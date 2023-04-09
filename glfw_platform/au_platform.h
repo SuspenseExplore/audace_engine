@@ -1,0 +1,7 @@
+#ifndef AU_PLATFORM_H
+#define AU_PLATFORM_H
+
+#include "glfw3.h"
+#include "glad.h"
+
+#endif
