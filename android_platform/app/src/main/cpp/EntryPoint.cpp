@@ -4,10 +4,12 @@
 
 #include <android_native_app_glue.h>
 #include <GLES3/gl32.h>
+#include <string>
 
 #include "EglWindow.h"
 #include "Application.h"
 #include "au_renderer.h"
+#include "AuLogger.h"
 
 Audace::EglWindow *window;
 Audace::Application *auApp;
@@ -15,18 +17,23 @@ Audace::Application *auApp;
 static void handleAndroidCmd(struct android_app *app, int32_t cmd) {
 	switch (cmd) {
 		case APP_CMD_INIT_WINDOW:
+			AU_ENGINE_LOG_INFO("Android system command: APP_CMD_INIT_WINDOW");
 			window->open();
 			glClearColor(1, 0, 1, 0);
 			glViewport(0, 0, window->getWidth(), window->getHeight());
 			break;
 
 		case APP_CMD_TERM_WINDOW:
+			AU_ENGINE_LOG_INFO("Android system command: APP_CMD_INIT_WINDOW");
 			window->close();
 			break;
 	}
 }
 
 void android_main(android_app *app) {
+	Audace::AuLogger::init();
+	AU_ENGINE_LOG_INFO("Audace logging initialized");
+
 	app->onAppCmd = handleAndroidCmd;
 	window = new Audace::EglWindow(app);
 	auApp = Audace::createApp(window);

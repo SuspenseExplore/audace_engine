@@ -6,8 +6,8 @@
 #include <GLES/gl.h>
 #include <GLES3/gl32.h>
 
-#include "audace_common.h"
 #include "EglWindow.h"
+#include "AuLogger.h"
 
 namespace Audace {
 	bool EglWindow::open() {
@@ -29,7 +29,7 @@ namespace Audace {
 		eglChooseConfig(display, attrs, nullptr, 0, &numCfg);
 		std::unique_ptr<EGLConfig[]> supportedCfgs(new EGLConfig[numCfg]);
 		eglChooseConfig(display, attrs, supportedCfgs.get(), numCfg, &numCfg);
-		LOGD("EGL version: %d.%d", major, minor);
+		AU_ENGINE_LOG_INFO("EGL version: {0:d}.{1:d}", major, minor);
 
 		auto i = 0;
 		for (; i < numCfg; i++) {
@@ -39,7 +39,6 @@ namespace Audace {
 			eglGetConfigAttrib(display, cfg, EGL_GREEN_SIZE, &g);
 			eglGetConfigAttrib(display, cfg, EGL_BLUE_SIZE, &b);
 			eglGetConfigAttrib(display, cfg, EGL_DEPTH_SIZE, &d);
-			LOGD("EGL Config: %d,%d,%d,%d", r, g, b, d);
 			if (r == 8 && g == 8 && b == 8 && d == 24) {
 				config = supportedCfgs[i];
 				break;
@@ -49,7 +48,7 @@ namespace Audace {
 			config = supportedCfgs[0];
 		}
 		if (config == nullptr) {
-			LOGE("EGL createViews failed: could not find valid config");
+			AU_ENGINE_LOG_CRITICAL("EGL could not find valid config");
 			return false;
 		}
 		const EGLint contextAttrs[] = {EGL_CONTEXT_MAJOR_VERSION, 3,
@@ -61,7 +60,7 @@ namespace Audace {
 		context = eglCreateContext(display, config, nullptr, contextAttrs);
 
 		if (eglMakeCurrent(display, surface, surface, context) == EGL_FALSE) {
-			LOGE("EGL createViews failed: could not make current");
+			AU_ENGINE_LOG_CRITICAL("eglMakeCurrent failed during init");
 			return false;
 		}
 
@@ -70,8 +69,8 @@ namespace Audace {
 
 		auto glInfo = {GL_VENDOR, GL_RENDERER, GL_VERSION, GL_EXTENSIONS};
 		for (auto name: glInfo) {
-			auto info = glGetString(name);
-			LOGD("GL info: %s", info);
+			const char *info = reinterpret_cast<const char *>(glGetString(name));
+			AU_ENGINE_LOG_INFO("GL info: {}", info);
 		}
 
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
@@ -100,10 +99,11 @@ namespace Audace {
 	}
 
 	void EglWindow::beginFrame() {
-
+		AU_ENGINE_LOG_TRACE("Starting new frame");
 	}
 
 	void EglWindow::endFrame() {
+		AU_ENGINE_LOG_TRACE("Ending frame");
 		eglSwapBuffers(display, surface);
 	}
 

@@ -25,8 +25,15 @@ namespace Audace
 		bool open();
 		void close();
 
-		void beginFrame() {}
-		void endFrame() { glfwSwapBuffers(window); }
+		void beginFrame()
+		{
+			AU_ENGINE_LOG_TRACE("Starting new frame");
+		}
+		void endFrame()
+		{
+			AU_ENGINE_LOG_TRACE("Ending frame");
+			glfwSwapBuffers(window);
+		}
 		void processEvents() { glfwPollEvents(); }
 
 		bool shouldClose() { return glfwWindowShouldClose(window); }

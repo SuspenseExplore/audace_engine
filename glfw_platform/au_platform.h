@@ -3,5 +3,6 @@
 
 #include "glfw3.h"
 #include "glad.h"
+#include "AuLogger.h"
 
 #endif

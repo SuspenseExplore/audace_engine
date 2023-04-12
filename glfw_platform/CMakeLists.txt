@@ -5,9 +5,10 @@ project("audace_platform")
 add_library(
 	audace_platform
 	STATIC
-	${CMAKE_CURRENT_SOURCE_DIR}/GameWindow.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/include/glad.c
-	${CMAKE_CURRENT_SOURCE_DIR}/EntryPoint.cpp
+	GameWindow.cpp
+	include/glad.c
+	EntryPoint.cpp
+	AuLogger.cpp
 )
 
 add_library(
@@ -21,6 +22,11 @@ set_target_properties(
 	IMPORTED_IMPLIB ${CMAKE_CURRENT_SOURCE_DIR}/lib/glfw3.lib
 )
 
+add_subdirectory(
+	D:/spdlog
+	D:/spdlog/build
+)
+
 target_include_directories(
 	audace_platform
 	PUBLIC
@@ -29,10 +35,12 @@ target_include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/include/glad
 	${CMAKE_CURRENT_SOURCE_DIR}/include/KHR
 	${ENGINE_DIR}
+	D:/spdlog/include
 )
 
 target_link_libraries(
 	audace_platform
 	PUBLIC
 	glfw3
+	spdlog
 )
