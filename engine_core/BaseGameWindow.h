@@ -2,11 +2,15 @@
 #define AU_BASEGAMEWINDOW_H
 
 namespace Audace {
+	class Application;
+
 	class BaseGameWindow {
 		protected:
 		bool initialized = false;
+		Application *app;
 
 		public:
+		void setApplication(Application *application) {app = application;}
 		virtual void processEvents() {}
 
 		bool isInitialized() {return initialized;}

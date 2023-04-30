@@ -6,8 +6,10 @@
 #include <GLES/gl.h>
 #include <GLES3/gl32.h>
 
+#include "au_platform.h"
 #include "EglWindow.h"
 #include "AuLogger.h"
+#include "Application.h"
 
 namespace Audace {
 	bool EglWindow::open() {
@@ -73,10 +75,12 @@ namespace Audace {
 			AU_ENGINE_LOG_INFO("GL info: {}", info);
 		}
 
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
-		glEnable(GL_CULL_FACE);
-		glDisable(GL_DEPTH_TEST);
+		CHECK_GL_ERROR(glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST), "glHint");
+//		CHECK_GL_ERROR(glEnable(GL_CULL_FACE), "glEnable");
+		CHECK_GL_ERROR(glDisable(GL_DEPTH_TEST), "glDisable");
+		glViewport(0, 0, width, height);
 
+		app->onInit();
 		initialized = true;
 		return true;
 	}
@@ -100,6 +104,9 @@ namespace Audace {
 
 	void EglWindow::beginFrame() {
 		AU_ENGINE_LOG_TRACE("Starting new frame");
+		if (eglMakeCurrent(display, surface, surface, context) == EGL_FALSE) {
+			AU_ENGINE_LOG_ERROR("eglMakeCurrent failed");
+		}
 	}
 
 	void EglWindow::endFrame() {

@@ -5,12 +5,12 @@ namespace Audace {
 
 	void AuLogger::init() {
 		spdlog::set_pattern("%^[%T.%e] [%n] [%l] %v%$");
-		spdlog::set_level(spdlog::level::trace);
+		spdlog::set_level(spdlog::level::info);
 		engineLogger = std::make_shared<AuLogger>(AuLogger("engine_log"));
 	}
 
 	AuLogger::AuLogger(std::string name) {
 		logger = spdlog::stdout_color_mt(name);
-		logger->set_level(spdlog::level::trace);
+		logger->set_level(spdlog::level::info);
 	}
 }

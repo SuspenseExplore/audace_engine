@@ -37,6 +37,7 @@ void android_main(android_app *app) {
 	app->onAppCmd = handleAndroidCmd;
 	window = new Audace::EglWindow(app);
 	auApp = Audace::createApp(window);
+	window->setApplication(auApp);
 	auApp->start();
 	delete auApp;
 	delete window;

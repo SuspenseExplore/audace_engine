@@ -1,6 +1,7 @@
 #ifndef AU_APPLICATION_H
 #define AU_APPLICATION_H
 
+#include "au_platform.h"
 #include "BaseGameWindow.h"
 #include "RenderContext.h"
 
@@ -25,17 +26,22 @@ namespace Audace
 				if (window->isInitialized())
 				{
 					window->beginFrame();
+
 					drawFrame();
+
 					window->endFrame();
 				}
 			}
-
+			
+			onShutdown();
 			window->close();
 		}
 
 		virtual void stop() {}
 
+		virtual void onInit() {}
 		virtual void drawFrame() {}
+		virtual void onShutdown() {}
 	};
 }
 

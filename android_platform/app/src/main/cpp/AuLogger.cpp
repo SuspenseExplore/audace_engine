@@ -14,6 +14,6 @@ namespace Audace {
 
 	AuLogger::AuLogger(std::string name) {
 		logger = spdlog::android_logger_mt(name);
-		logger->set_level(spdlog::level::trace);
+		logger->set_level(spdlog::level::info);
 	}
 }

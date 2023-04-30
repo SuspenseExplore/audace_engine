@@ -16,7 +16,8 @@ namespace Audace
 		GLFWwindow *window;
 
 	public:
-		GameWindow(int32_t width, int32_t height, std::string title) : width(width), height(height), title(title)
+		GameWindow(int32_t width, int32_t height, std::string title)
+			: width(width), height(height), title(title)
 		{
 			initialized = true;
 		}
@@ -27,14 +28,16 @@ namespace Audace
 
 		void beginFrame()
 		{
-			AU_ENGINE_LOG_TRACE("Starting new frame");
 		}
 		void endFrame()
 		{
-			AU_ENGINE_LOG_TRACE("Ending frame");
 			glfwSwapBuffers(window);
 		}
-		void processEvents() { glfwPollEvents(); }
+		void processEvents()
+		{
+			glfwPollEvents();
+			AU_ENGINE_LOG_TRACE("Processed system events");
+		}
 
 		bool shouldClose() { return glfwWindowShouldClose(window); }
 	};

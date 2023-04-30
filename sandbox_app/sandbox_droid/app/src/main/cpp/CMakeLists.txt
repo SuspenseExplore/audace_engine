@@ -8,11 +8,14 @@ cmake_minimum_required(VERSION 3.18.1)
 # Declares and names the project.
 
 project("sandbox_droid")
+add_library(native_app_glue STATIC
+		${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c)
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
 
 set(APP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../..)
-set(ENGINE_DIR ${APP_DIR}/../engine_core)
-set(PLATFORM_DIR ${APP_DIR}/../android_platform/app/src/main/cpp)
+set(ENGINE_ROOT_DIR ${APP_DIR}/..)
+set(ENGINE_DIR ${ENGINE_ROOT_DIR}/engine_core)
+set(PLATFORM_DIR ${ENGINE_ROOT_DIR}/android_platform/app/src/main/cpp)
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -26,11 +29,18 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        ${APP_DIR}/SandboxApp.cpp)
+        ${PLATFORM_DIR}/AuLogger.cpp
+		${PLATFORM_DIR}/EglWindow.cpp
+		${PLATFORM_DIR}/EntryPoint.cpp
+		${ENGINE_DIR}/RenderContext.cpp
+		${ENGINE_DIR}/renderer/DataBuffer.cpp
+		${ENGINE_DIR}/renderer/VertexArray.cpp
+		${ENGINE_DIR}/renderer/ShaderProgram.cpp
+		${APP_DIR}/SandboxApp.cpp)
 
 add_subdirectory(
-        ${ENGINE_DIR}
-        ${ENGINE_DIR}/build
+        D:/spdlog
+        D:/spdlog/build
 )
 
 # Searches for a specified prebuilt library and stores the path as a
@@ -49,7 +59,11 @@ find_library( # Sets the name of the path variable.
 target_include_directories(
         sandbox_droid
         PUBLIC
+		${ANDROID_NDK}/sources/android/native_app_glue
+		D:/spdlog/include
+		${PLATFORM_DIR}
         ${ENGINE_DIR}
+		${APP_DIR}
 )
 
 # Specifies libraries CMake should link to your target library. You
@@ -60,7 +74,8 @@ target_link_libraries( # Specifies the target library.
         sandbox_droid
         android
         native_app_glue
-        engine_core
+		EGL
+		GLESv3
 
         # Links the target library to the log library
         # included in the NDK.

@@ -5,8 +5,6 @@
 #ifndef AULOGGER_H
 #define AULOGGER_H
 
-#include <jni.h>
-#include <android/log.h>
 #include <memory>
 #include <string>
 
