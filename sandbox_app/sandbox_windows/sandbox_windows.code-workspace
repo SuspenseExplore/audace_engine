@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../glfw_platform"
+		},
+		{
+			"path": "../../engine_core"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"memory": "cpp",
+			"system_error": "cpp",
+			"xmemory": "cpp"
+		}
+	}
+}

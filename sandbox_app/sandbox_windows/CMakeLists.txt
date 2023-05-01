@@ -32,9 +32,15 @@ target_include_directories(
 	D:/spdlog/include
 )
 
-add_subdirectory(
-	D:/spdlog
-	D:/spdlog/build
+add_library(
+	spdlog
+	STATIC
+	IMPORTED
+)
+set_target_properties(
+	spdlog
+	PROPERTIES
+	IMPORTED_IMPLIB ${PLATFORM_DIR}/lib/spdlogd.lib
 )
 
 add_library(
