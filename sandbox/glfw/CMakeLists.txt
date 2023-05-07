@@ -10,6 +10,7 @@ add_executable(
 	include/glad.c
 	main.cpp
 	${ENGINE_DIR}/renderer/DataBuffer.cpp
+	${ENGINE_DIR}/renderer/ShaderProgram.cpp
 )
 
 target_include_directories(

@@ -10,6 +10,9 @@
     <ClCompile Include="D:\audace_engine\engine_src\renderer\DataBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\audace_engine\engine_src\renderer\ShaderProgram.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="D:\audace_engine\sandbox\glfw\CMakeLists.txt" />

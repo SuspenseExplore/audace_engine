@@ -316,6 +316,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\audace_engine\sandbox\glfw\include\glad.c" />
     <ClCompile Include="D:\audace_engine\sandbox\glfw\main.cpp" />
     <ClCompile Include="D:\audace_engine\engine_src\renderer\DataBuffer.cpp" />
+    <ClCompile Include="D:\audace_engine\engine_src\renderer\ShaderProgram.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:\audace_engine\sandbox\glfw\build\ZERO_CHECK.vcxproj">

@@ -1,14 +1,31 @@
 #include <iostream>
+#include <string>
 
 #include "glfw3.h"
 #include "glad/glad.h"
 #include "renderer/DataBuffer.h"
+#include "renderer/ShaderProgram.h"
 
 float verts[] = {
 	-0.5f, -0.5f,
 	-0.5f, 0.5f,
 	0.5f, -0.5f,
 	0.5f, 0.5f};
+
+std::string vsSrc = 
+	"#version 320 es\n"
+	"layout (location = 0) in vec4 position;\n"
+	"void main() {\n"
+	"	gl_Position = position;\n"
+	"}";
+
+std::string fsSrc = 
+	"#version 320 es\n"
+	"precision mediump float;\n"
+	"out vec4 fragColor;\n"
+	"void main() {\n"
+	"	fragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
+	"}";
 
 int main()
 {
@@ -30,6 +47,10 @@ int main()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, nullptr);
 
+	Audace::ShaderProgram shader(vsSrc, fsSrc);
+	shader.create();
+	shader.bind();
+
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -37,6 +58,8 @@ int main()
 		glfwSwapBuffers(window);
 	}
 
+	shader.destroy();
+	buffer.destroy();
 	glfwTerminate();
 	return 0;
 }
