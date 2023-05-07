@@ -1,3 +1,0 @@
-D:/audace_engine/sandbox/glfw/build/CMakeFiles/sandbox_glfw.dir
-D:/audace_engine/sandbox/glfw/build/CMakeFiles/ALL_BUILD.dir
-D:/audace_engine/sandbox/glfw/build/CMakeFiles/ZERO_CHECK.dir
