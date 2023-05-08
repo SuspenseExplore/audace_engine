@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.18.1)
 
 # Declares and names the project.
 
-project("audace")
+project("openxr_sandbox")
 
 # add android's native app glue
 add_library(native_app_glue STATIC
@@ -20,7 +20,7 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_o
 # Gradle automatically packages shared libraries with your APK.
 
 add_library( # Sets the name of the library.
-        audace
+        openxr_sandbox
 
         # Sets the library as a shared library.
         SHARED
@@ -62,14 +62,14 @@ find_library( # Sets the name of the path variable.
         # you want CMake to locate.
         log)
 
-target_include_directories(audace PRIVATE ${ANDROID_NDK}/sources/android/native_app_glue)
+target_include_directories(openxr_sandbox PRIVATE ${ANDROID_NDK}/sources/android/native_app_glue)
 
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
 target_link_libraries( # Specifies the target library.
-        audace
+		openxr_sandbox
         android
         native_app_glue
         EGL
