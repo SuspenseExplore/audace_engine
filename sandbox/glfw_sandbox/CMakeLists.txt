@@ -12,6 +12,7 @@ add_executable(
 	${ENGINE_DIR}/renderer/DataBuffer.cpp
 	${ENGINE_DIR}/renderer/ShaderProgram.cpp
 	${ENGINE_DIR}/renderer/VertexAttribute.cpp
+	${ENGINE_DIR}/renderer/VertexArray.cpp
 )
 
 target_include_directories(

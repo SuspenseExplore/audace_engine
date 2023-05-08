@@ -10,6 +10,7 @@
 #include "renderer/DataBuffer.h"
 #include "renderer/VertexAttribute.h"
 #include "renderer/ShaderProgram.h"
+#include "renderer/VertexArray.h"
 #include "openxr/OpenxrView.h"
 
 class Scene {
@@ -20,7 +21,7 @@ class Scene {
 	};
 	Audace::DataBuffer *vertexBuffer;
 	Audace::VertexAttribute *attr;
-	GLuint vertexArray;
+	Audace::VertexArray *vertexArray;
 	Audace::ShaderProgram *shaderProgram;
 	GLuint mvpMatLocation;
 	GLuint colorLocation;

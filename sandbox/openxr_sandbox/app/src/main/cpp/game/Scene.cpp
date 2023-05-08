@@ -3,6 +3,7 @@
 //
 
 #include <string>
+#include <vector>
 
 #include "audace_common.h"
 #include "openxr/xr_linear.h"
@@ -30,11 +31,12 @@ void Scene::init() {
 	vertexBuffer->create();
 	vertexBuffer->bind();
 
-	glGenVertexArrays(1, &vertexArray);
-	glBindVertexArray(vertexArray);
-
 	attr = new Audace::VertexAttribute(0, 3, GL_FLOAT, false, sizeof(float) * 3, 0);
-	attr->bind();
+	std::vector<Audace::VertexAttribute*> attrs;
+	attrs.push_back(attr);
+	vertexArray = new Audace::VertexArray(attrs);
+	vertexArray->create();
+	vertexBuffer->unbind();
 
 	shaderProgram = new Audace::ShaderProgram(vsSrc, fsSrc);
 	shaderProgram->create();
@@ -59,7 +61,7 @@ void Scene::render(OpenxrView view) {
 	shaderProgram->bind();
 	glUniformMatrix4fv(mvpMatLocation, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&vpMat));
 	glUniform4f(colorLocation, 1, 0, 0, 0);
-	glBindVertexArray(vertexArray);
+	vertexArray->bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }

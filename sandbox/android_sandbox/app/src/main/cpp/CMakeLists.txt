@@ -32,6 +32,7 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/renderer/DataBuffer.cpp
 		${ENGINE_DIR}/renderer/ShaderProgram.cpp
 		${ENGINE_DIR}/renderer/VertexAttribute.cpp
+		${ENGINE_DIR}/renderer/VertexArray.cpp
 		)
 
 # Searches for a specified prebuilt library and stores the path as a

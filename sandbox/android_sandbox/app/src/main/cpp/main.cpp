@@ -6,15 +6,18 @@
 #include <jni.h>
 #include <android_native_app_glue.h>
 #include <GLES3/gl32.h>
+#include <vector>
 #include "EglWindow.h"
 #include "renderer/DataBuffer.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/VertexAttribute.h"
+#include "renderer/VertexArray.h"
 
 EglWindow window;
 Audace::DataBuffer *buffer;
 Audace::ShaderProgram *shader;
 Audace::VertexAttribute *attr;
+Audace::VertexArray *vertexArray;
 
 float verts[] = {
 		-0.5f, -0.5f,
@@ -46,7 +49,12 @@ void handleAndroidCmd(android_app *app, int32_t cmd) {
 			buffer->bind();
 
 			attr = new Audace::VertexAttribute(0, 2, GL_FLOAT, false, sizeof(float) * 2, 0);
-			attr->bind();
+			std::vector<Audace::VertexAttribute*> attrs;
+			attrs.push_back(attr);
+			vertexArray = new Audace::VertexArray(attrs);
+			vertexArray->create();
+			buffer->unbind();
+			vertexArray->bind();
 
 			shader = new Audace::ShaderProgram(vsSrc, fsSrc);
 			shader->create();
@@ -75,6 +83,9 @@ void android_main(android_app *app) {
 			shader->destroy();
 			delete shader;
 			delete attr;
+			vertexArray->destroy();
+			delete vertexArray;
+
 			window.close();
 			return;
 		}

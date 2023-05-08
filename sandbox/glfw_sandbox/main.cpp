@@ -1,11 +1,13 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "glfw3.h"
 #include "glad/glad.h"
 #include "renderer/DataBuffer.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/VertexAttribute.h"
+#include "renderer/VertexArray.h"
 
 float verts[] = {
 	-0.5f, -0.5f,
@@ -45,8 +47,14 @@ int main()
 	buffer.create();
 	buffer.bind();
 
-	Audace::VertexAttribute attr(0, 2, GL_FLOAT, false, sizeof(float) * 2, 0);
-	attr.bind();
+	Audace::VertexAttribute *attr = new Audace::VertexAttribute(0, 2, GL_FLOAT, false, sizeof(float) * 2, 0);
+	std::vector<Audace::VertexAttribute*> attrs;
+	attrs.push_back(attr);
+	
+	Audace::VertexArray vertexArray(attrs);
+	vertexArray.create();
+	buffer.unbind();
+	vertexArray.bind();
 
 	Audace::ShaderProgram shader(vsSrc, fsSrc);
 	shader.create();
@@ -61,6 +69,7 @@ int main()
 
 	shader.destroy();
 	buffer.destroy();
+	vertexArray.destroy();
 	glfwTerminate();
 	return 0;
 }
