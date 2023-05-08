@@ -9,6 +9,17 @@ namespace Audace {
 		glAttachShader(glid, vs);
 		glAttachShader(glid, fs);
 		glLinkProgram(glid);
+		GLint res;
+		glGetProgramiv(glid, GL_LINK_STATUS, &res);
+		if (!res) {
+			glGetProgramiv(glid, GL_INFO_LOG_LENGTH, &res);
+			char *log = new char[res];
+			glGetProgramInfoLog(glid, res, nullptr, log);
+			std::cerr << "Shader program link error: " << log << std::endl;
+			delete[] log;
+			glDeleteProgram(glid);
+		}
+
 		glDeleteShader(vs);
 		glDeleteShader(fs);
 	}
@@ -32,6 +43,7 @@ namespace Audace {
 			char *log = new char[res];
 			glGetShaderInfoLog(shaderId, res, nullptr, log);
 			std::cerr << "Shader compile error: " << log << std::endl;
+			delete[] log;
 		}
 		return shaderId;
 	}
