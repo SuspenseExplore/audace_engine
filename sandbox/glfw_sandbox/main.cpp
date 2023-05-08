@@ -5,6 +5,7 @@
 #include "glad/glad.h"
 #include "renderer/DataBuffer.h"
 #include "renderer/ShaderProgram.h"
+#include "renderer/VertexAttribute.h"
 
 float verts[] = {
 	-0.5f, -0.5f,
@@ -44,8 +45,8 @@ int main()
 	buffer.create();
 	buffer.bind();
 
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, nullptr);
+	Audace::VertexAttribute attr(0, 2, GL_FLOAT, false, sizeof(float) * 2, 0);
+	attr.bind();
 
 	Audace::ShaderProgram shader(vsSrc, fsSrc);
 	shader.create();

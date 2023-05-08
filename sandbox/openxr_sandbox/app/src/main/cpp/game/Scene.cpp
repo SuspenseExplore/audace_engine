@@ -28,12 +28,13 @@ void Scene::init() {
 
 	vertexBuffer = new Audace::DataBuffer(verts, sizeof(verts), GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 	vertexBuffer->create();
+	vertexBuffer->bind();
 
 	glGenVertexArrays(1, &vertexArray);
 	glBindVertexArray(vertexArray);
-	glEnableVertexAttribArray(0);
-	vertexBuffer->bind();
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+
+	attr = new Audace::VertexAttribute(0, 3, GL_FLOAT, false, sizeof(float) * 3, 0);
+	attr->bind();
 
 	shaderProgram = new Audace::ShaderProgram(vsSrc, fsSrc);
 	shaderProgram->create();

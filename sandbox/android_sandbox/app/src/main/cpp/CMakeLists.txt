@@ -30,7 +30,9 @@ add_library( # Sets the name of the library.
 		main.cpp
 		EglWindow.cpp
 		${ENGINE_DIR}/renderer/DataBuffer.cpp
-		${ENGINE_DIR}/renderer/ShaderProgram.cpp)
+		${ENGINE_DIR}/renderer/ShaderProgram.cpp
+		${ENGINE_DIR}/renderer/VertexAttribute.cpp
+		)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by

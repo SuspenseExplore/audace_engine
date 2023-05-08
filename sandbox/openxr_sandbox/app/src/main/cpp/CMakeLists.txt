@@ -30,6 +30,7 @@ add_library( # Sets the name of the library.
         main.cpp
 		${ENGINE_DIR}/renderer/DataBuffer.cpp
 		${ENGINE_DIR}/renderer/ShaderProgram.cpp
+		${ENGINE_DIR}/renderer/VertexAttribute.cpp
         openxr/OpenxrSwapchain.cpp
         openxr/OpenxrView.cpp
         openxr/OpenxrContext.cpp

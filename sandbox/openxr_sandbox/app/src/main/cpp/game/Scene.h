@@ -8,16 +8,18 @@
 #include <GLES3/gl32.h>
 
 #include "renderer/DataBuffer.h"
+#include "renderer/VertexAttribute.h"
 #include "renderer/ShaderProgram.h"
 #include "openxr/OpenxrView.h"
 
 class Scene {
-	float verts[12] = {-1.0f, -1.0f, 0.0f,
-				   -1.0f, 1.0f, 0.0f,
-				   1.0f, -1.0f, 0.0f,
-				   1.0f, 1.0f, 0.0f,
+	float verts[12] = {-1.0f, -1.0f, -2.0f,
+				   -1.0f, 1.0f, -2.0f,
+				   1.0f, -1.0f, -2.0f,
+				   1.0f, 1.0f, -2.0f,
 	};
 	Audace::DataBuffer *vertexBuffer;
+	Audace::VertexAttribute *attr;
 	GLuint vertexArray;
 	Audace::ShaderProgram *shaderProgram;
 	GLuint mvpMatLocation;

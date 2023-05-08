@@ -9,10 +9,12 @@
 #include "EglWindow.h"
 #include "renderer/DataBuffer.h"
 #include "renderer/ShaderProgram.h"
+#include "renderer/VertexAttribute.h"
 
 EglWindow window;
 Audace::DataBuffer *buffer;
 Audace::ShaderProgram *shader;
+Audace::VertexAttribute *attr;
 
 float verts[] = {
 		-0.5f, -0.5f,
@@ -42,8 +44,10 @@ void handleAndroidCmd(android_app *app, int32_t cmd) {
 			buffer = new Audace::DataBuffer(verts, sizeof(verts), GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 			buffer->create();
 			buffer->bind();
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+			attr = new Audace::VertexAttribute(0, 2, GL_FLOAT, false, sizeof(float) * 2, 0);
+			attr->bind();
+
 			shader = new Audace::ShaderProgram(vsSrc, fsSrc);
 			shader->create();
 			shader->bind();
@@ -70,6 +74,7 @@ void android_main(android_app *app) {
 			delete buffer;
 			shader->destroy();
 			delete shader;
+			delete attr;
 			window.close();
 			return;
 		}
