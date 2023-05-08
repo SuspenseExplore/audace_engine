@@ -50,6 +50,7 @@ target_include_directories(
 		PRIVATE
 		${ANDROID_NDK}/sources/android/native_app_glue
 		${ENGINE_DIR}
+		${ENGINE_DIR}/android_platform
 		${CMAKE_CURRENT_SOURCE_DIR})
 
 # Specifies libraries CMake should link to your target library. You

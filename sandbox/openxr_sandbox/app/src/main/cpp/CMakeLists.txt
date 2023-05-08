@@ -8,6 +8,7 @@ cmake_minimum_required(VERSION 3.18.1)
 # Declares and names the project.
 
 project("openxr_sandbox")
+set(ENGINE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../../engine_src)
 
 # add android's native app glue
 add_library(native_app_glue STATIC
@@ -27,6 +28,8 @@ add_library( # Sets the name of the library.
 
         # Provides a relative path to your source file(s).
         main.cpp
+		${ENGINE_DIR}/renderer/DataBuffer.cpp
+		${ENGINE_DIR}/renderer/ShaderProgram.cpp
         openxr/OpenxrSwapchain.cpp
         openxr/OpenxrView.cpp
         openxr/OpenxrContext.cpp
@@ -62,7 +65,12 @@ find_library( # Sets the name of the path variable.
         # you want CMake to locate.
         log)
 
-target_include_directories(openxr_sandbox PRIVATE ${ANDROID_NDK}/sources/android/native_app_glue)
+target_include_directories(
+		openxr_sandbox
+		PRIVATE
+		${ANDROID_NDK}/sources/android/native_app_glue
+		${ENGINE_DIR}
+		${ENGINE_DIR}/android_platform)
 
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this

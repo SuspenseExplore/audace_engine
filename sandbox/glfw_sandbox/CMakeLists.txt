@@ -21,6 +21,7 @@ target_include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/include/glad
 	${CMAKE_CURRENT_SOURCE_DIR}/include/KHR
 	${ENGINE_DIR}
+	${ENGINE_DIR}/glfw_platform
 	D:/spdlog/include
 )
 

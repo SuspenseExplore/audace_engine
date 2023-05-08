@@ -7,17 +7,19 @@
 
 #include <GLES3/gl32.h>
 
+#include "renderer/DataBuffer.h"
+#include "renderer/ShaderProgram.h"
 #include "openxr/OpenxrView.h"
 
 class Scene {
-	float verts[12] = {-1.0f, -1.0f, 5.0f,
-				   -1.0f, 1.0f, 5.0f,
-				   1.0f, -1.0f, 5.0f,
-				   1.0f, 1.0f, 5.0f,
+	float verts[12] = {-1.0f, -1.0f, 0.0f,
+				   -1.0f, 1.0f, 0.0f,
+				   1.0f, -1.0f, 0.0f,
+				   1.0f, 1.0f, 0.0f,
 	};
-	GLuint vertexBuffer;
+	Audace::DataBuffer *vertexBuffer;
 	GLuint vertexArray;
-	GLuint shaderProgram;
+	Audace::ShaderProgram *shaderProgram;
 	GLuint mvpMatLocation;
 	GLuint colorLocation;
 

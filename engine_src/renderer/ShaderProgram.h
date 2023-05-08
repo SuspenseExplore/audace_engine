@@ -16,6 +16,8 @@ namespace Audace {
 		void destroy();
 		void bind();
 
+		GLuint getId() {return glid;}
+
 		static GLuint loadShader(const char *src, GLenum shaderType);
 	};
 }

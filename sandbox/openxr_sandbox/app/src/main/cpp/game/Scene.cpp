@@ -8,71 +8,38 @@
 #include "openxr/xr_linear.h"
 #include "Scene.h"
 
+std::string vsSrc = "#version 320 es\n"
+					"layout (location = 0) in vec4 position;\n"
+					"uniform mat4 mvpMat;"
+					"void main() {\n"
+					"	gl_Position = mvpMat * position;\n"
+					"}";
+const char* fsSrc = "#version 320 es\n"
+					"precision mediump float;\n"
+					"out vec4 color;\n"
+					"uniform vec4 uColor;\n"
+					"void main() {\n"
+					"	color = uColor;\n"
+					"}";
 void Scene::init() {
 	LOGD("SCENE INIT");
 	glClearColor(0, 0, 1, 1);
 //	glClearDepthf(1.0f);
 
-	glGenBuffers(1, &vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
+	vertexBuffer = new Audace::DataBuffer(verts, sizeof(verts), GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+	vertexBuffer->create();
 
 	glGenVertexArrays(1, &vertexArray);
 	glBindVertexArray(vertexArray);
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	vertexBuffer->bind();
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	const char* vsSrc = "#version 320 es\n"
-						"layout (location = 0) in vec4 position;\n"
-						"uniform mat4 mvpMat;"
-						"void main() {\n"
-						"	gl_Position = mvpMat * position;\n"
-						"}\0";
-	glShaderSource(vertexShader, 1, &vsSrc, nullptr);
-	glCompileShader(vertexShader);
-	GLint success;
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success) {
-		char log[512];
-		glGetShaderInfoLog(vertexShader, 512, nullptr, log);
-		LOGE("Vertex shader compilation error: %s", log);
-	}
-
-	const char* fsSrc = "#version 320 es\n"
-						"precision mediump float;\n"
-						"out vec4 color;\n"
-						"uniform vec4 uColor;\n"
-						"void main() {\n"
-						"	color = uColor;\n"
-						"}\0";
-	glShaderSource(fragmentShader, 1, &fsSrc, nullptr);
-	glCompileShader(fragmentShader);
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-	if (!success) {
-		char log[512];
-		glGetShaderInfoLog(fragmentShader, 512, nullptr, log);
-		LOGE("Fragment shader compilation error: %s", log);
-	}
-
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if (!success) {
-		char log[512];
-		glGetProgramInfoLog(shaderProgram, 512, nullptr, log);
-		LOGE("Shader link error: %s", log);
-	}
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-	mvpMatLocation = glGetUniformLocation(shaderProgram, "mvpMat");
-	colorLocation = glGetUniformLocation(shaderProgram, "uColor");
-	LOGD("uniform location: %d", mvpMatLocation);
-	LOGD("uniform location: %d", colorLocation);
+	shaderProgram = new Audace::ShaderProgram(vsSrc, fsSrc);
+	shaderProgram->create();
+	shaderProgram->bind();
+	mvpMatLocation = glGetUniformLocation(shaderProgram->getId(), "mvpMat");
+	colorLocation = glGetUniformLocation(shaderProgram->getId(), "uColor");
 }
 
 void Scene::render(OpenxrView view) {
@@ -88,7 +55,7 @@ void Scene::render(OpenxrView view) {
 	XrMatrix4x4f vpMat;
 	XrMatrix4x4f_Multiply(&vpMat, &projMat, &viewMat);
 
-	glUseProgram(shaderProgram);
+	shaderProgram->bind();
 	glUniformMatrix4fv(mvpMatLocation, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&vpMat));
 	glUniform4f(colorLocation, 1, 0, 0, 0);
 	glBindVertexArray(vertexArray);
