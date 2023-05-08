@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "audace"
+rootProject.name = "openxr_sandbox"
 include ':app'
