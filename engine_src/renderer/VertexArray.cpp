@@ -7,10 +7,12 @@ namespace Audace {
 		for (VertexAttribute *attr : attrs) {
 			attr->bind();
 		}
+		AU_RENDERER_LOG_TRACE("Create VertexArray {}", glid);
 	}
 
 	void VertexArray::bind() {
 		glBindVertexArray(glid);
+		AU_RENDERER_LOG_TRACE("Bound VertexArray {}", glid);
 	}
 
 	void VertexArray::destroy() {
@@ -18,5 +20,7 @@ namespace Audace {
 		for (int i = 0; i < attrs.size(); i++) {
 			delete attrs[i];
 		}
+		AU_RENDERER_LOG_TRACE("Destroyed VertexArray {}", glid);
+		glid = -1;
 	}
 }

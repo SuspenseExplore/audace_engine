@@ -45,6 +45,8 @@ void handleAndroidCmd(android_app *app, int32_t cmd) {
 	switch (cmd) {
 		case APP_CMD_INIT_WINDOW:
 			window.open(app);
+			AU_RENDERER_LOG_TRACE("Opened window");
+
 			buffer = new Audace::DataBuffer(verts, sizeof(verts), GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 			buffer->create();
 			buffer->bind();
@@ -66,9 +68,10 @@ void handleAndroidCmd(android_app *app, int32_t cmd) {
 
 void android_main(android_app *app) {
 	Audace::AuLogger::init();
-	AU_ENGINE_LOG_INFO("Launching");
+	AU_ENGINE_LOG_INFO("Logging initialized");
 	app->onAppCmd = handleAndroidCmd;
 
+	AU_ENGINE_LOG_TRACE("Entering render loop");
 	while (true) {
 		int id;
 		int events;
@@ -90,6 +93,8 @@ void android_main(android_app *app) {
 			delete vertexArray;
 
 			window.close();
+			AU_ENGINE_LOG_TRACE("Exiting render loop");
+			AU_ENGINE_LOG_TRACE("Application terminating normally");
 			return;
 		}
 

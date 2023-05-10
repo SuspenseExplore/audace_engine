@@ -23,14 +23,18 @@ namespace Audace {
 
 		glDeleteShader(vs);
 		glDeleteShader(fs);
+		AU_RENDERER_LOG_TRACE("Created ShaderProgram {}", glid);
 	}
 
 	void ShaderProgram::bind() {
 		glUseProgram(glid);
+		AU_RENDERER_LOG_TRACE("Bound ShaderProgram {}", glid);
 	}
 
 	void ShaderProgram::destroy() {
 		glDeleteProgram(glid);
+		AU_RENDERER_LOG_TRACE("Destroyed ShaderProgram {}", glid);
+		glid = -1;
 	}
 
 	GLuint ShaderProgram::loadShader(const char *src, GLenum shaderType) {

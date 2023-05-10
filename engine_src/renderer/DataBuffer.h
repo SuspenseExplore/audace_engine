@@ -24,6 +24,7 @@ namespace Audace
 			if (glid > 0)
 			{
 				glDeleteBuffers(1, &glid);
+				AU_RENDERER_LOG_TRACE("Destroyed DataBuffer {}", glid);
 				glid = -1;
 			}
 		}

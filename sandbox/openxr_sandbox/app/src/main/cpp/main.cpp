@@ -132,12 +132,13 @@ static void handleXrEvents() {
 
 void android_main(struct android_app *app) {
 	Audace::AuLogger::init();
-	AU_ENGINE_LOG_INFO("Launching app");
+	AU_ENGINE_LOG_INFO("Logging initialized");
 
 	app->onAppCmd = handleAndroidCmd;
 
 	appController.init(app);
 
+	AU_RENDERER_LOG_TRACE("Entering render loop");
 	while (true) {
 		int id;
 		int events;
@@ -154,13 +155,16 @@ void android_main(struct android_app *app) {
 			appController.getWindow().close();
 			glDeleteFramebuffers(1, &framebuffer);
 			ANativeActivity_finish(app->activity);
+
+			AU_ENGINE_LOG_TRACE("Application terminating normally");
 			return;
 		}
 
 		if (app->destroyRequested != 0) {
-			LOGD("destroy requested");
 			appController.getWindow().close();
 			glDeleteFramebuffers(1, &framebuffer);
+
+			AU_ENGINE_LOG_TRACE("Application terminating normally");
 			return;
 		}
 

@@ -16,14 +16,14 @@ float verts[] = {
 	0.5f, -0.5f,
 	0.5f, 0.5f};
 
-std::string vsSrc = 
+std::string vsSrc =
 	"#version 320 es\n"
 	"layout (location = 0) in vec4 position;\n"
 	"void main() {\n"
 	"	gl_Position = position;\n"
 	"}";
 
-std::string fsSrc = 
+std::string fsSrc =
 	"#version 320 es\n"
 	"precision mediump float;\n"
 	"out vec4 fragColor;\n"
@@ -34,6 +34,7 @@ std::string fsSrc =
 int main()
 {
 	Audace::AuLogger::init();
+	AU_ENGINE_LOG_TRACE("Logging initialized");
 
 	glfwInit();
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
@@ -42,8 +43,16 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
 
 	GLFWwindow *window = glfwCreateWindow(1280, 720, "Audace Sandbox", nullptr, nullptr);
+	if (window == nullptr)
+	{
+		AU_ENGINE_LOG_CRITICAL("GLFW window creation failed");
+		glfwTerminate();
+		return -1;
+	}
+
 	glfwMakeContextCurrent(window);
-	gladLoadGLES2Loader((GLADloadproc) glfwGetProcAddress);
+	gladLoadGLES2Loader((GLADloadproc)glfwGetProcAddress);
+	AU_RENDERER_LOG_TRACE("GLAD loaded");
 
 	glClearColor(1, 0, 1, 0);
 	Audace::DataBuffer buffer(verts, sizeof(verts), GL_ARRAY_BUFFER, GL_STATIC_DRAW);
@@ -51,9 +60,9 @@ int main()
 	buffer.bind();
 
 	Audace::VertexAttribute *attr = new Audace::VertexAttribute(0, 2, GL_FLOAT, false, sizeof(float) * 2, 0);
-	std::vector<Audace::VertexAttribute*> attrs;
+	std::vector<Audace::VertexAttribute *> attrs;
 	attrs.push_back(attr);
-	
+
 	Audace::VertexArray vertexArray(attrs);
 	vertexArray.create();
 	buffer.unbind();
@@ -63,16 +72,21 @@ int main()
 	shader.create();
 	shader.bind();
 
-	while (!glfwWindowShouldClose(window)) {
+	AU_ENGINE_LOG_TRACE("Entering render loop");
+	while (!glfwWindowShouldClose(window))
+	{
 		glfwPollEvents();
 		glClear(GL_COLOR_BUFFER_BIT);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		glfwSwapBuffers(window);
 	}
+	AU_ENGINE_LOG_TRACE("Exiting render loop");
 
 	shader.destroy();
 	buffer.destroy();
 	vertexArray.destroy();
 	glfwTerminate();
+	
+	AU_ENGINE_LOG_TRACE("Application terminating normally");
 	return 0;
 }

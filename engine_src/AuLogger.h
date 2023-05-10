@@ -19,6 +19,7 @@ namespace Audace
 	class AuLogger
 	{
 		static std::shared_ptr<AuLogger> engineLogger;
+		static std::shared_ptr<AuLogger> rendererLogger;
 
 		std::shared_ptr<spdlog::logger> logger;
 
@@ -26,6 +27,7 @@ namespace Audace
 		static void init();
 		static void shotdown();
 		static std::shared_ptr<AuLogger> getEngineLogger() { return engineLogger; }
+		static std::shared_ptr<AuLogger> getRendererLogger() { return rendererLogger; }
 
 		AuLogger(std::string name);
 		std::shared_ptr<spdlog::logger> getLogger() { return logger; }
