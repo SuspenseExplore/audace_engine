@@ -1,5 +1,6 @@
 #include <iostream>
 #include "ShaderProgram.h"
+#include "AuLogger.h"
 
 namespace Audace {
 	void ShaderProgram::create() {
@@ -15,7 +16,7 @@ namespace Audace {
 			glGetProgramiv(glid, GL_INFO_LOG_LENGTH, &res);
 			char *log = new char[res];
 			glGetProgramInfoLog(glid, res, nullptr, log);
-			std::cerr << "Shader program link error: " << log << std::endl;
+			AU_ENGINE_LOG_ERROR("Shader program link error: {}", log);
 			delete[] log;
 			glDeleteProgram(glid);
 		}
@@ -42,7 +43,7 @@ namespace Audace {
 			glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &res);
 			char *log = new char[res];
 			glGetShaderInfoLog(shaderId, res, nullptr, log);
-			std::cerr << "Shader compile error: " << log << std::endl;
+			AU_ENGINE_LOG_ERROR("Shader compile error: {}", log);
 			delete[] log;
 		}
 		return shaderId;

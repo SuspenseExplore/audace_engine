@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 
+#include "AuLogger.h"
 #include "glfw3.h"
 #include "glad/glad.h"
 #include "renderer/DataBuffer.h"
@@ -32,6 +33,8 @@ std::string fsSrc =
 
 int main()
 {
+	Audace::AuLogger::init();
+
 	glfwInit();
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);

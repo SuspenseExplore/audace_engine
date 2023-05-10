@@ -1,0 +1,6 @@
+#ifndef AU_PLATFORMDEFS_H
+#define AU_PLATFORMDEFS_H
+
+#define AU_ANDROID_PLATFORM
+
+#endif

@@ -17,6 +17,7 @@
 #include <GLES3/gl3.h>
 #include <GLES3/gl31.h>
 
+#include "AuLogger.h"
 #include "AppController.h"
 #include "EglWindow.h"
 #include "openxr/openxr_common.h"
@@ -130,6 +131,9 @@ static void handleXrEvents() {
 }
 
 void android_main(struct android_app *app) {
+	Audace::AuLogger::init();
+	AU_ENGINE_LOG_INFO("Launching app");
+
 	app->onAppCmd = handleAndroidCmd;
 
 	appController.init(app);

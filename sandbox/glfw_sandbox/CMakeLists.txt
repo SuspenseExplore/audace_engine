@@ -9,6 +9,7 @@ add_executable(
 	sandbox_glfw
 	include/glad.c
 	main.cpp
+	${ENGINE_DIR}/AuLogger.cpp
 	${ENGINE_DIR}/renderer/DataBuffer.cpp
 	${ENGINE_DIR}/renderer/ShaderProgram.cpp
 	${ENGINE_DIR}/renderer/VertexAttribute.cpp
@@ -24,7 +25,7 @@ target_include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/include/KHR
 	${ENGINE_DIR}
 	${ENGINE_DIR}/glfw_platform
-	D:/spdlog/include
+	${ENGINE_DIR}/include
 )
 
 add_library(

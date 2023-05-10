@@ -7,6 +7,7 @@
 #include <android_native_app_glue.h>
 #include <GLES3/gl32.h>
 #include <vector>
+#include "AuLogger.h"
 #include "EglWindow.h"
 #include "renderer/DataBuffer.h"
 #include "renderer/ShaderProgram.h"
@@ -64,6 +65,8 @@ void handleAndroidCmd(android_app *app, int32_t cmd) {
 }
 
 void android_main(android_app *app) {
+	Audace::AuLogger::init();
+	AU_ENGINE_LOG_INFO("Launching");
 	app->onAppCmd = handleAndroidCmd;
 
 	while (true) {

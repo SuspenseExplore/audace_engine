@@ -29,6 +29,7 @@ add_library( # Sets the name of the library.
 		# Provides a relative path to your source file(s).
 		main.cpp
 		EglWindow.cpp
+		${ENGINE_DIR}/AuLogger.cpp
 		${ENGINE_DIR}/renderer/DataBuffer.cpp
 		${ENGINE_DIR}/renderer/ShaderProgram.cpp
 		${ENGINE_DIR}/renderer/VertexAttribute.cpp
@@ -53,6 +54,7 @@ target_include_directories(
 		PRIVATE
 		${ANDROID_NDK}/sources/android/native_app_glue
 		${ENGINE_DIR}
+		${ENGINE_DIR}/include
 		${ENGINE_DIR}/android_platform
 		${CMAKE_CURRENT_SOURCE_DIR})
 
