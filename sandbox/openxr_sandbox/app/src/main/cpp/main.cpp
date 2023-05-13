@@ -135,7 +135,6 @@ void android_main(struct android_app *app) {
 	AU_ENGINE_LOG_INFO("Logging initialized");
 
 	app->onAppCmd = handleAndroidCmd;
-
 	appController.init(app);
 
 	AU_RENDERER_LOG_TRACE("Entering render loop");

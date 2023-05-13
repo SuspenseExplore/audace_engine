@@ -6,7 +6,9 @@
 #define AUDACE_SCENE_H
 
 #include <GLES3/gl32.h>
-
+#include <jni.h>
+#include <android_native_app_glue.h>
+#include "android_platform/FileLoader.h"
 #include "renderer/DataBuffer.h"
 #include "renderer/VertexAttribute.h"
 #include "renderer/ShaderProgram.h"
@@ -19,6 +21,7 @@ class Scene {
 				   1.0f, -1.0f, -2.0f,
 				   1.0f, 1.0f, -2.0f,
 	};
+	Audace::FileLoader *fileLoader;
 	Audace::DataBuffer *vertexBuffer;
 	Audace::VertexAttribute *attr;
 	Audace::VertexArray *vertexArray;
@@ -27,7 +30,7 @@ class Scene {
 	GLuint colorLocation;
 
 public:
-	void init();
+	void init(AAssetManager *assetManager);
 	void render(OpenxrView view);
 };
 

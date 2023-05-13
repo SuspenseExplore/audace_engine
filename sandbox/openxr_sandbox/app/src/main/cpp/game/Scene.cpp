@@ -9,21 +9,9 @@
 #include "openxr/xr_linear.h"
 #include "Scene.h"
 
-std::string vsSrc = "#version 320 es\n"
-					"layout (location = 0) in vec4 position;\n"
-					"uniform mat4 mvpMat;"
-					"void main() {\n"
-					"	gl_Position = mvpMat * position;\n"
-					"}";
-const char* fsSrc = "#version 320 es\n"
-					"precision mediump float;\n"
-					"out vec4 color;\n"
-					"uniform vec4 uColor;\n"
-					"void main() {\n"
-					"	color = uColor;\n"
-					"}";
-void Scene::init() {
-	LOGD("SCENE INIT");
+void Scene::init(AAssetManager *assetManager) {
+	fileLoader = new Audace::FileLoader(assetManager);
+
 	glClearColor(0, 0, 1, 1);
 //	glClearDepthf(1.0f);
 
@@ -38,7 +26,9 @@ void Scene::init() {
 	vertexArray->create();
 	vertexBuffer->unbind();
 
-	shaderProgram = new Audace::ShaderProgram(vsSrc, fsSrc);
+	std::string vs = fileLoader->textFileToString("shaders/color/vs.glsl");
+	std::string fs = fileLoader->textFileToString("shaders/color/fs.glsl");
+	shaderProgram = new Audace::ShaderProgram(vs, fs);
 	shaderProgram->create();
 	shaderProgram->bind();
 	mvpMatLocation = glGetUniformLocation(shaderProgram->getId(), "mvpMat");

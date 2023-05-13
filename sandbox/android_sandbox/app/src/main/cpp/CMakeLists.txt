@@ -30,6 +30,7 @@ add_library( # Sets the name of the library.
 		main.cpp
 		EglWindow.cpp
 		${ENGINE_DIR}/AuLogger.cpp
+		${ENGINE_DIR}/android_platform/FileLoader.cpp
 		${ENGINE_DIR}/renderer/DataBuffer.cpp
 		${ENGINE_DIR}/renderer/ShaderProgram.cpp
 		${ENGINE_DIR}/renderer/VertexAttribute.cpp

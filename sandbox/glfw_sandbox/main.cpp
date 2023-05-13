@@ -5,6 +5,7 @@
 #include "AuLogger.h"
 #include "glfw3.h"
 #include "glad/glad.h"
+#include "FileLoader.h"
 #include "renderer/DataBuffer.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/VertexAttribute.h"
@@ -15,21 +16,6 @@ float verts[] = {
 	-0.5f, 0.5f,
 	0.5f, -0.5f,
 	0.5f, 0.5f};
-
-std::string vsSrc =
-	"#version 320 es\n"
-	"layout (location = 0) in vec4 position;\n"
-	"void main() {\n"
-	"	gl_Position = position;\n"
-	"}";
-
-std::string fsSrc =
-	"#version 320 es\n"
-	"precision mediump float;\n"
-	"out vec4 fragColor;\n"
-	"void main() {\n"
-	"	fragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
-	"}";
 
 int main()
 {
@@ -68,7 +54,10 @@ int main()
 	buffer.unbind();
 	vertexArray.bind();
 
-	Audace::ShaderProgram shader(vsSrc, fsSrc);
+	Audace::FileLoader fileLoader("../../assets/");
+	std::string vs = fileLoader.textFileToString("shaders/color/vs.glsl");
+	std::string fs = fileLoader.textFileToString("shaders/color/fs.glsl");
+	Audace::ShaderProgram shader(vs, fs);
 	shader.create();
 	shader.bind();
 

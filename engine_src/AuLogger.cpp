@@ -13,6 +13,6 @@ namespace Audace {
 
 	AuLogger::AuLogger(std::string name) {
 		logger = AU_PLATFORM_LOGGER(name);
-		logger->set_level(spdlog::level::trace);
+		logger->set_level(spdlog::level::debug);
 	}
 }

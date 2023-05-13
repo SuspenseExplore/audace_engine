@@ -9,12 +9,14 @@
 #include <vector>
 #include "AuLogger.h"
 #include "EglWindow.h"
+#include "FileLoader.h"
 #include "renderer/DataBuffer.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/VertexAttribute.h"
 #include "renderer/VertexArray.h"
 
 EglWindow window;
+Audace::FileLoader *fileLoader;
 Audace::DataBuffer *buffer;
 Audace::ShaderProgram *shader;
 Audace::VertexAttribute *attr;
@@ -25,21 +27,6 @@ float verts[] = {
 		-0.5f, 0.5f,
 		0.5f, -0.5f,
 		0.5f, 0.5f};
-
-std::string vsSrc =
-		"#version 320 es\n"
-		"layout (location = 0) in vec4 position;\n"
-		"void main() {\n"
-		"	gl_Position = position;\n"
-		"}";
-
-std::string fsSrc =
-		"#version 320 es\n"
-		"precision mediump float;\n"
-		"out vec4 fragColor;\n"
-		"void main() {\n"
-		"	fragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
-		"}";
 
 void handleAndroidCmd(android_app *app, int32_t cmd) {
 	switch (cmd) {
@@ -59,7 +46,9 @@ void handleAndroidCmd(android_app *app, int32_t cmd) {
 			buffer->unbind();
 			vertexArray->bind();
 
-			shader = new Audace::ShaderProgram(vsSrc, fsSrc);
+			std::string vs = fileLoader->textFileToString("shaders/color/vs.glsl");
+			std::string fs = fileLoader->textFileToString("shaders/color/fs.glsl");
+			shader = new Audace::ShaderProgram(vs, fs);
 			shader->create();
 			shader->bind();
 			break;
@@ -70,6 +59,7 @@ void android_main(android_app *app) {
 	Audace::AuLogger::init();
 	AU_ENGINE_LOG_INFO("Logging initialized");
 	app->onAppCmd = handleAndroidCmd;
+	fileLoader = new Audace::FileLoader(app->activity->assetManager);
 
 	AU_ENGINE_LOG_TRACE("Entering render loop");
 	while (true) {
@@ -91,6 +81,7 @@ void android_main(android_app *app) {
 			delete attr;
 			vertexArray->destroy();
 			delete vertexArray;
+			delete fileLoader;
 
 			window.close();
 			AU_ENGINE_LOG_TRACE("Exiting render loop");

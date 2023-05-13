@@ -17,7 +17,7 @@ bool AppController::init(android_app *app) {
 
 bool AppController::createXrSession() {
 	glGenFramebuffers(1, &framebuffer);
-	scene.init();
+	scene.init(androidApp->activity->assetManager);
 	return xrContext.createSession(window.getDisplay(), window.getContext());
 }
 
