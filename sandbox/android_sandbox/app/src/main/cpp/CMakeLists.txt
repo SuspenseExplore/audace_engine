@@ -29,6 +29,7 @@ add_library( # Sets the name of the library.
 		# Provides a relative path to your source file(s).
 		main.cpp
 		EglWindow.cpp
+		AppController.cpp
 		${ENGINE_DIR}/AuLogger.cpp
 		${ENGINE_DIR}/android_platform/FileLoader.cpp
 		${ENGINE_DIR}/renderer/DataBuffer.cpp

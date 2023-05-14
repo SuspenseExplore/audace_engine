@@ -9,6 +9,7 @@ add_executable(
 	sandbox_glfw
 	include/glad.c
 	main.cpp
+	AppController.cpp
 	${ENGINE_DIR}/AuLogger.cpp
 	${ENGINE_DIR}/glfw_platform/FileLoader.cpp
 	${ENGINE_DIR}/renderer/DataBuffer.cpp
