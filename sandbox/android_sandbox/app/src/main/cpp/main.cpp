@@ -18,6 +18,7 @@ void handleAndroidCmd(android_app *app, int32_t cmd) {
 		case APP_CMD_INIT_WINDOW:
 			appController->createWindow();
 			AU_RENDERER_LOG_TRACE("Opened window");
+			appController->windowInitialized();
 
 			break;
 	}

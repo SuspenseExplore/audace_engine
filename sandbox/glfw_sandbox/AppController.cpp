@@ -57,17 +57,32 @@ namespace Audace
 		AU_RENDERER_LOG_TRACE("Renderer initialized");
 	}
 
+	void AppController::pollSystemEvents()
+	{
+		glfwPollEvents();
+	}
+
 	void AppController::runGameLoop()
 	{
 		AU_ENGINE_LOG_TRACE("Entering render loop");
-		while (!glfwWindowShouldClose(window))
+		while (true)
 		{
-			glfwPollEvents();
-			glClear(GL_COLOR_BUFFER_BIT);
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-			glfwSwapBuffers(window);
+			pollSystemEvents();
+
+			if (glfwWindowShouldClose(window)) {
+				shutdown();
+				return;
+			}
+			renderFrame();
 		}
 		AU_ENGINE_LOG_TRACE("Exiting render loop");
+	}
+
+	void AppController::renderFrame()
+	{
+		glClear(GL_COLOR_BUFFER_BIT);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		glfwSwapBuffers(window);
 	}
 
 	void AppController::shutdown()

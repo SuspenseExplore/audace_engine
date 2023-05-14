@@ -18,7 +18,7 @@
 namespace Audace {
 	class AppController : public EngineEventListener {
 		android_app *androidApp;
-		FileLoader *fileLoader;
+		FileLoader fileLoader;
 		DataBuffer *buffer;
 		ShaderProgram *shader;
 		VertexArray *vertexArray;
@@ -26,11 +26,11 @@ namespace Audace {
 	public:
 		EglWindow window;
 
-		AppController(android_app *app) : androidApp(app) {
-			fileLoader = new FileLoader(app->activity->assetManager);
+		AppController(android_app *app) : androidApp(app), fileLoader(app->activity->assetManager) {
 		}
 		bool createWindow();
 		void runGameLoop();
+		void renderFrame();
 		void shutdown();
 
 		static void pollSystemEvents(android_app *app);

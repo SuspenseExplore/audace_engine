@@ -25,7 +25,9 @@ namespace Audace
 		AppController() : fileLoader("../../assets/") {}
 
 		bool createWindow(int width, int height, std::string title);
+		void pollSystemEvents();
 		void runGameLoop();
+		void renderFrame();
 		void shutdown();
 
 		void windowInitialized() override;

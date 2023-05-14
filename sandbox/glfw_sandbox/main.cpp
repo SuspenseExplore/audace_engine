@@ -13,8 +13,6 @@ int main()
 	}
 
 	appController.runGameLoop();
-
-	appController.shutdown();
 	
 	AU_ENGINE_LOG_TRACE("Application terminating normally");
 	return 0;

@@ -13,6 +13,10 @@ float verts[] = {
 namespace Audace {
 	bool AppController::createWindow() {
 		window.open(androidApp);
+		return true;
+	}
+
+	void AppController::windowInitialized() {
 		buffer = new DataBuffer(verts, sizeof(verts), GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 		buffer->create();
 		buffer->bind();
@@ -25,16 +29,11 @@ namespace Audace {
 		buffer->unbind();
 		vertexArray->bind();
 
-		std::string vs = fileLoader->textFileToString("shaders/color/vs.glsl");
-		std::string fs = fileLoader->textFileToString("shaders/color/fs.glsl");
+		std::string vs = fileLoader.textFileToString("shaders/color/vs.glsl");
+		std::string fs = fileLoader.textFileToString("shaders/color/fs.glsl");
 		shader = new Audace::ShaderProgram(vs, fs);
 		shader->create();
 		shader->bind();
-		return true;
-	}
-
-	void AppController::windowInitialized() {
-
 	}
 
 	void AppController::pollSystemEvents(android_app *app) {
@@ -60,11 +59,15 @@ namespace Audace {
 				return;
 			}
 
-			glClear(GL_COLOR_BUFFER_BIT);
-			buffer->bind();
-			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-			window.endFrame();
+			renderFrame();
 		}
+	}
+
+	void AppController::renderFrame() {
+		glClear(GL_COLOR_BUFFER_BIT);
+		buffer->bind();
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		window.endFrame();
 	}
 
 	void AppController::shutdown() {
@@ -74,6 +77,5 @@ namespace Audace {
 		delete shader;
 		vertexArray->destroy();
 		delete vertexArray;
-		delete fileLoader;
 	}
 }
