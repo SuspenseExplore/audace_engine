@@ -5,10 +5,7 @@
 #include "glfw3.h"
 #include "EngineEventListener.h"
 #include "FileLoader.h"
-#include "renderer/DataBuffer.h"
-#include "renderer/ShaderProgram.h"
-#include "renderer/VertexAttribute.h"
-#include "renderer/VertexArray.h"
+#include "scene/Scene.h"
 
 namespace Audace
 {
@@ -16,13 +13,11 @@ namespace Audace
 	{
 
 	public:
-		FileLoader fileLoader;
 		GLFWwindow *window;
-		DataBuffer *buffer;
-		VertexArray *vertexArray;
-		ShaderProgram *shaderProgram;
+		FileLoader *fileLoader;
+		Scene *scene;
 
-		AppController() : fileLoader("../../assets/") {}
+		AppController(){}
 
 		bool createWindow(int width, int height, std::string title);
 		void pollSystemEvents();

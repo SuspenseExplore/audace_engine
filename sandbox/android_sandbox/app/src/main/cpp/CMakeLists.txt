@@ -9,6 +9,7 @@ cmake_minimum_required(VERSION 3.18.1)
 
 project("android_sandbox")
 set(ENGINE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../../engine_src)
+set(APP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../app_src)
 
 # add android's native app glue
 add_library(native_app_glue STATIC
@@ -36,6 +37,7 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/renderer/ShaderProgram.cpp
 		${ENGINE_DIR}/renderer/VertexAttribute.cpp
 		${ENGINE_DIR}/renderer/VertexArray.cpp
+		${APP_DIR}/MainScene.cpp
 		)
 
 # Searches for a specified prebuilt library and stores the path as a
@@ -58,6 +60,7 @@ target_include_directories(
 		${ENGINE_DIR}
 		${ENGINE_DIR}/include
 		${ENGINE_DIR}/android_platform
+		${APP_DIR}
 		${CMAKE_CURRENT_SOURCE_DIR})
 
 # Specifies libraries CMake should link to your target library. You

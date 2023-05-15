@@ -10,27 +10,27 @@
 #include "EngineEventListener.h"
 #include "EglWindow.h"
 #include "FileLoader.h"
-#include "renderer/DataBuffer.h"
-#include "renderer/ShaderProgram.h"
-#include "renderer/VertexAttribute.h"
-#include "renderer/VertexArray.h"
+#include "MainScene.h"
 
 namespace Audace {
 	class AppController : public EngineEventListener {
 		android_app *androidApp;
-		FileLoader fileLoader;
-		DataBuffer *buffer;
-		ShaderProgram *shader;
-		VertexArray *vertexArray;
+		FileLoader *fileLoader;
+		Scene *scene;
 
 	public:
 		EglWindow window;
 
-		AppController(android_app *app) : androidApp(app), fileLoader(app->activity->assetManager) {
+		AppController(android_app *app) : androidApp(app),
+										  fileLoader(new FileLoader(app->activity->assetManager)) {
 		}
+
 		bool createWindow();
+
 		void runGameLoop();
+
 		void renderFrame();
+
 		void shutdown();
 
 		static void pollSystemEvents(android_app *app);

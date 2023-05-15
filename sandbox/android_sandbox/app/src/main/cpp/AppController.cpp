@@ -4,12 +4,6 @@
 
 #include "AppController.h"
 
-float verts[] = {
-		-0.5f, -0.5f,
-		-0.5f, 0.5f,
-		0.5f, -0.5f,
-		0.5f, 0.5f};
-
 namespace Audace {
 	bool AppController::createWindow() {
 		window.open(androidApp);
@@ -17,23 +11,8 @@ namespace Audace {
 	}
 
 	void AppController::windowInitialized() {
-		buffer = new DataBuffer(verts, sizeof(verts), GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-		buffer->create();
-		buffer->bind();
-
-		VertexAttribute *attr = new VertexAttribute(0, 2, GL_FLOAT, false, sizeof(float) * 2, 0);
-		std::vector<VertexAttribute*> attrs;
-		attrs.push_back(attr);
-		vertexArray = new VertexArray(attrs);
-		vertexArray->create();
-		buffer->unbind();
-		vertexArray->bind();
-
-		std::string vs = fileLoader.textFileToString("shaders/color/vs.glsl");
-		std::string fs = fileLoader.textFileToString("shaders/color/fs.glsl");
-		shader = new Audace::ShaderProgram(vs, fs);
-		shader->create();
-		shader->bind();
+		scene = new MainScene(fileLoader);
+		scene->loadAssets();
 	}
 
 	void AppController::pollSystemEvents(android_app *app) {
@@ -64,18 +43,12 @@ namespace Audace {
 	}
 
 	void AppController::renderFrame() {
-		glClear(GL_COLOR_BUFFER_BIT);
-		buffer->bind();
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		scene->render();
 		window.endFrame();
 	}
 
 	void AppController::shutdown() {
-		buffer->destroy();
-		delete buffer;
-		shader->destroy();
-		delete shader;
-		vertexArray->destroy();
-		delete vertexArray;
+		scene->disposeAssets();
+		delete scene;
 	}
 }

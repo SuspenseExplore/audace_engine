@@ -3,19 +3,21 @@ cmake_minimum_required(VERSION 3.18.1)
 project("sandbox_glfw")
 
 set(ENGINE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../engine_src)
-set(APP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
+set(APP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../app_src)
 
 add_executable(
 	sandbox_glfw
 	include/glad.c
 	main.cpp
 	AppController.cpp
+	${APP_DIR}/MainScene.cpp
 	${ENGINE_DIR}/AuLogger.cpp
 	${ENGINE_DIR}/glfw_platform/FileLoader.cpp
 	${ENGINE_DIR}/renderer/DataBuffer.cpp
 	${ENGINE_DIR}/renderer/ShaderProgram.cpp
 	${ENGINE_DIR}/renderer/VertexAttribute.cpp
 	${ENGINE_DIR}/renderer/VertexArray.cpp
+	${ENGINE_DIR}/scene/Scene.cpp
 )
 
 target_include_directories(
@@ -28,6 +30,7 @@ target_include_directories(
 	${ENGINE_DIR}
 	${ENGINE_DIR}/glfw_platform
 	${ENGINE_DIR}/include
+	${APP_DIR}
 )
 
 add_library(
