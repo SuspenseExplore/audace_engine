@@ -8,15 +8,18 @@ set(APP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../app_src)
 add_executable(
 	sandbox_glfw
 	include/glad.c
+	${ENGINE_DIR}/stb_image.cpp
 	main.cpp
 	AppController.cpp
 	${APP_DIR}/MainScene.cpp
 	${ENGINE_DIR}/AuLogger.cpp
+	${ENGINE_DIR}/glfw_platform/ImageData.cpp
 	${ENGINE_DIR}/glfw_platform/FileLoader.cpp
 	${ENGINE_DIR}/renderer/DataBuffer.cpp
 	${ENGINE_DIR}/renderer/ShaderProgram.cpp
 	${ENGINE_DIR}/renderer/VertexAttribute.cpp
 	${ENGINE_DIR}/renderer/VertexArray.cpp
+	${ENGINE_DIR}/renderer/Texture2d.cpp
 	${ENGINE_DIR}/scene/Scene.cpp
 )
 

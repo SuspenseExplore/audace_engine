@@ -1,11 +1,16 @@
 #include "au_renderer.h"
 #include "MainScene.h"
+#include "ImageData.h"
 
 float verts[] = {
 	-0.5f, -0.5f,
 	-0.5f, 0.5f,
 	0.5f, -0.5f,
 	0.5f, 0.5f};
+
+MainScene::~MainScene() {
+	disposeAssets();
+}
 
 void MainScene::loadAssets()
 {
@@ -27,6 +32,12 @@ void MainScene::loadAssets()
 	shaderProgram = new Audace::ShaderProgram(vs, fs);
 	shaderProgram->create();
 	shaderProgram->bind();
+	
+	Audace::ImageData img = fileLoader->readImageFile("images/backgroundColorGrass.png");
+	texture = new Audace::Texture2d(img);
+	texture->create();
+	texture->bind(1);
+	shaderProgram->setUniformInt("tex1", 1);
 }
 
 void MainScene::render()

@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.18.1)
 
 # Declares and names the project.
 
-project("android_sandbox")
+project(android_sandbox)
 set(ENGINE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../../engine_src)
 set(APP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../app_src)
 
@@ -32,11 +32,14 @@ add_library( # Sets the name of the library.
 		EglWindow.cpp
 		AppController.cpp
 		${ENGINE_DIR}/AuLogger.cpp
+		${ENGINE_DIR}/stb_image.cpp
 		${ENGINE_DIR}/android_platform/FileLoader.cpp
+		${ENGINE_DIR}/android_platform/ImageData.cpp
 		${ENGINE_DIR}/renderer/DataBuffer.cpp
 		${ENGINE_DIR}/renderer/ShaderProgram.cpp
 		${ENGINE_DIR}/renderer/VertexAttribute.cpp
 		${ENGINE_DIR}/renderer/VertexArray.cpp
+		${ENGINE_DIR}/renderer/Texture2d.cpp
 		${APP_DIR}/MainScene.cpp
 		)
 

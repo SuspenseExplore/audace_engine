@@ -68,7 +68,6 @@ namespace Audace
 
 	void AppController::shutdown()
 	{
-		scene->disposeAssets();
 		delete scene;
 		glfwTerminate();
 	}
