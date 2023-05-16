@@ -4,6 +4,7 @@
 namespace Audace {
 	class Scene {
 		public:
+		virtual ~Scene() {}
 		virtual void loadAssets() = 0;
 		virtual void render() = 0;
 		virtual void disposeAssets() = 0;

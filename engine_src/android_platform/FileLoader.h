@@ -9,16 +9,20 @@
 #include <android_native_app_glue.h>
 #include <string>
 #include <map>
+#include "ImageData.h"
 #include "renderer/ShaderProgram.h"
 
 namespace Audace {
 	class FileLoader {
 		AAssetManager *assetManager;
 
+		AAsset* getAsset(const std::string& path);
+		char* readAssetToBuffer(AAsset *asset);
+
 	public:
 		FileLoader(AAssetManager *assets) : assetManager(assets) {}
-		std::string textFileToString(std::string path);
-
+		std::string textFileToString(const std::string& path);
+		ImageData readImageFile(const std::string& path);
 	};
 }
 
