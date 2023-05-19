@@ -130,6 +130,7 @@ bool OpenxrContext::beginSession() {
 	XR_ERROR_BAIL("xrBeginSession", xrBeginSession(xrSession, &sessionBeginInfo));
 
 	XrPosef pose;
+	pose.position.x = pose.position.y = pose.position.z = 0;
 	XrVector3f axis{1.0f, 0.0f, 0.0f};
 	XrQuaternionf_CreateFromAxisAngle(&pose.orientation, &axis, MATH_PI / -2.f);
 	XrReferenceSpaceCreateInfo referenceSpaceCreateInfo{
