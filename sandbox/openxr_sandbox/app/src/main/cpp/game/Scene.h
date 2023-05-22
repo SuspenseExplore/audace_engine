@@ -13,6 +13,7 @@
 #include "renderer/VertexAttribute.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/VertexArray.h"
+#include "renderer/Texture2d.h"
 #include "openxr/OpenxrView.h"
 
 class Scene {
@@ -26,6 +27,7 @@ class Scene {
 	Audace::VertexAttribute *attr;
 	Audace::VertexArray *vertexArray;
 	Audace::ShaderProgram *shaderProgram;
+	Audace::Texture2d *texture;
 	GLuint mvpMatLocation;
 	GLuint colorLocation;
 

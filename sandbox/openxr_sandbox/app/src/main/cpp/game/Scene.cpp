@@ -7,6 +7,7 @@
 
 #include "audace_common.h"
 #include "openxr/xr_linear.h"
+#include "ImageData.h"
 #include "Scene.h"
 
 void Scene::init(AAssetManager *assetManager) {
@@ -33,6 +34,10 @@ void Scene::init(AAssetManager *assetManager) {
 	shaderProgram->bind();
 	mvpMatLocation = glGetUniformLocation(shaderProgram->getId(), "mvpMat");
 	colorLocation = glGetUniformLocation(shaderProgram->getId(), "uColor");
+
+	Audace::ImageData img = fileLoader->readImageFile("images/backgroundColorGrass.png");
+	texture = new Audace::Texture2d(img);
+	texture->create();
 }
 
 void Scene::render(OpenxrView view) {
@@ -50,7 +55,10 @@ void Scene::render(OpenxrView view) {
 
 	shaderProgram->bind();
 	glUniformMatrix4fv(mvpMatLocation, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&vpMat));
-	glUniform4f(colorLocation, 1, 0, 0, 0);
+
+	texture->bind(1);
+	shaderProgram->setUniformInt("tex1", 1);
+
 	vertexArray->bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
