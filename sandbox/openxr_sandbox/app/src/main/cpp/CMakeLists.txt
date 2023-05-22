@@ -54,7 +54,7 @@ set_property(
         openxr_loader
         PROPERTY
         IMPORTED_LOCATION
-        D:/oculus_openxr_sdk/OpenXR/Libs/Android/${ANDROID_ABI}/${CMAKE_BUILD_TYPE}/libopenxr_loader.so
+        ${CMAKE_CURRENT_SOURCE_DIR}/lib/libopenxr_loader.so
 )
 
 # Searches for a specified prebuilt library and stores the path as a
