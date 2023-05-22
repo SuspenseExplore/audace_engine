@@ -166,14 +166,19 @@ bool AppController::renderLayer(std::vector<XrCompositionLayerProjectionView> &p
 void AppController::renderView(OpenxrView view) {
 
 	glViewport(0, 0, view.getWidth(), view.getHeight());
+	AU_CHECK_GL_ERRORS();
 
 //	glFrontFace(GL_CW);
 //	glCullFace(GL_BACK);
 	glDisable(GL_CULL_FACE);
+	AU_CHECK_GL_ERRORS();
 	glDisable(GL_DEPTH_TEST);
+	AU_CHECK_GL_ERRORS();
 
 	scene.render(view);
 
 	glBindVertexArray(0);
+	AU_CHECK_GL_ERRORS();
 	glUseProgram(0);
+	AU_CHECK_GL_ERRORS();
 }

@@ -7,7 +7,7 @@ namespace Audace
 {
 	class DataBuffer
 	{
-		GLuint glid = 0;
+		GLuint glid = -1;
 		void *data;
 		GLuint size;
 		GLuint target;
@@ -24,6 +24,7 @@ namespace Audace
 			if (glid > 0)
 			{
 				glDeleteBuffers(1, &glid);
+				AU_CHECK_GL_ERRORS();
 				AU_RENDERER_LOG_TRACE("Destroyed DataBuffer {}", glid);
 				glid = -1;
 			}

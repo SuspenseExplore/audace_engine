@@ -55,11 +55,14 @@ void Scene::render(OpenxrView view) {
 
 	shaderProgram->bind();
 	glUniformMatrix4fv(mvpMatLocation, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&vpMat));
+	AU_CHECK_GL_ERRORS();
 
 	texture->bind(1);
 	shaderProgram->setUniformInt("tex1", 1);
 
 	vertexArray->bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	AU_CHECK_GL_ERRORS();
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	AU_CHECK_GL_ERRORS();
 }

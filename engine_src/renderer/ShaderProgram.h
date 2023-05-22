@@ -7,7 +7,7 @@
 
 namespace Audace {
 	class ShaderProgram {
-		GLuint glid;
+		GLuint glid = -1;
 		std::string vsSrc;
 		std::string fsSrc;
 		std::map<std::string, GLint> uniforms;
