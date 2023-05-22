@@ -17,10 +17,10 @@
 #include "openxr/OpenxrView.h"
 
 class Scene {
-	float verts[12] = {-1.0f, -1.0f, -2.0f,
-				   -1.0f, 1.0f, -2.0f,
-				   1.0f, -1.0f, -2.0f,
-				   1.0f, 1.0f, -2.0f,
+	float verts[12] = {0.0f, 0.0f, 0.0f,
+				   0.0f, 1.0f, 0.0f,
+				   1.0f, 0.0f, 0.0f,
+				   1.0f, 1.0f, 0.0f,
 	};
 	Audace::FileLoader *fileLoader;
 	Audace::DataBuffer *vertexBuffer;
@@ -28,8 +28,7 @@ class Scene {
 	Audace::VertexArray *vertexArray;
 	Audace::ShaderProgram *shaderProgram;
 	Audace::Texture2d *texture;
-	GLuint mvpMatLocation;
-	GLuint colorLocation;
+	GLuint vpMatLocation;
 
 public:
 	void init(AAssetManager *assetManager);

@@ -5,6 +5,9 @@
 #include <string>
 #include <vector>
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 #include "audace_common.h"
 #include "openxr/xr_linear.h"
 #include "ImageData.h"
@@ -32,8 +35,7 @@ void Scene::init(AAssetManager *assetManager) {
 	shaderProgram = new Audace::ShaderProgram(vs, fs);
 	shaderProgram->create();
 	shaderProgram->bind();
-	mvpMatLocation = glGetUniformLocation(shaderProgram->getId(), "mvpMat");
-	colorLocation = glGetUniformLocation(shaderProgram->getId(), "uColor");
+	vpMatLocation = glGetUniformLocation(shaderProgram->getId(), "vpMat");
 
 	Audace::ImageData img = fileLoader->readImageFile("images/backgroundColorGrass.png");
 	texture = new Audace::Texture2d(img);
@@ -41,6 +43,7 @@ void Scene::init(AAssetManager *assetManager) {
 }
 
 void Scene::render(OpenxrView view) {
+	shaderProgram->bind();
 	XrPosef pose = view.getViewData().pose;
 
 	XrMatrix4x4f projMat;
@@ -52,9 +55,13 @@ void Scene::render(OpenxrView view) {
 	XrMatrix4x4f_InvertRigidBody(&viewMat, &camMat);
 	XrMatrix4x4f vpMat;
 	XrMatrix4x4f_Multiply(&vpMat, &projMat, &viewMat);
+	shaderProgram->setUniformMat4("vpMat", reinterpret_cast<float*>(&vpMat));
+//	glUniformMatrix4fv(vpMatLocation, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&vpMat));
+	AU_CHECK_GL_ERRORS();
 
-	shaderProgram->bind();
-	glUniformMatrix4fv(mvpMatLocation, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&vpMat));
+	glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5, 1, 0));
+	worldMat = glm::rotate(worldMat, -glm::radians(90.0f), glm::vec3(1, 0, 0));
+	shaderProgram->setUniformMat4("worldMat", glm::value_ptr(worldMat));
 	AU_CHECK_GL_ERRORS();
 
 	texture->bind(1);

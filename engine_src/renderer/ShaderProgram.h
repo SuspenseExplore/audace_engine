@@ -23,6 +23,7 @@ namespace Audace {
 		GLuint getId() {return glid;}
 
 		void setUniformInt(std::string name, int value);
+		void setUniformMat4(std::string name, float *value);
 
 		static GLuint loadShader(const char *src, GLenum shaderType);
 	};

@@ -92,6 +92,11 @@ namespace Audace
 		AU_RENDERER_LOG_TRACE("Set int uniform in shader {} at location {} to value {}", glid, uniforms[name], value);
 	}
 
+	void ShaderProgram::setUniformMat4(std::string name, float *value) {
+		glUniformMatrix4fv(uniforms[name], 1, false, value);
+		AU_CHECK_GL_ERRORS();
+	}
+
 	GLuint ShaderProgram::loadShader(const char *src, GLenum shaderType)
 	{
 		GLuint shaderId = glCreateShader(shaderType);
