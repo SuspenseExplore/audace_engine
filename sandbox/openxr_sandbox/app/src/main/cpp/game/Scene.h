@@ -9,21 +9,16 @@
 #include <jni.h>
 #include <android_native_app_glue.h>
 #include "android_platform/FileLoader.h"
-#include "renderer/DataBuffer.h"
-#include "renderer/VertexAttribute.h"
 #include "renderer/ShaderProgram.h"
-#include "renderer/VertexArray.h"
 #include "renderer/Texture2d.h"
+#include "renderer/Sprite.h"
 #include "openxr/OpenxrView.h"
 
 class Scene {
 	Audace::FileLoader *fileLoader;
-	Audace::DataBuffer *vertexBuffer;
-	Audace::VertexAttribute *attr;
-	Audace::VertexArray *vertexArray;
+	Audace::Sprite *circleSprite;
 	Audace::ShaderProgram *shaderProgram;
 	Audace::Texture2d *texture;
-	GLuint vpMatLocation;
 
 public:
 	void init(AAssetManager *assetManager);

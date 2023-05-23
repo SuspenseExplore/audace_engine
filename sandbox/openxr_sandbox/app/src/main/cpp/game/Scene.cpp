@@ -20,25 +20,13 @@ void Scene::init(AAssetManager *assetManager) {
 	glClearColor(0, 0, 1, 1);
 //	glClearDepthf(1.0f);
 
-	float *verts = Audace::Shapes::circlePositions();
-	vertexBuffer = new Audace::DataBuffer(verts, sizeof(float) * 66, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-	vertexBuffer->create();
-	vertexBuffer->bind();
-	delete[] verts;
-
-	attr = new Audace::VertexAttribute(0, 3, GL_FLOAT, false, sizeof(float) * 3, 0);
-	std::vector<Audace::VertexAttribute*> attrs;
-	attrs.push_back(attr);
-	vertexArray = new Audace::VertexArray(attrs);
-	vertexArray->create();
-	vertexBuffer->unbind();
+	circleSprite = Audace::Shapes::squarePositions();
 
 	std::string vs = fileLoader->textFileToString("shaders/color/vs.glsl");
 	std::string fs = fileLoader->textFileToString("shaders/color/fs.glsl");
 	shaderProgram = new Audace::ShaderProgram(vs, fs);
 	shaderProgram->create();
 	shaderProgram->bind();
-	vpMatLocation = glGetUniformLocation(shaderProgram->getId(), "vpMat");
 
 	Audace::ImageData img = fileLoader->readImageFile("images/backgroundColorGrass.png");
 	texture = new Audace::Texture2d(img);
@@ -70,9 +58,8 @@ void Scene::render(OpenxrView view) {
 	texture->bind(1);
 	shaderProgram->setUniformInt("tex1", 1);
 
-	vertexArray->bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	AU_CHECK_GL_ERRORS();
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 22);
+	circleSprite->render();
 	AU_CHECK_GL_ERRORS();
 }
