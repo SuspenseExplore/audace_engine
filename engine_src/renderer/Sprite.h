@@ -22,12 +22,18 @@ namespace Audace {
 		int startIndex;
 		int vertexCount;
 		GLenum renderMode;
+		GLenum indexType;
 
 	public:
-		Sprite(DataBuffer *vertexBuffer, DataBuffer *indexBuffer, VertexArray *vertexArray,
+		Sprite(DataBuffer *vertexBuffer, VertexArray *vertexArray,
 			   int startIndex, int vertexCount, GLenum renderMode) :
-				vertexBuffer(vertexBuffer), indexBuffer(indexBuffer), vertexArray(vertexArray),
+				vertexBuffer(vertexBuffer), indexBuffer(nullptr), vertexArray(vertexArray),
 				startIndex(startIndex), vertexCount(vertexCount), renderMode(renderMode) {}
+
+		Sprite(DataBuffer *vertexBuffer, DataBuffer *indexBuffer, VertexArray *vertexArray,
+			   int startIndex, int vertexCount, GLenum renderMode, GLenum indexType) :
+				vertexBuffer(vertexBuffer), indexBuffer(indexBuffer), vertexArray(vertexArray),
+				startIndex(startIndex), vertexCount(vertexCount), renderMode(renderMode), indexType(indexType) {}
 
 		void render();
 	};

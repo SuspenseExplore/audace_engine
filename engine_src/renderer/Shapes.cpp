@@ -10,27 +10,28 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 namespace Audace {
-	Sprite* Shapes::squarePositions() {
+	Sprite *Shapes::squarePositions() {
 		float *verts = new float[]{
 				0.0f, 0.0f, 0.0f,
 				0.0f, 1.0f, 0.0f,
 				1.0f, 0.0f, 0.0f,
 				1.0f, 1.0f, 0.0f};
-		DataBuffer *vertexBuffer = new DataBuffer(verts, sizeof(float) * 12, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+		DataBuffer *vertexBuffer = new DataBuffer(verts, sizeof(float) * 12, GL_ARRAY_BUFFER,
+												  GL_STATIC_DRAW);
 		vertexBuffer->create();
 		vertexBuffer->bind();
 
 		VertexAttribute *attr = new VertexAttribute(0, 3, GL_FLOAT, false, sizeof(float) * 3, 0);
-		std::vector<VertexAttribute*> attrs;
+		std::vector<VertexAttribute *> attrs;
 		attrs.push_back(attr);
 		VertexArray *vertexArray = new VertexArray(attrs);
 		vertexArray->create();
 
-		Sprite *sprite = new Sprite(vertexBuffer, nullptr, vertexArray, 0, 4, GL_TRIANGLE_STRIP);
+		Sprite *sprite = new Sprite(vertexBuffer, vertexArray, 0, 4, GL_TRIANGLE_STRIP);
 		return sprite;
 	}
 
-	Sprite* Shapes::circlePositions() {
+	Sprite *Shapes::circlePositions() {
 		glm::vec4 center = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 		glm::vec4 edge = glm::vec4(0.5f, 0.0f, 0.0f, 1.0f);
 		glm::vec3 axis = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -42,7 +43,8 @@ namespace Audace {
 		verts[1] = center.y;
 		verts[2] = center.z;
 		for (int i = 0; i <= STEPS; i++) {
-			glm::mat4 mat = glm::rotate(glm::mat4(1.0f), (float) i * glm::two_pi<float>() / (float) STEPS, axis);
+			glm::mat4 mat = glm::rotate(glm::mat4(1.0f),
+										(float) i * glm::two_pi<float>() / (float) STEPS, axis);
 			glm::vec3 p = mat * edge;
 			AU_RENDERER_LOG_DEBUG("{},{},{}", p.x, p.y, p.z);
 			verts[n + 0] = p.x;
@@ -50,17 +52,76 @@ namespace Audace {
 			verts[n + 2] = p.z;
 			n += 3;
 		}
-		DataBuffer *vertexBuffer = new DataBuffer(verts, sizeof(float) * COUNT, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+		DataBuffer *vertexBuffer = new DataBuffer(verts, sizeof(float) * COUNT, GL_ARRAY_BUFFER,
+												  GL_STATIC_DRAW);
 		vertexBuffer->create();
 		vertexBuffer->bind();
 
 		VertexAttribute *attr = new VertexAttribute(0, 3, GL_FLOAT, false, sizeof(float) * 3, 0);
-		std::vector<VertexAttribute*> attrs;
+		std::vector<VertexAttribute *> attrs;
 		attrs.push_back(attr);
 		VertexArray *vertexArray = new VertexArray(attrs);
 		vertexArray->create();
 
-		Sprite *sprite = new Sprite(vertexBuffer, nullptr, vertexArray, 0, STEPS + 2, GL_TRIANGLE_FAN);
+		Sprite *sprite = new Sprite(vertexBuffer, vertexArray, 0, STEPS + 2, GL_TRIANGLE_FAN);
+		return sprite;
+	}
+
+	Sprite *Shapes::cubePositions() {
+		float *verts = new float[]{
+				// -x
+				0.0f, 0.0f, 0.0f,
+				0.0f, 0.0f, 1.0f,
+				0.0f, 1.0f, 0.0f,
+				0.0f, 1.0f, 1.0f,
+				// +x
+				1.0f, 0.0f, 0.0f,
+				1.0f, 0.0f, 1.0f,
+				1.0f, 1.0f, 0.0f,
+				1.0f, 1.0f, 1.0f,
+				// -y
+//				0.0f, 0.0f, 0.0f,
+//				0.0f, 0.0f, 1.0f,
+//				1.0f, 0.0f, 0.0f,
+//				1.0f, 0.0f, 1.0f,
+				// -z
+//				0.0f, 0.0f, 0.0f,
+//				0.0f, 1.0f, 0.0f,
+//				1.0f, 0.0f, 0.0f,
+//				1.0f, 1.0f, 0.0f
+		};
+
+		unsigned short *indices = new unsigned short[]{
+				0, 1, 2,
+				1, 2, 3,
+				4, 5, 6,
+				5, 6, 7,
+				0, 1, 4,
+				1, 4, 5,
+				2, 3, 6,
+				3, 6, 7,
+				0, 2, 4,
+				2, 4, 6,
+				1, 3, 5,
+				3, 5, 7
+		};
+		DataBuffer *vertexBuffer = new DataBuffer(verts, sizeof(float) * 24, GL_ARRAY_BUFFER,
+												  GL_STATIC_DRAW);
+		vertexBuffer->create();
+		vertexBuffer->bind();
+
+		DataBuffer *indexBuffer = new DataBuffer(indices, sizeof(unsigned short) * 36,
+												 GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
+		indexBuffer->create();
+
+		VertexAttribute *attr = new VertexAttribute(0, 3, GL_FLOAT, false, sizeof(float) * 3, 0);
+		std::vector<VertexAttribute *> attrs;
+		attrs.push_back(attr);
+		VertexArray *vertexArray = new VertexArray(attrs);
+		vertexArray->create();
+
+		Sprite *sprite = new Sprite(vertexBuffer, indexBuffer, vertexArray, 0, 36, GL_TRIANGLES,
+									GL_UNSIGNED_SHORT);
 		return sprite;
 	}
 }

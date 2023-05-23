@@ -20,7 +20,7 @@ void Scene::init(AAssetManager *assetManager) {
 	glClearColor(0, 0, 1, 1);
 //	glClearDepthf(1.0f);
 
-	circleSprite = Audace::Shapes::squarePositions();
+	circleSprite = Audace::Shapes::cubePositions();
 
 	std::string vs = fileLoader->textFileToString("shaders/color/vs.glsl");
 	std::string fs = fileLoader->textFileToString("shaders/color/fs.glsl");
@@ -50,8 +50,9 @@ void Scene::render(OpenxrView view) {
 //	glUniformMatrix4fv(vpMatLocation, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&vpMat));
 	AU_CHECK_GL_ERRORS();
 
-	glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5, 2, 1));
+	glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5, 0, 0));
 	worldMat = glm::rotate(worldMat, -glm::radians(90.0f), glm::vec3(1, 0, 0));
+	worldMat = glm::scale(worldMat, glm::vec3(0.5f, 0.5f, 0.5f));
 	shaderProgram->setUniformMat4("worldMat", glm::value_ptr(worldMat));
 	AU_CHECK_GL_ERRORS();
 

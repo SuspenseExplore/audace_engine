@@ -12,7 +12,7 @@ namespace Audace {
 		} else {
 			vertexArray->bind();
 			indexBuffer->bind();
-			glDrawElements(renderMode, vertexCount, GL_UNSIGNED_SHORT, (void*) startIndex);
+			glDrawElements(renderMode, vertexCount, indexType, (void*) startIndex);
 		}
 	}
 } // Audace

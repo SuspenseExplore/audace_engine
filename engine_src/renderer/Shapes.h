@@ -12,6 +12,7 @@ namespace Audace {
 	public:
 		static Sprite* squarePositions();
 		static Sprite* circlePositions();
+		static Sprite* cubePositions();
 	};
 }
 
