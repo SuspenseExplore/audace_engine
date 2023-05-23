@@ -12,6 +12,7 @@
 #include "openxr/xr_linear.h"
 #include "ImageData.h"
 #include "Scene.h"
+#include "renderer/Shapes.h"
 
 void Scene::init(AAssetManager *assetManager) {
 	fileLoader = new Audace::FileLoader(assetManager);
@@ -19,9 +20,11 @@ void Scene::init(AAssetManager *assetManager) {
 	glClearColor(0, 0, 1, 1);
 //	glClearDepthf(1.0f);
 
-	vertexBuffer = new Audace::DataBuffer(verts, sizeof(verts), GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+	float *verts = Audace::Shapes::circlePositions();
+	vertexBuffer = new Audace::DataBuffer(verts, sizeof(float) * 66, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 	vertexBuffer->create();
 	vertexBuffer->bind();
+	delete[] verts;
 
 	attr = new Audace::VertexAttribute(0, 3, GL_FLOAT, false, sizeof(float) * 3, 0);
 	std::vector<Audace::VertexAttribute*> attrs;
@@ -59,7 +62,7 @@ void Scene::render(OpenxrView view) {
 //	glUniformMatrix4fv(vpMatLocation, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&vpMat));
 	AU_CHECK_GL_ERRORS();
 
-	glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5, 1, 0));
+	glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5, 2, 1));
 	worldMat = glm::rotate(worldMat, -glm::radians(90.0f), glm::vec3(1, 0, 0));
 	shaderProgram->setUniformMat4("worldMat", glm::value_ptr(worldMat));
 	AU_CHECK_GL_ERRORS();
@@ -70,6 +73,6 @@ void Scene::render(OpenxrView view) {
 	vertexArray->bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	AU_CHECK_GL_ERRORS();
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 22);
 	AU_CHECK_GL_ERRORS();
 }

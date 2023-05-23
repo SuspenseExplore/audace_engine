@@ -75,7 +75,7 @@ bool EglWindow::init(android_app* app) {
 		LOGD("GL info: %s", info);
 	}
 
-	glEnable(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
 	AU_CHECK_GL_ERRORS();
 	glDisable(GL_DEPTH_TEST);
 	AU_CHECK_GL_ERRORS();
