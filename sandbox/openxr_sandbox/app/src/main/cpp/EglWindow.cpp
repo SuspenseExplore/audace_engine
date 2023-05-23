@@ -77,7 +77,7 @@ bool EglWindow::init(android_app* app) {
 
 	glDisable(GL_CULL_FACE);
 	AU_CHECK_GL_ERRORS();
-	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 	AU_CHECK_GL_ERRORS();
 
 	return true;

@@ -18,7 +18,7 @@ void Scene::init(AAssetManager *assetManager) {
 	fileLoader = new Audace::FileLoader(assetManager);
 
 	glClearColor(0, 0, 1, 1);
-//	glClearDepthf(1.0f);
+	glClearDepthf(1.0f);
 
 	circleSprite = Audace::Shapes::cubePositions();
 
