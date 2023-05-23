@@ -25,6 +25,7 @@ namespace Audace {
 
 		int width, height, channels;
 		stbi_uc* bytes = stbi_load_from_memory(reinterpret_cast<stbi_uc*>(buf), size, &width, &height, &channels, 3);
+		delete[] buf;
 		ImageData img(bytes, width, height, GL_RGB);
 		return img;
 	}

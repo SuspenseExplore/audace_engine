@@ -16,9 +16,12 @@
 
 class Scene {
 	Audace::FileLoader *fileLoader;
-	Audace::Sprite *circleSprite;
+	Audace::Sprite *boxSprite;
 	Audace::ShaderProgram *shaderProgram;
-	Audace::Texture2d *texture;
+	Audace::Texture2d *darkGridTex;
+	Audace::Texture2d *greenChecksTex;
+	Audace::Texture2d *orangeChecksTex;
+	Audace::Texture2d *purpleChecksTex;
 
 public:
 	void init(AAssetManager *assetManager);
