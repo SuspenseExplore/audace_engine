@@ -22,8 +22,8 @@ void Scene::init(AAssetManager *assetManager) {
 
 	boxSprite = Audace::Shapes::cubePositions();
 
-	std::string vs = fileLoader->textFileToString("shaders/proto_texture/vs.glsl");
-	std::string fs = fileLoader->textFileToString("shaders/proto_texture/fs.glsl");
+	std::string vs = fileLoader->textFileToString("shaders/standard/vs.glsl");
+	std::string fs = fileLoader->textFileToString("shaders/standard/fs.glsl");
 	shaderProgram = new Audace::ShaderProgram(vs, fs);
 	shaderProgram->create();
 	shaderProgram->bind();
@@ -60,8 +60,9 @@ void Scene::render(OpenxrView view) {
 	purpleChecksTex->bind(4);
 
 	shaderProgram->bind();
-	XrPosef pose = view.getViewData().pose;
+	shaderProgram->setUniformVec4("ambientLight", 1, 1, 0.6, 0.7f);
 
+	XrPosef pose = view.getViewData().pose;
 	XrMatrix4x4f projMat;
 	XrMatrix4x4f_CreateProjectionFov(&projMat, GRAPHICS_OPENGL_ES, view.getViewData().fov, 0.1f,
 									 100.0f);
