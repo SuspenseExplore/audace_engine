@@ -112,4 +112,74 @@ namespace Audace {
 									GL_UNSIGNED_SHORT);
 		return sprite;
 	}
+
+	Sprite *Shapes::cubePosNorm() {
+		float *verts = new float[]{
+				//-x
+				0, 0, 0, -1, 0, 0,
+				0, 0, 1, -1, 0, 0,
+				0, 1, 0, -1, 0, 0,
+				0, 1, 1, -1, 0, 0,
+				//+x
+				1, 0, 0,	1, 0, 0,
+				1, 0, 1,	1, 0, 0,
+				1, 1, 0,	1, 0, 0,
+				1, 1, 1,	1, 0, 0,
+				//-y
+				0, 0, 0,	0, -1, 0,
+				0, 0, 1,	0, -1, 0,
+				1, 0, 0,	0, -1, 0,
+				1, 0, 1,	0, -1, 0,
+				//+y
+				0, 1, 0,	0, 1, 0,
+				0, 1, 1,	0, 1, 0,
+				1, 1, 0,	0, 1, 0,
+				1, 1, 1,	0, 1, 0,
+				//-z
+				0, 0, 0,		0, 0, -1,
+				0, 1, 0,	0, 0, -1,
+				1, 0, 0,	0, 0, -1,
+				1, 1, 0,	0, 0, -1,
+				//+z
+				0, 0, 1,	0, 0, 1,
+				0, 1, 1,	0, 0, 1,
+				1, 0, 1,	0, 0, 1,
+				1, 1, 1,	0, 0, 1
+		};
+
+		unsigned short *indices = new unsigned short[]{
+				0, 1, 2,
+				1, 2, 3,
+				4, 5, 6,
+				5, 6, 7,
+				8, 9, 10,
+				9, 10, 11,
+				12, 13, 14,
+				13, 14, 15,
+				16, 17, 18,
+				17, 18, 19,
+				20, 21, 22,
+				21, 22, 23
+		};
+		DataBuffer *vertexBuffer = new DataBuffer(verts, sizeof(float) * 6 * 4 * 6, GL_ARRAY_BUFFER,
+												  GL_STATIC_DRAW);
+		vertexBuffer->create();
+		vertexBuffer->bind();
+
+		DataBuffer *indexBuffer = new DataBuffer(indices, sizeof(unsigned short) * 36,
+												 GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
+		indexBuffer->create();
+
+		VertexAttribute *posAttr = new VertexAttribute(0, 3, GL_FLOAT, false, sizeof(float) * 6, 0);
+		VertexAttribute *normAttr = new VertexAttribute(1, 3, GL_FLOAT, false, sizeof(float) * 6, sizeof(float) * 3);
+		std::vector<VertexAttribute *> attrs;
+		attrs.push_back(posAttr);
+		attrs.push_back(normAttr);
+		VertexArray *vertexArray = new VertexArray(attrs);
+		vertexArray->create();
+
+		Sprite *sprite = new Sprite(vertexBuffer, indexBuffer, vertexArray, 0, 36, GL_TRIANGLES,
+									GL_UNSIGNED_SHORT);
+		return sprite;
+	}
 }
