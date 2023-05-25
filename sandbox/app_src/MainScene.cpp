@@ -8,10 +8,6 @@ float verts[] = {
 	0.5f, -0.5f,
 	0.5f, 0.5f};
 
-MainScene::~MainScene() {
-	disposeAssets();
-}
-
 void MainScene::loadAssets()
 {
 	glClearColor(0, 0, 1, 0);

@@ -19,7 +19,6 @@ class MainScene : public Audace::Scene
 
 public:
 	MainScene(Audace::FileLoader *fileLoader) : fileLoader(fileLoader) {}
-	~MainScene() override;
 	void loadAssets() override;
 	void render() override;
 	void disposeAssets() override;
