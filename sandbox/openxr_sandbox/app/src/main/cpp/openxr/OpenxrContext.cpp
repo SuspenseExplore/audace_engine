@@ -132,7 +132,7 @@ bool OpenxrContext::beginSession() {
 	XrPosef pose;
 	pose.position.x = pose.position.y = pose.position.z = 0;
 	XrVector3f axis{1.0f, 0.0f, 0.0f};
-	XrQuaternionf_CreateFromAxisAngle(&pose.orientation, &axis, 0);
+	XrQuaternionf_CreateFromAxisAngle(&pose.orientation, &axis, MATH_PI / -2.0f);
 	XrReferenceSpaceCreateInfo referenceSpaceCreateInfo{
 			XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
 

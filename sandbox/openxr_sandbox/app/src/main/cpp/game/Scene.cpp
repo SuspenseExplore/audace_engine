@@ -57,8 +57,8 @@ void Scene::render(OpenxrView view) {
 	XrPosef pose = view.getViewData().pose;
 
 	darkGridTex->bind(1);
-	orangeChecksTex->bind(2);
-	greenChecksTex->bind(3);
+	greenChecksTex->bind(2);
+	orangeChecksTex->bind(3);
 	purpleChecksTex->bind(4);
 
 	// make the light orbit a point over time
@@ -68,7 +68,7 @@ void Scene::render(OpenxrView view) {
 
 	shaderProgram->bind();
 	shaderProgram->setUniformVec4("ambientLight", 0.2, 0.2, 1, 0.2f);
-	shaderProgram->setUniformVec4("diffusePos", 0 + x, 0, 0 + y, 0);
+	shaderProgram->setUniformVec4("diffusePos", 0 + x, 0 + y, 0, 0);
 	shaderProgram->setUniformVec4("diffuseColor", 0.75, 0.5, 0.2, 5);
 	shaderProgram->setUniformVec4("viewPos", pose.position.x, pose.position.y, pose.position.z, 0);
 
@@ -87,9 +87,9 @@ void Scene::render(OpenxrView view) {
 	AU_CHECK_GL_ERRORS();
 
 	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(-10, -2, -10));
+		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(-10, -10, -2));
 //		worldMat = glm::rotate(worldMat, glm::radians(0.0f), glm::vec3(1, 0, 0));
-		worldMat = glm::scale(worldMat, glm::vec3(20.0f, 1.0f, 20));
+		worldMat = glm::scale(worldMat, glm::vec3(20.0f, 20.0f, 1.0f));
 		shaderProgram->setUniformMat4("worldMat", glm::value_ptr(worldMat));
 		shaderProgram->setUniformVec2("textureScale", 10, 10);
 		AU_CHECK_GL_ERRORS();
@@ -100,9 +100,9 @@ void Scene::render(OpenxrView view) {
 		AU_CHECK_GL_ERRORS();
 	}
 	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(5, 1, -1));
+		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(10, 0, 0));
 		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(0, 1, 0));
-		worldMat = glm::scale(worldMat, glm::vec3(2.0f, 2.0f, 15));
+		worldMat = glm::scale(worldMat, glm::vec3(5, 5, 5));
 		shaderProgram->setUniformMat4("worldMat", glm::value_ptr(worldMat));
 		shaderProgram->setUniformVec2("textureScale", 2, 2);
 		AU_CHECK_GL_ERRORS();
@@ -113,9 +113,9 @@ void Scene::render(OpenxrView view) {
 		AU_CHECK_GL_ERRORS();
 	}
 	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(-5, -1, -7.2));
-		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(0, 1, 0));
-		worldMat = glm::scale(worldMat, glm::vec3(2.0f, 5.0f, 6));
+		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 10, 0));
+//		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(0, 1, 0));
+		worldMat = glm::scale(worldMat, glm::vec3(5, 5, 5));
 		shaderProgram->setUniformMat4("worldMat", glm::value_ptr(worldMat));
 		shaderProgram->setUniformVec2("textureScale", 2, 2);
 		AU_CHECK_GL_ERRORS();
@@ -126,9 +126,9 @@ void Scene::render(OpenxrView view) {
 		AU_CHECK_GL_ERRORS();
 	}
 	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(-8, 0, -2));
-		worldMat = glm::rotate(worldMat, glm::radians(45.0f), glm::vec3(0, 0, 1));
-		worldMat = glm::scale(worldMat, glm::vec3(2.0f, 5.0f, 10));
+		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 10));
+//		worldMat = glm::rotate(worldMat, glm::radians(45.0f), glm::vec3(0, 0, 1));
+		worldMat = glm::scale(worldMat, glm::vec3(5, 5, 5));
 		shaderProgram->setUniformMat4("worldMat", glm::value_ptr(worldMat));
 		shaderProgram->setUniformVec2("textureScale", 2, 2);
 		AU_CHECK_GL_ERRORS();

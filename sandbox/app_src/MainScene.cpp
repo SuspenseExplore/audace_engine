@@ -49,7 +49,7 @@ void MainScene::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glm::vec3 cameraPos = glm::vec3(10.0f, -10.0f, 2.0f);
+	glm::vec3 cameraPos = glm::vec3(-5.0f, -30.0f, 2.0f);
 
 	darkGridTex->bind(1);
 	greenChecksTex->bind(2);
@@ -81,27 +81,27 @@ void MainScene::render()
 		boxSprite->render();
 	}
 	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, -1.0f, 1.0f));
+		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(10, 0, 0));
 		// worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		worldMat = glm::scale(worldMat, glm::vec3(2.0f, 15.0f, 2.0f));
+		worldMat = glm::scale(worldMat, glm::vec3(5, 5, 5));
 		shaderProgram->setUniformMat4("worldMat", glm::value_ptr(worldMat));
 		shaderProgram->setUniformInt("tex1", 2);
 		shaderProgram->setUniformVec2("textureScale", 2, 2);
 		boxSprite->render();
 	}
 	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(-5.0f, -7.2f, -1.0f));
-		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		worldMat = glm::scale(worldMat, glm::vec3(2.0f, 6.0f, 5.0f));
+		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 10, 0));
+		// worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		worldMat = glm::scale(worldMat, glm::vec3(5, 5, 5));
 		shaderProgram->setUniformMat4("worldMat", glm::value_ptr(worldMat));
 		shaderProgram->setUniformInt("tex1", 3);
 		shaderProgram->setUniformVec2("textureScale", 2, 2);
 		boxSprite->render();
 	}
 	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(-8.0f, -2.0f, 0.0f));
-		worldMat = glm::rotate(worldMat, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		worldMat = glm::scale(worldMat, glm::vec3(2.0f, 10.0f, 5.0f));
+		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 10));
+		// worldMat = glm::rotate(worldMat, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		worldMat = glm::scale(worldMat, glm::vec3(5, 5, 5));
 		shaderProgram->setUniformMat4("worldMat", glm::value_ptr(worldMat));
 		shaderProgram->setUniformInt("tex1", 4);
 		shaderProgram->setUniformVec2("textureScale", 2, 2);
