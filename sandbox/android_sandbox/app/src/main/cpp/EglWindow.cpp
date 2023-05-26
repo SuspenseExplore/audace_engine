@@ -69,7 +69,7 @@ bool EglWindow::open(android_app* app) {
 
 	glClearColor(1, 0, 1, 0);
 	glDisable(GL_CULL_FACE);
-	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 	initialized = true;
 
 	return true;

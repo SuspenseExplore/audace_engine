@@ -40,6 +40,8 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/renderer/VertexAttribute.cpp
 		${ENGINE_DIR}/renderer/VertexArray.cpp
 		${ENGINE_DIR}/renderer/Texture2d.cpp
+		${ENGINE_DIR}/renderer/Sprite.cpp
+		${ENGINE_DIR}/renderer/Shapes.cpp
 		${APP_DIR}/MainScene.cpp
 		)
 
