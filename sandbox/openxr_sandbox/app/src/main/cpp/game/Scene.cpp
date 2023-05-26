@@ -36,13 +36,13 @@ void Scene::init(AAssetManager *assetManager) {
 	}
 	{
 		Audace::ImageData img = fileLoader->readImageFile("images/green_checkerboard.png");
-		orangeChecksTex = new Audace::Texture2d(img);
-		orangeChecksTex->create();
+		greenChecksTex = new Audace::Texture2d(img);
+		greenChecksTex->create();
 	}
 	{
 		Audace::ImageData img = fileLoader->readImageFile("images/orange_checkerboard.png");
-		greenChecksTex = new Audace::Texture2d(img);
-		greenChecksTex->create();
+		orangeChecksTex = new Audace::Texture2d(img);
+		orangeChecksTex->create();
 	}
 	{
 		Audace::ImageData img = fileLoader->readImageFile("images/purple_checkerboard.png");

@@ -3,19 +3,19 @@
 
 #include "scene/Scene.h"
 #include "FileLoader.h"
-#include "renderer/DataBuffer.h"
+#include "renderer/Sprite.h"
 #include "renderer/ShaderProgram.h"
-#include "renderer/VertexAttribute.h"
-#include "renderer/VertexArray.h"
 #include "renderer/Texture2d.h"
 
 class MainScene : public Audace::Scene
 {
 	Audace::FileLoader *fileLoader;
-	Audace::DataBuffer *buffer;
-	Audace::VertexArray *vertexArray;
+	Audace::Sprite *boxSprite;
 	Audace::ShaderProgram *shaderProgram;
-	Audace::Texture2d *texture;
+	Audace::Texture2d *darkGridTex;
+	Audace::Texture2d *greenChecksTex;
+	Audace::Texture2d *orangeChecksTex;
+	Audace::Texture2d *purpleChecksTex;
 
 public:
 	MainScene(Audace::FileLoader *fileLoader) : fileLoader(fileLoader) {}

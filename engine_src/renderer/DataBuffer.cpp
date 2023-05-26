@@ -3,9 +3,9 @@
 void Audace::DataBuffer::create() {
 	if (glid == -1) {
 		glGenBuffers(1, &glid);
+		AU_RENDERER_LOG_TRACE("Created DataBuffer with id {}", glid);
 		bind();
 		glBufferData(target, size, data, usage);
-		AU_RENDERER_LOG_TRACE("Created DataBuffer with id {}", glid);
 	}
 }
 

@@ -20,6 +20,8 @@ add_executable(
 	${ENGINE_DIR}/renderer/VertexAttribute.cpp
 	${ENGINE_DIR}/renderer/VertexArray.cpp
 	${ENGINE_DIR}/renderer/Texture2d.cpp
+	${ENGINE_DIR}/renderer/Sprite.cpp
+	${ENGINE_DIR}/renderer/Shapes.cpp
 	${ENGINE_DIR}/scene/Scene.cpp
 )
 

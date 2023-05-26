@@ -30,6 +30,7 @@ namespace Audace
 		gladLoadGLES2Loader((GLADloadproc)glfwGetProcAddress);
 		AU_RENDERER_LOG_TRACE("GLAD loaded");
 
+		glEnable(GL_DEPTH_TEST);
 		AU_RENDERER_LOG_TRACE("Renderer initialized");
 
 		fileLoader = new FileLoader("../../assets/");
