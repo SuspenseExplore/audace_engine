@@ -5,6 +5,8 @@
 #include <GLES3/gl32.h>
 
 #include "AppController.h"
+#include "openxr/openxr_common.h"
+#include "glm/glm.hpp"
 
 bool AppController::createWindow() {
 	return window.init(androidApp);
@@ -18,10 +20,13 @@ bool AppController::init(android_app *app) {
 bool AppController::createXrSession() {
 	glGenFramebuffers(1, &framebuffer);
 	scene.init(androidApp->activity->assetManager);
-	return xrContext.createSession(window.getDisplay(), window.getContext());
+	xrContext.createSession(window.getDisplay(), window.getContext());
+	xrContext.registerActions();
+
+	return true;
 }
 
-XrFrameState *AppController::startFrame() {
+XrFrameState* AppController::startFrame() {
 	if (xrContext.xrSession == XR_NULL_HANDLE) {
 		LOGD("Skipping frame render; session is null");
 		return nullptr;
@@ -40,6 +45,11 @@ XrFrameState *AppController::startFrame() {
 	res = xrBeginFrame(xrContext.xrSession, &frameBeginInfo);
 	if (res != XR_SUCCESS) {
 		LOGE("xrBeginFrame failed: %d", res);
+		return nullptr;
+	}
+
+	if (!xrContext.processActions(currentFrameState.predictedDisplayTime)) {
+		LOGE("Failed to process XR actions");
 		return nullptr;
 	}
 
@@ -175,6 +185,7 @@ void AppController::renderView(OpenxrView view) {
 	glEnable(GL_DEPTH_TEST);
 	AU_CHECK_GL_ERRORS();
 
+	scene.setLightPos(glm::vec3(xrContext.leftHandLocation.pose.position.x, xrContext.leftHandLocation.pose.position.y, xrContext.leftHandLocation.pose.position.z));
 	scene.render(view);
 
 	glBindVertexArray(0);

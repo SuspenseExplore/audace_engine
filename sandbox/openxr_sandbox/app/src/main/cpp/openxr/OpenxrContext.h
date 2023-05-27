@@ -24,10 +24,19 @@ public:
 	std::vector<XrViewConfigurationView> xrViewConfigs;
 	uint32_t viewCount;
 
+	XrPath leftHandPath{XR_NULL_PATH};
+	XrActionSet mainSceneActionSet{XR_NULL_HANDLE};
+	XrAction leftHandPoseAction{XR_NULL_HANDLE};
+	XrSpace leftHandSpace{XR_NULL_HANDLE};
+	XrSpaceLocation leftHandLocation{XR_TYPE_SPACE_LOCATION};
+
 	bool init(android_app* app);
 	bool createSession(EGLDisplay eglDisplay, EGLContext eglContext);
 	bool beginSession();
 	int64_t chooseViewFormat(XrSession session);
+
+	bool registerActions();
+	bool processActions(XrTime displayTime);
 
 	OpenxrView getView(uint32_t i) {return views[i];}
 };

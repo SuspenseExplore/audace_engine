@@ -105,6 +105,9 @@ static void handleXrEvents() {
 						}
 						break;
 					}
+					case XR_SESSION_STATE_FOCUSED: {
+						break;
+					}
 					case XR_SESSION_STATE_EXITING: {
 						exitRenderLoop = true;
 						// Do not attempt to restart because user closed this session.

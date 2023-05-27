@@ -68,7 +68,7 @@ void Scene::render(OpenxrView view) {
 
 	shaderProgram->bind();
 	shaderProgram->setUniformVec4("ambientLight", 0.2, 0.2, 1, 0.2f);
-	shaderProgram->setUniformVec4("diffusePos", 0 + x, 0 + y, 0, 0);
+	shaderProgram->setUniformVec4("diffusePos", lightPos.x, lightPos.y, lightPos.z, 0);
 	shaderProgram->setUniformVec4("diffuseColor", 0.75, 0.5, 0.2, 5);
 	shaderProgram->setUniformVec4("viewPos", pose.position.x, pose.position.y, pose.position.z, 0);
 
@@ -82,8 +82,8 @@ void Scene::render(OpenxrView view) {
 	XrMatrix4x4f_InvertRigidBody(&viewMat, &camMat);
 	XrMatrix4x4f vpMat;
 	XrMatrix4x4f_Multiply(&vpMat, &projMat, &viewMat);
+
 	shaderProgram->setUniformMat4("vpMat", reinterpret_cast<float *>(&vpMat));
-//	glUniformMatrix4fv(vpMatLocation, 1, GL_FALSE, reinterpret_cast<const GLfloat*>(&vpMat));
 	AU_CHECK_GL_ERRORS();
 
 	{

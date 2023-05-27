@@ -13,6 +13,7 @@
 #include "renderer/Texture2d.h"
 #include "renderer/Sprite.h"
 #include "openxr/OpenxrView.h"
+#include "glm/glm.hpp"
 
 class Scene {
 	Audace::FileLoader *fileLoader;
@@ -23,8 +24,11 @@ class Scene {
 	Audace::Texture2d *orangeChecksTex;
 	Audace::Texture2d *purpleChecksTex;
 
+	glm::vec3 lightPos;
+
 public:
 	void init(AAssetManager *assetManager);
+	void setLightPos(glm::vec3 pos) {lightPos = pos;}
 	void render(OpenxrView view);
 };
 
