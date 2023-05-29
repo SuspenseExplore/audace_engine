@@ -14,8 +14,12 @@
 #include "renderer/Sprite.h"
 #include "openxr/OpenxrView.h"
 #include "glm/glm.hpp"
+#include "input/BooleanActionHandler.h"
+
+class AppController;
 
 class Scene {
+	AppController *appController;
 	Audace::FileLoader *fileLoader;
 	Audace::Sprite *boxSprite;
 	Audace::ShaderProgram *shaderProgram;
@@ -24,10 +28,12 @@ class Scene {
 	Audace::Texture2d *orangeChecksTex;
 	Audace::Texture2d *purpleChecksTex;
 
+	Audace::BooleanActionHandler* lightOnAction;
 	glm::vec3 lightPos;
+	bool lightOn;
 
 public:
-	void init(AAssetManager *assetManager);
+	void init(AppController *controller, AAssetManager *assetManager);
 	void setLightPos(glm::vec3 pos) {lightPos = pos;}
 	void render(OpenxrView view);
 };

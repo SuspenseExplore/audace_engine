@@ -5,10 +5,13 @@
 #ifndef AUDACE_APPCONTROLLER_H
 #define AUDACE_APPCONTROLLER_H
 
+#include <vector>
+
 #include "audace_common.h"
 #include "EglWindow.h"
 #include "openxr/OpenxrContext.h"
 #include "game/Scene.h"
+#include "input/BooleanActionHandler.h"
 
 class AppController {
 	android_app *androidApp;
@@ -45,6 +48,8 @@ public:
 	OpenxrContext getXrContext() { return xrContext; }
 
 	EglWindow getWindow() { return window; }
+
+	void addInputEventHandler(Audace::BooleanActionHandler* handler) {xrContext.addBooleanActionHandler(handler);}
 };
 
 

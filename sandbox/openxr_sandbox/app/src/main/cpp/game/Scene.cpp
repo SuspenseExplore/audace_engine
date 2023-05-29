@@ -5,17 +5,25 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <functional>
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include "audace_common.h"
 #include "openxr/xr_linear.h"
+#include "AppController.h"
 #include "ImageData.h"
 #include "Scene.h"
 #include "renderer/Shapes.h"
 
-void Scene::init(AAssetManager *assetManager) {
+void Scene::init(AppController *controller, AAssetManager *assetManager) {
+	appController = controller;
+	std::vector<std::string> subPaths = {"/user/hand/left"};
+	lightOnAction = new Audace::BooleanActionHandler("light_on_action", "Light-on Action",
+													 "/user/hand/left/input/x/click", subPaths);
+	appController->addInputEventHandler(lightOnAction);
+
 	fileLoader = new Audace::FileLoader(assetManager);
 
 	glClearColor(0, 0, 1, 1);
@@ -52,6 +60,8 @@ void Scene::init(AAssetManager *assetManager) {
 }
 
 void Scene::render(OpenxrView view) {
+	lightOn = lightOnAction->getState();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	AU_CHECK_GL_ERRORS();
 	XrPosef pose = view.getViewData().pose;
@@ -69,7 +79,7 @@ void Scene::render(OpenxrView view) {
 	shaderProgram->bind();
 	shaderProgram->setUniformVec4("ambientLight", 0.2, 0.2, 1, 0.2f);
 	shaderProgram->setUniformVec4("diffusePos", lightPos.x, lightPos.y, lightPos.z, 0);
-	shaderProgram->setUniformVec4("diffuseColor", 0.75, 0.5, 0.2, 5);
+	shaderProgram->setUniformVec4("diffuseColor", 0.75, 0.5, 0.2, lightOn ? 2 : 1);
 	shaderProgram->setUniformVec4("viewPos", pose.position.x, pose.position.y, pose.position.z, 0);
 
 	XrMatrix4x4f projMat;

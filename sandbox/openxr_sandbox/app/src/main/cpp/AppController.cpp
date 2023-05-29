@@ -19,14 +19,14 @@ bool AppController::init(android_app *app) {
 
 bool AppController::createXrSession() {
 	glGenFramebuffers(1, &framebuffer);
-	scene.init(androidApp->activity->assetManager);
+	scene.init(this, androidApp->activity->assetManager);
 	xrContext.createSession(window.getDisplay(), window.getContext());
 	xrContext.registerActions();
 
 	return true;
 }
 
-XrFrameState* AppController::startFrame() {
+XrFrameState *AppController::startFrame() {
 	if (xrContext.xrSession == XR_NULL_HANDLE) {
 		LOGD("Skipping frame render; session is null");
 		return nullptr;
@@ -52,7 +52,6 @@ XrFrameState* AppController::startFrame() {
 		LOGE("Failed to process XR actions");
 		return nullptr;
 	}
-
 	return &currentFrameState;
 }
 
@@ -185,7 +184,9 @@ void AppController::renderView(OpenxrView view) {
 	glEnable(GL_DEPTH_TEST);
 	AU_CHECK_GL_ERRORS();
 
-	scene.setLightPos(glm::vec3(xrContext.leftHandLocation.pose.position.x, xrContext.leftHandLocation.pose.position.y, xrContext.leftHandLocation.pose.position.z));
+	scene.setLightPos(glm::vec3(xrContext.leftHandLocation.pose.position.x,
+								xrContext.leftHandLocation.pose.position.y,
+								xrContext.leftHandLocation.pose.position.z));
 	scene.render(view);
 
 	glBindVertexArray(0);
