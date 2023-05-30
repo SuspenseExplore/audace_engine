@@ -5,15 +5,15 @@
 #ifndef AU_BOOLEANACTIONEVENT_H
 #define AU_BOOLEANACTIONEVENT_H
 
+#include "InputEvent.h"
+
 namespace Audace {
-	class BooleanInputEvent {
+	class BooleanInputEvent : public InputEvent {
 	public:
 		const bool state;
-		const bool changed;
-		const long changedTime;
 
 		BooleanInputEvent(bool state, bool changed, long changedTime) :
-		state(state), changed(changed), changedTime(changedTime) {}
+		InputEvent(changed, changedTime), state(state) {}
 	};
 }
 

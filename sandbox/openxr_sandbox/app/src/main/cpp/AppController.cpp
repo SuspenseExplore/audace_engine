@@ -22,17 +22,30 @@ bool AppController::createXrSession() {
 	scene.init(this, androidApp->activity->assetManager);
 	xrContext.createSession(window.getDisplay(), window.getContext());
 
-	std::vector<std::string> subPaths = {"/user/hand/left"};
-	auto *lightOnAction = new Audace::BooleanInputHandler(
-			"light_on_action", "Light-on Action",
-			"/user/hand/left/input/x/click", subPaths,
-			[this](Audace::BooleanInputEvent event) {
-				if (event.changed) {
-					scene.setLightOn(event.state);
-				}
-			});
-	xrContext.addBooleanInputHandler(lightOnAction);
-
+	{
+		std::vector<std::string> subPaths = {"/user/hand/left"};
+		auto *action = new Audace::BooleanInputHandler(
+				"light_on_action", "Light-on Action",
+				"/user/hand/left/input/x/click", subPaths,
+				[this](Audace::BooleanInputEvent event) {
+					if (event.changed) {
+						scene.setLightOn(event.state);
+					}
+				});
+		xrContext.addBooleanInputHandler(action);
+	}
+	{
+		std::vector<std::string> subPaths = {"/user/hand/left"};
+		auto *action = new Audace::BooleanInputHandler(
+				"random_color_action", "Random ColorAction",
+				"/user/hand/left/input/y/click", subPaths,
+				[this](Audace::BooleanInputEvent event) {
+					if (event.state && event.changed) {
+						scene.randomLightColor();
+					}
+				});
+		xrContext.addBooleanInputHandler(action);
+	}
 	xrContext.registerActions();
 	return true;
 }

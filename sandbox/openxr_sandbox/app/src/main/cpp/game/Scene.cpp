@@ -72,7 +72,7 @@ void Scene::render(OpenxrView view) {
 	shaderProgram->bind();
 	shaderProgram->setUniformVec4("ambientLight", 0.2, 0.2, 1, 0.2f);
 	shaderProgram->setUniformVec4("diffusePos", lightPos.x, lightPos.y, lightPos.z, 0);
-	shaderProgram->setUniformVec4("diffuseColor", 0.75, 0.5, 0.2, lightOn ? 2 : 1);
+	shaderProgram->setUniformVec4("diffuseColor", lightColor.x, lightColor.y, lightColor.z, lightOn ? 2 : 1);
 	shaderProgram->setUniformVec4("viewPos", pose.position.x, pose.position.y, pose.position.z, 0);
 
 	XrMatrix4x4f projMat;

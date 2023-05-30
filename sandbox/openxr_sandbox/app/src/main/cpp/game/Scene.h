@@ -15,6 +15,7 @@
 #include "openxr/OpenxrView.h"
 #include "glm/glm.hpp"
 #include "input/BooleanInputHandler.h"
+#include "util/RandomUniformFloats.h"
 
 class AppController;
 
@@ -30,12 +31,16 @@ class Scene {
 
 	Audace::BooleanInputHandler* lightOnAction;
 	glm::vec3 lightPos;
+	glm::vec3 lightColor = glm::vec3(1, 0, 0);
 	bool lightOn;
+
+	Audace::RandomUniformFloats rand = Audace::RandomUniformFloats::normalizedRange();
 
 public:
 	void init(AppController *controller, AAssetManager *assetManager);
 	void setLightPos(glm::vec3 pos) {lightPos = pos;}
 	void setLightOn(bool on) {lightOn = on;}
+	void randomLightColor() {lightColor = glm::normalize(glm::vec3(rand.get(), rand.get(), rand.get()));}
 	void render(OpenxrView view);
 };
 
