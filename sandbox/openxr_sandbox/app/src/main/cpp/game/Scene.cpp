@@ -19,11 +19,6 @@
 
 void Scene::init(AppController *controller, AAssetManager *assetManager) {
 	appController = controller;
-	std::vector<std::string> subPaths = {"/user/hand/left"};
-	lightOnAction = new Audace::BooleanActionHandler("light_on_action", "Light-on Action",
-													 "/user/hand/left/input/x/click", subPaths);
-	appController->addInputEventHandler(lightOnAction);
-
 	fileLoader = new Audace::FileLoader(assetManager);
 
 	glClearColor(0, 0, 1, 1);
@@ -60,8 +55,6 @@ void Scene::init(AppController *controller, AAssetManager *assetManager) {
 }
 
 void Scene::render(OpenxrView view) {
-	lightOn = lightOnAction->getState();
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	AU_CHECK_GL_ERRORS();
 	XrPosef pose = view.getViewData().pose;

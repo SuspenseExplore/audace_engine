@@ -11,7 +11,7 @@
 #include "EglWindow.h"
 #include "openxr/OpenxrContext.h"
 #include "game/Scene.h"
-#include "input/BooleanActionHandler.h"
+#include "input/BooleanInputHandler.h"
 
 class AppController {
 	android_app *androidApp;
@@ -49,7 +49,9 @@ public:
 
 	EglWindow getWindow() { return window; }
 
-	void addInputEventHandler(Audace::BooleanActionHandler* handler) {xrContext.addBooleanActionHandler(handler);}
+	void addInputEventHandler(Audace::BooleanInputHandler *handler) {
+		xrContext.addBooleanInputHandler(handler);
+	}
 };
 
 

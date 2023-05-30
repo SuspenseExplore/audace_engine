@@ -21,8 +21,19 @@ bool AppController::createXrSession() {
 	glGenFramebuffers(1, &framebuffer);
 	scene.init(this, androidApp->activity->assetManager);
 	xrContext.createSession(window.getDisplay(), window.getContext());
-	xrContext.registerActions();
 
+	std::vector<std::string> subPaths = {"/user/hand/left"};
+	auto *lightOnAction = new Audace::BooleanInputHandler(
+			"light_on_action", "Light-on Action",
+			"/user/hand/left/input/x/click", subPaths,
+			[this](Audace::BooleanInputEvent event) {
+				if (event.changed) {
+					scene.setLightOn(event.state);
+				}
+			});
+	xrContext.addBooleanInputHandler(lightOnAction);
+
+	xrContext.registerActions();
 	return true;
 }
 

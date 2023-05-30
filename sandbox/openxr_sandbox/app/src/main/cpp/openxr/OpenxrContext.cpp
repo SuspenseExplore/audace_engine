@@ -176,7 +176,7 @@ bool OpenxrContext::registerActions() {
 	strcpy(actionSetInfo.localizedActionSetName, "Main Scene");
 	actionSetInfo.priority = 0;
 	XR_ERROR_BAIL("xrCreateActionSet",
-				  xrCreateActionSet(instance, &actionSetInfo, &mainSceneActionSet));
+				  xrCreateActionSet(instance, &actionSetInfo, &actionSet));
 	XR_ERROR_BAIL("xrStringToPath", xrStringToPath(instance, "/user/hand/left", &leftHandPath));
 
 	// create a pose input action for the left controller
@@ -188,19 +188,19 @@ bool OpenxrContext::registerActions() {
 		actionInfo.countSubactionPaths = 1;
 		actionInfo.subactionPaths = &leftHandPath;
 		XR_ERROR_BAIL("xrCreateAction",
-					  xrCreateAction(mainSceneActionSet, &actionInfo, &leftHandPoseAction));
+					  xrCreateAction(actionSet, &actionInfo, &leftHandPoseAction));
 
 		XrPath path;
 		xrStringToPath(instance, "/user/hand/left/input/grip/pose", &path);
 		bindings.push_back(XrActionSuggestedBinding{leftHandPoseAction, path});
 	}
 
-	for (Audace::BooleanActionHandler *handler: booleanActionHandlers) {
+	for (Audace::BooleanInputHandler *handler: booleanInputHandlers) {
 		registerBooleanAction(handler);
 		XrPath path;
 		XR_LOG_ERROR("xrStringToPath",
 					 xrStringToPath(instance, handler->bindingPath.c_str(), &path));
-		bindings.push_back(XrActionSuggestedBinding{*handler->getAction(), path});
+		bindings.push_back(XrActionSuggestedBinding{handler->getAction(), path});
 	}
 
 	XrPath touchControllerPath;
@@ -225,13 +225,13 @@ bool OpenxrContext::registerActions() {
 
 	XrSessionActionSetsAttachInfo attachInfo{XR_TYPE_SESSION_ACTION_SETS_ATTACH_INFO};
 	attachInfo.countActionSets = 1;
-	attachInfo.actionSets = &mainSceneActionSet;
+	attachInfo.actionSets = &actionSet;
 	XR_ERROR_BAIL("xrAttachSessionActionSets", xrAttachSessionActionSets(xrSession, &attachInfo));
 
 	return true;
 }
 
-void OpenxrContext::registerBooleanAction(Audace::BooleanActionHandler *handler) {
+void OpenxrContext::registerBooleanAction(Audace::BooleanInputHandler *handler) {
 	XrActionCreateInfo actionInfo{XR_TYPE_ACTION_CREATE_INFO};
 	actionInfo.actionType = XR_ACTION_TYPE_BOOLEAN_INPUT;
 	strcpy(actionInfo.actionName, handler->name.c_str());
@@ -239,12 +239,15 @@ void OpenxrContext::registerBooleanAction(Audace::BooleanActionHandler *handler)
 	actionInfo.countSubactionPaths = 1;
 	actionInfo.subactionPaths = &leftHandPath;
 
+	XrAction action;
 	XR_LOG_ERROR("xrCreateAction",
-				 xrCreateAction(mainSceneActionSet, &actionInfo, handler->getAction()));
+				 xrCreateAction(actionSet, &actionInfo, &action));
+	handler->setAction(action);
+	AU_OPENXR_LOG_DEBUG("Created action: {}; {}", handler->name, (long) action);
 }
 
 bool OpenxrContext::processActions(XrTime displayTime) {
-	XrActiveActionSet activeActionSet{mainSceneActionSet, XR_NULL_PATH};
+	XrActiveActionSet activeActionSet{actionSet, XR_NULL_PATH};
 	XrActionsSyncInfo syncInfo{XR_TYPE_ACTIONS_SYNC_INFO};
 	syncInfo.countActiveActionSets = 1;
 	syncInfo.activeActionSets = &activeActionSet;
@@ -261,19 +264,18 @@ bool OpenxrContext::processActions(XrTime displayTime) {
 			xrLocateSpace(leftHandSpace, xrSpace, displayTime, &leftHandLocation);
 		}
 	}
-	for (Audace::BooleanActionHandler *handler: booleanActionHandlers) {
+	for (Audace::BooleanInputHandler *handler: booleanInputHandlers) {
 		XrActionStateGetInfo getInfo{XR_TYPE_ACTION_STATE_GET_INFO};
-		getInfo.action = *handler->getAction();
+		getInfo.action = handler->getAction();
 
 		XrActionStateBoolean booleanState{XR_TYPE_ACTION_STATE_BOOLEAN};
 		XR_LOG_ERROR("xrGetActionStateBoolean",
 					 xrGetActionStateBoolean(xrSession, &getInfo, &booleanState));
-		handler->update(booleanState.currentState,
-						booleanState.changedSinceLastSync,
-						booleanState.lastChangeTime);
-//		handler->callback(Audace::BooleanActionEvent(booleanState.currentState,
-//													booleanState.changedSinceLastSync,
-//													booleanState.lastChangeTime));
+
+		AU_OPENXR_LOG_TRACE("Action state: {}; {}", handler->name, booleanState.currentState);
+		handler->callback(Audace::BooleanInputEvent(booleanState.currentState,
+													booleanState.changedSinceLastSync,
+													booleanState.lastChangeTime));
 	}
 	return true;
 }

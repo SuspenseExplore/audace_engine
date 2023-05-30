@@ -11,7 +11,7 @@
 #include "android_native_app_glue.h"
 
 #include "OpenxrView.h"
-#include "input/BooleanActionHandler.h"
+#include "input/BooleanInputHandler.h"
 
 class OpenxrContext {
 
@@ -25,10 +25,10 @@ public:
 	std::vector<XrViewConfigurationView> xrViewConfigs;
 	uint32_t viewCount;
 
-	std::vector<Audace::BooleanActionHandler*> booleanActionHandlers;
+	std::vector<Audace::BooleanInputHandler*> booleanInputHandlers;
 
 	XrPath leftHandPath{XR_NULL_PATH};
-	XrActionSet mainSceneActionSet{XR_NULL_HANDLE};
+	XrActionSet actionSet{XR_NULL_HANDLE};
 	XrAction leftHandPoseAction{XR_NULL_HANDLE};
 	XrSpace leftHandSpace{XR_NULL_HANDLE};
 	XrSpaceLocation leftHandLocation{XR_TYPE_SPACE_LOCATION};
@@ -40,12 +40,12 @@ public:
 
 	bool registerActions();
 	bool processActions(XrTime displayTime);
-	void addBooleanActionHandler(Audace::BooleanActionHandler* handler) {booleanActionHandlers.push_back(handler);}
+	void addBooleanInputHandler(Audace::BooleanInputHandler* handler) {booleanInputHandlers.push_back(handler);}
 
 	OpenxrView getView(uint32_t i) {return views[i];}
 
 private:
-	void registerBooleanAction(Audace::BooleanActionHandler* handler);
+	void registerBooleanAction(Audace::BooleanInputHandler* handler);
 };
 
 
