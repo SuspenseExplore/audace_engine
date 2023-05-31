@@ -73,6 +73,7 @@ bool OpenxrContext::init(android_app *app) {
 		}
 	}
 
+	Audace::InputDevices::init(instance);
 	return true;
 }
 
@@ -166,9 +167,6 @@ int64_t OpenxrContext::chooseViewFormat(XrSession session) {
 }
 
 bool OpenxrContext::registerActions() {
-//	std::vector<XrActionSuggestedBinding> bindings{{
-//														   {leftHandPoseAction, leftPosePath},
-//														   {leftHandXAction, leftXPath}}};
 	std::vector<XrActionSuggestedBinding> bindings{};
 
 	XrActionSetCreateInfo actionSetInfo{XR_TYPE_ACTION_SET_CREATE_INFO};
@@ -195,12 +193,37 @@ bool OpenxrContext::registerActions() {
 		bindings.push_back(XrActionSuggestedBinding{leftHandPoseAction, path});
 	}
 
-	for (Audace::BooleanInputHandler *handler: booleanInputHandlers) {
-		registerBooleanAction(handler);
-		XrPath path;
-		XR_LOG_ERROR("xrStringToPath",
-					 xrStringToPath(instance, handler->bindingPath.c_str(), &path));
-		bindings.push_back(XrActionSuggestedBinding{handler->getAction(), path});
+	{
+		Audace::OculusTouchController::InputName name = Audace::OculusTouchController::LEFT_X_CLICK;
+		XrActionCreateInfo actionInfo{XR_TYPE_ACTION_CREATE_INFO};
+		actionInfo.actionType = XR_ACTION_TYPE_BOOLEAN_INPUT;
+		strcpy(actionInfo.actionName, "x_button_click");
+		strcpy(actionInfo.localizedActionName, "X Button Click");
+		actionInfo.countSubactionPaths = 1;
+		actionInfo.subactionPaths = &leftHandPath;
+
+		XrAction action;
+		XR_LOG_ERROR("xrCreateAction",
+					 xrCreateAction(actionSet, &actionInfo, &action));
+		actions[name] = action;
+		bindings.push_back(
+				XrActionSuggestedBinding{action, Audace::OculusTouchController::paths[name]});
+	}
+	{
+		Audace::OculusTouchController::InputName name = Audace::OculusTouchController::LEFT_Y_CLICK;
+		XrActionCreateInfo actionInfo{XR_TYPE_ACTION_CREATE_INFO};
+		actionInfo.actionType = XR_ACTION_TYPE_BOOLEAN_INPUT;
+		strcpy(actionInfo.actionName, "y_button_click");
+		strcpy(actionInfo.localizedActionName, "Y Button Click");
+		actionInfo.countSubactionPaths = 1;
+		actionInfo.subactionPaths = &leftHandPath;
+
+		XrAction action;
+		XR_LOG_ERROR("xrCreateAction",
+					 xrCreateAction(actionSet, &actionInfo, &action));
+		actions[name] = action;
+		bindings.push_back(
+				XrActionSuggestedBinding{action, Audace::OculusTouchController::paths[name]});
 	}
 
 	XrPath touchControllerPath;
@@ -231,21 +254,6 @@ bool OpenxrContext::registerActions() {
 	return true;
 }
 
-void OpenxrContext::registerBooleanAction(Audace::BooleanInputHandler *handler) {
-	XrActionCreateInfo actionInfo{XR_TYPE_ACTION_CREATE_INFO};
-	actionInfo.actionType = XR_ACTION_TYPE_BOOLEAN_INPUT;
-	strcpy(actionInfo.actionName, handler->name.c_str());
-	strcpy(actionInfo.localizedActionName, handler->displayName.c_str());
-	actionInfo.countSubactionPaths = 1;
-	actionInfo.subactionPaths = &leftHandPath;
-
-	XrAction action;
-	XR_LOG_ERROR("xrCreateAction",
-				 xrCreateAction(actionSet, &actionInfo, &action));
-	handler->setAction(action);
-	AU_OPENXR_LOG_DEBUG("Created action: {}; {}", handler->name, (long) action);
-}
-
 bool OpenxrContext::processActions(XrTime displayTime) {
 	XrActiveActionSet activeActionSet{actionSet, XR_NULL_PATH};
 	XrActionsSyncInfo syncInfo{XR_TYPE_ACTIONS_SYNC_INFO};
@@ -264,18 +272,35 @@ bool OpenxrContext::processActions(XrTime displayTime) {
 			xrLocateSpace(leftHandSpace, xrSpace, displayTime, &leftHandLocation);
 		}
 	}
-	for (Audace::BooleanInputHandler *handler: booleanInputHandlers) {
+	{
+		Audace::OculusTouchController::InputName name = Audace::OculusTouchController::LEFT_X_CLICK;
+		std::function<void(Audace::BooleanInputEvent)> handler = booleanInputHandlers[name];
 		XrActionStateGetInfo getInfo{XR_TYPE_ACTION_STATE_GET_INFO};
-		getInfo.action = handler->getAction();
+		getInfo.action = actions[name];
 
 		XrActionStateBoolean booleanState{XR_TYPE_ACTION_STATE_BOOLEAN};
 		XR_LOG_ERROR("xrGetActionStateBoolean",
 					 xrGetActionStateBoolean(xrSession, &getInfo, &booleanState));
 
-		AU_OPENXR_LOG_TRACE("Action state: {}; {}", handler->name, booleanState.currentState);
-		handler->callback(Audace::BooleanInputEvent(booleanState.currentState,
-													booleanState.changedSinceLastSync,
-													booleanState.lastChangeTime));
+		AU_OPENXR_LOG_TRACE("Action state: {}; {}", name, booleanState.currentState);
+		handler(Audace::BooleanInputEvent(booleanState.currentState,
+										  booleanState.changedSinceLastSync,
+										  booleanState.lastChangeTime));
+	}
+	{
+		Audace::OculusTouchController::InputName name = Audace::OculusTouchController::LEFT_Y_CLICK;
+		std::function<void(Audace::BooleanInputEvent)> handler = booleanInputHandlers[name];
+		XrActionStateGetInfo getInfo{XR_TYPE_ACTION_STATE_GET_INFO};
+		getInfo.action = actions[name];
+
+		XrActionStateBoolean booleanState{XR_TYPE_ACTION_STATE_BOOLEAN};
+		XR_LOG_ERROR("xrGetActionStateBoolean",
+					 xrGetActionStateBoolean(xrSession, &getInfo, &booleanState));
+
+		AU_OPENXR_LOG_TRACE("Action state: {}; {}", name, booleanState.currentState);
+		handler(Audace::BooleanInputEvent(booleanState.currentState,
+										  booleanState.changedSinceLastSync,
+										  booleanState.lastChangeTime));
 	}
 	return true;
 }

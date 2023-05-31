@@ -7,6 +7,7 @@
 #include "AppController.h"
 #include "openxr/openxr_common.h"
 #include "glm/glm.hpp"
+#include "input/InputDevices.h"
 
 bool AppController::createWindow() {
 	return window.init(androidApp);
@@ -22,29 +23,22 @@ bool AppController::createXrSession() {
 	scene.init(this, androidApp->activity->assetManager);
 	xrContext.createSession(window.getDisplay(), window.getContext());
 
+	using namespace Audace;
 	{
-		std::vector<std::string> subPaths = {"/user/hand/left"};
-		auto *action = new Audace::BooleanInputHandler(
-				"light_on_action", "Light-on Action",
-				"/user/hand/left/input/x/click", subPaths,
-				[this](Audace::BooleanInputEvent event) {
-					if (event.changed) {
-						scene.setLightOn(event.state);
-					}
-				});
-		xrContext.addBooleanInputHandler(action);
+		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_X_CLICK;
+		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {
+			if (event.changed) {
+				scene.setLightOn(event.state);
+			}
+		});
 	}
 	{
-		std::vector<std::string> subPaths = {"/user/hand/left"};
-		auto *action = new Audace::BooleanInputHandler(
-				"random_color_action", "Random ColorAction",
-				"/user/hand/left/input/y/click", subPaths,
-				[this](Audace::BooleanInputEvent event) {
-					if (event.state && event.changed) {
-						scene.randomLightColor();
-					}
-				});
-		xrContext.addBooleanInputHandler(action);
+		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_Y_CLICK;
+		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {
+			if (event.state && event.changed) {
+				scene.randomLightColor();
+			}
+		});
 	}
 	xrContext.registerActions();
 	return true;

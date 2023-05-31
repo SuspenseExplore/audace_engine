@@ -13,7 +13,6 @@
 
 namespace Audace {
 	class BooleanInputHandler {
-		XrAction xrAction;
 
 	public:
 		const std::string name;
@@ -29,9 +28,6 @@ namespace Audace {
 							std::function<void(BooleanInputEvent)> callback) :
 				name(name), displayName(displayName), bindingPath(bindingPath), subPaths(subPaths),
 				callback(callback) {}
-
-		XrAction getAction() { return xrAction; }
-		void setAction(XrAction action) {xrAction = action;}
 	};
 }
 

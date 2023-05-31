@@ -11,6 +11,7 @@
 #include "EglWindow.h"
 #include "openxr/OpenxrContext.h"
 #include "game/Scene.h"
+#include "input/InputDevices.h"
 #include "input/BooleanInputHandler.h"
 
 class AppController {
@@ -48,10 +49,6 @@ public:
 	OpenxrContext getXrContext() { return xrContext; }
 
 	EglWindow getWindow() { return window; }
-
-	void addInputEventHandler(Audace::BooleanInputHandler *handler) {
-		xrContext.addBooleanInputHandler(handler);
-	}
 };
 
 
