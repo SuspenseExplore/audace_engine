@@ -14,7 +14,6 @@
 #include "renderer/Sprite.h"
 #include "openxr/OpenxrView.h"
 #include "glm/glm.hpp"
-#include "input/BooleanInputHandler.h"
 #include "util/RandomUniformFloats.h"
 
 class AppController;
@@ -29,7 +28,6 @@ class Scene {
 	Audace::Texture2d *orangeChecksTex;
 	Audace::Texture2d *purpleChecksTex;
 
-	Audace::BooleanInputHandler* lightOnAction;
 	glm::vec3 lightPos;
 	glm::vec3 lightColor = glm::vec3(1, 0, 0);
 	bool lightOn;

@@ -13,7 +13,8 @@
 #include "android_native_app_glue.h"
 
 #include "OpenxrView.h"
-#include "input/BooleanInputHandler.h"
+#include "input/BooleanInputEvent.h"
+#include "input/PoseInputEvent.h"
 #include "input/InputDevices.h"
 
 class OpenxrContext {
@@ -28,9 +29,9 @@ public:
 	std::vector<XrViewConfigurationView> xrViewConfigs;
 	uint32_t viewCount;
 
-//	std::vector<Audace::BooleanInputHandler*> booleanInputHandlers;
 	std::map<Audace::OculusTouchController::InputName, XrAction> actions;
 	std::map<Audace::OculusTouchController::InputName, std::function<void(Audace::BooleanInputEvent)>> booleanInputHandlers;
+	std::map<Audace::OculusTouchController::InputName, std::function<void(Audace::PoseInputEvent)>> poseInputHandlers;
 
 	XrPath leftHandPath{XR_NULL_PATH};
 	XrActionSet actionSet{XR_NULL_HANDLE};
@@ -52,8 +53,12 @@ public:
 
 	void addBooleanInputHandler(Audace::OculusTouchController::InputName name,
 								std::function<void(Audace::BooleanInputEvent)> handler) {
-//		booleanInputHandlers.push_back(handler);
 		booleanInputHandlers[name] = handler;
+	}
+
+	void addPoseInputHandler(Audace::OculusTouchController::InputName name,
+								std::function<void(Audace::PoseInputEvent)> handler) {
+		poseInputHandlers[name] = handler;
 	}
 
 	OpenxrView getView(uint32_t i) { return views[i]; }

@@ -179,18 +179,19 @@ bool OpenxrContext::registerActions() {
 
 	// create a pose input action for the left controller
 	{
+		Audace::OculusTouchController::InputName name = Audace::OculusTouchController::LEFT_GRIP_POSE;
 		XrActionCreateInfo actionInfo{XR_TYPE_ACTION_CREATE_INFO};
 		actionInfo.actionType = XR_ACTION_TYPE_POSE_INPUT;
 		strcpy(actionInfo.actionName, "left_hand_pose");
 		strcpy(actionInfo.localizedActionName, "Left hand pose");
 		actionInfo.countSubactionPaths = 1;
 		actionInfo.subactionPaths = &leftHandPath;
-		XR_ERROR_BAIL("xrCreateAction",
-					  xrCreateAction(actionSet, &actionInfo, &leftHandPoseAction));
 
-		XrPath path;
-		xrStringToPath(instance, "/user/hand/left/input/grip/pose", &path);
-		bindings.push_back(XrActionSuggestedBinding{leftHandPoseAction, path});
+		XrAction action;
+		XR_LOG_ERROR("xrCreateAction",
+					  xrCreateAction(actionSet, &actionInfo, &action));
+		actions[name] = action;
+		bindings.push_back(XrActionSuggestedBinding{action, Audace::OculusTouchController::paths[name]});
 	}
 
 	{
@@ -240,7 +241,7 @@ bool OpenxrContext::registerActions() {
 				  xrSuggestInteractionProfileBindings(instance, &suggestedBinding));
 
 	XrActionSpaceCreateInfo actionSpaceInfo{XR_TYPE_ACTION_SPACE_CREATE_INFO};
-	actionSpaceInfo.action = leftHandPoseAction;
+	actionSpaceInfo.action = actions[Audace::OculusTouchController::LEFT_GRIP_POSE];
 	actionSpaceInfo.poseInActionSpace.orientation.w = 1;
 	actionSpaceInfo.subactionPath = leftHandPath;
 	XR_ERROR_BAIL("xrCreateActionSpace",
@@ -262,14 +263,20 @@ bool OpenxrContext::processActions(XrTime displayTime) {
 	xrSyncActions(xrSession, &syncInfo);
 
 	{
+		Audace::OculusTouchController::InputName name = Audace::OculusTouchController::LEFT_GRIP_POSE;
 		XrActionStateGetInfo getInfo{XR_TYPE_ACTION_STATE_GET_INFO};
-		getInfo.action = leftHandPoseAction;
+		getInfo.action = actions[name];
 
 		XrActionStatePose poseState{XR_TYPE_ACTION_STATE_POSE};
 		XR_ERROR_BAIL("xrGetActionStatePose",
 					  xrGetActionStatePose(xrSession, &getInfo, &poseState));
 		if (poseState.isActive == XR_TRUE) {
-			xrLocateSpace(leftHandSpace, xrSpace, displayTime, &leftHandLocation);
+			XrSpaceLocation location{XR_TYPE_SPACE_LOCATION};
+			xrLocateSpace(leftHandSpace, xrSpace, displayTime, &location);
+			AU_OPENXR_LOG_DEBUG("Location: [{},{},{}]", location.pose.position.x, location.pose.position.y, location.pose.position.z);
+			Audace::Pose pose;
+			pose.position = glm::vec3(location.pose.position.x, location.pose.position.y, location.pose.position.z);
+			poseInputHandlers[name](Audace::PoseInputEvent(pose, true, displayTime));
 		}
 	}
 	{

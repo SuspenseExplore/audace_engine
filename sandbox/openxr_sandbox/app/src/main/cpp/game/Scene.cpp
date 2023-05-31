@@ -64,11 +64,6 @@ void Scene::render(OpenxrView view) {
 	orangeChecksTex->bind(3);
 	purpleChecksTex->bind(4);
 
-	// make the light orbit a point over time
-	float t = (float) std::chrono::high_resolution_clock::now().time_since_epoch().count();
-	float x = cos(t / 5000000000.0f) * 7.0f;
-	float y = sin(t / 5000000000.0f) * 7.0f;
-
 	shaderProgram->bind();
 	shaderProgram->setUniformVec4("ambientLight", 0.2, 0.2, 1, 0.2f);
 	shaderProgram->setUniformVec4("diffusePos", lightPos.x, lightPos.y, lightPos.z, 0);

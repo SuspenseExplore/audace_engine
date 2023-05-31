@@ -12,7 +12,6 @@
 #include "openxr/OpenxrContext.h"
 #include "game/Scene.h"
 #include "input/InputDevices.h"
-#include "input/BooleanInputHandler.h"
 
 class AppController {
 	android_app *androidApp;

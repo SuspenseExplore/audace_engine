@@ -17,8 +17,8 @@
 #include "openxr_platform_defines.h"
 #include "openxr_reflection.h"
 
-#define XR_LOG_ERROR(_name, _call) ({XrResult _r = _call; if (_r != XR_SUCCESS) LOGE("%s failed: %d", _name, _r);})
-#define XR_ERROR_BAIL(_name, _call) ({XrResult _r = _call; if (_r != XR_SUCCESS) {LOGE("%s failed: %d", _name, _r); return false;}})
+#define XR_LOG_ERROR(_name, _call) ({XrResult _r = _call; if (_r < XR_SUCCESS) LOGE("%s failed: %d", _name, _r);})
+#define XR_ERROR_BAIL(_name, _call) ({XrResult _r = _call; if (_r < XR_SUCCESS) {LOGE("%s failed: %d", _name, _r); return false;}})
 
 #define AU_OPENXR_LOG_CRITICAL(...)	Audace::AuLogger::getXrLogger()->getLogger()->critical(__VA_ARGS__)
 #define AU_OPENXR_LOG_ERROR(...)	Audace::AuLogger::getXrLogger()->getLogger()->error(__VA_ARGS__)

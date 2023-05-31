@@ -2,8 +2,8 @@
 // Created by Suspense on 5/29/2023.
 //
 
-#ifndef AU_BOOLEANACTIONEVENT_H
-#define AU_BOOLEANACTIONEVENT_H
+#ifndef AU_BOOLEANINPUTEVENT_H
+#define AU_BOOLEANINPUTEVENT_H
 
 #include "InputEvent.h"
 
@@ -17,4 +17,4 @@ namespace Audace {
 	};
 }
 
-#endif //AU_BOOLEANACTIONEVENT_H
+#endif //AU_BOOLEANINPUTEVENT_H

@@ -25,6 +25,14 @@ bool AppController::createXrSession() {
 
 	using namespace Audace;
 	{
+		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_GRIP_POSE;
+		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
+			if (event.changed) {
+				scene.setLightPos(event.state.position);
+			}
+		});
+	}
+	{
 		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_X_CLICK;
 		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {
 			if (event.changed) {
@@ -202,9 +210,6 @@ void AppController::renderView(OpenxrView view) {
 	glEnable(GL_DEPTH_TEST);
 	AU_CHECK_GL_ERRORS();
 
-	scene.setLightPos(glm::vec3(xrContext.leftHandLocation.pose.position.x,
-								xrContext.leftHandLocation.pose.position.y,
-								xrContext.leftHandLocation.pose.position.z));
 	scene.render(view);
 
 	glBindVertexArray(0);
