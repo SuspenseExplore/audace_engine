@@ -177,7 +177,6 @@ bool OpenxrContext::registerActions() {
 				  xrCreateActionSet(instance, &actionSetInfo, &actionSet));
 	XR_ERROR_BAIL("xrStringToPath", xrStringToPath(instance, "/user/hand/left", &leftHandPath));
 
-	// create a pose input action for the left controller
 	{
 		Audace::OculusTouchController::InputName name = Audace::OculusTouchController::LEFT_GRIP_POSE;
 		XrActionCreateInfo actionInfo{XR_TYPE_ACTION_CREATE_INFO};
@@ -190,6 +189,21 @@ bool OpenxrContext::registerActions() {
 		XrAction action;
 		XR_LOG_ERROR("xrCreateAction",
 					  xrCreateAction(actionSet, &actionInfo, &action));
+		actions[name] = action;
+		bindings.push_back(XrActionSuggestedBinding{action, Audace::OculusTouchController::paths[name]});
+	}
+	{
+		Audace::OculusTouchController::InputName name = Audace::OculusTouchController::LEFT_AIM_POSE;
+		XrActionCreateInfo actionInfo{XR_TYPE_ACTION_CREATE_INFO};
+		actionInfo.actionType = XR_ACTION_TYPE_POSE_INPUT;
+		strcpy(actionInfo.actionName, "left_hand_aim");
+		strcpy(actionInfo.localizedActionName, "Left hand aim");
+		actionInfo.countSubactionPaths = 1;
+		actionInfo.subactionPaths = &leftHandPath;
+
+		XrAction action;
+		XR_LOG_ERROR("xrCreateAction",
+					 xrCreateAction(actionSet, &actionInfo, &action));
 		actions[name] = action;
 		bindings.push_back(XrActionSuggestedBinding{action, Audace::OculusTouchController::paths[name]});
 	}
@@ -240,13 +254,22 @@ bool OpenxrContext::registerActions() {
 	XR_ERROR_BAIL("xrSuggestInteractionProfileBindings",
 				  xrSuggestInteractionProfileBindings(instance, &suggestedBinding));
 
-	XrActionSpaceCreateInfo actionSpaceInfo{XR_TYPE_ACTION_SPACE_CREATE_INFO};
-	actionSpaceInfo.action = actions[Audace::OculusTouchController::LEFT_GRIP_POSE];
-	actionSpaceInfo.poseInActionSpace.orientation.w = 1;
-	actionSpaceInfo.subactionPath = leftHandPath;
-	XR_ERROR_BAIL("xrCreateActionSpace",
-				  xrCreateActionSpace(xrSession, &actionSpaceInfo, &leftHandSpace));
-
+	{
+		XrActionSpaceCreateInfo actionSpaceInfo{XR_TYPE_ACTION_SPACE_CREATE_INFO};
+		actionSpaceInfo.action = actions[Audace::OculusTouchController::LEFT_GRIP_POSE];
+		actionSpaceInfo.poseInActionSpace.orientation.w = 1;
+		actionSpaceInfo.subactionPath = leftHandPath;
+		XR_ERROR_BAIL("xrCreateActionSpace",
+					  xrCreateActionSpace(xrSession, &actionSpaceInfo, &leftHandPoseSpace));
+	}
+	{
+		XrActionSpaceCreateInfo actionSpaceInfo{XR_TYPE_ACTION_SPACE_CREATE_INFO};
+		actionSpaceInfo.action = actions[Audace::OculusTouchController::LEFT_AIM_POSE];
+		actionSpaceInfo.poseInActionSpace.orientation.w = 1;
+		actionSpaceInfo.subactionPath = leftHandPath;
+		XR_ERROR_BAIL("xrCreateActionSpace",
+					  xrCreateActionSpace(xrSession, &actionSpaceInfo, &leftHandAimSpace));
+	}
 	XrSessionActionSetsAttachInfo attachInfo{XR_TYPE_SESSION_ACTION_SETS_ATTACH_INFO};
 	attachInfo.countActionSets = 1;
 	attachInfo.actionSets = &actionSet;
@@ -262,7 +285,7 @@ bool OpenxrContext::processActions(XrTime displayTime) {
 	syncInfo.activeActionSets = &activeActionSet;
 	xrSyncActions(xrSession, &syncInfo);
 
-	{
+	if (poseInputHandlers.find(Audace::OculusTouchController::LEFT_GRIP_POSE) != poseInputHandlers.end()) {
 		Audace::OculusTouchController::InputName name = Audace::OculusTouchController::LEFT_GRIP_POSE;
 		XrActionStateGetInfo getInfo{XR_TYPE_ACTION_STATE_GET_INFO};
 		getInfo.action = actions[name];
@@ -270,16 +293,33 @@ bool OpenxrContext::processActions(XrTime displayTime) {
 		XrActionStatePose poseState{XR_TYPE_ACTION_STATE_POSE};
 		XR_ERROR_BAIL("xrGetActionStatePose",
 					  xrGetActionStatePose(xrSession, &getInfo, &poseState));
-		if (poseState.isActive == XR_TRUE) {
+		if (poseState.isActive == XR_TRUE && poseInputHandlers.find(name) != poseInputHandlers.end()) {
 			XrSpaceLocation location{XR_TYPE_SPACE_LOCATION};
-			xrLocateSpace(leftHandSpace, xrSpace, displayTime, &location);
-			AU_OPENXR_LOG_DEBUG("Location: [{},{},{}]", location.pose.position.x, location.pose.position.y, location.pose.position.z);
+			xrLocateSpace(leftHandPoseSpace, xrSpace, displayTime, &location);
 			Audace::Pose pose;
 			pose.position = glm::vec3(location.pose.position.x, location.pose.position.y, location.pose.position.z);
+			pose.orientation = glm::quat(location.pose.orientation.w, location.pose.orientation.x, location.pose.orientation.y, location.pose.orientation.z);
 			poseInputHandlers[name](Audace::PoseInputEvent(pose, true, displayTime));
 		}
 	}
-	{
+	if (poseInputHandlers.find(Audace::OculusTouchController::LEFT_AIM_POSE) != poseInputHandlers.end()) {
+		Audace::OculusTouchController::InputName name = Audace::OculusTouchController::LEFT_AIM_POSE;
+		XrActionStateGetInfo getInfo{XR_TYPE_ACTION_STATE_GET_INFO};
+		getInfo.action = actions[name];
+
+		XrActionStatePose poseState{XR_TYPE_ACTION_STATE_POSE};
+		XR_ERROR_BAIL("xrGetActionStatePose",
+					  xrGetActionStatePose(xrSession, &getInfo, &poseState));
+		if (poseState.isActive == XR_TRUE && poseInputHandlers.find(name) != poseInputHandlers.end()) {
+			XrSpaceLocation location{XR_TYPE_SPACE_LOCATION};
+			xrLocateSpace(leftHandAimSpace, xrSpace, displayTime, &location);
+			Audace::Pose pose;
+			pose.position = glm::vec3(location.pose.position.x, location.pose.position.y, location.pose.position.z);
+			pose.orientation = glm::quat(location.pose.orientation.w, location.pose.orientation.x, location.pose.orientation.y, location.pose.orientation.z);
+			poseInputHandlers[name](Audace::PoseInputEvent(pose, true, displayTime));
+		}
+	}
+	if (booleanInputHandlers.find(Audace::OculusTouchController::LEFT_X_CLICK) != booleanInputHandlers.end()) {
 		Audace::OculusTouchController::InputName name = Audace::OculusTouchController::LEFT_X_CLICK;
 		std::function<void(Audace::BooleanInputEvent)> handler = booleanInputHandlers[name];
 		XrActionStateGetInfo getInfo{XR_TYPE_ACTION_STATE_GET_INFO};
@@ -294,7 +334,7 @@ bool OpenxrContext::processActions(XrTime displayTime) {
 										  booleanState.changedSinceLastSync,
 										  booleanState.lastChangeTime));
 	}
-	{
+	if (booleanInputHandlers.find(Audace::OculusTouchController::LEFT_Y_CLICK) != booleanInputHandlers.end()) {
 		Audace::OculusTouchController::InputName name = Audace::OculusTouchController::LEFT_Y_CLICK;
 		std::function<void(Audace::BooleanInputEvent)> handler = booleanInputHandlers[name];
 		XrActionStateGetInfo getInfo{XR_TYPE_ACTION_STATE_GET_INFO};

@@ -33,6 +33,14 @@ bool AppController::createXrSession() {
 		});
 	}
 	{
+		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_AIM_POSE;
+		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
+			if (event.changed) {
+				scene.setAimPose(event.state);
+			}
+		});
+	}
+	{
 		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_X_CLICK;
 		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {
 			if (event.changed) {

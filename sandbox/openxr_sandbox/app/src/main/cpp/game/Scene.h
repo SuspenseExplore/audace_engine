@@ -15,6 +15,7 @@
 #include "openxr/OpenxrView.h"
 #include "glm/glm.hpp"
 #include "util/RandomUniformFloats.h"
+#include "math/Pose.h"
 
 class AppController;
 
@@ -32,6 +33,8 @@ class Scene {
 	glm::vec3 lightColor = glm::vec3(1, 0, 0);
 	bool lightOn;
 
+	Audace::Pose aimPose;
+
 	Audace::RandomUniformFloats rand = Audace::RandomUniformFloats::normalizedRange();
 
 public:
@@ -39,6 +42,7 @@ public:
 	void setLightPos(glm::vec3 pos) {lightPos = pos;}
 	void setLightOn(bool on) {lightOn = on;}
 	void randomLightColor() {lightColor = glm::normalize(glm::vec3(rand.get(), rand.get(), rand.get()));}
+	void setAimPose(Audace::Pose pose) {aimPose = pose;}
 	void render(OpenxrView view);
 };
 

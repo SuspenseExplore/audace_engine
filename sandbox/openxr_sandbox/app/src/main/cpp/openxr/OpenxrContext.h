@@ -35,9 +35,8 @@ public:
 
 	XrPath leftHandPath{XR_NULL_PATH};
 	XrActionSet actionSet{XR_NULL_HANDLE};
-	XrAction leftHandPoseAction{XR_NULL_HANDLE};
-	XrSpace leftHandSpace{XR_NULL_HANDLE};
-	XrSpaceLocation leftHandLocation{XR_TYPE_SPACE_LOCATION};
+	XrSpace leftHandPoseSpace{XR_NULL_HANDLE};
+	XrSpace leftHandAimSpace{XR_NULL_HANDLE};
 
 	bool init(android_app *app);
 
