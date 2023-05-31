@@ -2,7 +2,7 @@
 #define AU_APPCONTROLLER_H
 
 #include <string>
-#include "glfw3.h"
+#include "GameWindow.h"
 #include "EngineEventListener.h"
 #include "FileLoader.h"
 #include "scene/Scene.h"
@@ -13,7 +13,7 @@ namespace Audace
 	{
 
 	public:
-		GLFWwindow *window;
+		GameWindow* window;
 		FileLoader *fileLoader;
 		Scene *scene;
 

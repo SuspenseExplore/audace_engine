@@ -6,30 +6,14 @@ namespace Audace
 {
 	bool AppController::createWindow(int width, int height, std::string title)
 	{
-		glfwInit();
-		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
-
-		window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
-		if (window == nullptr)
-		{
-			AU_ENGINE_LOG_CRITICAL("GLFW window creation failed");
-			glfwTerminate();
-			return false;
-		}
-
+		window = new GameWindow(width, height, title);
+		window->open();
 		windowInitialized();
 		return true;
 	}
 
 	void AppController::windowInitialized()
 	{
-		glfwMakeContextCurrent(window);
-		gladLoadGLES2Loader((GLADloadproc)glfwGetProcAddress);
-		AU_RENDERER_LOG_TRACE("GLAD loaded");
-
 		glEnable(GL_DEPTH_TEST);
 		AU_RENDERER_LOG_TRACE("Renderer initialized");
 
@@ -50,13 +34,14 @@ namespace Audace
 		while (true)
 		{
 			pollSystemEvents();
-
-			if (glfwWindowShouldClose(window))
+			if (window->shouldClose())
 			{
 				shutdown();
 				return;
 			}
+			window->beginFrame();
 			renderFrame();
+			window->endFrame();
 		}
 		AU_ENGINE_LOG_TRACE("Exiting render loop");
 	}
@@ -64,12 +49,11 @@ namespace Audace
 	void AppController::renderFrame()
 	{
 		scene->render();
-		glfwSwapBuffers(window);
 	}
 
 	void AppController::shutdown()
 	{
 		delete scene;
-		glfwTerminate();
+		window->close();
 	}
 }

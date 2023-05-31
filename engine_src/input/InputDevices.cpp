@@ -6,10 +6,6 @@
 #include "InputDevices.h"
 
 namespace Audace {
-	void InputDevices::init(XrInstance instance) {
-		OculusTouchController::init(instance);
-	}
-
 	const std::string OculusTouchController::leftHandString = "/user/hand/left";
 	const std::string OculusTouchController::rightHandString = "/user/hand/right";
 	std::string OculusTouchController::stringPaths[30];

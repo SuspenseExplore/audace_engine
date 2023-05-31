@@ -73,7 +73,7 @@ bool OpenxrContext::init(android_app *app) {
 		}
 	}
 
-	Audace::InputDevices::init(instance);
+	Audace::OculusTouchController::init(instance);
 	return true;
 }
 
