@@ -5,27 +5,27 @@
 #include <functional>
 #include "glfw3.h"
 #include "AuLogger.h"
-#include "input/KeyInputEvent.h"
+#include "input/ButtonInputEvent.h"
 
 namespace Audace
 {
 	class KeyboardManager
 	{
 		static KeyboardManager *INSTANCE;
-		std::map<int, std::function<void(KeyInputEvent)>> keyEventHandlers;
+		std::map<int, std::function<void(ButtonInputEvent)>> buttonEventHandlers;
 
 	public:
-		void addKeyEventHandler(int key, std::function<void(KeyInputEvent)> handler) {
-			keyEventHandlers[key] = handler;
+		void addButtonEventHandler(int button, std::function<void(ButtonInputEvent)> handler) {
+			buttonEventHandlers[button] = handler;
 		}
 
 		static void setStaticRef(KeyboardManager *KeyboardManager) { KeyboardManager::INSTANCE = KeyboardManager; };
-		static void eventCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
+		static void eventCallback(GLFWwindow *window, int button, int scancode, int action, int mods)
 		{
-			if (INSTANCE->keyEventHandlers.find(key) != INSTANCE->keyEventHandlers.end())
+			if (INSTANCE->buttonEventHandlers.find(button) != INSTANCE->buttonEventHandlers.end())
 			{
-				KeyInputEvent event(key, action != GLFW_RELEASE, action != GLFW_REPEAT, std::chrono::high_resolution_clock::now().time_since_epoch().count());
-				INSTANCE->keyEventHandlers[key](event);
+				ButtonInputEvent event(button, action != GLFW_RELEASE, action != GLFW_REPEAT, std::chrono::high_resolution_clock::now().time_since_epoch().count());
+				INSTANCE->buttonEventHandlers[button](event);
 			}
 		}
 	};

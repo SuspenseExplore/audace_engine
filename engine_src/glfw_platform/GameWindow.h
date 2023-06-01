@@ -4,7 +4,7 @@
 #include <functional>
 #include "glfw3.h"
 #include "KeyboardManager.h"
-#include "input/KeyInputEvent.h"
+#include "input/ButtonInputEvent.h"
 
 namespace Audace {
 	class GameWindow {
@@ -25,8 +25,8 @@ public:
 		void beginFrame();
 		void endFrame();
 
-		void addKeyEventHandler(int key, std::function<void(KeyInputEvent)> handler) {
-			keyboardManager.addKeyEventHandler(key, handler);
+		void addButtonEventHandler(int button, std::function<void(ButtonInputEvent)> handler) {
+			keyboardManager.addButtonEventHandler(button, handler);
 		}
 	};
 }

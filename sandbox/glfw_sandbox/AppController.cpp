@@ -23,19 +23,19 @@ namespace Audace
 		scene = new MainScene(fileLoader);
 		scene->loadAssets();
 
-		window->addKeyEventHandler(GLFW_KEY_A, [this](KeyInputEvent event)
+		window->addButtonEventHandler(GLFW_KEY_A, [this](ButtonInputEvent event)
 								   {
 									reinterpret_cast<MainScene*>(scene)->setVelX(event.pressed ? -1 : 0);
 									});
-		window->addKeyEventHandler(GLFW_KEY_D, [this](KeyInputEvent event)
+		window->addButtonEventHandler(GLFW_KEY_D, [this](ButtonInputEvent event)
 								   {
 									reinterpret_cast<MainScene*>(scene)->setVelX(event.pressed ? 1 : 0);
 									});
-		window->addKeyEventHandler(GLFW_KEY_W, [this](KeyInputEvent event)
+		window->addButtonEventHandler(GLFW_KEY_W, [this](ButtonInputEvent event)
 								   {
 									reinterpret_cast<MainScene*>(scene)->setVelY(event.pressed ? 1 : 0);
 									});
-		window->addKeyEventHandler(GLFW_KEY_S, [this](KeyInputEvent event)
+		window->addButtonEventHandler(GLFW_KEY_S, [this](ButtonInputEvent event)
 								   {
 									reinterpret_cast<MainScene*>(scene)->setVelY(event.pressed ? -1 : 0);
 									});
