@@ -7,6 +7,7 @@
 #include "renderer/Sprite.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/Texture2d.h"
+#include "util/RandomUniformFloats.h"
 
 class MainScene : public Audace::Scene
 {
@@ -21,6 +22,10 @@ class MainScene : public Audace::Scene
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
 	glm::vec3 cameraPos = glm::vec3(-5.0f, -30.0f, 2.0f);
 	glm::vec3 cameraTarget = glm::vec3(0, 0, 0);
+
+	glm::vec4 diffuseLight = glm::vec4(1, 0, 0, 1);
+	glm::vec3 lightPos = glm::vec3(0);
+	Audace::RandomUniformFloats rand = Audace::RandomUniformFloats::normalizedRange();
 
 public:
 	MainScene(Audace::FileLoader *fileLoader) : fileLoader(fileLoader) {}
@@ -38,6 +43,19 @@ public:
 
 	void setVelZ(float v) {
 		cameraVel.z = v;
+	}
+
+	void setLightBright(bool bright) {
+		diffuseLight.w = bright ? 2 : 1;
+	}
+
+	void randomLightColor() {
+		glm::vec3 v = glm::normalize(glm::vec3(rand.get(), rand.get(), rand.get()));
+		diffuseLight = glm::vec4(v, diffuseLight.w);
+	}
+
+	void setLightPos(float x, float y) {
+		lightPos = glm::vec3((x - 640.0f) / 100.0f, (y - 360.0f) / -100.0f, 0);
 	}
 };
 

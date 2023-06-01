@@ -34,6 +34,10 @@ namespace Audace
 
 		KeyboardManager::setStaticRef(&keyboardManager);
 		glfwSetKeyCallback(window, KeyboardManager::eventCallback);
+
+		MouseManager::setStaticRef(&mouseManager);
+		glfwSetMouseButtonCallback(window, MouseManager::buttonEventCallback);
+		glfwSetCursorPosCallback(window, MouseManager::moveEventCallback);
 		return true;
 	}
 

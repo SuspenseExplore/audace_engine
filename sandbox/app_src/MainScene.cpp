@@ -65,8 +65,8 @@ void MainScene::render()
 
 	shaderProgram->bind();
 	shaderProgram->setUniformVec4("ambientLight", 0.2f, 0.2f, 0.4f, 0.2f);
-	shaderProgram->setUniformVec4("diffusePos", 0.0f + x, 0.0f + y, 0, 0);
-	shaderProgram->setUniformVec4("diffuseColor", 0.75, 0.5, 0.2, 5);
+	shaderProgram->setUniformVec4("diffusePos", lightPos.x, lightPos.y, lightPos.z, 0);
+	shaderProgram->setUniformVec4("diffuseColor", diffuseLight.x, diffuseLight.y, diffuseLight.z, diffuseLight.w);
 	shaderProgram->setUniformVec4("viewPos", cameraPos.x, cameraPos.y, cameraPos.z, 1.0f);
 
 	glm::mat4 viewMat = glm::lookAt(cameraPos, cameraTarget, glm::vec3(0.0f, 0.0f, 1.0f));

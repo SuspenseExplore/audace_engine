@@ -4,7 +4,9 @@
 #include <functional>
 #include "glfw3.h"
 #include "KeyboardManager.h"
+#include "MouseManager.h"
 #include "input/ButtonInputEvent.h"
+#include "input/Vec2InputEvent.h"
 
 namespace Audace {
 	class GameWindow {
@@ -14,6 +16,7 @@ namespace Audace {
 		std::string title;
 
 		KeyboardManager keyboardManager;
+		MouseManager mouseManager;
 
 public:
 		GameWindow(int width, int height, std::string title);
@@ -25,8 +28,16 @@ public:
 		void beginFrame();
 		void endFrame();
 
-		void addButtonEventHandler(int button, std::function<void(ButtonInputEvent)> handler) {
+		void addKeyEventHandler(int button, std::function<void(ButtonInputEvent)> handler) {
 			keyboardManager.addButtonEventHandler(button, handler);
+		}
+
+		void addMouseButtonEventHandler(int button, std::function<void(ButtonInputEvent)> handler) {
+			mouseManager.addButtonEventHandler(button, handler);
+		}
+
+		void setMouseMoveEventHandler(std::function<void(Vec2InputEvent)> handler) {
+			mouseManager.setMouseMoveEventHandler(&handler);
 		}
 	};
 }

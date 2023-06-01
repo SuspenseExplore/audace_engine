@@ -15,6 +15,7 @@ add_executable(
 	${ENGINE_DIR}/AuLogger.cpp
 	${ENGINE_DIR}/glfw_platform/GameWindow.cpp
 	${ENGINE_DIR}/glfw_platform/KeyboardManager.cpp
+	${ENGINE_DIR}/glfw_platform/MouseManager.cpp
 	${ENGINE_DIR}/glfw_platform/ImageData.cpp
 	${ENGINE_DIR}/glfw_platform/FileLoader.cpp
 	${ENGINE_DIR}/renderer/DataBuffer.cpp
