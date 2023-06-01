@@ -8,8 +8,8 @@
 namespace Audace {
 	class InputEvent {
 	public:
-		const bool changed;
-		const long changedTime;
+		bool changed;
+		long changedTime;
 
 		InputEvent(bool changed, long changedTime) : changed(changed), changedTime(changedTime) {}
 	};

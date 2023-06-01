@@ -5,6 +5,13 @@
 
 namespace Audace
 {
+	GameWindow::GameWindow(int width, int height, std::string title)
+	{
+		this->width = width;
+		this->height = height;
+		this->title = title;
+	}
+
 	bool GameWindow::open()
 	{
 		glfwInit();
@@ -24,6 +31,9 @@ namespace Audace
 		glfwMakeContextCurrent(window);
 		gladLoadGLES2Loader((GLADloadproc)glfwGetProcAddress);
 		AU_RENDERER_LOG_TRACE("GLAD loaded");
+
+		KeyboardManager::setStaticRef(&keyboardManager);
+		glfwSetKeyCallback(window, KeyboardManager::eventCallback);
 		return true;
 	}
 
@@ -32,11 +42,17 @@ namespace Audace
 		glfwTerminate();
 	}
 
-	void GameWindow::beginFrame() {
-
+	void GameWindow::processEvents()
+	{
+		glfwPollEvents();
 	}
 
-	void GameWindow::endFrame() {
+	void GameWindow::beginFrame()
+	{
+	}
+
+	void GameWindow::endFrame()
+	{
 		glfwSwapBuffers(window);
 	}
 }

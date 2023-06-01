@@ -5,6 +5,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
+#include "glfw3.h"
 
 float verts[] = {
 	-0.5f, -0.5f,
@@ -49,17 +50,18 @@ void MainScene::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glm::vec3 cameraPos = glm::vec3(-5.0f, -30.0f, 2.0f);
-
 	darkGridTex->bind(1);
 	greenChecksTex->bind(2);
 	orangeChecksTex->bind(3);
 	purpleChecksTex->bind(4);
 
 	// make the light orbit a point over time
-	float t = (float) std::chrono::high_resolution_clock::now().time_since_epoch().count();
-	float x = cos(t / 5000000000.0f) * 7.0f;
-	float y = sin(t / 5000000000.0f) * 7.0f;
+	float t = glfwGetTime() * 50.0f;
+	float x = cos(glm::radians(t)) * 7.0f;
+	float y = sin(glm::radians(t)) * 7.0f;
+
+	cameraPos += cameraVel;
+	cameraTarget += cameraVel;
 
 	shaderProgram->bind();
 	shaderProgram->setUniformVec4("ambientLight", 0.2f, 0.2f, 0.4f, 0.2f);
@@ -67,7 +69,7 @@ void MainScene::render()
 	shaderProgram->setUniformVec4("diffuseColor", 0.75, 0.5, 0.2, 5);
 	shaderProgram->setUniformVec4("viewPos", cameraPos.x, cameraPos.y, cameraPos.z, 1.0f);
 
-	glm::mat4 viewMat = glm::lookAt(cameraPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	glm::mat4 viewMat = glm::lookAt(cameraPos, cameraTarget, glm::vec3(0.0f, 0.0f, 1.0f));
 	glm::mat4 projMat = glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.1f, 100.0f);
 	glm::mat4 vpMat = projMat * viewMat;
 		shaderProgram->setUniformMat4("vpMat", glm::value_ptr(vpMat));

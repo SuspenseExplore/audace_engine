@@ -20,7 +20,7 @@ namespace Audace
 		AppController(){}
 
 		bool createWindow(int width, int height, std::string title);
-		void pollSystemEvents();
+		void processEvents();
 		void runGameLoop();
 		void renderFrame();
 		void shutdown();

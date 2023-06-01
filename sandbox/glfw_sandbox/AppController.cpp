@@ -1,3 +1,4 @@
+#include "glfw3.h"
 #include "au_renderer.h"
 #include "AppController.h"
 #include "MainScene.h"
@@ -21,11 +22,23 @@ namespace Audace
 
 		scene = new MainScene(fileLoader);
 		scene->loadAssets();
-	}
 
-	void AppController::pollSystemEvents()
-	{
-		glfwPollEvents();
+		window->addKeyEventHandler(GLFW_KEY_A, [this](KeyInputEvent event)
+								   {
+									reinterpret_cast<MainScene*>(scene)->setVelX(event.pressed ? -1 : 0);
+									});
+		window->addKeyEventHandler(GLFW_KEY_D, [this](KeyInputEvent event)
+								   {
+									reinterpret_cast<MainScene*>(scene)->setVelX(event.pressed ? 1 : 0);
+									});
+		window->addKeyEventHandler(GLFW_KEY_W, [this](KeyInputEvent event)
+								   {
+									reinterpret_cast<MainScene*>(scene)->setVelY(event.pressed ? 1 : 0);
+									});
+		window->addKeyEventHandler(GLFW_KEY_S, [this](KeyInputEvent event)
+								   {
+									reinterpret_cast<MainScene*>(scene)->setVelY(event.pressed ? -1 : 0);
+									});
 	}
 
 	void AppController::runGameLoop()
@@ -33,7 +46,7 @@ namespace Audace
 		AU_ENGINE_LOG_TRACE("Entering render loop");
 		while (true)
 		{
-			pollSystemEvents();
+			window->processEvents();
 			if (window->shouldClose())
 			{
 				shutdown();
