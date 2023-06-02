@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include "au_renderer.h"
+#include "glm/glm.hpp"
 
 namespace Audace {
 	class ShaderProgram {
@@ -27,7 +28,7 @@ namespace Audace {
 		void setUniformVec2(std::string name, float *value);
 		void setUniformVec4(std::string name, float x, float y, float z, float w);
 		void setUniformVec4(std::string name, float *value);
-		void setUniformMat4(std::string name, float *value);
+		void setUniformMat4(std::string name, glm::mat4 mat);
 
 		static GLuint loadShader(const char *src, GLenum shaderType);
 	};

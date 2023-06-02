@@ -26,6 +26,7 @@ add_executable(
 	${ENGINE_DIR}/renderer/Sprite.cpp
 	${ENGINE_DIR}/renderer/Shapes.cpp
 	${ENGINE_DIR}/scene/Scene.cpp
+	${ENGINE_DIR}/scene/ForwardCamera.cpp
 )
 
 target_include_directories(

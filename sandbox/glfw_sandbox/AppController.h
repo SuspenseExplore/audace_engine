@@ -16,6 +16,7 @@ namespace Audace
 		GameWindow* window;
 		FileLoader *fileLoader;
 		Scene *scene;
+		glm::vec2 mousePos;
 
 		AppController(){}
 

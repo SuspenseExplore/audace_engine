@@ -8,6 +8,8 @@
 #include "renderer/ShaderProgram.h"
 #include "renderer/Texture2d.h"
 #include "util/RandomUniformFloats.h"
+#include "math/Pose.h"
+#include "scene/ForwardCamera.h"
 
 class MainScene : public Audace::Scene
 {
@@ -20,8 +22,9 @@ class MainScene : public Audace::Scene
 	Audace::Texture2d *purpleChecksTex;
 
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
-	glm::vec3 cameraPos = glm::vec3(-5.0f, -30.0f, 2.0f);
-	glm::vec3 cameraTarget = glm::vec3(0, 0, 0);
+	Audace::ForwardCamera camera = Audace::ForwardCamera::standard(glm::vec3(0, -10, 0), 1280.0f, 720.0f);
+	float cameraYaw = 0;
+	float cameraPitch = 0;
 
 	glm::vec4 diffuseLight = glm::vec4(1, 0, 0, 1);
 	glm::vec3 lightPos = glm::vec3(0);
@@ -33,29 +36,40 @@ public:
 	void render() override;
 	void disposeAssets() override;
 
-	void setVelX(float v) {
+	void setVelX(float v)
+	{
 		cameraVel.x = v;
 	}
 
-	void setVelY(float v) {
+	void setVelY(float v)
+	{
 		cameraVel.y = v;
 	}
 
-	void setVelZ(float v) {
+	void setVelZ(float v)
+	{
 		cameraVel.z = v;
 	}
 
-	void setLightBright(bool bright) {
+	void setLightBright(bool bright)
+	{
 		diffuseLight.w = bright ? 2 : 1;
 	}
 
-	void randomLightColor() {
+	void randomLightColor()
+	{
 		glm::vec3 v = glm::normalize(glm::vec3(rand.get(), rand.get(), rand.get()));
 		diffuseLight = glm::vec4(v, diffuseLight.w);
 	}
 
-	void setLightPos(float x, float y) {
+	void setLightPos(float x, float y)
+	{
 		lightPos = glm::vec3((x - 640.0f) / 100.0f, (y - 360.0f) / -100.0f, 0);
+	}
+
+	void rotateCamera(float x, float y, float z) {
+		cameraYaw += z;
+		cameraPitch += x;
 	}
 };
 

@@ -1,6 +1,7 @@
 #include <iostream>
 #include "ShaderProgram.h"
 #include "AuLogger.h"
+#include "glm/gtc/type_ptr.hpp"
 
 namespace Audace
 {
@@ -116,8 +117,8 @@ namespace Audace
 		AU_RENDERER_LOG_TRACE("Set vec4 uniform in shader {} at location {} to value [{},{},{},{}]", glid, uniforms[name], value[0], value[1], value[2], value[3]);
 	}
 
-	void ShaderProgram::setUniformMat4(std::string name, float *value) {
-		glUniformMatrix4fv(uniforms[name], 1, false, value);
+	void ShaderProgram::setUniformMat4(std::string name, glm::mat4 value) {
+		glUniformMatrix4fv(uniforms[name], 1, false, glm::value_ptr(value));
 		AU_CHECK_GL_ERRORS();
 	}
 
