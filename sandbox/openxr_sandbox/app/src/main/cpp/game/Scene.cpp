@@ -90,7 +90,7 @@ void Scene::render(OpenxrView view) {
 		worldMat = worldMat * glm::mat4_cast(aimPose.orientation);
 		worldMat = glm::scale(worldMat, glm::vec3(0.02f, 0.02f, -2.0f));
 		worldMat = glm::translate(worldMat, glm::vec3(-0.5f, -0.5f, 0));
-		shaderProgram->setUniformMat4("worldMat", glm::value_ptr(worldMat));
+		shaderProgram->setUniformMat4("worldMat", worldMat);
 		shaderProgram->setUniformVec2("textureScale", 1, 1);
 		AU_CHECK_GL_ERRORS();
 
@@ -103,7 +103,7 @@ void Scene::render(OpenxrView view) {
 		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(-10, -10, -2));
 //		worldMat = glm::rotate(worldMat, glm::radians(0.0f), glm::vec3(1, 0, 0));
 		worldMat = glm::scale(worldMat, glm::vec3(20.0f, 20.0f, 1.0f));
-		shaderProgram->setUniformMat4("worldMat", glm::value_ptr(worldMat));
+		shaderProgram->setUniformMat4("worldMat", worldMat);
 		shaderProgram->setUniformVec2("textureScale", 10, 10);
 		AU_CHECK_GL_ERRORS();
 

@@ -122,6 +122,11 @@ namespace Audace
 		AU_CHECK_GL_ERRORS();
 	}
 
+	void ShaderProgram::setUniformMat4(std::string name, float* value) {
+		glUniformMatrix4fv(uniforms[name], 1, false, value);
+		AU_CHECK_GL_ERRORS();
+	}
+
 	GLuint ShaderProgram::loadShader(const char *src, GLenum shaderType)
 	{
 		GLuint shaderId = glCreateShader(shaderType);
