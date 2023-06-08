@@ -5,7 +5,11 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
-#include "glfw3.h"
+#include "content/obj_loader.h"
+#include "renderer/DataBuffer.h"
+#include "renderer/VertexAttribute.h"
+#include "renderer/VertexArray.h"
+#include "renderer/Sprite.h"
 
 float verts[] = {
 	-0.5f, -0.5f,
@@ -44,6 +48,29 @@ void MainScene::loadAssets()
 		purpleChecksTex = new Audace::Texture2d(img);
 		purpleChecksTex->create();
 	}
+
+	objl::Loader modelLoader;
+	bool loaded = modelLoader.LoadFile("../../assets/models/rock_largeA.obj");
+
+	int indexCount = modelLoader.LoadedIndices.size();
+	int vertexCount = modelLoader.LoadedVertices.size();
+
+	Audace::DataBuffer* buf = new Audace::DataBuffer(modelLoader.LoadedVertices.data(), vertexCount * 8 * sizeof(float), GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+	Audace::DataBuffer* ind = new Audace::DataBuffer(modelLoader.LoadedIndices.data(), indexCount * sizeof(unsigned int), GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
+	buf->create();
+	ind->create();
+	buf->bind();
+	ind->bind();
+
+	Audace::VertexAttribute posAttr(0, 3, GL_FLOAT, false, sizeof(float) * 8, 0);
+	Audace::VertexAttribute normAttr(1, 3, GL_FLOAT, false, sizeof(float) * 8, sizeof(float) * 3);
+	std::vector<Audace::VertexAttribute*> attrs;
+	attrs.push_back(&posAttr);
+	attrs.push_back(&normAttr);
+	Audace::VertexArray* vertArray = new Audace::VertexArray(attrs);
+	vertArray->create();
+
+	modelSprite = new Audace::Sprite(buf, ind, vertArray, 0, modelLoader.LoadedIndices.size(), GL_TRIANGLES, GL_UNSIGNED_INT);
 }
 
 void MainScene::render()
@@ -54,11 +81,6 @@ void MainScene::render()
 	greenChecksTex->bind(2);
 	orangeChecksTex->bind(3);
 	purpleChecksTex->bind(4);
-
-	// make the light orbit a point over time
-	float t = glfwGetTime() * 50.0f;
-	float x = cos(glm::radians(t)) * 7.0f;
-	float y = sin(glm::radians(t)) * 7.0f;
 
 	camera.setOrientation(cameraPitch, 0, cameraYaw);
 	camera.move(cameraVel);
@@ -80,31 +102,31 @@ void MainScene::render()
 		boxSprite->render();
 	}
 	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(10, 0, 0));
+		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(5, 0, 0));
 		// worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 		worldMat = glm::scale(worldMat, glm::vec3(5, 5, 5));
 		shaderProgram->setUniformMat4("worldMat", worldMat);
 		shaderProgram->setUniformInt("tex1", 2);
 		shaderProgram->setUniformVec2("textureScale", 2, 2);
-		boxSprite->render();
+		modelSprite->render();
 	}
 	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 10, 0));
+		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 5, 0));
 		// worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 		worldMat = glm::scale(worldMat, glm::vec3(5, 5, 5));
 		shaderProgram->setUniformMat4("worldMat", worldMat);
 		shaderProgram->setUniformInt("tex1", 3);
 		shaderProgram->setUniformVec2("textureScale", 2, 2);
-		boxSprite->render();
+		modelSprite->render();
 	}
 	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 10));
+		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 5));
 		// worldMat = glm::rotate(worldMat, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		worldMat = glm::scale(worldMat, glm::vec3(5, 5, 5));
 		shaderProgram->setUniformMat4("worldMat", worldMat);
 		shaderProgram->setUniformInt("tex1", 4);
 		shaderProgram->setUniformVec2("textureScale", 2, 2);
-		boxSprite->render();
+		modelSprite->render();
 	}
 }
 
