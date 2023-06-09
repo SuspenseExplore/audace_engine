@@ -12,10 +12,16 @@ namespace Audace {
 		glm::vec3 texCoord;
 	};
 
+	struct ModelSection {
+		int startIndex;
+		int vertexCount;
+	};
+
 	struct Model {
 		std::string name;
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
+		std::vector<ModelSection*> sections;
 	};
 }
 

@@ -5,35 +5,21 @@
 #ifndef AU_SPRITE_H
 #define AU_SPRITE_H
 
+#include <vector>
 #include "au_renderer.h"
-#include "renderer/DataBuffer.h"
-#include "renderer/VertexAttribute.h"
-#include "renderer/VertexArray.h"
+#include "content/Model.h"
+#include "renderer/Mesh.h"
 
 namespace Audace {
 
 	/**
-	 * A Sprite contains the geometry and metadata to render a single discrete object
+	 * Combines one or more Meshes with world transformation data to make a single coherent renderable object
 	 */
 	class Sprite {
-		DataBuffer *vertexBuffer;
-		DataBuffer *indexBuffer;
-		VertexArray *vertexArray;
-		int startIndex;
-		int vertexCount;
-		GLenum renderMode;
-		GLenum indexType;
+		std::vector<Mesh*> meshes;
 
 	public:
-		Sprite(DataBuffer *vertexBuffer, VertexArray *vertexArray,
-			   int startIndex, int vertexCount, GLenum renderMode) :
-				vertexBuffer(vertexBuffer), indexBuffer(nullptr), vertexArray(vertexArray),
-				startIndex(startIndex), vertexCount(vertexCount), renderMode(renderMode) {}
-
-		Sprite(DataBuffer *vertexBuffer, DataBuffer *indexBuffer, VertexArray *vertexArray,
-			   int startIndex, int vertexCount, GLenum renderMode, GLenum indexType) :
-				vertexBuffer(vertexBuffer), indexBuffer(indexBuffer), vertexArray(vertexArray),
-				startIndex(startIndex), vertexCount(vertexCount), renderMode(renderMode), indexType(indexType) {}
+		Sprite(Model* model);
 
 		void render();
 	};

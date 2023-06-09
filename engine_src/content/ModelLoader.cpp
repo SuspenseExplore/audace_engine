@@ -16,6 +16,9 @@ namespace Audace
 		std::vector<glm::vec3> texCoords;
 		std::map<std::string, unsigned int> indexMap;
 
+		unsigned int currentIndex = 0;
+		ModelSection* currentSection = nullptr;
+
 		std::stringstream ss(fileContent);
 		std::string line;
 		std::string d = "\n";
@@ -28,6 +31,16 @@ namespace Audace
 			else if (line.size() == 0)
 			{
 				// ignore blank line
+			}
+			else if (line[0] == 'u' && line[1] == 's' && line[2] == 'e' && line[3] == 'm' && line[4] == 't' && line[5] == 'l')
+			{
+				if (currentSection != nullptr)
+				{
+					model->sections.push_back(currentSection);
+				}
+				currentSection = new ModelSection;
+				currentSection->startIndex = currentIndex;
+				currentSection->vertexCount = 0;
 			}
 			else if (line[0] == 'g')
 			{
@@ -75,11 +88,15 @@ namespace Audace
 						indexMap[face] = index;
 						model->vertices.push_back(vertex);
 						model->indices.push_back(index);
+						currentSection->vertexCount++;
+						currentIndex++;
 					}
 					else
 					{
 						// this vertex already exists, just add the index
 						model->indices.push_back(indexMap[face]);
+						currentSection->vertexCount++;
+						currentIndex++;
 					}
 				}
 			}
@@ -88,6 +105,7 @@ namespace Audace
 				AU_ENGINE_LOG_DEBUG("Read line: {}", line);
 			}
 		}
+		model->sections.push_back(currentSection);
 		return model;
 	}
 }

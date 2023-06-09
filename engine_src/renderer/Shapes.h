@@ -5,15 +5,15 @@
 #ifndef AU_SHAPES_H
 #define AU_SHAPES_H
 
-#include "renderer/Sprite.h"
+#include "renderer/Mesh.h"
 
 namespace Audace {
 	class Shapes {
 	public:
-		static Sprite* squarePositions();
-		static Sprite* circlePositions();
-		static Sprite* cubePositions();
-		static Sprite* cubePosNorm();
+		static Mesh* squarePositions();
+		static Mesh* circlePositions();
+		static Mesh* cubePositions();
+		static Mesh* cubePosNorm();
 	};
 }
 

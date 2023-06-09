@@ -4,6 +4,7 @@
 #include "glm/glm.hpp"
 #include "scene/Scene.h"
 #include "FileLoader.h"
+#include "renderer/Mesh.h"
 #include "renderer/Sprite.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/Texture2d.h"
@@ -14,7 +15,7 @@
 class MainScene : public Audace::Scene
 {
 	Audace::FileLoader *fileLoader;
-	Audace::Sprite* boxSprite;
+	Audace::Mesh* boxSprite;
 	Audace::Sprite* modelSprite;
 	Audace::ShaderProgram *shaderProgram;
 	Audace::Texture2d *darkGridTex;

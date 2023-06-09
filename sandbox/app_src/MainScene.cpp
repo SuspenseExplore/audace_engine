@@ -5,7 +5,6 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
-#include "content/obj_loader.h"
 #include "renderer/DataBuffer.h"
 #include "renderer/VertexAttribute.h"
 #include "renderer/VertexArray.h"
@@ -49,24 +48,8 @@ void MainScene::loadAssets()
 		purpleChecksTex->create();
 	}
 
-	Audace::Model* model = fileLoader->readModelFile("models/rock_largeA.obj");
-	int vertexCount = model->vertices.size();
-	int indexCount = model->indices.size();
-
-	Audace::DataBuffer* buf = new Audace::DataBuffer(model->vertices.data(), vertexCount * 9 * sizeof(float), GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-	Audace::DataBuffer* ind = new Audace::DataBuffer(model->indices.data(), indexCount * sizeof(unsigned int), GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
-	buf->create();
-	ind->create();
-
-	Audace::VertexAttribute posAttr(0, 3, GL_FLOAT, false, sizeof(float) * 9, 0);
-	Audace::VertexAttribute normAttr(1, 3, GL_FLOAT, false, sizeof(float) * 9, sizeof(float) * 3);
-	std::vector<Audace::VertexAttribute*> attrs;
-	attrs.push_back(&posAttr);
-	attrs.push_back(&normAttr);
-	Audace::VertexArray* vertArray = new Audace::VertexArray(attrs);
-	vertArray->create();
-
-	modelSprite = new Audace::Sprite(buf, ind, vertArray, 0, indexCount, GL_TRIANGLES, GL_UNSIGNED_INT);
+	Audace::Model* model = fileLoader->readModelFile("models/wallNarrowWood.obj");
+	modelSprite = new Audace::Sprite(model);
 }
 
 void MainScene::render()
@@ -99,8 +82,8 @@ void MainScene::render()
 	}
 	{
 		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(5, 0, 0));
-		// worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		worldMat = glm::scale(worldMat, glm::vec3(5, 5, 5));
+		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		worldMat = glm::scale(worldMat, glm::vec3(0.2f, 0.2f, 0.2f));
 		shaderProgram->setUniformMat4("worldMat", worldMat);
 		shaderProgram->setUniformInt("tex1", 2);
 		shaderProgram->setUniformVec2("textureScale", 2, 2);
@@ -108,8 +91,8 @@ void MainScene::render()
 	}
 	{
 		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 5, 0));
-		// worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		worldMat = glm::scale(worldMat, glm::vec3(5, 5, 5));
+		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		worldMat = glm::scale(worldMat, glm::vec3(0.2f, 0.2f, 0.2f));
 		shaderProgram->setUniformMat4("worldMat", worldMat);
 		shaderProgram->setUniformInt("tex1", 3);
 		shaderProgram->setUniformVec2("textureScale", 2, 2);
@@ -117,8 +100,8 @@ void MainScene::render()
 	}
 	{
 		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 5));
-		// worldMat = glm::rotate(worldMat, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		worldMat = glm::scale(worldMat, glm::vec3(5, 5, 5));
+		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		worldMat = glm::scale(worldMat, glm::vec3(0.2f, 0.2f, 0.2f));
 		shaderProgram->setUniformMat4("worldMat", worldMat);
 		shaderProgram->setUniformInt("tex1", 4);
 		shaderProgram->setUniformVec2("textureScale", 2, 2);

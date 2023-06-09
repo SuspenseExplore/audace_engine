@@ -10,7 +10,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 namespace Audace {
-	Sprite *Shapes::squarePositions() {
+	Mesh *Shapes::squarePositions() {
 		float *verts = new float[]{
 				0.0f, 0.0f, 0.0f,
 				0.0f, 1.0f, 0.0f,
@@ -27,11 +27,11 @@ namespace Audace {
 		VertexArray *vertexArray = new VertexArray(attrs);
 		vertexArray->create();
 
-		Sprite *sprite = new Sprite(vertexBuffer, vertexArray, 0, 4, GL_TRIANGLE_STRIP);
-		return sprite;
+		Mesh *mesh = new Mesh(vertexArray, 0, 4, GL_TRIANGLE_STRIP);
+		return mesh;
 	}
 
-	Sprite *Shapes::circlePositions() {
+	Mesh *Shapes::circlePositions() {
 		glm::vec4 center = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 		glm::vec4 edge = glm::vec4(0.5f, 0.0f, 0.0f, 1.0f);
 		glm::vec3 axis = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -63,11 +63,11 @@ namespace Audace {
 		VertexArray *vertexArray = new VertexArray(attrs);
 		vertexArray->create();
 
-		Sprite *sprite = new Sprite(vertexBuffer, vertexArray, 0, STEPS + 2, GL_TRIANGLE_FAN);
-		return sprite;
+		Mesh *mesh = new Mesh(vertexArray, 0, STEPS + 2, GL_TRIANGLE_FAN);
+		return mesh;
 	}
 
-	Sprite *Shapes::cubePositions() {
+	Mesh *Shapes::cubePositions() {
 		float *verts = new float[]{
 				0.0f, 0.0f, 0.0f,
 				0.0f, 0.0f, 1.0f,
@@ -108,12 +108,12 @@ namespace Audace {
 		VertexArray *vertexArray = new VertexArray(attrs);
 		vertexArray->create();
 
-		Sprite *sprite = new Sprite(vertexBuffer, indexBuffer, vertexArray, 0, 36, GL_TRIANGLES,
+		Mesh *mesh = new Mesh(vertexArray, indexBuffer, 0, 36, GL_TRIANGLES,
 									GL_UNSIGNED_SHORT);
-		return sprite;
+		return mesh;
 	}
 
-	Sprite *Shapes::cubePosNorm() {
+	Mesh *Shapes::cubePosNorm() {
 		float *verts = new float[]{
 				//-x
 				0, 0, 0, -1, 0, 0,
@@ -178,8 +178,8 @@ namespace Audace {
 		VertexArray *vertexArray = new VertexArray(attrs);
 		vertexArray->create();
 
-		Sprite *sprite = new Sprite(vertexBuffer, indexBuffer, vertexArray, 0, 36, GL_TRIANGLES,
+		Mesh *mesh = new Mesh(vertexArray, indexBuffer, 0, 36, GL_TRIANGLES,
 									GL_UNSIGNED_SHORT);
-		return sprite;
+		return mesh;
 	}
 }
