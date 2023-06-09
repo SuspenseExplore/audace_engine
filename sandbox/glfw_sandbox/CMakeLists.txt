@@ -25,6 +25,7 @@ add_executable(
 	${ENGINE_DIR}/renderer/Texture2d.cpp
 	${ENGINE_DIR}/renderer/Sprite.cpp
 	${ENGINE_DIR}/renderer/Shapes.cpp
+	${ENGINE_DIR}/content/ModelLoader.cpp
 	${ENGINE_DIR}/scene/Scene.cpp
 	${ENGINE_DIR}/scene/ForwardCamera.cpp
 )

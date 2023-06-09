@@ -49,28 +49,24 @@ void MainScene::loadAssets()
 		purpleChecksTex->create();
 	}
 
-	objl::Loader modelLoader;
-	bool loaded = modelLoader.LoadFile("../../assets/models/rock_largeA.obj");
+	Audace::Model* model = fileLoader->readModelFile("models/rock_largeA.obj");
+	int vertexCount = model->vertices.size();
+	int indexCount = model->indices.size();
 
-	int indexCount = modelLoader.LoadedIndices.size();
-	int vertexCount = modelLoader.LoadedVertices.size();
-
-	Audace::DataBuffer* buf = new Audace::DataBuffer(modelLoader.LoadedVertices.data(), vertexCount * 8 * sizeof(float), GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-	Audace::DataBuffer* ind = new Audace::DataBuffer(modelLoader.LoadedIndices.data(), indexCount * sizeof(unsigned int), GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
+	Audace::DataBuffer* buf = new Audace::DataBuffer(model->vertices.data(), vertexCount * 9 * sizeof(float), GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+	Audace::DataBuffer* ind = new Audace::DataBuffer(model->indices.data(), indexCount * sizeof(unsigned int), GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
 	buf->create();
 	ind->create();
-	buf->bind();
-	ind->bind();
 
-	Audace::VertexAttribute posAttr(0, 3, GL_FLOAT, false, sizeof(float) * 8, 0);
-	Audace::VertexAttribute normAttr(1, 3, GL_FLOAT, false, sizeof(float) * 8, sizeof(float) * 3);
+	Audace::VertexAttribute posAttr(0, 3, GL_FLOAT, false, sizeof(float) * 9, 0);
+	Audace::VertexAttribute normAttr(1, 3, GL_FLOAT, false, sizeof(float) * 9, sizeof(float) * 3);
 	std::vector<Audace::VertexAttribute*> attrs;
 	attrs.push_back(&posAttr);
 	attrs.push_back(&normAttr);
 	Audace::VertexArray* vertArray = new Audace::VertexArray(attrs);
 	vertArray->create();
 
-	modelSprite = new Audace::Sprite(buf, ind, vertArray, 0, modelLoader.LoadedIndices.size(), GL_TRIANGLES, GL_UNSIGNED_INT);
+	modelSprite = new Audace::Sprite(buf, ind, vertArray, 0, indexCount, GL_TRIANGLES, GL_UNSIGNED_INT);
 }
 
 void MainScene::render()

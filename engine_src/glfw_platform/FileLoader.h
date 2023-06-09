@@ -2,7 +2,9 @@
 #define AU_FILELOADER_H
 
 #include <string>
+#include <iostream>
 #include "ImageData.h"
+#include "content/Model.h"
 
 namespace Audace {
 	class FileLoader {
@@ -10,8 +12,10 @@ namespace Audace {
 
 		public:
 		FileLoader(std::string basePath) : basePath(basePath) {}
+
 		std::string textFileToString(std::string path);
 		ImageData readImageFile(std::string path);
+		Model* readModelFile(std::string path);
 	};
 }
 
