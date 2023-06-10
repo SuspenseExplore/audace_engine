@@ -48,12 +48,16 @@ void MainScene::loadAssets()
 		purpleChecksTex->create();
 	}
 
-	Audace::Model* model = fileLoader->readModelFile("models/wallNarrowWood.obj");
+	Audace::Model* model = fileLoader->readModelFile("models/", "wallNarrowWood.obj");
+	for (Audace::ModelSection* section : model->sections) {
+		section->material->setShader(shaderProgram);
+	}
 	modelSprite = new Audace::Sprite(model);
 }
 
 void MainScene::render()
 {
+	glEnable(GL_CULL_FACE);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	darkGridTex->bind(1);
@@ -65,10 +69,11 @@ void MainScene::render()
 	camera.move(cameraVel);
 
 	shaderProgram->bind();
-	shaderProgram->setUniformVec4("ambientLight", 0.2f, 0.2f, 0.4f, 0.2f);
-	shaderProgram->setUniformVec4("diffusePos", lightPos.x, lightPos.y, lightPos.z, 0);
-	shaderProgram->setUniformVec4("diffuseColor", diffuseLight.x, diffuseLight.y, diffuseLight.z, diffuseLight.w);
-	shaderProgram->setUniformVec4("viewPos", camera.getPosition().x, camera.getPosition().y, camera.getPosition().z, 1.0f);
+	shaderProgram->setUniformVec3("light.position", lightPos.x, lightPos.y, lightPos.z);
+	shaderProgram->setUniformVec3("light.ambient", 0.2f, 0.2f, 0.4f);
+	shaderProgram->setUniformVec3("light.diffuse", diffuseLight.x, diffuseLight.y, diffuseLight.z);
+	shaderProgram->setUniformVec3("light.specular", 1.0f, 1.0f, 1.0f);
+	shaderProgram->setUniformVec3("viewPos", camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
 
 	shaderProgram->setUniformMat4("vpMat", camera.getvpMat());
 

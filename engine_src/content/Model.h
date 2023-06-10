@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "glm/glm.hpp"
+#include "renderer/Material.h"
 
 namespace Audace {
 	struct Vertex {
@@ -15,6 +16,7 @@ namespace Audace {
 	struct ModelSection {
 		int startIndex;
 		int vertexCount;
+		Material* material;
 	};
 
 	struct Model {

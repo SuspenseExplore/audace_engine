@@ -27,7 +27,7 @@ namespace Audace {
 		VertexArray *vertexArray = new VertexArray(attrs);
 		vertexArray->create();
 
-		Mesh *mesh = new Mesh(vertexArray, 0, 4, GL_TRIANGLE_STRIP);
+		Mesh *mesh = new Mesh(vertexArray, 0, 4, GL_TRIANGLE_STRIP, nullptr);
 		return mesh;
 	}
 
@@ -63,7 +63,7 @@ namespace Audace {
 		VertexArray *vertexArray = new VertexArray(attrs);
 		vertexArray->create();
 
-		Mesh *mesh = new Mesh(vertexArray, 0, STEPS + 2, GL_TRIANGLE_FAN);
+		Mesh *mesh = new Mesh(vertexArray, 0, STEPS + 2, GL_TRIANGLE_FAN, nullptr);
 		return mesh;
 	}
 
@@ -109,7 +109,7 @@ namespace Audace {
 		vertexArray->create();
 
 		Mesh *mesh = new Mesh(vertexArray, indexBuffer, 0, 36, GL_TRIANGLES,
-									GL_UNSIGNED_SHORT);
+									GL_UNSIGNED_SHORT, nullptr);
 		return mesh;
 	}
 
@@ -179,7 +179,7 @@ namespace Audace {
 		vertexArray->create();
 
 		Mesh *mesh = new Mesh(vertexArray, indexBuffer, 0, 36, GL_TRIANGLES,
-									GL_UNSIGNED_SHORT);
+									GL_UNSIGNED_SHORT, nullptr);
 		return mesh;
 	}
 }

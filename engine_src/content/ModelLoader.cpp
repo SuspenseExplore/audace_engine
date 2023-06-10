@@ -8,7 +8,7 @@
 
 namespace Audace
 {
-	Model *ModelLoader::loadObj(std::string &fileContent)
+	Model *ModelLoader::loadObj(FileLoader *fileLoader, std::string path, std::string filename)
 	{
 		Model *model = new Model;
 		std::vector<glm::vec3> positions;
@@ -17,11 +17,12 @@ namespace Audace
 		std::map<std::string, unsigned int> indexMap;
 
 		unsigned int currentIndex = 0;
-		ModelSection* currentSection = nullptr;
+		ModelSection *currentSection = nullptr;
+		std::map<std::string, Material *> materials;
 
+		std::string fileContent = fileLoader->textFileToString(path + filename);
 		std::stringstream ss(fileContent);
 		std::string line;
-		std::string d = "\n";
 		while (std::getline(ss, line, '\n'))
 		{
 			if (line[0] == '#')
@@ -34,6 +35,9 @@ namespace Audace
 			}
 			else if (line[0] == 'u' && line[1] == 's' && line[2] == 'e' && line[3] == 'm' && line[4] == 't' && line[5] == 'l')
 			{
+				std::vector<std::string> vec = StringUtil::split(line, ' ');
+				std::string matName = vec[1];
+
 				if (currentSection != nullptr)
 				{
 					model->sections.push_back(currentSection);
@@ -41,6 +45,7 @@ namespace Audace
 				currentSection = new ModelSection;
 				currentSection->startIndex = currentIndex;
 				currentSection->vertexCount = 0;
+				currentSection->material = materials[matName];
 			}
 			else if (line[0] == 'g')
 			{
@@ -100,6 +105,11 @@ namespace Audace
 					}
 				}
 			}
+			else if (line[0] == 'm' && line[1] == 't' && line[2] == 'l' && line[3] == 'l' && line[4] == 'i' && line[5] == 'b')
+			{
+				std::vector<std::string> vec = StringUtil::split(line, ' ');
+				materials = loadMtl(fileLoader, path + vec[1]);
+			}
 			else
 			{
 				AU_ENGINE_LOG_DEBUG("Read line: {}", line);
@@ -107,5 +117,60 @@ namespace Audace
 		}
 		model->sections.push_back(currentSection);
 		return model;
+	}
+
+	std::map<std::string, Material *> ModelLoader::loadMtl(FileLoader *fileLoader, std::string filepath)
+	{
+		std::map<std::string, Material *> mats;
+		std::string fileContent = fileLoader->textFileToString(filepath);
+		std::stringstream ss(fileContent);
+		std::string line;
+
+		Material *mat = nullptr;
+
+		while (std::getline(ss, line, '\n'))
+		{
+			if (line[0] == '#')
+			{
+				// ignore comment
+			}
+			else if (line.size() == 0)
+			{
+				// ignore blank line
+			}
+			else if (line[0] == 'n' && line[1] == 'e' && line[2] == 'w' && line[3] == 'm' && line[4] == 't' && line[5] == 'l')
+			{
+				std::vector<std::string> vec = StringUtil::split(line, ' ');
+				std::string name = vec[1];
+				if (mat != nullptr)
+				{
+					mats[mat->getName()] = mat;
+				}
+				mat = new Material();
+				mat->setName(name);
+				mat->setShininess(0.5f * 128);
+			}
+			else if (line[0] == 'K' && line[1] == 'a')
+			{
+				std::vector<std::string> vec = StringUtil::split(line, ' ');
+				glm::vec3 ambient = glm::vec3(std::stof(vec[1]), std::stof(vec[2]), std::stof(vec[3]));
+				mat->setAmbientColor(ambient);
+			}
+			else if (line[0] == 'K' && line[1] == 'd')
+			{
+				std::vector<std::string> vec = StringUtil::split(line, ' ');
+				glm::vec3 diffuse = glm::vec3(std::stof(vec[1]), std::stof(vec[2]), std::stof(vec[3]));
+				mat->setDiffuseColor(diffuse);
+			}
+			else if (line[0] == 'K' && line[1] == 's')
+			{
+				std::vector<std::string> vec = StringUtil::split(line, ' ');
+				glm::vec3 specular = glm::vec3(std::stof(vec[1]), std::stof(vec[2]), std::stof(vec[3]));
+				mat->setSpecularColor(specular);
+			}
+		}
+		mats[mat->getName()] = mat;
+
+		return mats;
 	}
 }

@@ -4,6 +4,7 @@
 #include "au_renderer.h"
 #include "renderer/VertexArray.h"
 #include "renderer/DataBuffer.h"
+#include "renderer/Material.h"
 
 namespace Audace
 {
@@ -18,10 +19,11 @@ namespace Audace
 		int vertexCount;
 		GLenum renderMode;
 		GLenum indexType;
+		Material *material;
 
 	public:
-		Mesh(VertexArray *vertexArray, DataBuffer *indexBuffer, int startIndex, int vertexCount, GLenum renderMode, GLenum indexType) : vertexArray(vertexArray), indexBuffer(indexBuffer), startIndex(startIndex), vertexCount(vertexCount), renderMode(renderMode), indexType(indexType) {}
-		Mesh(VertexArray *vertexArray, int startIndex, int vertexCount, GLenum renderMode) : vertexArray(vertexArray), startIndex(startIndex), vertexCount(vertexCount), renderMode(renderMode) {}
+		Mesh(VertexArray *vertexArray, DataBuffer *indexBuffer, int startIndex, int vertexCount, GLenum renderMode, GLenum indexType, Material *material) : vertexArray(vertexArray), indexBuffer(indexBuffer), startIndex(startIndex), vertexCount(vertexCount), renderMode(renderMode), indexType(indexType), material(material) {}
+		Mesh(VertexArray *vertexArray, int startIndex, int vertexCount, GLenum renderMode, Material *material) : vertexArray(vertexArray), startIndex(startIndex), vertexCount(vertexCount), renderMode(renderMode), material(material) {}
 
 		void render();
 	};

@@ -23,13 +23,12 @@ namespace Audace
 		return img;
 	}
 
-	Model *FileLoader::readModelFile(std::string path)
+	Model *FileLoader::readModelFile(std::string path, std::string filename)
 	{
 		std::string objExt = ".obj";
-		if (std::equal(objExt.rbegin(), objExt.rend(), path.rbegin()))
+		if (std::equal(objExt.rbegin(), objExt.rend(), filename.rbegin()))
 		{
-			std::string content = textFileToString(path);
-			Model *model = ModelLoader::loadObj(content);
+			Model *model = ModelLoader::loadObj(this, path, filename);
 			return model;
 		}
 		return nullptr;

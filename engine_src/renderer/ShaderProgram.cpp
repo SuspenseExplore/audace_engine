@@ -93,6 +93,13 @@ namespace Audace
 		AU_RENDERER_LOG_TRACE("Set int uniform in shader {} at location {} to value {}", glid, uniforms[name], value);
 	}
 
+	void ShaderProgram::setUniformFloat(std::string name, float value)
+	{
+		glUniform1f(uniforms[name], value);
+		AU_CHECK_GL_ERRORS();
+		AU_RENDERER_LOG_TRACE("Set float uniform in shader {} at location {} to value {}", glid, uniforms[name], value);
+	}
+
 	void ShaderProgram::setUniformVec2(std::string name, float x, float y) {
 		glUniform2f(uniforms[name], x, y);
 		AU_CHECK_GL_ERRORS();
@@ -103,6 +110,12 @@ namespace Audace
 		glUniform2f(uniforms[name], value[0], value[1]);
 		AU_CHECK_GL_ERRORS();
 		AU_RENDERER_LOG_TRACE("Set vec2 uniform in shader {} at location {} to value [{},{}]", glid, uniforms[name], value[0], value[1]);
+	}
+
+	void ShaderProgram::setUniformVec3(std::string name, float x, float y, float z) {
+		glUniform3f(uniforms[name], x, y, z);
+		AU_CHECK_GL_ERRORS();
+		AU_RENDERER_LOG_TRACE("Set vec3 uniform in shader {} at location {} to value [{},{},{}]", glid, uniforms[name], x, y, z);
 	}
 
 	void ShaderProgram::setUniformVec4(std::string name, float x, float y, float z, float w) {

@@ -24,8 +24,10 @@ namespace Audace {
 		GLuint getId() {return glid;}
 
 		void setUniformInt(std::string name, int value);
+		void setUniformFloat(std::string name, float x);
 		void setUniformVec2(std::string name, float x, float y);
 		void setUniformVec2(std::string name, float *value);
+		void setUniformVec3(std::string name, float x, float y, float z);
 		void setUniformVec4(std::string name, float x, float y, float z, float w);
 		void setUniformVec4(std::string name, float *value);
 		void setUniformMat4(std::string name, glm::mat4 mat);

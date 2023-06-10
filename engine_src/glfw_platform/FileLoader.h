@@ -15,7 +15,7 @@ namespace Audace {
 
 		std::string textFileToString(std::string path);
 		ImageData readImageFile(std::string path);
-		Model* readModelFile(std::string path);
+		Model* readModelFile(std::string path, std::string filename);
 	};
 }
 

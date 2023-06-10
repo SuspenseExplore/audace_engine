@@ -29,7 +29,8 @@ namespace Audace
 		vertArray->create();
 
 		for (ModelSection* section : model->sections) {
-			Mesh* mesh = new Mesh(vertArray, ind, section->startIndex, section->vertexCount, GL_TRIANGLES, GL_UNSIGNED_INT);
+			Mesh* mesh = new Mesh(vertArray, ind, section->startIndex, section->vertexCount, GL_TRIANGLES, GL_UNSIGNED_INT, section->material);
+			
 			meshes.push_back(mesh);
 		}
 	}

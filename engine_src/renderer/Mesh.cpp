@@ -4,6 +4,9 @@ namespace Audace
 {
 	void Mesh::render()
 	{
+		if (material != nullptr) {
+			material->apply();
+		}
 		if (indexBuffer == nullptr)
 		{
 			vertexArray->bind();
