@@ -11,10 +11,10 @@ namespace Audace
 	{
 		ShaderProgram *shaderProgram;
 		std::string name;
-		glm::vec3 ambientColor;
-		glm::vec3 diffuseColor;
-		glm::vec3 specularColor;
-		float shininess;
+		glm::vec3 ambientColor = glm::vec3(0.0f, 0.0f, 0.0f);
+		glm::vec3 diffuseColor = glm::vec3(0.0f, 0.0f, 0.0f);
+		glm::vec3 specularColor = glm::vec3(0.0f, 0.0f, 0.0f);
+		float shininess = 0.2f * 128;
 
 	public:
 		void setName(std::string name) {this->name = name;}

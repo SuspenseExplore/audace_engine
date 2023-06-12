@@ -43,9 +43,7 @@ namespace Audace
 					model->sections.push_back(currentSection);
 				}
 				currentSection = new ModelSection;
-				currentSection->startIndex = currentIndex;
-				currentSection->vertexCount = 0;
-				currentSection->material = materials[matName];
+				// currentSection->material = materials[matName];
 			}
 			else if (line[0] == 'g')
 			{
@@ -89,19 +87,19 @@ namespace Audace
 						vertex.texCoord = texCoords[std::stoi(refs[1]) - 1];
 						vertex.normal = normals[std::stoi(refs[2]) - 1];
 
-						unsigned int index = model->vertices.size();
-						indexMap[face] = index;
-						model->vertices.push_back(vertex);
-						model->indices.push_back(index);
-						currentSection->vertexCount++;
-						currentIndex++;
+						// unsigned int index = model->vertices.size();
+						// indexMap[face] = index;
+						// model->vertices.push_back(vertex);
+						// model->indices.push_back(index);
+						// currentSection->vertexCount++;
+						// currentIndex++;
 					}
 					else
 					{
 						// this vertex already exists, just add the index
-						model->indices.push_back(indexMap[face]);
-						currentSection->vertexCount++;
-						currentIndex++;
+						// model->indices.push_back(indexMap[face]);
+						// currentSection->vertexCount++;
+						// currentIndex++;
 					}
 				}
 			}
@@ -148,7 +146,6 @@ namespace Audace
 				}
 				mat = new Material();
 				mat->setName(name);
-				mat->setShininess(0.5f * 128);
 			}
 			else if (line[0] == 'K' && line[1] == 'a')
 			{

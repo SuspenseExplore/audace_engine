@@ -26,21 +26,21 @@ namespace Audace
 		scene->loadAssets();
 
 		window->addKeyEventHandler(GLFW_KEY_A, [this](ButtonInputEvent event)
-								   { reinterpret_cast<MainScene *>(scene)->setVelX(event.pressed ? -0.5f : 0); });
+								   { reinterpret_cast<MainScene *>(scene)->setVelX(event.pressed ? -0.1f : 0); });
 		window->addKeyEventHandler(GLFW_KEY_D, [this](ButtonInputEvent event)
-								   { reinterpret_cast<MainScene *>(scene)->setVelX(event.pressed ? 0.5f : 0); });
+								   { reinterpret_cast<MainScene *>(scene)->setVelX(event.pressed ? 0.1f : 0); });
 		window->addKeyEventHandler(GLFW_KEY_W, [this](ButtonInputEvent event)
-								   { reinterpret_cast<MainScene *>(scene)->setVelY(event.pressed ? 0.5f : 0); });
+								   { reinterpret_cast<MainScene *>(scene)->setVelY(event.pressed ? 0.1f : 0); });
 		window->addKeyEventHandler(GLFW_KEY_S, [this](ButtonInputEvent event)
-								   { reinterpret_cast<MainScene *>(scene)->setVelY(event.pressed ? -0.5f : 0); });
+								   { reinterpret_cast<MainScene *>(scene)->setVelY(event.pressed ? -0.1f : 0); });
 		window->addMouseButtonEventHandler(GLFW_MOUSE_BUTTON_1, [this](ButtonInputEvent event)
 										   { reinterpret_cast<MainScene *>(scene)->setLightBright(event.pressed); });
-		window->addMouseButtonEventHandler(GLFW_MOUSE_BUTTON_2, [this](ButtonInputEvent event)
-										   { if (event.pressed && event.changed) {reinterpret_cast<MainScene *>(scene)->randomLightColor();} });
+		// window->addMouseButtonEventHandler(GLFW_MOUSE_BUTTON_2, [this](ButtonInputEvent event)
+		// 								   { if (event.pressed && event.changed) {reinterpret_cast<MainScene *>(scene)->randomLightColor();} });
 		window->setMouseMoveEventHandler([this](Vec2InputEvent event)
 										 { 											
 											// rotate the camera if scroll wheel is held down
-											if (event.changed && window->isMouseButtonDown(GLFW_MOUSE_BUTTON_3)) {
+											if (event.changed && window->isMouseButtonDown(GLFW_MOUSE_BUTTON_2)) {
 												reinterpret_cast<MainScene *>(scene)->rotateCamera((event.state.y - mousePos.y) * 0.005f, 0, (event.state.x - mousePos.x) * 0.005f);
 											} else {
 												// move the light based on mouse pos

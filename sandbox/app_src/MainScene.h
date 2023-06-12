@@ -15,7 +15,7 @@
 class MainScene : public Audace::Scene
 {
 	Audace::FileLoader *fileLoader;
-	Audace::Mesh* boxSprite;
+	Audace::Sprite* groundSprite;
 	Audace::Sprite* modelSprite;
 	Audace::ShaderProgram *shaderProgram;
 	Audace::Texture2d *darkGridTex;
@@ -24,12 +24,12 @@ class MainScene : public Audace::Scene
 	Audace::Texture2d *purpleChecksTex;
 
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
-	Audace::ForwardCamera camera = Audace::ForwardCamera::standard(glm::vec3(-5, -20, 0), 1280.0f, 720.0f);
+	Audace::ForwardCamera camera = Audace::ForwardCamera::standard(glm::vec3(0, 0, 1), 1280.0f, 720.0f);
 	float cameraYaw = 0;
 	float cameraPitch = 0;
 
 	glm::vec4 diffuseLight = glm::vec4(1, 1, 1, 1);
-	glm::vec3 lightPos = glm::vec3(0);
+	glm::vec3 lightPos = glm::vec3(0, 0, 7);
 	Audace::RandomUniformFloats rand = Audace::RandomUniformFloats::normalizedRange();
 
 public:
@@ -66,7 +66,7 @@ public:
 
 	void setLightPos(float x, float y)
 	{
-		lightPos = glm::vec3((x - 640.0f) / 50.0f, (y - 360.0f) / -50.0f, 0);
+		lightPos = glm::vec3((x - 640.0f) / 50.0f, (y - 360.0f) / -50.0f, lightPos.z);
 	}
 
 	void rotateCamera(float x, float y, float z) {

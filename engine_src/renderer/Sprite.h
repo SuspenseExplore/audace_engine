@@ -9,6 +9,7 @@
 #include "au_renderer.h"
 #include "content/Model.h"
 #include "renderer/Mesh.h"
+#include "renderer/VertexArray.h"
 
 namespace Audace {
 
@@ -16,6 +17,7 @@ namespace Audace {
 	 * Combines one or more Meshes with world transformation data to make a single coherent renderable object
 	 */
 	class Sprite {
+		VertexArray* vertexArray;
 		std::vector<Mesh*> meshes;
 
 	public:

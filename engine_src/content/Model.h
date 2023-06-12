@@ -14,15 +14,13 @@ namespace Audace {
 	};
 
 	struct ModelSection {
-		int startIndex;
-		int vertexCount;
 		Material* material;
+		std::vector<unsigned int> indices;
 	};
 
 	struct Model {
 		std::string name;
 		std::vector<Vertex> vertices;
-		std::vector<unsigned int> indices;
 		std::vector<ModelSection*> sections;
 	};
 }

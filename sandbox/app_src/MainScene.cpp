@@ -19,7 +19,6 @@ float verts[] = {
 void MainScene::loadAssets()
 {
 	glClearColor(0, 0, 1, 0);
-	boxSprite = Audace::Shapes::cubePosNorm();
 
 	std::string vs = fileLoader->textFileToString("shaders/standard/vs.glsl");
 	std::string fs = fileLoader->textFileToString("shaders/standard/fs.glsl");
@@ -48,16 +47,27 @@ void MainScene::loadAssets()
 		purpleChecksTex->create();
 	}
 
-	Audace::Model* model = fileLoader->readModelFile("models/", "wallNarrowWood.obj");
-	for (Audace::ModelSection* section : model->sections) {
-		section->material->setShader(shaderProgram);
+	{
+		Audace::Model *model = fileLoader->readModelFile("models/", "cliff_blockSlopeWalls_rock.obj");
+		for (Audace::ModelSection *section : model->sections)
+		{
+			section->material->setShader(shaderProgram);
+		}
+		modelSprite = new Audace::Sprite(model);
 	}
-	modelSprite = new Audace::Sprite(model);
+	{
+		Audace::Model *model = fileLoader->readModelFile("models/", "ground_pathStraight.obj");
+		for (Audace::ModelSection *section : model->sections)
+		{
+			section->material->setShader(shaderProgram);
+		}
+		groundSprite = new Audace::Sprite(model);
+	}
 }
 
 void MainScene::render()
 {
-	glEnable(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	darkGridTex->bind(1);
@@ -78,26 +88,27 @@ void MainScene::render()
 	shaderProgram->setUniformMat4("vpMat", camera.getvpMat());
 
 	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(-10.0f, -10.0f, -2.0f));
-		worldMat = glm::scale(worldMat, glm::vec3(20.0f, 20.0f, 1.0f));
+		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		worldMat = glm::scale(worldMat, glm::vec3(10.0f, 10.0f, 10.0f));
 		shaderProgram->setUniformMat4("worldMat", worldMat);
 		shaderProgram->setUniformInt("tex1", 1);
 		shaderProgram->setUniformVec2("textureScale", 10, 10);
-		boxSprite->render();
+		groundSprite->render();
 	}
 	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(5, 0, 0));
+		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(5, 0, 1));
 		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		worldMat = glm::scale(worldMat, glm::vec3(0.2f, 0.2f, 0.2f));
+		// worldMat = glm::scale(worldMat, glm::vec3(0.2f, 0.2f, 0.2f));
 		shaderProgram->setUniformMat4("worldMat", worldMat);
 		shaderProgram->setUniformInt("tex1", 2);
 		shaderProgram->setUniformVec2("textureScale", 2, 2);
 		modelSprite->render();
 	}
 	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 5, 0));
+		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 5, -1));
 		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		worldMat = glm::scale(worldMat, glm::vec3(0.2f, 0.2f, 0.2f));
+		worldMat = glm::scale(worldMat, glm::vec3(2, 2, 2));
 		shaderProgram->setUniformMat4("worldMat", worldMat);
 		shaderProgram->setUniformInt("tex1", 3);
 		shaderProgram->setUniformVec2("textureScale", 2, 2);

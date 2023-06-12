@@ -4,17 +4,16 @@ namespace Audace
 {
 	void Mesh::render()
 	{
+		vertexArray->bind();
 		if (material != nullptr) {
 			material->apply();
 		}
 		if (indexBuffer == nullptr)
 		{
-			vertexArray->bind();
 			glDrawArrays(renderMode, startIndex, vertexCount);
 		}
 		else
 		{
-			vertexArray->bind();
 			indexBuffer->bind();
 			glDrawElements(renderMode, vertexCount, indexType, (void *)startIndex);
 		}
