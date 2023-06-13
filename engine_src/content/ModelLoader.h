@@ -10,7 +10,7 @@ namespace Audace {
 	class ModelLoader {
 		public:
 		static Model *loadObj(FileLoader* fileLoader, std::string path, std::string filename);
-		static std::map<std::string, Material*> loadMtl(FileLoader* fileLoader, std::string filename);
+		static std::map<std::string, Material*> loadMtl(FileLoader* fileLoader, std::string path, std::string filename);
 	};
 }
 

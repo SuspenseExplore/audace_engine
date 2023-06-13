@@ -68,32 +68,8 @@ set_target_properties(
 	IMPORTED_IMPLIB ${CMAKE_CURRENT_SOURCE_DIR}/lib/glfw3.lib
 )
 
-add_library(
-	assimp
-	SHARED
-	IMPORTED
-)
-set_target_properties(
-	assimp
-	PROPERTIES
-	IMPORTED_IMPLIB ${CMAKE_CURRENT_SOURCE_DIR}/lib/assimp-vc143-mtd.lib
-)
-
-add_library(
-	zlib
-	SHARED
-	IMPORTED
-)
-set_target_properties(
-	zlib
-	PROPERTIES
-	IMPORTED_IMPLIB ${CMAKE_CURRENT_SOURCE_DIR}/lib/zlibstaticd.lib
-)
-
 target_link_libraries(
 	sandbox_glfw
 	PUBLIC
 	glfw3
-	assimp
-	zlib
 )

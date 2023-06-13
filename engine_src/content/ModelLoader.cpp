@@ -25,7 +25,7 @@ namespace Audace
 		std::string line;
 		while (std::getline(ss, line, '\n'))
 		{
-			if (line[0] == '#')
+			if (StringUtil::startsWith(line, "#"))
 			{
 				// ignore comment
 			}
@@ -33,7 +33,7 @@ namespace Audace
 			{
 				// ignore blank line
 			}
-			else if (line[0] == 'u' && line[1] == 's' && line[2] == 'e' && line[3] == 'm' && line[4] == 't' && line[5] == 'l')
+			else if (StringUtil::startsWith(line, "usemtl"))
 			{
 				std::vector<std::string> vec = StringUtil::split(line, ' ');
 				std::string matName = vec[1];
@@ -43,34 +43,34 @@ namespace Audace
 					model->sections.push_back(currentSection);
 				}
 				currentSection = new ModelSection;
-				// currentSection->material = materials[matName];
+				currentSection->material = materials[matName];
 			}
-			else if (line[0] == 'g')
+			else if (StringUtil::startsWith(line, "g"))
 			{
 				model->name = line.substr(line.find(' ', 0) + 1);
 			}
-			else if (line[0] == 'v' && line[1] == 'n')
+			else if (StringUtil::startsWith(line, "vn"))
 			{
 				// vertex normal
 				std::vector<std::string> vec = StringUtil::split(line, ' ');
 				glm::vec3 pos = glm::vec3(std::stof(vec[1]), std::stof(vec[2]), std::stof(vec[3]));
 				normals.push_back(pos);
 			}
-			else if (line[0] == 'v' && line[1] == 't')
+			else if (StringUtil::startsWith(line, "vt"))
 			{
 				// tex coord
 				std::vector<std::string> vec = StringUtil::split(line, ' ');
 				glm::vec3 pos = glm::vec3(std::stof(vec[1]), std::stof(vec[2]), 0);
 				texCoords.push_back(pos);
 			}
-			else if (line[0] == 'v')
+			else if (StringUtil::startsWith(line, "v"))
 			{
 				// vertex position
 				std::vector<std::string> vec = StringUtil::split(line, ' ');
 				glm::vec3 pos = glm::vec3(std::stof(vec[1]), std::stof(vec[2]), std::stof(vec[3]));
 				positions.push_back(pos);
 			}
-			else if (line[0] == 'f')
+			else if (StringUtil::startsWith(line, "f"))
 			{
 				// face
 				std::vector<std::string> vec = StringUtil::split(line, ' ');
@@ -87,26 +87,24 @@ namespace Audace
 						vertex.texCoord = texCoords[std::stoi(refs[1]) - 1];
 						vertex.normal = normals[std::stoi(refs[2]) - 1];
 
-						// unsigned int index = model->vertices.size();
-						// indexMap[face] = index;
-						// model->vertices.push_back(vertex);
-						// model->indices.push_back(index);
-						// currentSection->vertexCount++;
-						// currentIndex++;
+						unsigned int index = model->vertices.size();
+						indexMap[face] = index;
+						model->vertices.push_back(vertex);
+						currentSection->indices.push_back(index);
+						currentIndex++;
 					}
 					else
 					{
 						// this vertex already exists, just add the index
-						// model->indices.push_back(indexMap[face]);
-						// currentSection->vertexCount++;
-						// currentIndex++;
+						currentSection->indices.push_back(indexMap[face]);
+						currentIndex++;
 					}
 				}
 			}
-			else if (line[0] == 'm' && line[1] == 't' && line[2] == 'l' && line[3] == 'l' && line[4] == 'i' && line[5] == 'b')
+			else if (StringUtil::startsWith(line, "mtllib"))
 			{
 				std::vector<std::string> vec = StringUtil::split(line, ' ');
-				materials = loadMtl(fileLoader, path + vec[1]);
+				materials = loadMtl(fileLoader, path, vec[1]);
 			}
 			else
 			{
@@ -117,10 +115,10 @@ namespace Audace
 		return model;
 	}
 
-	std::map<std::string, Material *> ModelLoader::loadMtl(FileLoader *fileLoader, std::string filepath)
+	std::map<std::string, Material *> ModelLoader::loadMtl(FileLoader *fileLoader, std::string path, std::string filename)
 	{
 		std::map<std::string, Material *> mats;
-		std::string fileContent = fileLoader->textFileToString(filepath);
+		std::string fileContent = fileLoader->textFileToString(path + filename);
 		std::stringstream ss(fileContent);
 		std::string line;
 

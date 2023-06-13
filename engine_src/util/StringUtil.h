@@ -24,6 +24,10 @@ namespace Audace
 
 			return v;
 		}
+
+		static bool startsWith(string s, string comp) {
+			return !s.substr(0, comp.length()).compare(comp);
+		}
 	};
 }
 
