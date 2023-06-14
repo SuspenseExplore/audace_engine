@@ -24,8 +24,6 @@ void Scene::init(AppController *controller, AAssetManager *assetManager) {
 	glClearColor(0, 0, 1, 1);
 	glClearDepthf(1.0f);
 
-	boxSprite = Audace::Shapes::cubePosNorm();
-
 	std::string vs = fileLoader->textFileToString("shaders/standard/vs.glsl");
 	std::string fs = fileLoader->textFileToString("shaders/standard/fs.glsl");
 	shaderProgram = new Audace::ShaderProgram(vs, fs);
@@ -52,6 +50,20 @@ void Scene::init(AppController *controller, AAssetManager *assetManager) {
 		purpleChecksTex = new Audace::Texture2d(img);
 		purpleChecksTex->create();
 	}
+	{
+		Audace::Model* model = fileLoader->readModelFile("models/", "cliff_blockSlopeWalls_rock.obj");
+		for (Audace::ModelSection* section : model->sections) {
+			section->material->setShader(shaderProgram);
+		}
+		modelSprite = new Audace::Sprite(model);
+	}
+	{
+		Audace::Model* model = fileLoader->readModelFile("models/", "ground_pathStraight.obj");
+		for (Audace::ModelSection* section : model->sections) {
+			section->material->setShader(shaderProgram);
+		}
+		groundSprite = new Audace::Sprite(model);
+	}
 }
 
 void Scene::render(OpenxrView view) {
@@ -65,10 +77,11 @@ void Scene::render(OpenxrView view) {
 	purpleChecksTex->bind(4);
 
 	shaderProgram->bind();
-	shaderProgram->setUniformVec4("ambientLight", 0.2, 0.2, 1, 0.2f);
-	shaderProgram->setUniformVec4("diffusePos", lightPos.x, lightPos.y, lightPos.z, 0);
-	shaderProgram->setUniformVec4("diffuseColor", lightColor.x, lightColor.y, lightColor.z, lightOn ? 2 : 1);
-	shaderProgram->setUniformVec4("viewPos", pose.position.x, pose.position.y, pose.position.z, 0);
+	shaderProgram->setUniformVec3("light.position", lightPos.x, lightPos.y, lightPos.z);
+	shaderProgram->setUniformVec3("light.ambient", 0.2f, 0.2f, 0.4f);
+	shaderProgram->setUniformVec3("light.diffuse", diffuseLight.x, diffuseLight.y, diffuseLight.z);
+	shaderProgram->setUniformVec3("light.specular", 1.0f, 1.0f, 1.0f);
+	shaderProgram->setUniformVec3("viewPos", pose.position.x, pose.position.y, pose.position.z);
 
 	XrMatrix4x4f projMat;
 	XrMatrix4x4f_CreateProjectionFov(&projMat, GRAPHICS_OPENGL_ES, view.getViewData().fov, 0.1f,
@@ -91,64 +104,64 @@ void Scene::render(OpenxrView view) {
 		worldMat = glm::scale(worldMat, glm::vec3(0.02f, 0.02f, -2.0f));
 		worldMat = glm::translate(worldMat, glm::vec3(-0.5f, -0.5f, 0));
 		shaderProgram->setUniformMat4("worldMat", worldMat);
-		shaderProgram->setUniformVec2("textureScale", 1, 1);
+//		shaderProgram->setUniformVec2("textureScale", 1, 1);
 		AU_CHECK_GL_ERRORS();
 
-		shaderProgram->setUniformInt("tex1", 1);
+//		shaderProgram->setUniformInt("tex1", 1);
 
-		boxSprite->render();
+//		boxSprite->render();
 		AU_CHECK_GL_ERRORS();
 	}
 	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(-10, -10, -2));
-//		worldMat = glm::rotate(worldMat, glm::radians(0.0f), glm::vec3(1, 0, 0));
-		worldMat = glm::scale(worldMat, glm::vec3(20.0f, 20.0f, 1.0f));
+		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
+		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(1, 0, 0));
+		worldMat = glm::scale(worldMat, glm::vec3(10.0f, 10.0f, 10.0f));
 		shaderProgram->setUniformMat4("worldMat", worldMat);
-		shaderProgram->setUniformVec2("textureScale", 10, 10);
+//		shaderProgram->setUniformVec2("textureScale", 10, 10);
 		AU_CHECK_GL_ERRORS();
 
-		shaderProgram->setUniformInt("tex1", 1);
+//		shaderProgram->setUniformInt("tex1", 1);
 
-		boxSprite->render();
-		AU_CHECK_GL_ERRORS();
-	}
-	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(10, 0, 0));
-		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(0, 1, 0));
-		worldMat = glm::scale(worldMat, glm::vec3(5, 5, 5));
-		shaderProgram->setUniformMat4("worldMat", glm::value_ptr(worldMat));
-		shaderProgram->setUniformVec2("textureScale", 2, 2);
-		AU_CHECK_GL_ERRORS();
-
-		shaderProgram->setUniformInt("tex1", 2);
-
-		boxSprite->render();
+		groundSprite->render();
 		AU_CHECK_GL_ERRORS();
 	}
 	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 10, 0));
-//		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(0, 1, 0));
-		worldMat = glm::scale(worldMat, glm::vec3(5, 5, 5));
+		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(5, 0, 1));
+		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(1, 0, 0));
+//		worldMat = glm::scale(worldMat, glm::vec3(10, 10, 10));
 		shaderProgram->setUniformMat4("worldMat", glm::value_ptr(worldMat));
-		shaderProgram->setUniformVec2("textureScale", 2, 2);
+//		shaderProgram->setUniformVec2("textureScale", 2, 2);
 		AU_CHECK_GL_ERRORS();
 
-		shaderProgram->setUniformInt("tex1", 3);
+//		shaderProgram->setUniformInt("tex1", 2);
 
-		boxSprite->render();
+		modelSprite->render();
 		AU_CHECK_GL_ERRORS();
 	}
 	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 10));
-//		worldMat = glm::rotate(worldMat, glm::radians(45.0f), glm::vec3(0, 0, 1));
-		worldMat = glm::scale(worldMat, glm::vec3(5, 5, 5));
+		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 5, -1));
+		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(1, 0, 0));
+		worldMat = glm::scale(worldMat, glm::vec3(2, 2, 2));
 		shaderProgram->setUniformMat4("worldMat", glm::value_ptr(worldMat));
-		shaderProgram->setUniformVec2("textureScale", 2, 2);
+//		shaderProgram->setUniformVec2("textureScale", 2, 2);
 		AU_CHECK_GL_ERRORS();
 
-		shaderProgram->setUniformInt("tex1", 4);
+//		shaderProgram->setUniformInt("tex1", 3);
 
-		boxSprite->render();
+		modelSprite->render();
+		AU_CHECK_GL_ERRORS();
+	}
+	{
+		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 5));
+		worldMat = glm::rotate(worldMat, glm::radians(45.0f), glm::vec3(1, 0, 0));
+		worldMat = glm::scale(worldMat, glm::vec3(0.2f, 0.2f, 0.2f));
+		shaderProgram->setUniformMat4("worldMat", glm::value_ptr(worldMat));
+//		shaderProgram->setUniformVec2("textureScale", 2, 2);
+		AU_CHECK_GL_ERRORS();
+
+//		shaderProgram->setUniformInt("tex1", 4);
+
+		modelSprite->render();
 		AU_CHECK_GL_ERRORS();
 	}
 }

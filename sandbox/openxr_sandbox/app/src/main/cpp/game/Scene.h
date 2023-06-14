@@ -22,7 +22,8 @@ class AppController;
 class Scene {
 	AppController *appController;
 	Audace::FileLoader *fileLoader;
-	Audace::Sprite *boxSprite;
+	Audace::Sprite *modelSprite;
+	Audace::Sprite *groundSprite;
 	Audace::ShaderProgram *shaderProgram;
 	Audace::Texture2d *darkGridTex;
 	Audace::Texture2d *greenChecksTex;
@@ -30,7 +31,7 @@ class Scene {
 	Audace::Texture2d *purpleChecksTex;
 
 	glm::vec3 lightPos;
-	glm::vec3 lightColor = glm::vec3(1, 0, 0);
+	glm::vec3 diffuseLight = glm::vec3(1, 1, 1);
 	bool lightOn;
 
 	Audace::Pose aimPose;
@@ -41,7 +42,7 @@ public:
 	void init(AppController *controller, AAssetManager *assetManager);
 	void setLightPos(glm::vec3 pos) {lightPos = pos;}
 	void setLightOn(bool on) {lightOn = on;}
-	void randomLightColor() {lightColor = glm::normalize(glm::vec3(rand.get(), rand.get(), rand.get()));}
+	void randomLightColor() {diffuseLight = glm::normalize(glm::vec3(rand.get(), rand.get(), rand.get()));}
 	void setAimPose(Audace::Pose pose) {aimPose = pose;}
 	void render(OpenxrView view);
 };
