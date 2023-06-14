@@ -10,6 +10,7 @@
 #include <string>
 #include <map>
 #include "ImageData.h"
+#include "content/Model.h"
 #include "renderer/ShaderProgram.h"
 
 namespace Audace {
@@ -23,6 +24,7 @@ namespace Audace {
 		FileLoader(AAssetManager *assets) : assetManager(assets) {}
 		std::string textFileToString(const std::string& path);
 		ImageData readImageFile(const std::string& path);
+		Model* readModelFile(std::string path, std::string filename);
 	};
 }
 

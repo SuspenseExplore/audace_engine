@@ -35,11 +35,13 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/stb_image.cpp
 		${ENGINE_DIR}/android_platform/FileLoader.cpp
 		${ENGINE_DIR}/android_platform/ImageData.cpp
+		${ENGINE_DIR}/content/ModelLoader.cpp
 		${ENGINE_DIR}/renderer/DataBuffer.cpp
 		${ENGINE_DIR}/renderer/ShaderProgram.cpp
 		${ENGINE_DIR}/renderer/VertexAttribute.cpp
 		${ENGINE_DIR}/renderer/VertexArray.cpp
 		${ENGINE_DIR}/renderer/Texture2d.cpp
+		${ENGINE_DIR}/renderer/Mesh.cpp
 		${ENGINE_DIR}/renderer/Sprite.cpp
 		${ENGINE_DIR}/renderer/Shapes.cpp
 		${APP_DIR}/MainScene.cpp

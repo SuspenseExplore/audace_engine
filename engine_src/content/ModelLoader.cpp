@@ -23,13 +23,14 @@ namespace Audace
 		std::string fileContent = fileLoader->textFileToString(path + filename);
 		std::stringstream ss(fileContent);
 		std::string line;
-		while (std::getline(ss, line, '\n'))
+		while (std::getline(ss, line))
 		{
+			line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
 			if (StringUtil::startsWith(line, "#"))
 			{
 				// ignore comment
 			}
-			else if (line.size() == 0)
+			else if (line.empty())
 			{
 				// ignore blank line
 			}
@@ -108,7 +109,7 @@ namespace Audace
 			}
 			else
 			{
-				AU_ENGINE_LOG_DEBUG("Read line: {}", line);
+				AU_ENGINE_LOG_DEBUG("Read line: '{:x}'", line);
 			}
 		}
 		model->sections.push_back(currentSection);
@@ -126,6 +127,7 @@ namespace Audace
 
 		while (std::getline(ss, line, '\n'))
 		{
+			line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
 			if (line[0] == '#')
 			{
 				// ignore comment

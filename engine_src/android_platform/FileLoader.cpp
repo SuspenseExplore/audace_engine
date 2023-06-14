@@ -5,6 +5,7 @@
 #include "FileLoader.h"
 #include "stb_image.h"
 #include "au_renderer.h"
+#include "content/ModelLoader.h"
 
 namespace Audace {
 
@@ -38,6 +39,12 @@ namespace Audace {
 		AAsset_close(asset);
 
 		return buf;
+	}
+
+	Model *FileLoader::readModelFile(std::string path, std::string filename)
+	{
+		Model* model = ModelLoader::loadObj(this, path, filename);
+		return model;
 	}
 
 	AAsset* FileLoader::getAsset(const std::string& path) {

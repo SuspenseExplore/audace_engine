@@ -92,8 +92,8 @@ void MainScene::render()
 		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		worldMat = glm::scale(worldMat, glm::vec3(10.0f, 10.0f, 10.0f));
 		shaderProgram->setUniformMat4("worldMat", worldMat);
-		shaderProgram->setUniformInt("tex1", 1);
-		shaderProgram->setUniformVec2("textureScale", 10, 10);
+//		shaderProgram->setUniformInt("tex1", 1);
+//		shaderProgram->setUniformVec2("textureScale", 10, 10);
 		groundSprite->render();
 	}
 	{
@@ -101,8 +101,8 @@ void MainScene::render()
 		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		// worldMat = glm::scale(worldMat, glm::vec3(0.2f, 0.2f, 0.2f));
 		shaderProgram->setUniformMat4("worldMat", worldMat);
-		shaderProgram->setUniformInt("tex1", 2);
-		shaderProgram->setUniformVec2("textureScale", 2, 2);
+//		shaderProgram->setUniformInt("tex1", 2);
+//		shaderProgram->setUniformVec2("textureScale", 2, 2);
 		modelSprite->render();
 	}
 	{
@@ -110,8 +110,8 @@ void MainScene::render()
 		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		worldMat = glm::scale(worldMat, glm::vec3(2, 2, 2));
 		shaderProgram->setUniformMat4("worldMat", worldMat);
-		shaderProgram->setUniformInt("tex1", 3);
-		shaderProgram->setUniformVec2("textureScale", 2, 2);
+//		shaderProgram->setUniformInt("tex1", 3);
+//		shaderProgram->setUniformVec2("textureScale", 2, 2);
 		modelSprite->render();
 	}
 	{
@@ -119,8 +119,8 @@ void MainScene::render()
 		worldMat = glm::rotate(worldMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		worldMat = glm::scale(worldMat, glm::vec3(0.2f, 0.2f, 0.2f));
 		shaderProgram->setUniformMat4("worldMat", worldMat);
-		shaderProgram->setUniformInt("tex1", 4);
-		shaderProgram->setUniformVec2("textureScale", 2, 2);
+//		shaderProgram->setUniformInt("tex1", 4);
+//		shaderProgram->setUniformVec2("textureScale", 2, 2);
 		modelSprite->render();
 	}
 }
