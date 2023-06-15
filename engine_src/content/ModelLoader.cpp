@@ -124,6 +124,8 @@ namespace Audace
 		std::string line;
 
 		Material *mat = nullptr;
+		bool foundAmbientColor = false;
+		glm::vec3 diffuseColor;
 
 		while (std::getline(ss, line, '\n'))
 		{
@@ -142,22 +144,28 @@ namespace Audace
 				std::string name = vec[1];
 				if (mat != nullptr)
 				{
+					if (!foundAmbientColor)
+					{
+						mat->setAmbientColor(diffuseColor);
+					}
 					mats[mat->getName()] = mat;
 				}
 				mat = new Material();
 				mat->setName(name);
+				foundAmbientColor = false;
 			}
 			else if (line[0] == 'K' && line[1] == 'a')
 			{
 				std::vector<std::string> vec = StringUtil::split(line, ' ');
 				glm::vec3 ambient = glm::vec3(std::stof(vec[1]), std::stof(vec[2]), std::stof(vec[3]));
 				mat->setAmbientColor(ambient);
+				foundAmbientColor = true;
 			}
 			else if (line[0] == 'K' && line[1] == 'd')
 			{
 				std::vector<std::string> vec = StringUtil::split(line, ' ');
-				glm::vec3 diffuse = glm::vec3(std::stof(vec[1]), std::stof(vec[2]), std::stof(vec[3]));
-				mat->setDiffuseColor(diffuse);
+				diffuseColor = glm::vec3(std::stof(vec[1]), std::stof(vec[2]), std::stof(vec[3]));
+				mat->setDiffuseColor(diffuseColor);
 			}
 			else if (line[0] == 'K' && line[1] == 's')
 			{
@@ -165,6 +173,10 @@ namespace Audace
 				glm::vec3 specular = glm::vec3(std::stof(vec[1]), std::stof(vec[2]), std::stof(vec[3]));
 				mat->setSpecularColor(specular);
 			}
+		}
+		if (!foundAmbientColor)
+		{
+			mat->setAmbientColor(diffuseColor);
 		}
 		mats[mat->getName()] = mat;
 

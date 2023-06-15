@@ -1,6 +1,7 @@
 #ifndef AU_MAINSCENE_H
 #define AU_MAINSCENE_H
 
+#include <vector>
 #include "glm/glm.hpp"
 #include "scene/Scene.h"
 #include "FileLoader.h"
@@ -15,8 +16,7 @@
 class MainScene : public Audace::Scene
 {
 	Audace::FileLoader *fileLoader;
-	Audace::Sprite* groundSprite;
-	Audace::Sprite* modelSprite;
+	std::vector<Audace::Sprite*> sprites;
 	Audace::ShaderProgram *shaderProgram;
 	Audace::Texture2d *darkGridTex;
 	Audace::Texture2d *greenChecksTex;
@@ -34,6 +34,7 @@ class MainScene : public Audace::Scene
 
 public:
 	MainScene(Audace::FileLoader *fileLoader) : fileLoader(fileLoader) {}
+	Audace::Sprite* loadSprite(std::string filename);
 	void loadAssets() override;
 	void render() override;
 	void disposeAssets() override;

@@ -23,6 +23,7 @@ namespace Audace
 		void setDiffuseColor(glm::vec3 color) { diffuseColor = color; }
 		void setSpecularColor(glm::vec3 color) { specularColor = color; }
 		void setShininess(float shininess) {this->shininess = shininess;}
+		ShaderProgram* getShader() {return shaderProgram;}
 		void setShader(ShaderProgram *shaderProgram) {this->shaderProgram = shaderProgram;}
 
 		void apply() {

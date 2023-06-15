@@ -2,12 +2,11 @@
 
 namespace Audace
 {
-	void Mesh::render()
+	void Mesh::render(glm::mat4 worldMat)
 	{
 		vertexArray->bind();
-		if (material != nullptr) {
-			material->apply();
-		}
+		material->apply();
+		material->getShader()->setUniformMat4("worldMat", worldMat);
 		if (indexBuffer == nullptr)
 		{
 			glDrawArrays(renderMode, startIndex, vertexCount);

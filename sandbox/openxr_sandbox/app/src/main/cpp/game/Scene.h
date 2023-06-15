@@ -22,8 +22,7 @@ class AppController;
 class Scene {
 	AppController *appController;
 	Audace::FileLoader *fileLoader;
-	Audace::Sprite *modelSprite;
-	Audace::Sprite *groundSprite;
+	std::vector<Audace::Sprite*> sprites;
 	Audace::ShaderProgram *shaderProgram;
 	Audace::Texture2d *darkGridTex;
 	Audace::Texture2d *greenChecksTex;
@@ -40,6 +39,7 @@ class Scene {
 
 public:
 	void init(AppController *controller, AAssetManager *assetManager);
+	Audace::Sprite* loadSprite(std::string filename);
 	void setLightPos(glm::vec3 pos) {lightPos = pos;}
 	void setLightOn(bool on) {lightOn = on;}
 	void randomLightColor() {diffuseLight = glm::normalize(glm::vec3(rand.get(), rand.get(), rand.get()));}
