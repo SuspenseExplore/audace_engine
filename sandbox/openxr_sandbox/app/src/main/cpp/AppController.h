@@ -34,14 +34,17 @@ public:
 
 	bool endFrame(std::vector<XrCompositionLayerBaseHeader *> layers);
 
-	uint32_t prepareViews(XrFrameState *frameState);
+	uint32_t prepareViews(XrFrameState *frameState, XrSpace space);
 
 	void renderFrame();
 
 	bool renderLayer(std::vector<XrCompositionLayerProjectionView> &projectionLayerViews,
 					 XrCompositionLayerProjection &layer);
+	bool renderUiLayer(std::vector<XrCompositionLayerProjectionView> &projectionLayerViews,
+					 XrCompositionLayerProjection &layer);
 
 	void renderView(OpenxrView view);
+	void renderUiView(OpenxrView view);
 
 	android_app *getAndroidApp() { return androidApp; }
 

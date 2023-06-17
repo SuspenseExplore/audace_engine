@@ -45,6 +45,7 @@ public:
 	void randomLightColor() {diffuseLight = glm::normalize(glm::vec3(rand.get(), rand.get(), rand.get()));}
 	void setAimPose(Audace::Pose pose) {aimPose = pose;}
 	void render(OpenxrView view);
+	void renderUi(OpenxrView view);
 };
 
 

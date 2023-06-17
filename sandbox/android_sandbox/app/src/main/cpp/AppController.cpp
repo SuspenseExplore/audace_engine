@@ -43,6 +43,7 @@ namespace Audace {
 	}
 
 	void AppController::renderFrame() {
+		window.beginFrame();
 		scene->render();
 		window.endFrame();
 	}

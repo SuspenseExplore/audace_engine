@@ -33,6 +33,12 @@ add_library( # Sets the name of the library.
 		AppController.cpp
 		${ENGINE_DIR}/AuLogger.cpp
 		${ENGINE_DIR}/stb_image.cpp
+		${ENGINE_DIR}/include/imgui/imgui.cpp
+		${ENGINE_DIR}/include/imgui/imgui_draw.cpp
+		${ENGINE_DIR}/include/imgui/imgui_tables.cpp
+		${ENGINE_DIR}/include/imgui/imgui_widgets.cpp
+		${ENGINE_DIR}/android_platform/imgui/imgui_impl_android.cpp
+		${ENGINE_DIR}/android_platform/imgui/imgui_impl_opengl3.cpp
 		${ENGINE_DIR}/android_platform/FileLoader.cpp
 		${ENGINE_DIR}/android_platform/ImageData.cpp
 		${ENGINE_DIR}/content/ModelLoader.cpp
@@ -46,6 +52,12 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/renderer/Shapes.cpp
 		${APP_DIR}/MainScene.cpp
 		)
+
+target_compile_definitions(
+		android_sandbox
+		PRIVATE
+		IMGUI_IMPL_OPENGL_ES3
+)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
@@ -66,7 +78,9 @@ target_include_directories(
 		${ANDROID_NDK}/sources/android/native_app_glue
 		${ENGINE_DIR}
 		${ENGINE_DIR}/include
+		${ENGINE_DIR}/include/imgui
 		${ENGINE_DIR}/android_platform
+		${ENGINE_DIR}/android_platform/imgui
 		${APP_DIR}
 		${CMAKE_CURRENT_SOURCE_DIR})
 

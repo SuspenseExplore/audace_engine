@@ -9,6 +9,9 @@
 #include "au_renderer.h"
 #include "audace_common.h"
 #include "EglWindow.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_opengl3.h"
+#include "imgui/imgui_impl_android.h"
 
 bool EglWindow::init(android_app* app) {
 	const EGLint attrs[] = {EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
@@ -67,7 +70,7 @@ bool EglWindow::init(android_app* app) {
 
 	eglQuerySurface(display, surface, EGL_WIDTH, &width);
 	eglQuerySurface(display, surface, EGL_HEIGHT, &height);
-
+	LOGD("Surface size: %dx%d", width, height);
 
 	auto glInfo = {GL_VENDOR, GL_RENDERER, GL_VERSION, GL_EXTENSIONS};
 	for (auto name: glInfo) {
@@ -80,10 +83,38 @@ bool EglWindow::init(android_app* app) {
 	glEnable(GL_DEPTH_TEST);
 	AU_CHECK_GL_ERRORS();
 
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO &io = ImGui::GetIO();
+	// io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	// io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
+	ImGui::StyleColorsDark();
+	ImGui_ImplAndroid_Init(app->window);
+	ImGui_ImplOpenGL3_Init("#version 300 es");
+	ImGui::GetStyle().ScaleAllSizes(2);
+
 	return true;
 }
 
+void EglWindow::beginFrame() {
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplAndroid_NewFrame();
+	ImGui::NewFrame();
+	int err = GL_NO_ERROR;
+	while ((err = glGetError()) != GL_NO_ERROR)
+	{
+	}
+}
+
+void EglWindow::endFrame() {
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
 void EglWindow::close() {
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplAndroid_Shutdown();
+	ImGui::DestroyContext();
 
 	if (display != EGL_NO_DISPLAY) {
 		eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);

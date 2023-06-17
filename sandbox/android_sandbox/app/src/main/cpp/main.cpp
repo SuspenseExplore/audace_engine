@@ -10,6 +10,8 @@
 #include "AuLogger.h"
 #include "EglWindow.h"
 #include "AppController.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_android.h"
 
 Audace::AppController *appController;
 
@@ -24,12 +26,17 @@ void handleAndroidCmd(android_app *app, int32_t cmd) {
 	}
 }
 
+int32_t handleInputEvent(android_app* app, AInputEvent* event) {
+	return ImGui_ImplAndroid_HandleInputEvent(event);
+}
+
 void android_main(android_app *app) {
 	Audace::AuLogger::init();
 	AU_ENGINE_LOG_INFO("Logging initialized");
 
 	appController = new Audace::AppController(app);
 	app->onAppCmd = handleAndroidCmd;
+	app->onInputEvent = handleInputEvent;
 
 	while (!appController->window.initFinished()) {
 		Audace::AppController::pollSystemEvents(app);

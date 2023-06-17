@@ -24,6 +24,8 @@
 #include "openxr/OpenxrContext.h"
 #include "openxr/OpenxrView.h"
 #include "openxr/OpenxrSwapchain.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_android.h"
 
 AppController appController;
 GLuint framebuffer;
@@ -61,6 +63,10 @@ static void handleAndroidCmd(struct android_app *app, int32_t cmd) {
 			glDeleteFramebuffers(1, &framebuffer);
 			break;
 	}
+}
+
+int32_t handleInputEvent(android_app* app, AInputEvent* event) {
+	return ImGui_ImplAndroid_HandleInputEvent(event);
 }
 
 static void handleXrEvents() {
@@ -138,6 +144,7 @@ void android_main(struct android_app *app) {
 	AU_ENGINE_LOG_INFO("Logging initialized");
 
 	app->onAppCmd = handleAndroidCmd;
+	app->onInputEvent = handleInputEvent;
 	appController.init(app);
 
 	AU_RENDERER_LOG_TRACE("Entering render loop");

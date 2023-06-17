@@ -22,7 +22,8 @@ public:
 	bool open(android_app* app);
 	void close();
 
-	void endFrame() { eglSwapBuffers(display, surface);}
+	void beginFrame();
+	void endFrame();
 
 	EGLDisplay getDisplay() {return display;}
 	EGLSurface getSurface() {return surface;}

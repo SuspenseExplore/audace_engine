@@ -16,6 +16,8 @@
 #include "ImageData.h"
 #include "Scene.h"
 #include "renderer/Shapes.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_opengl3.h"
 
 void Scene::init(AppController *controller, AAssetManager *assetManager) {
 	appController = controller;
@@ -168,12 +170,11 @@ void Scene::init(AppController *controller, AAssetManager *assetManager) {
 //	}
 }
 
-Audace::Sprite* Scene::loadSprite(std::string filename) {
+Audace::Sprite *Scene::loadSprite(std::string filename) {
 
 	glm::mat4 IDENTITY_MAT = glm::mat4(1.0f);
 	Audace::Model *model = fileLoader->readModelFile("models/", filename);
-	for (Audace::ModelSection *section : model->sections)
-	{
+	for (Audace::ModelSection *section: model->sections) {
 		section->material->setShader(shaderProgram);
 	}
 	Audace::Sprite *sprite = new Audace::Sprite(model);
@@ -227,8 +228,23 @@ void Scene::render(OpenxrView view) {
 //		boxSprite->render();
 //		AU_CHECK_GL_ERRORS();
 //	}
-	for (Audace::Sprite *sprite : sprites)
-	{
+	for (Audace::Sprite *sprite: sprites) {
 		sprite->render();
 	}
+}
+
+void Scene::renderUi(OpenxrView view) {
+	bool checked;
+	float f;
+	if (view.getViewData().pose.position.x < 0.0f) {
+		ImGui::Begin("Left window");
+		ImGui::SetWindowPos(ImVec2(500 + 55, 800));
+	} else {
+		ImGui::Begin("Left window ");
+		ImGui::SetWindowPos(ImVec2(500 - 55, 800));
+	}
+	ImGui::Text("This is a text");
+	ImGui::Checkbox("check me out", &checked);
+	ImGui::SliderFloat("float", &f, 0, 1);
+	ImGui::End();
 }

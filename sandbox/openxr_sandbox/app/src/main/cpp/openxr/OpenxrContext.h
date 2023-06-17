@@ -23,7 +23,8 @@ public:
 	XrInstance instance{XR_NULL_HANDLE};
 	XrSystemId xrSystem{XR_NULL_SYSTEM_ID};
 	XrSession xrSession{XR_NULL_HANDLE};
-	XrSpace xrSpace{XR_NULL_HANDLE};
+	XrSpace xrWorldSpace{XR_NULL_HANDLE};
+	XrSpace xrViewSpace{XR_NULL_HANDLE};
 
 	std::vector<OpenxrView> views;
 	std::vector<XrViewConfigurationView> xrViewConfigs;

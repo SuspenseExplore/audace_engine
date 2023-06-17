@@ -20,6 +20,9 @@ public:
 	bool init(android_app* app);
 	void close();
 
+	void beginFrame();
+	void endFrame();
+
 	EGLDisplay getDisplay() {return display;}
 	EGLSurface getSurface() {return surface;}
 	EGLContext getContext() {return context;}

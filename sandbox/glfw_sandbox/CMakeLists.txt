@@ -18,6 +18,12 @@ add_executable(
 	${ENGINE_DIR}/glfw_platform/MouseManager.cpp
 	${ENGINE_DIR}/glfw_platform/ImageData.cpp
 	${ENGINE_DIR}/glfw_platform/FileLoader.cpp
+	${ENGINE_DIR}/include/imgui/imgui.cpp
+	${ENGINE_DIR}/include/imgui/imgui_draw.cpp
+	${ENGINE_DIR}/include/imgui/imgui_tables.cpp
+	${ENGINE_DIR}/include/imgui/imgui_widgets.cpp
+	${ENGINE_DIR}/glfw_platform/imgui/imgui_impl_glfw.cpp
+	${ENGINE_DIR}/glfw_platform/imgui/imgui_impl_opengl3.cpp
 	${ENGINE_DIR}/renderer/DataBuffer.cpp
 	${ENGINE_DIR}/renderer/ShaderProgram.cpp
 	${ENGINE_DIR}/renderer/VertexAttribute.cpp
@@ -39,10 +45,11 @@ target_include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/include
 	${CMAKE_CURRENT_SOURCE_DIR}/include/glad
 	${CMAKE_CURRENT_SOURCE_DIR}/include/KHR
-	${CMAKE_CURRENT_SOURCE_DIR}/include/assimp
+	${ENGINE_DIR}/glfw_platform/include/imgui
 	${ENGINE_DIR}
 	${ENGINE_DIR}/glfw_platform
 	${ENGINE_DIR}/include
+	${ENGINE_DIR}/include/imgui
 	${APP_DIR}
 )
 

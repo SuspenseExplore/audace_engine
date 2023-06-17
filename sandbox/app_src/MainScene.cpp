@@ -9,6 +9,7 @@
 #include "renderer/VertexAttribute.h"
 #include "renderer/VertexArray.h"
 #include "renderer/Sprite.h"
+#include "imgui.h"
 
 float verts[] = {
 	-0.5f, -0.5f,
@@ -165,8 +166,9 @@ void MainScene::loadAssets()
 	}
 }
 
-Audace::Sprite* MainScene::loadSprite(std::string filename) {
-	
+Audace::Sprite *MainScene::loadSprite(std::string filename)
+{
+
 	glm::mat4 IDENTITY_MAT = glm::mat4(1.0f);
 	Audace::Model *model = fileLoader->readModelFile("models/", filename);
 	for (Audace::ModelSection *section : model->sections)
@@ -204,6 +206,15 @@ void MainScene::render()
 	{
 		sprite->render();
 	}
+
+	bool checked;
+	float f;
+	ImGui::Begin("Test window");
+	ImGui::SetWindowPos(ImVec2(20, 100));
+	ImGui::Text("This is a text");
+	ImGui::Checkbox("check me out", &checked);
+	ImGui::SliderFloat("float", &f, 0, 1);
+	ImGui::End();
 }
 
 void MainScene::disposeAssets()

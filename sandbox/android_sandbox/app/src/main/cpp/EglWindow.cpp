@@ -7,8 +7,11 @@
 #include <GLES2/gl2.h>
 
 #include "EglWindow.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_android.h"
+#include "imgui/imgui_impl_opengl3.h"
 
-bool EglWindow::open(android_app* app) {
+bool EglWindow::open(android_app *app) {
 	const EGLint attrs[] = {EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
 							EGL_RENDERABLE_TYPE, EGL_OPENGL_ES3_BIT,
 							EGL_BLUE_SIZE, 8,
@@ -70,12 +73,41 @@ bool EglWindow::open(android_app* app) {
 	glClearColor(1, 0, 1, 0);
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
-	initialized = true;
 
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO &io = ImGui::GetIO();
+	// io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	// io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
+	ImGui::StyleColorsDark();
+	ImGui_ImplAndroid_Init(app->window);
+	ImGui_ImplOpenGL3_Init("#version 300 es");
+	ImGui::GetStyle().ScaleAllSizes(5);
+
+	initialized = true;
 	return true;
 }
 
+void EglWindow::beginFrame() {
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplAndroid_NewFrame();
+	ImGui::NewFrame();
+	int err = GL_NO_ERROR;
+	while ((err = glGetError()) != GL_NO_ERROR)
+	{
+	}
+}
+
+void EglWindow::endFrame() {
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	eglSwapBuffers(display, surface);
+}
+
 void EglWindow::close() {
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplAndroid_Shutdown();
+	ImGui::DestroyContext();
 
 	if (display != EGL_NO_DISPLAY) {
 		eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);

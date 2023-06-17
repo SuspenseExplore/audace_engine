@@ -130,19 +130,36 @@ bool OpenxrContext::beginSession() {
 	sessionBeginInfo.primaryViewConfigurationType = XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO;
 	XR_ERROR_BAIL("xrBeginSession", xrBeginSession(xrSession, &sessionBeginInfo));
 
-	XrPosef pose;
-	pose.position.x = pose.position.y = pose.position.z = 0;
-	XrVector3f axis{1.0f, 0.0f, 0.0f};
-	XrQuaternionf_CreateFromAxisAngle(&pose.orientation, &axis, MATH_PI / -2.0f);
-	XrReferenceSpaceCreateInfo referenceSpaceCreateInfo{
-			XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
+	{
+		XrPosef pose;
+		pose.position.x = pose.position.y = pose.position.z = 0;
+		XrVector3f axis{1.0f, 0.0f, 0.0f};
+		XrQuaternionf_CreateFromAxisAngle(&pose.orientation, &axis, MATH_PI / -2.0f);
+		XrReferenceSpaceCreateInfo referenceSpaceCreateInfo{
+				XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
 
-	referenceSpaceCreateInfo.poseInReferenceSpace = pose;
-	referenceSpaceCreateInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_LOCAL;
-	XR_ERROR_BAIL("xrCreateReferenceSpace",
-				  xrCreateReferenceSpace(xrSession, &referenceSpaceCreateInfo,
-										 &xrSpace));
-	return true;
+		referenceSpaceCreateInfo.poseInReferenceSpace = pose;
+		referenceSpaceCreateInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_STAGE;
+		XR_ERROR_BAIL("xrCreateReferenceSpace",
+					  xrCreateReferenceSpace(xrSession, &referenceSpaceCreateInfo,
+											 &xrWorldSpace));
+	}
+	{
+		XrPosef pose;
+		pose.position.x = pose.position.y = pose.position.z = 0;
+		pose.orientation.w = 1;
+		pose.orientation.x = pose.orientation.y = pose.orientation.z = 0;
+//		XrVector3f axis{1.0f, 0.0f, 0.0f};
+//		XrQuaternionf_CreateFromAxisAngle(&pose.orientation, &axis, MATH_PI / -2.0f);
+		XrReferenceSpaceCreateInfo referenceSpaceCreateInfo{
+				XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
+
+		referenceSpaceCreateInfo.poseInReferenceSpace = pose;
+		referenceSpaceCreateInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_VIEW;
+		XR_ERROR_BAIL("xrCreateReferenceSpace",
+					  xrCreateReferenceSpace(xrSession, &referenceSpaceCreateInfo,
+											 &xrViewSpace));
+	}	return true;
 }
 
 int64_t OpenxrContext::chooseViewFormat(XrSession session) {
@@ -295,7 +312,7 @@ bool OpenxrContext::processActions(XrTime displayTime) {
 					  xrGetActionStatePose(xrSession, &getInfo, &poseState));
 		if (poseState.isActive == XR_TRUE && poseInputHandlers.find(name) != poseInputHandlers.end()) {
 			XrSpaceLocation location{XR_TYPE_SPACE_LOCATION};
-			xrLocateSpace(leftHandPoseSpace, xrSpace, displayTime, &location);
+			xrLocateSpace(leftHandPoseSpace, xrWorldSpace, displayTime, &location);
 			Audace::Pose pose;
 			pose.position = glm::vec3(location.pose.position.x, location.pose.position.y, location.pose.position.z);
 			pose.orientation = glm::quat(location.pose.orientation.w, location.pose.orientation.x, location.pose.orientation.y, location.pose.orientation.z);
@@ -312,7 +329,7 @@ bool OpenxrContext::processActions(XrTime displayTime) {
 					  xrGetActionStatePose(xrSession, &getInfo, &poseState));
 		if (poseState.isActive == XR_TRUE && poseInputHandlers.find(name) != poseInputHandlers.end()) {
 			XrSpaceLocation location{XR_TYPE_SPACE_LOCATION};
-			xrLocateSpace(leftHandAimSpace, xrSpace, displayTime, &location);
+			xrLocateSpace(leftHandAimSpace, xrWorldSpace, displayTime, &location);
 			Audace::Pose pose;
 			pose.position = glm::vec3(location.pose.position.x, location.pose.position.y, location.pose.position.z);
 			pose.orientation = glm::quat(location.pose.orientation.w, location.pose.orientation.x, location.pose.orientation.y, location.pose.orientation.z);
