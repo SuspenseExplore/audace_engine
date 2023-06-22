@@ -1,0 +1,16 @@
+#include "au_renderer.h"
+#include "NavigationScene.h"
+#include "imgui.h"
+#include "SceneEnum.h"
+
+void NavigationScene::render() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	ImGui::Begin("Scenes");
+	if (ImGui::Button("Main Scene")) {
+		appController->setScene(SandboxScene::MAIN);
+	}
+	if (ImGui::Button("Scene Builder")) {
+		appController->setScene(SandboxScene::BUILDER);
+	}
+	ImGui::End();
+}

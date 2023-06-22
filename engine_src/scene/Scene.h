@@ -1,9 +1,17 @@
 #ifndef AU_SCENE_H
 #define AU_SCENE_H
 
-namespace Audace {
-	class Scene {
-		public:
+#include "application/BaseAppController.h"
+
+namespace Audace
+{
+	class Scene
+	{
+	protected:
+		BaseAppController *appController;
+
+	public:
+		Scene(BaseAppController *controller);
 		virtual ~Scene() {}
 		virtual void loadAssets() = 0;
 		virtual void render() = 0;

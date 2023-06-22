@@ -11,7 +11,9 @@ add_executable(
 	${ENGINE_DIR}/stb_image.cpp
 	main.cpp
 	AppController.cpp
-	${APP_DIR}/MainScene.cpp
+	${APP_DIR}/scene/MainScene.cpp
+	${APP_DIR}/scene/NavigationScene.cpp
+	${APP_DIR}/scene/SceneBuilder.cpp
 	${ENGINE_DIR}/AuLogger.cpp
 	${ENGINE_DIR}/glfw_platform/GameWindow.cpp
 	${ENGINE_DIR}/glfw_platform/KeyboardManager.cpp
@@ -36,6 +38,7 @@ add_executable(
 	${ENGINE_DIR}/content/ModelLoader.cpp
 	${ENGINE_DIR}/scene/Scene.cpp
 	${ENGINE_DIR}/scene/ForwardCamera.cpp
+	${ENGINE_DIR}/scene/BasicCameraController.cpp
 )
 
 target_include_directories(

@@ -15,7 +15,7 @@ namespace Audace {
 		ForwardCamera(Pose pose, glm::mat4 projection) : pose(pose), projMat(projection) {
 		}
 		static ForwardCamera standard(glm::vec3 position, float viewWidth, float viewHeight) {
-			glm::quat q = glm::quat(1, 0, 0, 0);
+			glm::quat q = glm::quat(glm::vec3(0.0f, 0.0f, 0.0f));
 			glm::mat4 proj = glm::perspectiveFov(glm::radians(45.0f), viewWidth, viewHeight, 0.1f, 100.0f);
 			return ForwardCamera(Pose(position, q), proj);
 		}

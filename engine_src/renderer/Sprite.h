@@ -57,7 +57,7 @@ namespace Audace {
 		}
 
 		void setScale(glm::vec3 scale) {
-			this->scale = scale;
+			this->scale = glm::vec3(scale);
 		}
 	};
 
