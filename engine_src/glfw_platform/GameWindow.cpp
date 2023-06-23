@@ -77,16 +77,16 @@ namespace Audace
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		int err = GL_NO_ERROR;
-		while ((err = glGetError()) != GL_NO_ERROR)
-		{
-		}
 	}
 
 	void GameWindow::endFrame()
 	{
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		int err = GL_NO_ERROR;
+		while ((err = glGetError()) != GL_NO_ERROR)
+		{
+		}
 		glfwSwapBuffers(window);
 	}
 }
