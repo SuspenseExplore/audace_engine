@@ -1,6 +1,7 @@
 #ifndef AI_SCENEBUILDER_H
 #define AI_SCENEBUILDER_H
 
+#include <vector>
 #include "application/BaseAppController.h"
 #include "FileLoader.h"
 #include "scene/Scene.h"
@@ -9,6 +10,7 @@
 #include "renderer/Sprite.h"
 #include "scene/ForwardCamera.h"
 #include "scene/BasicCameraController.h"
+#include "content/Model.h"
 
 class SceneBuilder : public Audace::Scene
 {
@@ -17,18 +19,28 @@ class SceneBuilder : public Audace::Scene
 	Audace::ShaderProgram* shaderProgram;
 
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
-	Audace::ForwardCamera camera = Audace::ForwardCamera::standard(glm::vec3(0, 0, 1), 1280.0f, 720.0f);
+	Audace::ForwardCamera camera = Audace::ForwardCamera::standard(glm::vec3(0, -10, 2), 1280.0f, 720.0f);
 	Audace::BasicCameraController camController = Audace::BasicCameraController(&camera);
 	float cameraYaw = 0;
 	float cameraPitch = 0;
 
 	glm::vec4 diffuseLight = glm::vec4(1, 1, 1, 1);
-	glm::vec3 lightPos = glm::vec3(0, 10, 0);
+	glm::vec3 lightPos = glm::vec3(0, 0, 10);
 
+	int selectedModelIndex = 0;
+	int modelCount = 2;
+	std::string modelNames[2];
+
+	Audace::Model* currModel;
 	Audace::Sprite* currSprite;
-	glm::vec3 spritePos = glm::vec3(0, 5, 1);
+	glm::vec3 spritePos = glm::vec3(0, 0, 0);
 	glm::vec3 spriteAngles = glm::vec3(0, 0, 0);
 	glm::vec3 spriteScale = glm::vec3(1, 1, 1);
+	glm::mat4 modelMat = glm::mat4(1.0f);
+
+	std::vector<Audace::Sprite*> sprites;
+
+	Audace::Model* loadModel(std::string filename);
 
 public:
 	SceneBuilder(Audace::BaseAppController *controller, Audace::FileLoader *fileLoader) : Scene(controller), fileLoader(fileLoader) {}

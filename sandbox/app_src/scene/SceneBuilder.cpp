@@ -16,12 +16,13 @@ void SceneBuilder::loadAssets()
 	shaderProgram->create();
 	shaderProgram->bind();
 
-	Audace::Model *model = fileLoader->readModelFile("models/", "cliff_blockSlope_rock.obj");
-	for (Audace::ModelSection *section : model->sections)
-	{
-		section->material->setShader(shaderProgram);
-	}
-	currSprite = new Audace::Sprite(model);
+	modelMat = glm::rotate(modelMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+	modelNames[0] = "ground_grass";
+	modelNames[1] = "cliff_blockSlope_rock";
+	currModel = loadModel(modelNames[selectedModelIndex]);
+	currSprite = new Audace::Sprite(currModel);
+	currSprite->setModelMatrix(modelMat);
 
 	Audace::KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_W, camController.forwardAction);
 	Audace::KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_S, camController.backwardAction);
@@ -31,6 +32,16 @@ void SceneBuilder::loadAssets()
 	Audace::KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Z, camController.downAction);
 	Audace::MouseManager::addButtonChangedEventHandler(1, camController.rightMouseAction);
 	Audace::MouseManager::setMouseMoveEventHandler(&camController.aimAction);
+}
+
+Audace::Model *SceneBuilder::loadModel(std::string modelName)
+{
+	Audace::Model *model = fileLoader->readModelFile("models/", modelName + ".obj");
+	for (Audace::ModelSection *section : model->sections)
+	{
+		section->material->setShader(shaderProgram);
+	}
+	return model;
 }
 
 void SceneBuilder::render()
@@ -48,6 +59,11 @@ void SceneBuilder::render()
 	shaderProgram->setUniformVec3("viewPos", camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
 
 	shaderProgram->setUniformMat4("vpMat", camera.getvpMat());
+
+	for (Audace::Sprite *sprite : sprites)
+	{
+		sprite->render();
+	}
 
 	currSprite->setPosition(spritePos);
 	currSprite->setOrientation(glm::quat(glm::radians(spriteAngles)));
@@ -69,7 +85,35 @@ void SceneBuilder::render()
 	ImGui::ColorEdit4("Clear Color", glm::value_ptr(clearColor));
 	ImGui::End();
 
-	ImGui::Begin("Load Model");
+	ImGui::Begin("Model");
+	if (ImGui::BeginCombo("Filename", modelNames[selectedModelIndex].c_str()))
+	{
+		for (int i = 0; i < modelCount; i++)
+		{
+			bool selected = selectedModelIndex == i;
+			if (ImGui::Selectable(modelNames[i].c_str(), selected))
+			{
+				selectedModelIndex = i;
+				currModel = loadModel(modelNames[i]);
+				currSprite = new Audace::Sprite(currModel);
+				currSprite->setModelMatrix(modelMat);
+			}
+			if (selected)
+			{
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndCombo();
+	}
+	if (ImGui::Button("Save"))
+	{
+		currSprite->setPosition(spritePos);
+		currSprite->setOrientation(glm::quat(glm::radians(spriteAngles)));
+		currSprite->setScale(spriteScale);
+		sprites.push_back(currSprite);
+		currSprite = new Audace::Sprite(currModel);
+		currSprite->setModelMatrix(modelMat);
+	}
 	ImGui::End();
 
 	ImGui::Begin("Sprite Properties");
