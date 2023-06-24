@@ -109,7 +109,7 @@ namespace Audace
 			}
 			else
 			{
-				AU_ENGINE_LOG_DEBUG("Read line: '{:x}'", line);
+				AU_ENGINE_LOG_DEBUG("Read line: '{}'", line);
 			}
 		}
 		model->sections.push_back(currentSection);

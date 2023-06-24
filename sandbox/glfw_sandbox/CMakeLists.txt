@@ -35,6 +35,7 @@ add_executable(
 	${ENGINE_DIR}/renderer/Sprite.cpp
 	${ENGINE_DIR}/renderer/Shapes.cpp
 	${ENGINE_DIR}/renderer/Material.cpp
+	${ENGINE_DIR}/renderer/light/PointLight.h
 	${ENGINE_DIR}/content/ModelLoader.cpp
 	${ENGINE_DIR}/scene/Scene.cpp
 	${ENGINE_DIR}/scene/ForwardCamera.cpp

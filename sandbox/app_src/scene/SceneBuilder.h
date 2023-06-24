@@ -8,6 +8,7 @@
 #include "glm/glm.hpp"
 #include "renderer/ShaderProgram.h"
 #include "renderer/Sprite.h"
+#include "renderer/light/PointLight.h"
 #include "scene/ForwardCamera.h"
 #include "scene/BasicCameraController.h"
 #include "content/Model.h"
@@ -24,12 +25,11 @@ class SceneBuilder : public Audace::Scene
 	float cameraYaw = 0;
 	float cameraPitch = 0;
 
-	glm::vec4 diffuseLight = glm::vec4(1, 1, 1, 1);
-	glm::vec3 lightPos = glm::vec3(0, 0, 10);
+	Audace::PointLight pointLights[4];
 
-	int selectedModelIndex = 0;
-	int modelCount = 2;
-	std::string modelNames[2];
+	int selectedModelIndex = 5;
+	int modelCount = 6;
+	std::string modelNames[6];
 
 	Audace::Model* currModel;
 	Audace::Sprite* currSprite;

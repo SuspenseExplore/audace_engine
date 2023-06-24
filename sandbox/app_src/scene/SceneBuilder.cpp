@@ -19,10 +19,19 @@ void SceneBuilder::loadAssets()
 	modelMat = glm::rotate(modelMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 	modelNames[0] = "ground_grass";
-	modelNames[1] = "cliff_blockSlope_rock";
+	modelNames[1] = "ground_pathEnd";
+	modelNames[2] = "ground_pathStraight";
+	modelNames[3] = "ground_riverStraight";
+	modelNames[4] = "bridge_stoneRoundNarrow";
+	modelNames[5] = "cliff_scene";
 	currModel = loadModel(modelNames[selectedModelIndex]);
 	currSprite = new Audace::Sprite(currModel);
 	currSprite->setModelMatrix(modelMat);
+
+	pointLights[0] = Audace::PointLight{glm::vec3(0, 0, 5), glm::vec3(1, 0.7f, 0.2f), 1};
+	pointLights[1] = Audace::PointLight{glm::vec3(-5, 0, 5), glm::vec3(1, 1, 0), 1};
+	pointLights[2] = Audace::PointLight{glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0};
+	pointLights[3] = Audace::PointLight{glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0};
 
 	Audace::KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_W, camController.forwardAction);
 	Audace::KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_S, camController.backwardAction);
@@ -52,10 +61,20 @@ void SceneBuilder::render()
 	camController.update();
 
 	shaderProgram->bind();
-	shaderProgram->setUniformVec3("light.position", lightPos.x, lightPos.y, lightPos.z);
-	shaderProgram->setUniformVec3("light.ambient", 0.2f, 0.2f, 0.4f);
-	shaderProgram->setUniformVec3("light.diffuse", diffuseLight.x, diffuseLight.y, diffuseLight.z);
-	shaderProgram->setUniformVec3("light.specular", 1.0f, 1.0f, 1.0f);
+	shaderProgram->setUniformVec4("ambientLight", 0.2f, 0.2f, 0.4f, 1.0f);
+
+	for (int i = 0; i < 4; i++) {
+		std::string prefix = "light[";
+		prefix += '0' + i;
+		prefix += "]";
+		shaderProgram->setUniformVec3(prefix + ".position", glm::value_ptr(pointLights[i].position));
+		shaderProgram->setUniformVec3(prefix + ".color", glm::value_ptr(pointLights[i].color));
+		shaderProgram->setUniformFloat(prefix + ".intensity", pointLights[i].intensity);
+	}
+	// shaderProgram->setUniformVec3("light[1].position", glm::value_ptr(pointLights[1].position));
+	// shaderProgram->setUniformVec3("light[1].color", glm::value_ptr(pointLights[1].color));
+	// shaderProgram->setUniformFloat("light[1].intensity", pointLights[1].intensity);
+
 	shaderProgram->setUniformVec3("viewPos", camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
 
 	shaderProgram->setUniformMat4("vpMat", camera.getvpMat());
@@ -82,7 +101,25 @@ void SceneBuilder::render()
 	ImGui::End();
 
 	ImGui::Begin("Scene Properties");
-	ImGui::ColorEdit4("Clear Color", glm::value_ptr(clearColor));
+	ImGui::ColorEdit3("Clear Color", glm::value_ptr(clearColor));
+	ImGui::End();
+
+	ImGui::Begin("Lights");
+	if (ImGui::BeginTabBar("Light number", 0))
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			std::string name = "Light " + i;
+			if (ImGui::BeginTabItem(name.c_str()))
+			{
+				ImGui::DragFloat3("Position" + i, glm::value_ptr(pointLights[i].position));
+				ImGui::ColorEdit3("Color" + i, glm::value_ptr(pointLights[i].color));
+				ImGui::DragFloat("Intensity" + i, &pointLights[i].intensity, 0.1f, 0.0f, 1.5f);
+				ImGui::EndTabItem();
+			}
+		}
+		ImGui::EndTabBar();
+	}
 	ImGui::End();
 
 	ImGui::Begin("Model");
