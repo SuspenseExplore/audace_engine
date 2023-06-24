@@ -3,6 +3,8 @@
 //
 
 #include "AppController.h"
+#include "scene/NavigationScene.h"
+#include "scene/SceneBuilder.h"
 
 namespace Audace {
 	bool AppController::createWindow() {
@@ -11,7 +13,7 @@ namespace Audace {
 	}
 
 	void AppController::windowInitialized() {
-		scene = new MainScene(fileLoader);
+		scene = new NavigationScene(this);
 		scene->loadAssets();
 	}
 
@@ -37,9 +39,42 @@ namespace Audace {
 				AU_ENGINE_LOG_TRACE("Application terminating normally");
 				return;
 			}
+			if (nextScene != CURRENT) {
+				startNextScene();
+			}
 
 			renderFrame();
 		}
+	}
+
+	void AppController::setScene(int scene)
+	{
+		nextScene = scene;
+	}
+
+	void AppController::startNextScene()
+	{
+		scene->disposeAssets();
+		delete scene;
+
+		switch (nextScene)
+		{
+			case NAVIGATION:
+				scene = new NavigationScene(this);
+				scene->loadAssets();
+				break;
+
+			case MAIN:
+				scene = new MainScene(this, fileLoader);
+				scene->loadAssets();
+				break;
+
+			case BUILDER:
+				scene = new SceneBuilder(this, fileLoader);
+				scene->loadAssets();
+				break;
+		}
+		nextScene = CURRENT;
 	}
 
 	void AppController::renderFrame() {

@@ -42,6 +42,8 @@ add_executable(
 	${ENGINE_DIR}/scene/BasicCameraController.cpp
 )
 
+add_compile_definitions(AU_PLATFORM_GLFW)
+
 target_include_directories(
 	sandbox_glfw
 	PRIVATE

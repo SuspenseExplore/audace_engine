@@ -50,7 +50,12 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/renderer/Mesh.cpp
 		${ENGINE_DIR}/renderer/Sprite.cpp
 		${ENGINE_DIR}/renderer/Shapes.cpp
-		${APP_DIR}/MainScene.cpp
+		${ENGINE_DIR}/scene/Scene.cpp
+		${ENGINE_DIR}/scene/ForwardCamera.cpp
+		${ENGINE_DIR}/scene/BasicCameraController.cpp
+		${APP_DIR}/scene/MainScene.cpp
+		${APP_DIR}/scene/NavigationScene.cpp
+		${APP_DIR}/scene/SceneBuilder.cpp
 		)
 
 target_compile_definitions(

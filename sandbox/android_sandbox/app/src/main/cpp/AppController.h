@@ -10,13 +10,17 @@
 #include "EngineEventListener.h"
 #include "EglWindow.h"
 #include "FileLoader.h"
-#include "MainScene.h"
+#include "scene/MainScene.h"
+#include "SceneEnum.h"
 
 namespace Audace {
-	class AppController : public EngineEventListener {
+	class AppController : public EngineEventListener, BaseAppController {
 		android_app *androidApp;
 		FileLoader *fileLoader;
 		Scene *scene;
+		int nextScene = SandboxScene::CURRENT;
+
+		void startNextScene();
 
 	public:
 		EglWindow window;
@@ -32,6 +36,8 @@ namespace Audace {
 		void renderFrame();
 
 		void shutdown();
+
+		void setScene(int newScene) override;
 
 		static void pollSystemEvents(android_app *app);
 

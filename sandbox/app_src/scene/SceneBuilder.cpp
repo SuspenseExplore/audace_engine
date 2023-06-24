@@ -5,8 +5,11 @@
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
+
+#ifdef AU_PLATFORM_GLFW
 #include "KeyboardManager.h"
 #include "MouseManager.h"
+#endif
 
 void SceneBuilder::loadAssets()
 {
@@ -33,6 +36,7 @@ void SceneBuilder::loadAssets()
 	pointLights[2] = Audace::PointLight{glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0};
 	pointLights[3] = Audace::PointLight{glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0};
 
+#ifdef AU_PLATFORM_GLFW
 	Audace::KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_W, camController.forwardAction);
 	Audace::KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_S, camController.backwardAction);
 	Audace::KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_A, camController.leftAction);
@@ -41,6 +45,7 @@ void SceneBuilder::loadAssets()
 	Audace::KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Z, camController.downAction);
 	Audace::MouseManager::addButtonChangedEventHandler(1, camController.rightMouseAction);
 	Audace::MouseManager::setMouseMoveEventHandler(&camController.aimAction);
+#endif
 }
 
 Audace::Model *SceneBuilder::loadModel(std::string modelName)
@@ -63,7 +68,8 @@ void SceneBuilder::render()
 	shaderProgram->bind();
 	shaderProgram->setUniformVec4("ambientLight", 0.2f, 0.2f, 0.4f, 1.0f);
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 4; i++)
+	{
 		std::string prefix = "light[";
 		prefix += '0' + i;
 		prefix += "]";

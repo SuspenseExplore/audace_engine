@@ -70,7 +70,7 @@ bool EglWindow::open(android_app *app) {
 		auto info = glGetString(name);
 	}
 
-	glClearColor(1, 0, 1, 0);
+	glClearColor(0, 0, 1, 0);
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 
