@@ -5,6 +5,7 @@
 #include <iostream>
 #include "ImageData.h"
 #include "content/Model.h"
+#include "content/ByteBuffer.h"
 
 namespace Audace {
 	class FileLoader {
@@ -13,6 +14,7 @@ namespace Audace {
 		public:
 		FileLoader(std::string basePath) : basePath(basePath) {}
 
+		ByteBuffer* readFileToBuffer(const std::string& path);
 		std::string textFileToString(std::string path);
 		ImageData readImageFile(std::string path);
 		Model* readModelFile(std::string path, std::string filename);

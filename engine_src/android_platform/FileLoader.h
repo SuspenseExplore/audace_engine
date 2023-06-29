@@ -11,6 +11,7 @@
 #include <map>
 #include "ImageData.h"
 #include "content/Model.h"
+#include "content/ByteBuffer.h"
 #include "renderer/ShaderProgram.h"
 
 namespace Audace {
@@ -22,6 +23,7 @@ namespace Audace {
 
 	public:
 		FileLoader(AAssetManager *assets) : assetManager(assets) {}
+		ByteBuffer* readFileToBuffer(const std::string& path);
 		std::string textFileToString(const std::string& path);
 		ImageData readImageFile(const std::string& path);
 		Model* readModelFile(std::string path, std::string filename);

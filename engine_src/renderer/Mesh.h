@@ -15,7 +15,7 @@ namespace Audace
 	class Mesh
 	{
 		VertexArray *vertexArray;
-		DataBuffer *indexBuffer;
+		DataBuffer *indexBuffer = nullptr;
 		int startIndex;
 		int vertexCount;
 		GLenum renderMode;

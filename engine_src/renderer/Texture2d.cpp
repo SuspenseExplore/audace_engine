@@ -2,6 +2,7 @@
 
 namespace Audace {
 	void Texture2d::create() {
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glGenTextures(1, &glid);
 		AU_CHECK_GL_ERRORS();
 		bind(0);
@@ -9,16 +10,16 @@ namespace Audace {
 		AU_CHECK_GL_ERRORS();
 		glGenerateMipmap(GL_TEXTURE_2D);
 		AU_CHECK_GL_ERRORS();
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		AU_CHECK_GL_ERRORS();
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		AU_CHECK_GL_ERRORS();
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		AU_CHECK_GL_ERRORS();
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		AU_CHECK_GL_ERRORS();
 
-		img.release();
+		// img.release();
 	}
 
 	void Texture2d::bind(int texUnit) {

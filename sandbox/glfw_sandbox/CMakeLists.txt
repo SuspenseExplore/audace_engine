@@ -36,6 +36,7 @@ add_executable(
 	${ENGINE_DIR}/renderer/Shapes.cpp
 	${ENGINE_DIR}/renderer/Material.cpp
 	${ENGINE_DIR}/renderer/light/PointLight.h
+	${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 	${ENGINE_DIR}/content/ModelLoader.cpp
 	${ENGINE_DIR}/scene/Scene.cpp
 	${ENGINE_DIR}/scene/ForwardCamera.cpp
@@ -56,6 +57,7 @@ target_include_directories(
 	${ENGINE_DIR}/glfw_platform
 	${ENGINE_DIR}/include
 	${ENGINE_DIR}/include/imgui
+	${ENGINE_DIR}/include/freetype
 	${APP_DIR}
 )
 
@@ -81,8 +83,20 @@ set_target_properties(
 	IMPORTED_IMPLIB ${CMAKE_CURRENT_SOURCE_DIR}/lib/glfw3.lib
 )
 
+add_library(
+	freetype
+	SHARED
+	IMPORTED
+)
+set_target_properties(
+	freetype
+	PROPERTIES
+	IMPORTED_IMPLIB ${CMAKE_CURRENT_SOURCE_DIR}/lib/freetype.lib
+)
+
 target_link_libraries(
 	sandbox_glfw
 	PUBLIC
 	glfw3
+	freetype
 )

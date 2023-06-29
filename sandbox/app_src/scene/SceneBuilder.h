@@ -12,12 +12,15 @@
 #include "scene/ForwardCamera.h"
 #include "scene/BasicCameraController.h"
 #include "content/Model.h"
+#include "renderer/text/BitmapFont.h"
 
 class SceneBuilder : public Audace::Scene
 {
 	Audace::FileLoader* fileLoader;
 	glm::vec4 clearColor = glm::vec4(0, 0, 1, 0);
 	Audace::ShaderProgram* shaderProgram;
+	Audace::Mesh* quadMesh;
+	Audace::BitmapFont* font;
 
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
 	Audace::ForwardCamera camera = Audace::ForwardCamera::standard(glm::vec3(0, -10, 2), 1280.0f, 720.0f);

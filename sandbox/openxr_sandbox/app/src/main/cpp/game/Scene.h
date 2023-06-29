@@ -12,6 +12,7 @@
 #include "renderer/ShaderProgram.h"
 #include "renderer/Texture2d.h"
 #include "renderer/Sprite.h"
+#include "renderer/text/BitmapFont.h"
 #include "openxr/OpenxrView.h"
 #include "glm/glm.hpp"
 #include "util/RandomUniformFloats.h"
@@ -28,6 +29,9 @@ class Scene {
 	Audace::Texture2d *greenChecksTex;
 	Audace::Texture2d *orangeChecksTex;
 	Audace::Texture2d *purpleChecksTex;
+
+	Audace::Mesh* quadMesh;
+	Audace::BitmapFont* font;
 
 	glm::vec3 lightPos;
 	glm::vec3 diffuseLight = glm::vec3(1, 1, 1);

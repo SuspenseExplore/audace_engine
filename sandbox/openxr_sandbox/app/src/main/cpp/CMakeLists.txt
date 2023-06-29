@@ -39,6 +39,7 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/android_platform/ImageData.cpp
 		${ENGINE_DIR}/android_platform/FileLoader.cpp
 		${ENGINE_DIR}/input/InputDevices.cpp
+		${ENGINE_DIR}/content/ByteBuffer.cpp
 		${ENGINE_DIR}/content/ModelLoader.cpp
 		${ENGINE_DIR}/renderer/DataBuffer.cpp
 		${ENGINE_DIR}/renderer/ShaderProgram.cpp
@@ -48,6 +49,7 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/renderer/Mesh.cpp
 		${ENGINE_DIR}/renderer/Sprite.cpp
 		${ENGINE_DIR}/renderer/Shapes.cpp
+		${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 		openxr/OpenxrSwapchain.cpp
 		openxr/OpenxrView.cpp
 		openxr/OpenxrContext.cpp
@@ -100,6 +102,17 @@ target_include_directories(
 		${ENGINE_DIR}/android_platform/imgui
 )
 
+add_library(
+		freetype
+		STATIC
+		IMPORTED
+)
+set_target_properties(
+		freetype
+		PROPERTIES
+		IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}../../../../libs/${ANDROID_ABI}/libfreetype2-static.a
+)
+
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
@@ -111,6 +124,7 @@ target_link_libraries( # Specifies the target library.
 		EGL
 		GLESv3
 		openxr_loader
+		freetype
 
 		# Links the target library to the log library
 		# included in the NDK.

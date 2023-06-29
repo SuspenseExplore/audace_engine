@@ -2,6 +2,7 @@
 #include "SceneBuilder.h"
 #include "imgui.h"
 #include "SceneEnum.h"
+#include "renderer/Shapes.h"
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -13,11 +14,16 @@
 
 void SceneBuilder::loadAssets()
 {
-	std::string vs = fileLoader->textFileToString("shaders/standard/vs.glsl");
-	std::string fs = fileLoader->textFileToString("shaders/standard/fs.glsl");
-	shaderProgram = new Audace::ShaderProgram(vs, fs);
-	shaderProgram->create();
-	shaderProgram->bind();
+	{
+		std::string vs = fileLoader->textFileToString("shaders/standard/vs.glsl");
+		std::string fs = fileLoader->textFileToString("shaders/standard/fs.glsl");
+		shaderProgram = new Audace::ShaderProgram(vs, fs);
+		shaderProgram->create();
+		shaderProgram->bind();
+	}
+
+	quadMesh = Audace::Shapes::squarePositions();
+	font = new Audace::BitmapFont(fileLoader, "arial.ttf");
 
 	modelMat = glm::rotate(modelMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
@@ -95,6 +101,8 @@ void SceneBuilder::render()
 	currSprite->setScale(spriteScale);
 	currSprite->render();
 
+	font->renderText("Sphynx of black quartz, judge my vow.");
+
 	ImGui::Begin("Scenes");
 	if (ImGui::Button("Navigation"))
 	{
@@ -115,12 +123,12 @@ void SceneBuilder::render()
 	{
 		for (int i = 0; i < 4; i++)
 		{
-			std::string name = "Light " + i;
+			std::string name = (std::string("Light ") + std::to_string(i));
 			if (ImGui::BeginTabItem(name.c_str()))
 			{
-				ImGui::DragFloat3("Position" + i, glm::value_ptr(pointLights[i].position));
-				ImGui::ColorEdit3("Color" + i, glm::value_ptr(pointLights[i].color));
-				ImGui::DragFloat("Intensity" + i, &pointLights[i].intensity, 0.1f, 0.0f, 1.5f);
+				ImGui::DragFloat3((std::string("Position") + std::to_string(i)).c_str(), glm::value_ptr(pointLights[i].position));
+				ImGui::ColorEdit3((std::string("Color") + std::to_string(i)).c_str(), glm::value_ptr(pointLights[i].color));
+				ImGui::DragFloat((std::string("Intensity") + std::to_string(i)).c_str(), &pointLights[i].intensity, 0.1f, 0.0f, 1.5f);
 				ImGui::EndTabItem();
 			}
 		}

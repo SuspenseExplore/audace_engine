@@ -18,6 +18,13 @@ namespace Audace {
 		return s;
 	}
 
+	ByteBuffer* FileLoader::readFileToBuffer(const std::string &path) {
+		AAsset *asset = getAsset(path);
+		int length = AAsset_getLength(asset);
+		char* buf = readAssetToBuffer(asset);
+		return new ByteBuffer(buf, length);
+	}
+
 	ImageData FileLoader::readImageFile(const std::string& path) {
 		int bytesRead = 0;
 		AAsset *asset = AAssetManager_open(assetManager, path.c_str(), AASSET_MODE_STREAMING);

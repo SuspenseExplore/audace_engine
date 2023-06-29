@@ -32,6 +32,9 @@ void Scene::init(AppController *controller, AAssetManager *assetManager) {
 	shaderProgram->create();
 	shaderProgram->bind();
 
+	quadMesh = Audace::Shapes::squarePositions();
+	font = new Audace::BitmapFont(fileLoader, "arial.ttf");
+
 	{
 		Audace::ImageData img = fileLoader->readImageFile("images/dark_grid.png");
 		darkGridTex = new Audace::Texture2d(img);
@@ -231,6 +234,7 @@ void Scene::render(OpenxrView view) {
 	for (Audace::Sprite *sprite: sprites) {
 		sprite->render();
 	}
+
 }
 
 void Scene::renderUi(OpenxrView view) {
@@ -247,4 +251,6 @@ void Scene::renderUi(OpenxrView view) {
 	ImGui::Checkbox("check me out", &checked);
 	ImGui::SliderFloat("float", &f, 0, 1);
 	ImGui::End();
+
+	font->renderText("Sphynx of black quartz, judge my vow.");
 }

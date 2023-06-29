@@ -6,6 +6,15 @@
 
 namespace Audace
 {
+	ByteBuffer* FileLoader::readFileToBuffer(const std::string& path) {
+		std::ifstream fin(basePath + path, std::ios::in | std::ios::binary | std::ios::ate);
+		int size = fin.tellg();
+		fin.seekg(0);
+		char* buf = new char[size];
+		fin.read(buf, size);
+		return new ByteBuffer(buf, size);
+	}
+
 	std::string FileLoader::textFileToString(std::string path)
 	{
 		std::ifstream fin(basePath + path, std::ios::in);
