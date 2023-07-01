@@ -57,11 +57,6 @@ void Scene::init(AppController *controller, AAssetManager *assetManager) {
 	}
 	glm::mat4 IDENTITY_MAT = glm::mat4(1.0f);
 	Audace::Sprite *cliff_scene = loadSprite("cliff_scene.obj");
-//	Audace::Sprite *ground_grass = loadSprite("ground_grass.obj");
-//	Audace::Sprite *ground_path_straight = loadSprite("ground_pathStraight.obj");
-//	Audace::Sprite *ground_path_end = loadSprite("ground_pathEnd.obj");
-//	Audace::Sprite *river_straight = loadSprite("ground_riverStraight.obj");
-//	Audace::Sprite *bridge = loadSprite("bridge_stoneRoundNarrow.obj");
 
 	{
 		Audace::Sprite *sprite = cliff_scene->clone();
@@ -71,106 +66,6 @@ void Scene::init(AppController *controller, AAssetManager *assetManager) {
 		sprite->setPosition(glm::vec3(0, 0, -1));
 		sprites.push_back(sprite);
 	}
-//	{
-//		Audace::Sprite *sprite = ground_grass->clone();
-//		glm::mat4 modelMat = glm::rotate(IDENTITY_MAT, glm::radians(90.0f), glm::vec3(1, 0, 0));
-//		// modelMat = glm::rotate(modelMat, glm::radians(180.0f), glm::vec3(0, 1, 0));
-//		sprite->setModelMatrix(modelMat);
-//		sprite->setPosition(glm::vec3(-1, 3, -1));
-//		sprites.push_back(sprite);
-//	}
-//	{
-//		Audace::Sprite *sprite = ground_path_end->clone();
-//		glm::mat4 modelMat = glm::rotate(IDENTITY_MAT, glm::radians(90.0f), glm::vec3(1, 0, 0));
-//		modelMat = glm::rotate(modelMat, glm::radians(180.0f), glm::vec3(0, 1, 0));
-//		sprite->setModelMatrix(modelMat);
-//		sprite->setPosition(glm::vec3(0, 3, -1));
-//		sprites.push_back(sprite);
-//	}
-//	{
-//		Audace::Sprite *sprite = ground_grass->clone();
-//		glm::mat4 modelMat = glm::rotate(IDENTITY_MAT, glm::radians(90.0f), glm::vec3(1, 0, 0));
-//		// modelMat = glm::rotate(modelMat, glm::radians(180.0f), glm::vec3(0, 1, 0));
-//		sprite->setModelMatrix(modelMat);
-//		sprite->setPosition(glm::vec3(1, 3, -1));
-//		sprites.push_back(sprite);
-//	}
-//	{
-//		Audace::Sprite *sprite = ground_grass->clone();
-//		glm::mat4 modelMat = glm::rotate(IDENTITY_MAT, glm::radians(90.0f), glm::vec3(1, 0, 0));
-//		// modelMat = glm::rotate(modelMat, glm::radians(180.0f), glm::vec3(0, 1, 0));
-//		sprite->setModelMatrix(modelMat);
-//		sprite->setPosition(glm::vec3(2, 3, -1));
-//		sprites.push_back(sprite);
-//	}
-//	{
-//		Audace::Sprite *sprite = ground_path_straight->clone();
-//		sprite->setModelMatrix(glm::rotate(IDENTITY_MAT, glm::radians(90.0f), glm::vec3(1, 0, 0)));
-//		sprite->setPosition(glm::vec3(0, 1, -1));
-//		sprites.push_back(sprite);
-//	}
-//	{
-//		Audace::Sprite *sprite = ground_path_straight->clone();
-//		sprite->setModelMatrix(glm::rotate(IDENTITY_MAT, glm::radians(90.0f), glm::vec3(1, 0, 0)));
-//		sprite->setPosition(glm::vec3(0, 2, -1));
-//		sprites.push_back(sprite);
-//	}
-//	{
-//		Audace::Sprite *sprite = ground_path_end->clone();
-//		glm::mat4 modelMat = glm::rotate(IDENTITY_MAT, glm::radians(90.0f), glm::vec3(1, 0, 0));
-//		modelMat = glm::rotate(modelMat, glm::radians(180.0f), glm::vec3(0, 1, 0));
-//		sprite->setModelMatrix(modelMat);
-//		sprite->setPosition(glm::vec3(0, 3, -1));
-//		sprites.push_back(sprite);
-//	}
-//	{
-//		Audace::Sprite *sprite = river_straight->clone();
-//		glm::mat4 modelMat = glm::rotate(IDENTITY_MAT, glm::radians(90.0f), glm::vec3(1, 0, 0));
-//		modelMat = glm::rotate(modelMat, glm::radians(90.0f), glm::vec3(0, 1, 0));
-//		sprite->setModelMatrix(modelMat);
-//		sprite->setPosition(glm::vec3(-2, 4, -1));
-//		sprites.push_back(sprite);
-//	}
-//	{
-//		Audace::Sprite *sprite = river_straight->clone();
-//		glm::mat4 modelMat = glm::rotate(IDENTITY_MAT, glm::radians(90.0f), glm::vec3(1, 0, 0));
-//		modelMat = glm::rotate(modelMat, glm::radians(90.0f), glm::vec3(0, 1, 0));
-//		sprite->setModelMatrix(modelMat);
-//		sprite->setPosition(glm::vec3(-1, 4, -1));
-//		sprites.push_back(sprite);
-//	}
-//	{
-//		Audace::Sprite *sprite = river_straight->clone();
-//		glm::mat4 modelMat = glm::rotate(IDENTITY_MAT, glm::radians(90.0f), glm::vec3(1, 0, 0));
-//		modelMat = glm::rotate(modelMat, glm::radians(90.0f), glm::vec3(0, 1, 0));
-//		sprite->setModelMatrix(modelMat);
-//		sprite->setPosition(glm::vec3(0, 4, -1));
-//		sprites.push_back(sprite);
-//	}
-//	{
-//		Audace::Sprite *sprite = river_straight->clone();
-//		glm::mat4 modelMat = glm::rotate(IDENTITY_MAT, glm::radians(90.0f), glm::vec3(1, 0, 0));
-//		modelMat = glm::rotate(modelMat, glm::radians(90.0f), glm::vec3(0, 1, 0));
-//		sprite->setModelMatrix(modelMat);
-//		sprite->setPosition(glm::vec3(1, 4, -1));
-//		sprites.push_back(sprite);
-//	}
-//	{
-//		Audace::Sprite *sprite = river_straight->clone();
-//		glm::mat4 modelMat = glm::rotate(IDENTITY_MAT, glm::radians(90.0f), glm::vec3(1, 0, 0));
-//		modelMat = glm::rotate(modelMat, glm::radians(90.0f), glm::vec3(0, 1, 0));
-//		sprite->setModelMatrix(modelMat);
-//		sprite->setPosition(glm::vec3(2, 4, -1));
-//		sprites.push_back(sprite);
-//	}
-//	{
-//		Audace::Sprite *sprite = bridge->clone();
-//		glm::mat4 modelMat = glm::rotate(IDENTITY_MAT, glm::radians(90.0f), glm::vec3(1, 0, 0));
-//		modelMat = glm::rotate(modelMat, glm::radians(90.0f), glm::vec3(0, 1, 0));
-//		sprite->setModelMatrix(modelMat);
-//		sprite->setPosition(glm::vec3(0, 4, -1));
-//		sprites.push_back(sprite);
-//	}
 }
 
 Audace::Sprite *Scene::loadSprite(std::string filename) {
@@ -189,6 +84,7 @@ void Scene::render(OpenxrView view) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	AU_CHECK_GL_ERRORS();
 	XrPosef pose = view.getViewData().pose;
+	XrFovf fov = view.getViewData().fov;
 
 	darkGridTex->bind(1);
 	greenChecksTex->bind(2);
@@ -202,19 +98,12 @@ void Scene::render(OpenxrView view) {
 	shaderProgram->setUniformVec3("light.specular", 1.0f, 1.0f, 1.0f);
 	shaderProgram->setUniformVec3("viewPos", pose.position.x, pose.position.y, pose.position.z);
 
-	XrMatrix4x4f projMat;
-	XrMatrix4x4f_CreateProjectionFov(&projMat, GRAPHICS_OPENGL_ES, view.getViewData().fov, 0.1f,
-									 100.0f);
-	XrMatrix4x4f camMat;
-	XrVector3f scale{1.f, 1.f, 1.f};
-	XrMatrix4x4f_CreateTranslationRotationScale(&camMat, &pose.position, &pose.orientation, &scale);
-	XrMatrix4x4f viewMat;
-	XrMatrix4x4f_InvertRigidBody(&viewMat, &camMat);
-	XrMatrix4x4f vpMat;
-	XrMatrix4x4f_Multiply(&vpMat, &projMat, &viewMat);
-
-	shaderProgram->setUniformMat4("vpMat", reinterpret_cast<float *>(&vpMat));
-	AU_CHECK_GL_ERRORS();
+	glm::mat4 camMat = glm::mat4_cast(glm::quat(pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z));
+	camMat = glm::transpose(camMat);
+	camMat = glm::translate(camMat, -glm::vec3(pose.position.x, pose.position.y, pose.position.z));
+	glm::mat4 projMat = glm::frustum(tan(fov.angleLeft), tan(fov.angleRight), tan(fov.angleDown), tan(fov.angleUp), 1.0f, 100.0f);
+	glm::mat4 vpMat = projMat * camMat;
+	shaderProgram->setUniformMat4("vpMat", glm::value_ptr(vpMat));
 
 //	{
 //		// the aim pose
