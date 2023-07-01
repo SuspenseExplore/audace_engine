@@ -4,6 +4,7 @@
 #include "scene/MainScene.h"
 #include "scene/NavigationScene.h"
 #include "scene/SceneBuilder.h"
+#include "scene/BasicCameraController.h"
 
 namespace Audace
 {
@@ -24,29 +25,6 @@ namespace Audace
 		AU_RENDERER_LOG_TRACE("Renderer initialized");
 
 		fileLoader = new FileLoader("../../assets/");
-
-		// window->addKeyEventHandler(GLFW_KEY_A, [this](ButtonInputEvent event)
-		// 						   { reinterpret_cast<MainScene *>(scene)->setVelX(event.pressed ? -0.1f : 0); });
-		// window->addKeyEventHandler(GLFW_KEY_D, [this](ButtonInputEvent event)
-		// 						   { reinterpret_cast<MainScene *>(scene)->setVelX(event.pressed ? 0.1f : 0); });
-		// window->addKeyEventHandler(GLFW_KEY_W, [this](ButtonInputEvent event)
-		// 						   { reinterpret_cast<MainScene *>(scene)->setVelY(event.pressed ? 0.1f : 0); });
-		// window->addKeyEventHandler(GLFW_KEY_S, [this](ButtonInputEvent event)
-		// 						   { reinterpret_cast<MainScene *>(scene)->setVelY(event.pressed ? -0.1f : 0); });
-		// window->addMouseButtonEventHandler(GLFW_MOUSE_BUTTON_1, [this](ButtonInputEvent event)
-		// 								   { reinterpret_cast<MainScene *>(scene)->setLightBright(event.pressed); });
-		// // window->addMouseButtonEventHandler(GLFW_MOUSE_BUTTON_2, [this](ButtonInputEvent event)
-		// // 								   { if (event.pressed && event.changed) {reinterpret_cast<MainScene *>(scene)->randomLightColor();} });
-		// window->setMouseMoveEventHandler([this](Vec2InputEvent event)
-		// 								 { 											
-		// 									// rotate the camera if scroll wheel is held down
-		// 									if (event.changed && window->isMouseButtonDown(GLFW_MOUSE_BUTTON_2)) {
-		// 										reinterpret_cast<MainScene *>(scene)->rotateCamera((event.state.y - mousePos.y) * 0.005f, 0, (event.state.x - mousePos.x) * 0.005f);
-		// 									} else {
-		// 										// move the light based on mouse pos
-		// 										reinterpret_cast<MainScene *>(scene)->setLightPos(event.state.x, event.state.y);
-		// 									}
-		// 									mousePos = glm::vec2(event.state.x, event.state.y); });
 	}
 
 	void AppController::runGameLoop()
@@ -95,6 +73,16 @@ namespace Audace
 
 		case BUILDER:
 			scene = new SceneBuilder(this, fileLoader);
+			BaseCamera *camera = scene->getCamera();
+			BasicCameraController *camCtl = new BasicCameraController((ForwardCamera *)camera);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_W, camCtl->forwardAction);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_S, camCtl->backwardAction);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_A, camCtl->leftAction);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_D, camCtl->rightAction);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Q, camCtl->upAction);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Z, camCtl->downAction);
+			MouseManager::addButtonChangedEventHandler(1, camCtl->rightMouseAction);
+			MouseManager::setMouseMoveEventHandler(&camCtl->aimAction);
 			scene->loadAssets();
 			break;
 		}

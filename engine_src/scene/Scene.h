@@ -2,6 +2,7 @@
 #define AU_SCENE_H
 
 #include "application/BaseAppController.h"
+#include "scene/BaseCamera.h"
 
 namespace Audace
 {
@@ -16,6 +17,8 @@ namespace Audace
 		virtual void loadAssets() = 0;
 		virtual void render() = 0;
 		virtual void disposeAssets() = 0;
+
+		virtual BaseCamera* getCamera() = 0;
 	};
 }
 

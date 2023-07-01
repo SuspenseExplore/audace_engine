@@ -1,10 +1,12 @@
 #include "BasicCameraController.h"
+#include "ForwardCamera.h"
 
 namespace Audace
 {
 	BasicCameraController::BasicCameraController(ForwardCamera *camera)
+		: camera(camera)
 	{
-		this->camera = camera;
+		camera->setController(this);
 		forwardAction = [this](BooleanInputEvent event)
 		{
 			velocity.y = event.state ? velFactor : 0;

@@ -39,6 +39,7 @@ add_executable(
 	${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 	${ENGINE_DIR}/content/ModelLoader.cpp
 	${ENGINE_DIR}/scene/Scene.cpp
+	${ENGINE_DIR}/scene/ICamera.h
 	${ENGINE_DIR}/scene/ForwardCamera.cpp
 	${ENGINE_DIR}/scene/BasicCameraController.cpp
 )

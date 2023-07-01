@@ -17,13 +17,13 @@ namespace Audace
 		void startNextScene();
 
 	public:
-		GameWindow* window;
+		GameWindow *window;
 		FileLoader *fileLoader;
 		Scene *scene;
 		int nextScene = SandboxScene::CURRENT;
 		glm::vec2 mousePos;
 
-		AppController(){}
+		AppController() {}
 
 		bool createWindow(int width, int height, std::string title);
 		void processEvents();
@@ -31,12 +31,16 @@ namespace Audace
 		void renderFrame();
 		void shutdown();
 
+		int getWidth() override { return window->getWidth(); }
+		int getHeight() override { return window->getHeight(); }
 		void setScene(int newScene) override;
 
-		void setMousePosListener(std::function<void(Vec2InputEvent)> listener) {
+		void setMousePosListener(std::function<void(Vec2InputEvent)> listener)
+		{
 			window->setMouseMoveEventHandler(listener);
 		}
-		void setMouseButtonListener(int button, std::function<void(ButtonInputEvent)> listener) {
+		void setMouseButtonListener(int button, std::function<void(ButtonInputEvent)> listener)
+		{
 			window->addMouseButtonEventHandler(button, listener);
 		}
 

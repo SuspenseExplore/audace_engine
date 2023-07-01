@@ -76,6 +76,8 @@ public:
 		cameraYaw += z;
 		cameraPitch += x;
 	}
+
+	Audace::BaseCamera* getCamera() override {return nullptr;}
 };
 
 #endif

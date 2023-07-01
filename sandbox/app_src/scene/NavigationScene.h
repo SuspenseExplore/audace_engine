@@ -12,6 +12,8 @@ public:
 	void loadAssets() override {}
 	void render() override;
 	void disposeAssets() override {}
+
+	Audace::BaseCamera* getCamera() override {return nullptr;}
 };
 
 #endif

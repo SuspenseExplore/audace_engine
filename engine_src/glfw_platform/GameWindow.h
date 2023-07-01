@@ -52,6 +52,9 @@ namespace Audace
 			glfwGetCursorPos(window, &x, &y);
 			return glm::vec2(x, y);
 		}
+
+		int getWidth() { return width; }
+		int getHeight() { return height; }
 	};
 }
 

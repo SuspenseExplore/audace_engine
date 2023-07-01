@@ -5,6 +5,7 @@
 #include "renderer/Shapes.h"
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/matrix_inverse.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
 #ifdef AU_PLATFORM_GLFW
@@ -41,17 +42,6 @@ void SceneBuilder::loadAssets()
 	pointLights[1] = Audace::PointLight{glm::vec3(-5, 0, 5), glm::vec3(1, 1, 0), 1};
 	pointLights[2] = Audace::PointLight{glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0};
 	pointLights[3] = Audace::PointLight{glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0};
-
-#ifdef AU_PLATFORM_GLFW
-	Audace::KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_W, camController.forwardAction);
-	Audace::KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_S, camController.backwardAction);
-	Audace::KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_A, camController.leftAction);
-	Audace::KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_D, camController.rightAction);
-	Audace::KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Q, camController.upAction);
-	Audace::KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Z, camController.downAction);
-	Audace::MouseManager::addButtonChangedEventHandler(1, camController.rightMouseAction);
-	Audace::MouseManager::setMouseMoveEventHandler(&camController.aimAction);
-#endif
 }
 
 Audace::Model *SceneBuilder::loadModel(std::string modelName)
@@ -69,7 +59,7 @@ void SceneBuilder::render()
 	glClearColor(clearColor.x, clearColor.y, clearColor.z, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	camController.update();
+	camera.update();
 
 	shaderProgram->bind();
 	shaderProgram->setUniformVec4("ambientLight", 0.2f, 0.2f, 0.4f, 1.0f);
@@ -89,7 +79,7 @@ void SceneBuilder::render()
 
 	shaderProgram->setUniformVec3("viewPos", camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
 
-	shaderProgram->setUniformMat4("vpMat", camera.getvpMat());
+	shaderProgram->setUniformMat4("vpMat", camera.getViewProjMatrix());
 
 	for (Audace::Sprite *sprite : sprites)
 	{

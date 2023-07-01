@@ -2,12 +2,13 @@
 #define AU_FORWARDCAMERA_H
 
 #include "au_renderer.h"
+#include "BaseCamera.h"
 #include "math/Pose.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-namespace Audace {
-	class ForwardCamera {
+namespace Audace {	
+	class ForwardCamera : public BaseCamera {
 		Pose pose;
 		glm::mat4 projMat;
 
@@ -30,7 +31,7 @@ namespace Audace {
 			move(v.x, v.y, v.z);
 		}
 
-		glm::vec3 getPosition() {
+		const glm::vec3& getPosition() override {
 			return pose.position;
 		}
 
@@ -54,6 +55,10 @@ namespace Audace {
 		void setOrientation(float x, float y, float z) {
 			pose.orientation = glm::quat(1, 0, 0, 0);
 			rotate(x, y, z);
+		}
+
+		void setOrientation(glm::quat quat) {
+			pose.orientation = quat;
 		}
 
 		glm::vec3 getFwdVec() {
@@ -82,7 +87,7 @@ namespace Audace {
 			return projMat;
 		}
 
-		const glm::mat4 getvpMat() {
+		const glm::mat4 getViewProjMatrix() override {
 			return getProjMat() * getViewMat();
 		}
 	};

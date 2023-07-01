@@ -201,7 +201,7 @@ void MainScene::render()
 	shaderProgram->setUniformVec3("light.specular", 1.0f, 1.0f, 1.0f);
 	shaderProgram->setUniformVec3("viewPos", camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
 
-	shaderProgram->setUniformMat4("vpMat", camera.getvpMat());
+	shaderProgram->setUniformMat4("vpMat", camera.getViewProjMatrix());
 
 	for (Audace::Sprite *sprite : sprites)
 	{

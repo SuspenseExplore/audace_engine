@@ -2,6 +2,7 @@
 #define AU_BASICCAMERACONTROLLER_H
 
 #include <functional>
+#include "ICameraController.h"
 #include "ForwardCamera.h"
 #include "input/BooleanInputEvent.h"
 #include "input/Vec2InputEvent.h"
@@ -12,7 +13,7 @@ namespace Audace
 	/**
 	 * Provides simple camera controls: right-drag to aim; standard WASD movement; plus Q and Z for moving up and down
 	 */
-	class BasicCameraController
+	class BasicCameraController : public ICameraController
 	{
 		ForwardCamera *camera;
 
@@ -26,7 +27,7 @@ namespace Audace
 
 	public:
 		BasicCameraController(ForwardCamera *camera);
-		void update();
+		void update() override;
 
 		std::function<void(BooleanInputEvent)> forwardAction;
 		std::function<void(BooleanInputEvent)> backwardAction;
