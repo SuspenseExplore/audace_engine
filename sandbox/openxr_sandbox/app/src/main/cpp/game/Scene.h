@@ -13,6 +13,7 @@
 #include "renderer/Texture2d.h"
 #include "renderer/Sprite.h"
 #include "renderer/text/BitmapFont.h"
+#include "renderer/light/POintLight.h"
 #include "openxr/OpenxrView.h"
 #include "glm/glm.hpp"
 #include "util/RandomUniformFloats.h"
@@ -33,8 +34,7 @@ class Scene {
 	Audace::Mesh* quadMesh;
 	Audace::BitmapFont* font;
 
-	glm::vec3 lightPos;
-	glm::vec3 diffuseLight = glm::vec3(1, 1, 1);
+	Audace::PointLight pointLights[4];
 	bool lightOn;
 
 	Audace::Pose aimPose;
@@ -44,9 +44,9 @@ class Scene {
 public:
 	void init(AppController *controller, AAssetManager *assetManager);
 	Audace::Sprite* loadSprite(std::string filename);
-	void setLightPos(glm::vec3 pos) {lightPos = pos;}
+	void setLightPos(glm::vec3 pos) {pointLights[0].position = pos;}
 	void setLightOn(bool on) {lightOn = on;}
-	void randomLightColor() {diffuseLight = glm::normalize(glm::vec3(rand.get(), rand.get(), rand.get()));}
+	void randomLightColor() {pointLights[0].color = glm::normalize(glm::vec3(rand.get(), rand.get(), rand.get()));}
 	void setAimPose(Audace::Pose pose) {aimPose = pose;}
 	void render(OpenxrView view);
 	void renderUi(OpenxrView view);

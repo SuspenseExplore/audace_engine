@@ -39,12 +39,19 @@ add_executable(
 	${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 	${ENGINE_DIR}/content/ModelLoader.cpp
 	${ENGINE_DIR}/scene/Scene.cpp
-	${ENGINE_DIR}/scene/ICamera.h
+	${ENGINE_DIR}/scene/BaseCamera.h
 	${ENGINE_DIR}/scene/ForwardCamera.cpp
 	${ENGINE_DIR}/scene/BasicCameraController.cpp
 )
 
 add_compile_definitions(AU_PLATFORM_GLFW)
+
+add_custom_command(
+	TARGET sandbox_glfw POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	${CMAKE_CURRENT_SOURCE_DIR}/../assets
+	${CMAKE_CURRENT_SOURCE_DIR}/assets
+)
 
 target_include_directories(
 	sandbox_glfw

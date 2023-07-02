@@ -68,6 +68,13 @@ target_compile_definitions(
 		IMGUI_IMPL_OPENGL_ES3
 )
 
+add_custom_command(
+		TARGET openxr_sandbox POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_directory
+		${ENGINE_DIR}/../sandbox/assets
+		${CMAKE_CURRENT_SOURCE_DIR}/../assets
+)
+
 # add the oculus loader for openxr
 add_library(openxr_loader SHARED IMPORTED)
 set_property(

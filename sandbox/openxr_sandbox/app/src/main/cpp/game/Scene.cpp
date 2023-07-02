@@ -26,6 +26,11 @@ void Scene::init(AppController *controller, AAssetManager *assetManager) {
 	glClearColor(0, 0, 1, 1);
 	glClearDepthf(1.0f);
 
+	pointLights[0] = Audace::PointLight{glm::vec3(0, 0, 5), glm::vec3(1, 0.7f, 0.2f), 1};
+	pointLights[1] = Audace::PointLight{glm::vec3(-5, 0, 5), glm::vec3(1, 1, 0), 1};
+	pointLights[2] = Audace::PointLight{glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0};
+	pointLights[3] = Audace::PointLight{glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0};
+
 	std::string vs = fileLoader->textFileToString("shaders/standard/vs.glsl");
 	std::string fs = fileLoader->textFileToString("shaders/standard/fs.glsl");
 	shaderProgram = new Audace::ShaderProgram(vs, fs);
@@ -92,11 +97,16 @@ void Scene::render(OpenxrView view) {
 	purpleChecksTex->bind(4);
 
 	shaderProgram->bind();
-	shaderProgram->setUniformVec3("light.position", lightPos.x, lightPos.y, lightPos.z);
-	shaderProgram->setUniformVec3("light.ambient", 0.2f, 0.2f, 0.4f);
-	shaderProgram->setUniformVec3("light.diffuse", diffuseLight.x, diffuseLight.y, diffuseLight.z);
-	shaderProgram->setUniformVec3("light.specular", 1.0f, 1.0f, 1.0f);
-	shaderProgram->setUniformVec3("viewPos", pose.position.x, pose.position.y, pose.position.z);
+
+	for (int i = 0; i < 4; i++)
+	{
+		std::string prefix = "light[";
+		prefix += '0' + i;
+		prefix += "]";
+		shaderProgram->setUniformVec3(prefix + ".position", glm::value_ptr(pointLights[i].position));
+		shaderProgram->setUniformVec3(prefix + ".color", glm::value_ptr(pointLights[i].color));
+		shaderProgram->setUniformFloat(prefix + ".intensity", pointLights[i].intensity);
+	}
 
 	glm::mat4 camMat = glm::mat4_cast(glm::quat(pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z));
 	camMat = glm::transpose(camMat);

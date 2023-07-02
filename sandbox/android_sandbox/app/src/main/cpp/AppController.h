@@ -42,6 +42,9 @@ namespace Audace {
 		static void pollSystemEvents(android_app *app);
 
 		void windowInitialized() override;
+
+		int getWidth() override {return window.getWidth();}
+		int getHeight() override {return window.getHeight();}
 	};
 }
 

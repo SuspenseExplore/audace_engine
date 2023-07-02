@@ -66,6 +66,13 @@ target_compile_definitions(
 		IMGUI_IMPL_OPENGL_ES3
 )
 
+add_custom_command(
+		TARGET android_sandbox POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_directory
+		${APP_DIR}/../assets
+		${CMAKE_CURRENT_SOURCE_DIR}/../assets
+)
+
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
 # default, you only need to specify the name of the public NDK library
