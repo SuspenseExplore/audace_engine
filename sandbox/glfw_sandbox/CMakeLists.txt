@@ -21,6 +21,7 @@ add_executable(
 	${ENGINE_DIR}/glfw_platform/ImageData.cpp
 	${ENGINE_DIR}/glfw_platform/FileLoader.cpp
 	${ENGINE_DIR}/include/imgui/imgui.cpp
+	${ENGINE_DIR}/include/imgui/imgui_demo.cpp
 	${ENGINE_DIR}/include/imgui/imgui_draw.cpp
 	${ENGINE_DIR}/include/imgui/imgui_tables.cpp
 	${ENGINE_DIR}/include/imgui/imgui_widgets.cpp

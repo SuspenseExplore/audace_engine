@@ -91,8 +91,8 @@ void SceneBuilder::render()
 	currSprite->setScale(spriteScale);
 	currSprite->render();
 
-	font->renderText("Sphynx of black quartz, judge my vow.");
-
+	// font->renderText("Sphynx of black quartz, judge my vow.");
+	// ImGui::ShowDemoWindow();
 	ImGui::Begin("Scenes");
 	if (ImGui::Button("Navigation"))
 	{
@@ -104,64 +104,125 @@ void SceneBuilder::render()
 	}
 	ImGui::End();
 
-	ImGui::Begin("Scene Properties");
-	ImGui::ColorEdit3("Clear Color", glm::value_ptr(clearColor));
-	ImGui::End();
-
-	ImGui::Begin("Lights");
-	if (ImGui::BeginTabBar("Light number", 0))
+	ImGui::Begin("Scene Editor");
+	if (ImGui::BeginTabBar("Tools"))
 	{
-		for (int i = 0; i < 4; i++)
+		if (ImGui::BeginTabItem("Clear State"))
 		{
-			std::string name = (std::string("Light ") + std::to_string(i));
-			if (ImGui::BeginTabItem(name.c_str()))
-			{
-				ImGui::DragFloat3((std::string("Position") + std::to_string(i)).c_str(), glm::value_ptr(pointLights[i].position));
-				ImGui::ColorEdit3((std::string("Color") + std::to_string(i)).c_str(), glm::value_ptr(pointLights[i].color));
-				ImGui::DragFloat((std::string("Intensity") + std::to_string(i)).c_str(), &pointLights[i].intensity, 0.1f, 0.0f, 1.5f);
-				ImGui::EndTabItem();
-			}
+			ImGui::ColorEdit3("Clear Color", glm::value_ptr(clearColor));
+			ImGui::EndTabItem();
 		}
-		ImGui::EndTabBar();
-	}
-	ImGui::End();
 
-	ImGui::Begin("Model");
-	if (ImGui::BeginCombo("Filename", modelNames[selectedModelIndex].c_str()))
-	{
-		for (int i = 0; i < modelCount; i++)
+		if (ImGui::BeginTabItem("Models"))
 		{
-			bool selected = selectedModelIndex == i;
-			if (ImGui::Selectable(modelNames[i].c_str(), selected))
+			if (ImGui::BeginCombo("Filename", modelNames[selectedModelIndex].c_str()))
 			{
-				selectedModelIndex = i;
-				currModel = loadModel(modelNames[i]);
+				for (int i = 0; i < modelCount; i++)
+				{
+					bool selected = selectedModelIndex == i;
+					if (ImGui::Selectable(modelNames[i].c_str(), selected))
+					{
+						selectedModelIndex = i;
+						currModel = loadModel(modelNames[i]);
+						currSprite = new Audace::Sprite(currModel);
+						currSprite->setModelMatrix(modelMat);
+					}
+					if (selected)
+					{
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+				ImGui::EndCombo();
+			}
+			if (ImGui::Button("Add"))
+			{
+				currSprite->setPosition(spritePos);
+				currSprite->setOrientation(glm::quat(glm::radians(spriteAngles)));
+				currSprite->setScale(spriteScale);
+				sprites.push_back(currSprite);
 				currSprite = new Audace::Sprite(currModel);
 				currSprite->setModelMatrix(modelMat);
 			}
-			if (selected)
-			{
-				ImGui::SetItemDefaultFocus();
-			}
+			ImGui::EndTabItem();
 		}
-		ImGui::EndCombo();
-	}
-	if (ImGui::Button("Save"))
-	{
-		currSprite->setPosition(spritePos);
-		currSprite->setOrientation(glm::quat(glm::radians(spriteAngles)));
-		currSprite->setScale(spriteScale);
-		sprites.push_back(currSprite);
-		currSprite = new Audace::Sprite(currModel);
-		currSprite->setModelMatrix(modelMat);
-	}
-	ImGui::End();
 
-	ImGui::Begin("Sprite Properties");
-	ImGui::DragFloat3("Position", glm::value_ptr(spritePos));
-	ImGui::DragFloat3("Angles", glm::value_ptr(spriteAngles), 1, -180.0f, 180.0f);
-	ImGui::DragFloat3("Scale", glm::value_ptr(spriteScale), 0.1f);
+		if (ImGui::BeginTabItem("Sprite Properties"))
+		{
+			if (ImGui::BeginTable("World Tx", 4, 0));
+			{
+				ImGui::TableSetupColumn("Tx", ImGuiTableColumnFlags_WidthFixed);
+				ImGui::TableSetupColumn("x", ImGuiTableColumnFlags_WidthStretch, 150);
+				ImGui::TableSetupColumn("y", ImGuiTableColumnFlags_WidthFixed, 150);
+				ImGui::TableSetupColumn("z", ImGuiTableColumnFlags_WidthFixed, 150);
+				ImGui::TableNextColumn();
+				ImGui::Text("Position");
+				ImGui::TableNextColumn();
+				ImGui::InputFloat("posx", &spritePos.x, 1.0f);
+				ImGui::TableNextColumn();
+				ImGui::InputFloat("posy", &spritePos.y, 1.0f);
+				ImGui::TableNextColumn();
+				ImGui::InputFloat("posz", &spritePos.z, 1.0f);
+
+				ImGui::TableNextColumn();
+				ImGui::Text("Angles");
+				ImGui::TableNextColumn();
+				ImGui::InputFloat("th-x", &spriteAngles.x, 1.0f);
+				ImGui::TableNextColumn();
+				ImGui::InputFloat("th-y", &spriteAngles.y, 1.0f);
+				ImGui::TableNextColumn();
+				ImGui::InputFloat("th-z", &spriteAngles.z, 1.0f);
+
+				ImGui::TableNextColumn();
+				ImGui::Text("Scale");
+				ImGui::TableNextColumn();
+				ImGui::InputFloat("scale x", &spriteScale.x, 1.0f);
+				ImGui::TableNextColumn();
+				ImGui::InputFloat("scale y", &spriteScale.y, 1.0f);
+				ImGui::TableNextColumn();
+				ImGui::InputFloat("scale z", &spriteScale.z, 1.0f);
+
+				ImGui::EndTable();
+			}
+			ImGui::EndTabItem();
+		}
+
+		static int currLight = 0;
+		if (ImGui::BeginTabItem("Lights"))
+		{
+			ImGui::RadioButton("1", &currLight, 0);
+			ImGui::SameLine();
+			ImGui::RadioButton("2", &currLight, 1);
+			ImGui::SameLine();
+			ImGui::RadioButton("3", &currLight, 2);
+			ImGui::SameLine();
+			ImGui::RadioButton("4", &currLight, 3);
+
+			ImGui::DragFloat3("Position", glm::value_ptr(pointLights[currLight].position));
+			ImGui::ColorEdit3("Color", glm::value_ptr(pointLights[currLight].color));
+			ImGui::SliderFloat("Intensity", &pointLights[currLight].intensity, 0.0f, 1.5f);
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
 	ImGui::End();
+	// ImGui::Begin("Lights");
+	// if (ImGui::BeginTabBar("Light number", 0))
+	// {
+	// 	for (int i = 0; i < 4; i++)
+	// 	{
+	// 		std::string name = (std::string("Light ") + std::to_string(i));
+	// 		if (ImGui::BeginTabItem(name.c_str()))
+	// 		{
+	// 			ImGui::DragFloat3((std::string("Position") + std::to_string(i)).c_str(), glm::value_ptr(pointLights[i].position));
+	// 			ImGui::ColorEdit3((std::string("Color") + std::to_string(i)).c_str(), glm::value_ptr(pointLights[i].color));
+	// 			ImGui::DragFloat((std::string("Intensity") + std::to_string(i)).c_str(), &pointLights[i].intensity, 0.1f, 0.0f, 1.5f);
+	// 			ImGui::EndTabItem();
+	// 		}
+	// 	}
+	// 	ImGui::EndTabBar();
+	// }
+	// ImGui::End();
 }
 
 void SceneBuilder::disposeAssets()

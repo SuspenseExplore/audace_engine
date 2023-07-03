@@ -13,7 +13,7 @@
 #include "renderer/Texture2d.h"
 #include "renderer/Sprite.h"
 #include "renderer/text/BitmapFont.h"
-#include "renderer/light/POintLight.h"
+#include "renderer/light/PointLight.h"
 #include "openxr/OpenxrView.h"
 #include "glm/glm.hpp"
 #include "util/RandomUniformFloats.h"

@@ -29,7 +29,7 @@ class SceneBuilder : public Audace::Scene
 
 	Audace::PointLight pointLights[4];
 
-	int selectedModelIndex = 5;
+	int selectedModelIndex = 0;
 	int modelCount = 6;
 	std::string modelNames[6];
 
