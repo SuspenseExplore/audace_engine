@@ -6,7 +6,6 @@
 #include "FileLoader.h"
 #include "scene/Scene.h"
 #include "glm/glm.hpp"
-#include "renderer/ShaderProgram.h"
 #include "renderer/Sprite.h"
 #include "renderer/light/PointLight.h"
 #include "scene/ForwardCamera.h"
@@ -18,7 +17,6 @@ class SceneBuilder : public Audace::Scene
 {
 	Audace::FileLoader *fileLoader;
 	glm::vec4 clearColor = glm::vec4(0, 0, 1, 0);
-	Audace::ShaderProgram *shaderProgram;
 	Audace::Mesh *quadMesh;
 	Audace::BitmapFont *font;
 

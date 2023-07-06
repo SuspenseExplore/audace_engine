@@ -2,6 +2,8 @@
 #include "SceneBuilder.h"
 #include "imgui.h"
 #include "SceneEnum.h"
+#include "content/AssetStore.h"
+#include "renderer/ShaderProgram.h"
 #include "renderer/Shapes.h"
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -15,13 +17,8 @@
 
 void SceneBuilder::loadAssets()
 {
-	{
-		std::string vs = fileLoader->textFileToString("shaders/standard/vs.glsl");
-		std::string fs = fileLoader->textFileToString("shaders/standard/fs.glsl");
-		shaderProgram = new Audace::ShaderProgram(vs, fs);
-		shaderProgram->create();
-		shaderProgram->bind();
-	}
+	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("standard");
+	shader->create();
 
 	quadMesh = Audace::Shapes::squarePositions();
 	font = new Audace::BitmapFont(fileLoader, "arial.ttf");
@@ -47,9 +44,10 @@ void SceneBuilder::loadAssets()
 Audace::Model *SceneBuilder::loadModel(std::string modelName)
 {
 	Audace::Model *model = fileLoader->readModelFile("models/", modelName + ".obj");
+	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("standard");
 	for (Audace::ModelSection *section : model->sections)
 	{
-		section->material->setShader(shaderProgram);
+		section->material->setShader(shader);
 	}
 	return model;
 }
@@ -61,25 +59,26 @@ void SceneBuilder::render()
 
 	camera.update();
 
-	shaderProgram->bind();
-	shaderProgram->setUniformVec4("ambientLight", 0.2f, 0.2f, 0.4f, 1.0f);
+	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("standard");
+	shader->bind();
+	shader->setUniformVec4("ambientLight", 0.2f, 0.2f, 0.4f, 1.0f);
 
 	for (int i = 0; i < 4; i++)
 	{
 		std::string prefix = "light[";
 		prefix += '0' + i;
 		prefix += "]";
-		shaderProgram->setUniformVec3(prefix + ".position", glm::value_ptr(pointLights[i].position));
-		shaderProgram->setUniformVec3(prefix + ".color", glm::value_ptr(pointLights[i].color));
-		shaderProgram->setUniformFloat(prefix + ".intensity", pointLights[i].intensity);
+		shader->setUniformVec3(prefix + ".position", glm::value_ptr(pointLights[i].position));
+		shader->setUniformVec3(prefix + ".color", glm::value_ptr(pointLights[i].color));
+		shader->setUniformFloat(prefix + ".intensity", pointLights[i].intensity);
 	}
-	// shaderProgram->setUniformVec3("light[1].position", glm::value_ptr(pointLights[1].position));
-	// shaderProgram->setUniformVec3("light[1].color", glm::value_ptr(pointLights[1].color));
-	// shaderProgram->setUniformFloat("light[1].intensity", pointLights[1].intensity);
+	// shader->setUniformVec3("light[1].position", glm::value_ptr(pointLights[1].position));
+	// shader->setUniformVec3("light[1].color", glm::value_ptr(pointLights[1].color));
+	// shader->setUniformFloat("light[1].intensity", pointLights[1].intensity);
 
-	shaderProgram->setUniformVec3("viewPos", camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
+	shader->setUniformVec3("viewPos", camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
 
-	shaderProgram->setUniformMat4("vpMat", camera.getViewProjMatrix());
+	shader->setUniformMat4("vpMat", camera.getViewProjMatrix());
 
 	for (Audace::Sprite *sprite : sprites)
 	{
@@ -91,7 +90,8 @@ void SceneBuilder::render()
 	currSprite->setScale(spriteScale);
 	currSprite->render();
 
-	// font->renderText("Sphynx of black quartz, judge my vow.");
+	font->renderText("Sphinx of black quartz, judge my vow.");
+	
 	// ImGui::ShowDemoWindow();
 	ImGui::Begin("Scenes");
 	if (ImGui::Button("Navigation"))

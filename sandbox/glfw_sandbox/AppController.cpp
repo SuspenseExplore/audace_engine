@@ -1,6 +1,7 @@
 #include "glfw3.h"
 #include "au_renderer.h"
 #include "AppController.h"
+#include "content/AssetStore.h"
 #include "scene/MainScene.h"
 #include "scene/NavigationScene.h"
 #include "scene/SceneBuilder.h"
@@ -25,6 +26,7 @@ namespace Audace
 		AU_RENDERER_LOG_TRACE("Renderer initialized");
 
 		fileLoader = new FileLoader("../../assets/");
+		AssetStore::init(fileLoader);
 	}
 
 	void AppController::runGameLoop()

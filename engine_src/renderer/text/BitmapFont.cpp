@@ -1,4 +1,5 @@
 #include "AuLogger.h"
+#include "content/AssetStore.h"
 #include "BitmapFont.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -7,9 +8,7 @@ namespace Audace
 {
 	BitmapFont::BitmapFont(FileLoader *loader, std::string filepath)
 	{
-		std::string vs = loader->textFileToString("shaders/color/vs.glsl");
-		std::string fs = loader->textFileToString("shaders/color/fs.glsl");
-		shader = new Audace::ShaderProgram(vs, fs);
+		shader = AssetStore::simpleTextShader();
 		shader->create();
 
 		quadMesh = Shapes::squarePositions();
@@ -53,17 +52,21 @@ namespace Audace
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 		shader->bind();
+		shader->setUniformInt("tex1", 0);
+		shader->setUniformVec3("color", glm::value_ptr(color));
+
 		int x = -500;
 		std::string::const_iterator c;
-		for (c = text.begin(); c != text.end(); c++) {
+		for (c = text.begin(); c != text.end(); c++)
+		{
 			Character ch = characters[*c];
 			glm::mat4 worldMat = glm::ortho(-640.0f, 640.0f, 360.0f, -360.0f);
 			worldMat = glm::translate(worldMat, glm::vec3(x + ch.bearing.x, -ch.bearing.y, 0.0f));
 			worldMat = glm::scale(worldMat, glm::vec3(ch.size.x, ch.size.y, 1.0f));
-			
+
 			shader->setUniformMat4("txMat", glm::value_ptr(worldMat));
-			shader->setUniformInt("tex1", 0);
 			ch.texture->bind(0);
 			quadMesh->render();
 

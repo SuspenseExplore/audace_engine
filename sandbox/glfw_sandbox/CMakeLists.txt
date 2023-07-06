@@ -39,6 +39,7 @@ add_executable(
 	${ENGINE_DIR}/renderer/light/PointLight.h
 	${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 	${ENGINE_DIR}/content/ModelLoader.cpp
+	${ENGINE_DIR}/content/AssetStore.cpp
 	${ENGINE_DIR}/scene/Scene.cpp
 	${ENGINE_DIR}/scene/BaseCamera.h
 	${ENGINE_DIR}/scene/ForwardCamera.cpp
