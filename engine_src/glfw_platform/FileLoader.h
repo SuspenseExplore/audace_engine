@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 #include "ImageData.h"
 #include "content/Model.h"
 #include "content/ByteBuffer.h"
@@ -18,6 +19,8 @@ namespace Audace {
 		std::string textFileToString(std::string path);
 		ImageData readImageFile(std::string path);
 		Model* readModelFile(std::string path, std::string filename);
+
+		std::vector<std::string> listFilesInDir(const std::string& path);
 	};
 }
 

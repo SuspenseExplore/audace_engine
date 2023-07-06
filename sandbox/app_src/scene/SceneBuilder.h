@@ -29,7 +29,8 @@ class SceneBuilder : public Audace::Scene
 
 	int selectedModelIndex = 0;
 	int modelCount = 6;
-	std::string modelNames[6];
+	std::string modelBasePath;
+	std::vector<std::string> modelFiles;
 
 	Audace::Model *currModel;
 	Audace::Sprite *currSprite;

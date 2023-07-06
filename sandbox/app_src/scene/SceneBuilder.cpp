@@ -25,13 +25,9 @@ void SceneBuilder::loadAssets()
 
 	modelMat = glm::rotate(modelMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-	modelNames[0] = "ground_grass";
-	modelNames[1] = "ground_pathEnd";
-	modelNames[2] = "ground_pathStraight";
-	modelNames[3] = "ground_riverStraight";
-	modelNames[4] = "bridge_stoneRoundNarrow";
-	modelNames[5] = "cliff_scene";
-	currModel = loadModel(modelNames[selectedModelIndex]);
+	modelBasePath = "models/";
+	modelFiles = fileLoader->listFilesInDir(modelBasePath + "*.obj");
+	currModel = loadModel(modelFiles[selectedModelIndex]);
 	currSprite = new Audace::Sprite(currModel);
 	currSprite->setModelMatrix(modelMat);
 
@@ -43,7 +39,7 @@ void SceneBuilder::loadAssets()
 
 Audace::Model *SceneBuilder::loadModel(std::string modelName)
 {
-	Audace::Model *model = fileLoader->readModelFile("models/", modelName + ".obj");
+	Audace::Model *model = fileLoader->readModelFile("models/", modelName);
 	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("standard");
 	for (Audace::ModelSection *section : model->sections)
 	{
@@ -115,15 +111,15 @@ void SceneBuilder::render()
 
 		if (ImGui::BeginTabItem("Models"))
 		{
-			if (ImGui::BeginCombo("Filename", modelNames[selectedModelIndex].c_str()))
+			if (ImGui::BeginCombo("Filename", modelFiles[selectedModelIndex].c_str()))
 			{
 				for (int i = 0; i < modelCount; i++)
 				{
 					bool selected = selectedModelIndex == i;
-					if (ImGui::Selectable(modelNames[i].c_str(), selected))
+					if (ImGui::Selectable(modelFiles[i].c_str(), selected))
 					{
 						selectedModelIndex = i;
-						currModel = loadModel(modelNames[i]);
+						currModel = loadModel(modelFiles[i]);
 						currSprite = new Audace::Sprite(currModel);
 						currSprite->setModelMatrix(modelMat);
 					}
