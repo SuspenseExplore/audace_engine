@@ -2,7 +2,7 @@
 
 namespace Audace {
 	void Texture2d::create() {
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, img.format == GL_ALPHA ? 1 : 4);
 		glGenTextures(1, &glid);
 		AU_CHECK_GL_ERRORS();
 		bind(0);

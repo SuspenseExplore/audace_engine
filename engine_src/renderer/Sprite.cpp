@@ -42,6 +42,15 @@ namespace Audace
 		}
 	}
 
+	Sprite::Sprite(std::vector<Mesh *> meshes)
+	{
+		modelMatrix = glm::mat4(1.0f);
+		pose.position = glm::vec3(0.0f);
+		pose.orientation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+		scale = glm::vec3(1.0f);
+		this->meshes = meshes;
+	}
+
 	void Sprite::render()
 	{
 		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), pose.position);

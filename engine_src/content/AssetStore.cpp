@@ -9,7 +9,7 @@ namespace Audace
 	void AssetStore::init(FileLoader* loader) {
 		fileLoader = loader;
 		getShader("AU_simple_text");
-		getShader("AU_one_tex");
+		getShader("AU_simple_billboard");
 	}
 
 	ShaderProgram *AssetStore::getShader(const std::string &name)

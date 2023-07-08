@@ -14,6 +14,7 @@ add_executable(
 	${APP_DIR}/scene/MainScene.cpp
 	${APP_DIR}/scene/NavigationScene.cpp
 	${APP_DIR}/scene/SceneBuilder.cpp
+	${APP_DIR}/scene/DragDropScene.cpp
 	${ENGINE_DIR}/AuLogger.cpp
 	${ENGINE_DIR}/glfw_platform/GameWindow.cpp
 	${ENGINE_DIR}/glfw_platform/KeyboardManager.cpp
@@ -35,7 +36,7 @@ add_executable(
 	${ENGINE_DIR}/renderer/Mesh.cpp
 	${ENGINE_DIR}/renderer/Sprite.cpp
 	${ENGINE_DIR}/renderer/Shapes.cpp
-	${ENGINE_DIR}/renderer/Material.cpp
+	${ENGINE_DIR}/renderer/material/Material.cpp
 	${ENGINE_DIR}/renderer/light/PointLight.h
 	${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 	${ENGINE_DIR}/content/ModelLoader.cpp

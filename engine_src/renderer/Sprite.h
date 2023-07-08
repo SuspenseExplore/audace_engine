@@ -38,6 +38,7 @@ namespace Audace {
 
 	public:
 		Sprite(Model* model);
+		Sprite(std::vector<Mesh*> meshes);
 
 		void render();
 		Sprite* clone() {

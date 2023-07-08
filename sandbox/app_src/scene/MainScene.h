@@ -25,7 +25,7 @@ class MainScene : public Audace::Scene
 	Audace::Texture2d *purpleChecksTex;
 
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
-	Audace::ForwardCamera camera = Audace::ForwardCamera::standard(glm::vec3(0, 0, 1), 1280.0f, 720.0f);
+	Audace::ForwardCamera camera = Audace::ForwardCamera::standard3d(glm::vec3(0, 0, 1), 1280.0f, 720.0f);
 	float cameraYaw = 0;
 	float cameraPitch = 0;
 

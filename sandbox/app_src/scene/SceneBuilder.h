@@ -46,7 +46,7 @@ class SceneBuilder : public Audace::Scene
 public:
 	SceneBuilder(Audace::BaseAppController *controller, Audace::FileLoader *fileLoader)
 		: Scene(controller), fileLoader(fileLoader), 
-		camera(Audace::ForwardCamera::standard(glm::vec3(0, -10, 2), appController->getWidth(), appController->getHeight()))
+		camera(Audace::ForwardCamera::standard3d(glm::vec3(0, -10, 2), appController->getWidth(), appController->getHeight()))
 	{
 	}
 

@@ -29,8 +29,9 @@ namespace Audace
 	{
 		int width;
 		int height;
-		unsigned char *bytes = stbi_load((basePath + path).c_str(), &width, &height, nullptr, 0);
-		ImageData img(bytes, width, height, GL_RGB);
+		int channels;
+		unsigned char *bytes = stbi_load((basePath + path).c_str(), &width, &height, &channels, 0);
+		ImageData img(bytes, width, height, channels == 3 ? GL_RGB : GL_RGBA);
 		return img;
 	}
 

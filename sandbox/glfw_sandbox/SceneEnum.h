@@ -3,5 +3,6 @@ enum SandboxScene
 	CURRENT,
 	NAVIGATION,
 	MAIN,
-	BUILDER
+	BUILDER,
+	DRAG_DROP
 };

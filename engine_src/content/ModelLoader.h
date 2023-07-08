@@ -5,6 +5,7 @@
 #include <map>
 #include "content/Model.h"
 #include "FileLoader.h"
+#include "renderer/material/Material.h"
 
 namespace Audace {
 	class ModelLoader {

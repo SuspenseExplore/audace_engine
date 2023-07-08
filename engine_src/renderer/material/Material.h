@@ -3,11 +3,12 @@
 
 #include <string>
 #include "glm/glm.hpp"
-#include "ShaderProgram.h"
+#include "renderer/ShaderProgram.h"
+#include "BaseMaterial.h"
 
 namespace Audace
 {
-	class Material
+	class Material : public BaseMaterial
 	{
 		ShaderProgram *shaderProgram;
 		std::string name;
@@ -23,10 +24,10 @@ namespace Audace
 		void setDiffuseColor(glm::vec3 color) { diffuseColor = color; }
 		void setSpecularColor(glm::vec3 color) { specularColor = color; }
 		void setShininess(float shininess) {this->shininess = shininess;}
-		ShaderProgram* getShader() {return shaderProgram;}
-		void setShader(ShaderProgram *shaderProgram) {this->shaderProgram = shaderProgram;}
+		ShaderProgram* getShader() override {return shaderProgram;}
+		void setShader(ShaderProgram *shaderProgram) override {this->shaderProgram = shaderProgram;}
 
-		void apply() {
+		void apply() override {
 			shaderProgram->bind();
 			shaderProgram->setUniformVec3("material.ambient", ambientColor.x, ambientColor.y, ambientColor.z);
 			shaderProgram->setUniformVec3("material.diffuse", diffuseColor.x, diffuseColor.y, diffuseColor.z);

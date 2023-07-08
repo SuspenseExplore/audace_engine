@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include "glm/glm.hpp"
-#include "renderer/Material.h"
+#include "renderer/material/BaseMaterial.h"
 
 namespace Audace {
 	struct Vertex {
@@ -14,7 +14,7 @@ namespace Audace {
 	};
 
 	struct ModelSection {
-		Material* material;
+		BaseMaterial* material;
 		std::vector<unsigned int> indices;
 	};
 

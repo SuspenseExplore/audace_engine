@@ -5,6 +5,7 @@
 #include "scene/MainScene.h"
 #include "scene/NavigationScene.h"
 #include "scene/SceneBuilder.h"
+#include "scene/DragDropScene.h"
 #include "scene/BasicCameraController.h"
 
 namespace Audace
@@ -70,6 +71,11 @@ namespace Audace
 
 		case MAIN:
 			scene = new MainScene(this, fileLoader);
+			scene->loadAssets();
+			break;
+
+		case DRAG_DROP:
+			scene = new DragDropScene(this, fileLoader);
 			scene->loadAssets();
 			break;
 
