@@ -28,9 +28,9 @@ namespace Audace
 		{
 			INSTANCE->buttonChangedEventHandlers[button] = handler;
 		}
-		static void setMouseMoveEventHandler(std::function<void(Vec2InputEvent)> *handler)
+		static void setMouseMoveEventHandler(std::function<void(Vec2InputEvent)> handler)
 		{
-			INSTANCE->mouseMoveEventHandler = *handler;
+			INSTANCE->mouseMoveEventHandler = handler;
 		}
 
 		static void setStaticRef(MouseManager *mouseManager) { MouseManager::INSTANCE = mouseManager; };

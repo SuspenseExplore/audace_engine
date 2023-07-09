@@ -25,6 +25,10 @@ class DragDropScene : public Audace::Scene
 	std::vector<std::string> suitNames = {"Clubs", "Diamonds", "Hearts", "Spades"};
 	std::vector<std::string> rankNames = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
 
+	glm::vec2 mousePos;
+	glm::vec2 grabOffset;
+	bool dragging = false;
+
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
 	Audace::ForwardCamera camera = Audace::ForwardCamera::standard2d(glm::vec3(0, 0, -1), 1280, 720);
 
@@ -47,6 +51,10 @@ public:
 	{
 		cameraVel.y = v;
 	}
+	void mouseMoved(float x, float y);
+	void buttonChanged(bool pressed);
+
+	bool isMouseOverCard(float x, float y);
 
 	Audace::BaseCamera *getCamera() override { return nullptr; }
 };

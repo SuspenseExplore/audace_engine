@@ -38,14 +38,12 @@ void DragDropScene::loadAssets()
 	}
 	material = new Audace::SimpleBillboardMaterial;
 	material->setShader(shaderProgram);
-	material->setColor(glm::vec4(1.0f, 1.0, 1.0f, 1.0f));
 
 	Audace::Mesh *mesh = Audace::Shapes::cubePositions();
-	mesh->setMaterial((Audace::BaseMaterial*) material);
+	mesh->setMaterial((Audace::BaseMaterial *)material);
 	sprite = new Audace::Sprite(std::vector<Audace::Mesh *>{mesh});
-	glm::mat4 modelMat = glm::scale(glm::mat4(1.0f), glm::vec3(140.0f, 190.0f, 1.0f));
-	sprite->setModelMatrix(modelMat);
 	sprite->setPosition(glm::vec3(0, 0, 0));
+	sprite->setScale(glm::vec3(140.0f, 190.0f, 1.0f));
 }
 
 Audace::Sprite *DragDropScene::loadSprite(std::string filename)
@@ -60,6 +58,46 @@ Audace::Sprite *DragDropScene::loadSprite(std::string filename)
 	Audace::Sprite *sprite = new Audace::Sprite(model);
 	delete model;
 	return sprite;
+}
+
+void DragDropScene::mouseMoved(float x, float y)
+{
+	glm::vec3 ray = glm::unProjectNO(glm::vec3(x, 720 - y, 0), camera.getViewMat(), camera.getProjMat(), glm::vec4(0, 0, 1280, 720));
+	mousePos.x = ray.x;
+	mousePos.y = ray.y;
+	if (dragging)
+	{
+		sprite->setPosition(glm::vec3(mousePos.x - grabOffset.x, mousePos.y - grabOffset.y, 1.0f));
+	}
+	else if (isMouseOverCard(x, y))
+	{
+		material->setColor(glm::vec4(1.0f, 1.0f, 0.6f, 0.0f));
+	}
+	else
+	{
+		material->setColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	}
+}
+
+void DragDropScene::buttonChanged(bool pressed)
+{
+	if (pressed && isMouseOverCard(mousePos.x, mousePos.y))
+	{
+		dragging = true;
+		grabOffset = mousePos - glm::vec2(sprite->getPosition());
+	}
+	else if (dragging && !pressed)
+	{
+		dragging = false;
+		sprite->setPosition(glm::vec3(mousePos.x - grabOffset.x, mousePos.y - grabOffset.y, 1.0f));
+	}
+}
+
+bool DragDropScene::isMouseOverCard(float x, float y)
+{
+	glm::vec3 c1 = sprite->getPosition();
+	glm::vec3 c2 = c1 + sprite->getScale();
+	return !(mousePos.x < c1.x || mousePos.x > c2.x || mousePos.y < c1.y || mousePos.y > c2.y);
 }
 
 void DragDropScene::render()

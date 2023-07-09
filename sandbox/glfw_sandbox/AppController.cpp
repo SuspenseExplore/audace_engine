@@ -76,6 +76,10 @@ namespace Audace
 
 		case DRAG_DROP:
 			scene = new DragDropScene(this, fileLoader);
+			MouseManager::setMouseMoveEventHandler([this](Vec2InputEvent event)
+												   { ((DragDropScene *)scene)->mouseMoved(event.state.x, event.state.y); });
+			MouseManager::addButtonEventHandler(0, [this](ButtonInputEvent event)
+												{ ((DragDropScene *)scene)->buttonChanged(event.pressed); });
 			scene->loadAssets();
 			break;
 
@@ -90,7 +94,7 @@ namespace Audace
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Q, camCtl->upAction);
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Z, camCtl->downAction);
 			MouseManager::addButtonChangedEventHandler(1, camCtl->rightMouseAction);
-			MouseManager::setMouseMoveEventHandler(&camCtl->aimAction);
+			MouseManager::setMouseMoveEventHandler(camCtl->aimAction);
 			scene->loadAssets();
 			break;
 		}

@@ -42,7 +42,7 @@ namespace Audace
 
 		void setMouseMoveEventHandler(std::function<void(Vec2InputEvent)> handler)
 		{
-			mouseManager.setMouseMoveEventHandler(&handler);
+			mouseManager.setMouseMoveEventHandler(handler);
 		}
 
 		bool isMouseButtonDown(int button) { return glfwGetMouseButton(window, button) == GLFW_PRESS; };

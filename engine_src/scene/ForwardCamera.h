@@ -26,7 +26,7 @@ namespace Audace
 		static ForwardCamera standard2d(glm::vec3 position, float viewWidth, float viewHeight)
 		{
 			glm::quat q = glm::quat(glm::vec3(glm::radians(-90.0f), 0.0f, 0.0f));
-			glm::mat4 proj = glm::ortho(viewWidth * -0.5f, viewWidth * 0.5f, viewHeight * 0.5f, viewHeight * -0.5f, 0.1f, 100.0f);
+			glm::mat4 proj = glm::ortho(viewWidth * -0.5f, viewWidth * 0.5f, viewHeight * -0.5f, viewHeight * 0.5f, 0.1f, 100.0f);
 			return ForwardCamera(Pose(position, q), proj);
 		}
 

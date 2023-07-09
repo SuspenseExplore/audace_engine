@@ -13,21 +13,25 @@
 #include "renderer/Mesh.h"
 #include "renderer/VertexArray.h"
 
-namespace Audace {
+namespace Audace
+{
 
 	/**
 	 * Combines one or more Meshes with world transformation data to make a single coherent renderable object
 	 */
-	class Sprite {
-		VertexArray* vertexArray;
-		std::vector<Mesh*> meshes;
+	class Sprite
+	{
+		VertexArray *vertexArray;
+		std::vector<Mesh *> meshes;
 		glm::mat4 modelMatrix;
 		Pose pose;
 		glm::vec3 scale;
 
-		Sprite(Sprite* sprite) {
+		Sprite(Sprite *sprite)
+		{
 			vertexArray = sprite->vertexArray;
-			for (Mesh* mesh : sprite->meshes) {
+			for (Mesh *mesh : sprite->meshes)
+			{
 				meshes.push_back(mesh);
 			}
 			modelMatrix = glm::mat4(sprite->modelMatrix);
@@ -37,31 +41,40 @@ namespace Audace {
 		}
 
 	public:
-		Sprite(Model* model);
-		Sprite(std::vector<Mesh*> meshes);
+		Sprite(Model *model);
+		Sprite(std::vector<Mesh *> meshes);
 
 		void render();
-		Sprite* clone() {
+		Sprite *clone()
+		{
 			return new Sprite(this);
 		}
 
-		void setModelMatrix(glm::mat4 mat) {
+		void setModelMatrix(glm::mat4 mat)
+		{
 			modelMatrix = mat;
 		}
 
-		void setPosition(glm::vec3 position) {
+		void setPosition(glm::vec3 position)
+		{
 			pose.position = position;
 		}
 
-		void setOrientation(glm::quat orientation) {
+		void setOrientation(glm::quat orientation)
+		{
 			pose.orientation = orientation;
 		}
 
-		void setScale(glm::vec3 scale) {
+		void setScale(glm::vec3 scale)
+		{
 			this->scale = glm::vec3(scale);
 		}
+
+		glm::vec3 getPosition() { return pose.position; }
+		glm::quat getOrientation() {return pose.orientation;}
+		glm::vec3 getScale() {return scale;}
 	};
 
 } // Audace
 
-#endif //AU_SPRITE_H
+#endif // AU_SPRITE_H
