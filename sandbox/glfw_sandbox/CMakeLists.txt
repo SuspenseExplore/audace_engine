@@ -3,11 +3,12 @@ cmake_minimum_required(VERSION 3.18.1)
 project("sandbox_glfw")
 
 set(ENGINE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../engine_src)
+set(PLATFORM_DIR ${ENGINE_DIR}/glfw_platform)
 set(APP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../app_src)
 
 add_executable(
 	sandbox_glfw
-	include/glad.c
+	${PLATFORM_DIR}/include/glad.c
 	${ENGINE_DIR}/stb_image.cpp
 	main.cpp
 	AppController.cpp
@@ -60,9 +61,10 @@ target_include_directories(
 	sandbox_glfw
 	PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}
-	${CMAKE_CURRENT_SOURCE_DIR}/include
-	${CMAKE_CURRENT_SOURCE_DIR}/include/glad
-	${CMAKE_CURRENT_SOURCE_DIR}/include/KHR
+	${PLATFORM_DIR}
+	${PLATFORM_DIR}/include
+	${PLATFORM_DIR}/include/glad
+	${PLATFORM_DIR}/include/KHR
 	${ENGINE_DIR}/glfw_platform/include/imgui
 	${ENGINE_DIR}
 	${ENGINE_DIR}/glfw_platform
@@ -80,7 +82,7 @@ add_library(
 set_target_properties(
 	spdlog
 	PROPERTIES
-	IMPORTED_IMPLIB ${CMAKE_CURRENT_SOURCE_DIR}/lib/spdlogd.lib
+	IMPORTED_IMPLIB ${PLATFORM_DIR}/lib/spdlogd.lib
 )
 
 add_library(
@@ -91,7 +93,7 @@ add_library(
 set_target_properties(
 	glfw3
 	PROPERTIES
-	IMPORTED_IMPLIB ${CMAKE_CURRENT_SOURCE_DIR}/lib/glfw3.lib
+	IMPORTED_IMPLIB ${PLATFORM_DIR}/lib/glfw3.lib
 )
 
 add_library(
@@ -102,7 +104,7 @@ add_library(
 set_target_properties(
 	freetype
 	PROPERTIES
-	IMPORTED_IMPLIB ${CMAKE_CURRENT_SOURCE_DIR}/lib/freetype.lib
+	IMPORTED_IMPLIB ${PLATFORM_DIR}/lib/freetype.lib
 )
 
 target_link_libraries(
