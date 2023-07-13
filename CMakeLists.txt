@@ -35,6 +35,7 @@ add_library(
 	${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 	${ENGINE_DIR}/content/ModelLoader.cpp
 	${ENGINE_DIR}/content/AssetStore.cpp
+	${ENGINE_DIR}/math/RectGrid.cpp
 	${ENGINE_DIR}/scene/Scene.cpp
 	${ENGINE_DIR}/scene/BaseCamera.h
 	${ENGINE_DIR}/scene/ForwardCamera.cpp
