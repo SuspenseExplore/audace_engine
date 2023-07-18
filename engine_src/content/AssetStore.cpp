@@ -5,11 +5,17 @@ namespace Audace
 {
 	FileLoader *AssetStore::fileLoader;
 	std::map<std::string, ShaderProgram *> AssetStore::shaders;
+	SimpleBillboardMaterial *AssetStore::billboardMat;
+	std::map<std::string, Texture2d *> AssetStore::textures;
 
-	void AssetStore::init(FileLoader* loader) {
+	void AssetStore::init(FileLoader *loader)
+	{
 		fileLoader = loader;
 		getShader("AU_simple_text");
 		getShader("AU_simple_billboard");
+		billboardMat = new SimpleBillboardMaterial;
+		billboardMat->setShader(simpleBillboardShader());
+		billboardMat->setColor(glm::vec4(1, 1, 1, 1));
 	}
 
 	ShaderProgram *AssetStore::getShader(const std::string &name)
@@ -22,7 +28,7 @@ namespace Audace
 			ss.str(std::string());
 			ss << "shaders/" << name << "/fs.glsl";
 			std::string fs = fileLoader->textFileToString(ss.str());
-			ShaderProgram *shaderProgram = new Audace::ShaderProgram(vs, fs);
+			ShaderProgram *shaderProgram = new ShaderProgram(vs, fs);
 			shaderProgram->create();
 			shaders[name] = shaderProgram;
 			return shaderProgram;
@@ -30,6 +36,22 @@ namespace Audace
 		else
 		{
 			return shaders[name];
+		}
+	}
+
+	Texture2d *AssetStore::getTexture(const std::string &name)
+	{
+		if (textures.find(name) == textures.end())
+		{
+			ImageData img = fileLoader->readImageFile(name);
+			Texture2d *tex = new Texture2d(img);
+			tex->create();
+			textures[name] = tex;
+			return tex;
+		}
+		else
+		{
+			return textures[name];
 		}
 	}
 }

@@ -35,6 +35,7 @@ namespace Audace
 		}
 
 		void setMaterial(BaseMaterial *mat) { material = mat; }
+		BaseMaterial* getMaterial() {return material;}
 	};
 }
 

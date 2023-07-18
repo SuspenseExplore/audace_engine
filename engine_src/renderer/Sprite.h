@@ -21,6 +21,7 @@ namespace Audace
 	 */
 	class Sprite
 	{
+	protected:
 		VertexArray *vertexArray;
 		std::vector<Mesh *> meshes;
 		glm::mat4 modelMatrix;
@@ -44,7 +45,7 @@ namespace Audace
 		Sprite(Model *model);
 		Sprite(std::vector<Mesh *> meshes);
 
-		void render();
+		virtual void render();
 		Sprite *clone()
 		{
 			return new Sprite(this);
@@ -71,8 +72,8 @@ namespace Audace
 		}
 
 		glm::vec3 getPosition() { return pose.position; }
-		glm::quat getOrientation() {return pose.orientation;}
-		glm::vec3 getScale() {return scale;}
+		glm::quat getOrientation() { return pose.orientation; }
+		glm::vec3 getScale() { return scale; }
 	};
 
 } // Audace
