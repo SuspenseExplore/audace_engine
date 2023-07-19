@@ -56,17 +56,17 @@ namespace Audace
 			modelMatrix = mat;
 		}
 
-		void setPosition(glm::vec3 position)
+		virtual void setPosition(glm::vec3 position)
 		{
 			pose.position = position;
 		}
 
-		void setOrientation(glm::quat orientation)
+		virtual void setOrientation(glm::quat orientation)
 		{
 			pose.orientation = orientation;
 		}
 
-		void setScale(glm::vec3 scale)
+		virtual void setScale(glm::vec3 scale)
 		{
 			this->scale = glm::vec3(scale);
 		}
