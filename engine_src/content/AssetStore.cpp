@@ -1,9 +1,11 @@
 #include <sstream>
 #include "AssetStore.h"
+#include "renderer/Shapes.h"
 
 namespace Audace
 {
 	FileLoader *AssetStore::fileLoader;
+	Mesh *AssetStore::squareMesh;
 	std::map<std::string, ShaderProgram *> AssetStore::shaders;
 	SimpleBillboardMaterial *AssetStore::billboardMat;
 	std::map<std::string, Texture2d *> AssetStore::textures;
@@ -11,6 +13,7 @@ namespace Audace
 	void AssetStore::init(FileLoader *loader)
 	{
 		fileLoader = loader;
+		squareMesh = Shapes::squarePositions();
 		getShader("AU_simple_text");
 		getShader("AU_simple_billboard");
 		billboardMat = new SimpleBillboardMaterial;
