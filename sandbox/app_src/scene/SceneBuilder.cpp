@@ -21,7 +21,6 @@ void SceneBuilder::loadAssets()
 	shader->create();
 
 	quadMesh = Audace::Shapes::squarePositions();
-	font = new Audace::BitmapFont(fileLoader, "arial.ttf");
 
 	modelMat = glm::rotate(modelMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
@@ -74,19 +73,15 @@ void SceneBuilder::render()
 
 	shader->setUniformVec3("viewPos", camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
 
-	shader->setUniformMat4("vpMat", camera.getViewProjMatrix());
-
 	for (Audace::Sprite *sprite : sprites)
 	{
-		sprite->render();
+		sprite->render(this);
 	}
 
 	currSprite->setPosition(spritePos);
 	currSprite->setOrientation(glm::quat(glm::radians(spriteAngles)));
 	currSprite->setScale(spriteScale);
-	currSprite->render();
-
-	font->renderText("Sphinx of black quartz, judge my vow.");
+	currSprite->render(this);
 	
 	// ImGui::ShowDemoWindow();
 	ImGui::Begin("Scenes");

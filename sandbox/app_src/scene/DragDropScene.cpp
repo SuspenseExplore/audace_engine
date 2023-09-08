@@ -109,7 +109,7 @@ void DragDropScene::render()
 
 	shaderProgram->bind();
 	shaderProgram->setUniformMat4("vpMat", camera.getViewProjMatrix());
-	sprite->render();
+	sprite->render(this);
 
 	ImGui::Begin("Scenes");
 	if (ImGui::Button("Navigation"))

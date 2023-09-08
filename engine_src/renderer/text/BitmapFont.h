@@ -27,7 +27,10 @@ namespace Audace
 
 	public:
 		BitmapFont(FileLoader* loader, std::string filepath);
-		void renderText(std::string text);
+		void renderText(std::string text, glm::vec4 color = glm::vec4(1, 1, 1, 1));
+
+		ShaderProgram *getShader() {return shader;}
+		Character getChar(char c) {return characters[c];}
 	};
 }
 

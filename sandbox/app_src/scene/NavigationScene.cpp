@@ -15,5 +15,8 @@ void NavigationScene::render() {
 	if (ImGui::Button("Drag & Drop")) {
 		appController->setScene(SandboxScene::DRAG_DROP);
 	}
+	if (ImGui::Button("Text")) {
+		appController->setScene(SandboxScene::TEXT);
+	}
 	ImGui::End();
 }

@@ -12,6 +12,7 @@
 #include "content/Model.h"
 #include "renderer/Mesh.h"
 #include "renderer/VertexArray.h"
+#include "scene/Scene.h"
 
 namespace Audace
 {
@@ -45,7 +46,7 @@ namespace Audace
 		Sprite(Model *model);
 		Sprite(std::vector<Mesh *> meshes);
 
-		virtual void render();
+		virtual void render(Scene *scene);
 		Sprite *clone()
 		{
 			return new Sprite(this);

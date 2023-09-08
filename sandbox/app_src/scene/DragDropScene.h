@@ -56,7 +56,7 @@ public:
 
 	bool isMouseOverCard(float x, float y);
 
-	Audace::BaseCamera *getCamera() override { return nullptr; }
+	Audace::BaseCamera *getCamera() override { return &camera; }
 };
 
 #endif

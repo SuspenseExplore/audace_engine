@@ -33,6 +33,7 @@ add_library(
 	${ENGINE_DIR}/renderer/material/Material.cpp
 	${ENGINE_DIR}/renderer/light/PointLight.h
 	${ENGINE_DIR}/renderer/text/BitmapFont.cpp
+	${ENGINE_DIR}/renderer/text/TextLabel.cpp
 	${ENGINE_DIR}/content/ModelLoader.cpp
 	${ENGINE_DIR}/content/AssetStore.cpp
 	${ENGINE_DIR}/math/RectGrid.cpp

@@ -4,5 +4,6 @@ enum SandboxScene
 	NAVIGATION,
 	MAIN,
 	BUILDER,
-	DRAG_DROP
+	DRAG_DROP,
+	TEXT
 };

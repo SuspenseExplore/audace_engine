@@ -6,6 +6,7 @@
 #include "scene/NavigationScene.h"
 #include "scene/SceneBuilder.h"
 #include "scene/DragDropScene.h"
+#include "scene/TextScene.h"
 #include "scene/BasicCameraController.h"
 
 namespace Audace
@@ -80,6 +81,11 @@ namespace Audace
 												   { ((DragDropScene *)scene)->mouseMoved(event.state.x, event.state.y); });
 			MouseManager::addButtonEventHandler(0, [this](ButtonInputEvent event)
 												{ ((DragDropScene *)scene)->buttonChanged(event.pressed); });
+			scene->loadAssets();
+			break;
+
+		case TEXT:
+			scene = new TextScene(this, fileLoader);
 			scene->loadAssets();
 			break;
 

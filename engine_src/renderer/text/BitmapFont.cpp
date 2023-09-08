@@ -48,14 +48,13 @@ namespace Audace
 		}
 	}
 
-	void BitmapFont::renderText(std::string text)
+	void BitmapFont::renderText(std::string text, glm::vec4 color)
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 		shader->bind();
 		shader->setUniformInt("tex1", 0);
-		shader->setUniformVec3("color", glm::value_ptr(color));
+		shader->setUniformVec4("color", glm::value_ptr(color));
 
 		int x = -500;
 		std::string::const_iterator c;

@@ -205,7 +205,7 @@ void MainScene::render()
 
 	for (Audace::Sprite *sprite : sprites)
 	{
-		sprite->render();
+		sprite->render(this);
 	}
 
 	ImGui::Begin("Scenes");
