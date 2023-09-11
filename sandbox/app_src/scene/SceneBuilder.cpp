@@ -40,7 +40,6 @@ void SceneBuilder::loadAssets()
 		Audace::Sprite *sprite = new Audace::Sprite({mesh});
 		sprite->setScale({0.1f, 0.1f, 0.1f});
 		lightSprites[0] = sprite;
-		lightMats[0] = mat;
 		pointLights[0] = Audace::PointLight{glm::vec3(0, 0, 5), glm::vec3(1, 0.7f, 0.2f), 1};
 	}
 	{
@@ -52,7 +51,6 @@ void SceneBuilder::loadAssets()
 		Audace::Sprite *sprite = new Audace::Sprite({mesh});
 		sprite->setScale({0.1f, 0.1f, 0.1f});
 		lightSprites[1] = sprite;
-		lightMats[1] = mat;
 		pointLights[1] = Audace::PointLight{glm::vec3(-5, 0, 5), glm::vec3(1, 1, 0), 1};
 	}
 	{
@@ -64,7 +62,6 @@ void SceneBuilder::loadAssets()
 		Audace::Sprite *sprite = new Audace::Sprite({mesh});
 		sprite->setScale({0.1f, 0.1f, 0.1f});
 		lightSprites[2] = sprite;
-		lightMats[2] = mat;
 		pointLights[2] = Audace::PointLight{glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0};
 	}
 	{
@@ -76,7 +73,6 @@ void SceneBuilder::loadAssets()
 		Audace::Sprite *sprite = new Audace::Sprite({mesh});
 		sprite->setScale({0.1f, 0.1f, 0.1f});
 		lightSprites[3] = sprite;
-		lightMats[3] = mat;
 		pointLights[3] = Audace::PointLight{glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0};
 	}
 }
@@ -120,7 +116,7 @@ void SceneBuilder::render()
 
 	for (int i = 0; i < 4; i++)
 	{
-		lightMats[i]->setEmissionColor(pointLights[i].color);
+		reinterpret_cast<Audace::Material*>(lightSprites[i]->getMaterial())->setEmissionColor(pointLights[i].color);
 		lightSprites[i]->setPosition(pointLights[i].position);
 		lightSprites[i]->render(this);
 	}

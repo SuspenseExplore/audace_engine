@@ -12,6 +12,7 @@
 #include "content/Model.h"
 #include "renderer/Mesh.h"
 #include "renderer/VertexArray.h"
+#include "renderer/material/BaseMaterial.h"
 #include "scene/Scene.h"
 
 namespace Audace
@@ -75,6 +76,9 @@ namespace Audace
 		glm::vec3 getPosition() { return pose.position; }
 		glm::quat getOrientation() { return pose.orientation; }
 		glm::vec3 getScale() { return scale; }
+
+		Mesh *getMesh(int i = 0) { return meshes[i]; }
+		BaseMaterial *getMaterial(int i = 0) { return getMesh(i)->getMaterial(); }
 	};
 
 } // Audace

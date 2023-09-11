@@ -24,7 +24,6 @@ class SceneBuilder : public Audace::Scene
 	float cameraYaw = 0;
 	float cameraPitch = 0;
 
-	Audace::Material *lightMats[4];
 	Audace::Sprite *lightSprites[4];
 	Audace::PointLight pointLights[4];
 
