@@ -5,6 +5,7 @@
 #include "content/AssetStore.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/Shapes.h"
+#include "renderer/material/Material.h"
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/matrix_inverse.hpp"
@@ -30,10 +31,54 @@ void SceneBuilder::loadAssets()
 	currSprite = new Audace::Sprite(currModel);
 	currSprite->setModelMatrix(modelMat);
 
-	pointLights[0] = Audace::PointLight{glm::vec3(0, 0, 5), glm::vec3(1, 0.7f, 0.2f), 1};
-	pointLights[1] = Audace::PointLight{glm::vec3(-5, 0, 5), glm::vec3(1, 1, 0), 1};
-	pointLights[2] = Audace::PointLight{glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0};
-	pointLights[3] = Audace::PointLight{glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0};
+	{
+		Audace::Mesh *mesh = Audace::Shapes::spherePositions(16, 16);
+		Audace::Material *mat = new Audace::Material;
+		mat->setShader(shader);
+		mat->setEmissionColor({1, 1, 1});
+		mesh->setMaterial(mat);
+		Audace::Sprite *sprite = new Audace::Sprite({mesh});
+		sprite->setScale({0.1f, 0.1f, 0.1f});
+		lightSprites[0] = sprite;
+		lightMats[0] = mat;
+		pointLights[0] = Audace::PointLight{glm::vec3(0, 0, 5), glm::vec3(1, 0.7f, 0.2f), 1};
+	}
+	{
+		Audace::Mesh *mesh = Audace::Shapes::spherePositions(16, 16);
+		Audace::Material *mat = new Audace::Material;
+		mat->setShader(shader);
+		mat->setEmissionColor({1, 1, 1});
+		mesh->setMaterial(mat);
+		Audace::Sprite *sprite = new Audace::Sprite({mesh});
+		sprite->setScale({0.1f, 0.1f, 0.1f});
+		lightSprites[1] = sprite;
+		lightMats[1] = mat;
+		pointLights[1] = Audace::PointLight{glm::vec3(-5, 0, 5), glm::vec3(1, 1, 0), 1};
+	}
+	{
+		Audace::Mesh *mesh = Audace::Shapes::spherePositions(16, 16);
+		Audace::Material *mat = new Audace::Material;
+		mat->setShader(shader);
+		mat->setEmissionColor({1, 1, 1});
+		mesh->setMaterial(mat);
+		Audace::Sprite *sprite = new Audace::Sprite({mesh});
+		sprite->setScale({0.1f, 0.1f, 0.1f});
+		lightSprites[2] = sprite;
+		lightMats[2] = mat;
+		pointLights[2] = Audace::PointLight{glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0};
+	}
+	{
+		Audace::Mesh *mesh = Audace::Shapes::spherePositions(16, 16);
+		Audace::Material *mat = new Audace::Material;
+		mat->setShader(shader);
+		mat->setEmissionColor({1, 1, 1});
+		mesh->setMaterial(mat);
+		Audace::Sprite *sprite = new Audace::Sprite({mesh});
+		sprite->setScale({0.1f, 0.1f, 0.1f});
+		lightSprites[3] = sprite;
+		lightMats[3] = mat;
+		pointLights[3] = Audace::PointLight{glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0};
+	}
 }
 
 Audace::Model *SceneBuilder::loadModel(std::string modelName)
@@ -73,6 +118,13 @@ void SceneBuilder::render()
 
 	shader->setUniformVec3("viewPos", camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
 
+	for (int i = 0; i < 4; i++)
+	{
+		lightMats[i]->setEmissionColor(pointLights[i].color);
+		lightSprites[i]->setPosition(pointLights[i].position);
+		lightSprites[i]->render(this);
+	}
+
 	for (Audace::Sprite *sprite : sprites)
 	{
 		sprite->render(this);
@@ -82,7 +134,7 @@ void SceneBuilder::render()
 	currSprite->setOrientation(glm::quat(glm::radians(spriteAngles)));
 	currSprite->setScale(spriteScale);
 	currSprite->render(this);
-	
+
 	// ImGui::ShowDemoWindow();
 	ImGui::Begin("Scenes");
 	if (ImGui::Button("Navigation"))
@@ -139,7 +191,8 @@ void SceneBuilder::render()
 
 		if (ImGui::BeginTabItem("Sprite Properties"))
 		{
-			if (ImGui::BeginTable("World Tx", 4, 0));
+			if (ImGui::BeginTable("World Tx", 4, 0))
+				;
 			{
 				ImGui::TableSetupColumn("Tx", ImGuiTableColumnFlags_WidthFixed);
 				ImGui::TableSetupColumn("x", ImGuiTableColumnFlags_WidthStretch, 150);
@@ -188,7 +241,7 @@ void SceneBuilder::render()
 			ImGui::SameLine();
 			ImGui::RadioButton("4", &currLight, 3);
 
-			ImGui::DragFloat3("Position", glm::value_ptr(pointLights[currLight].position));
+			ImGui::DragFloat3("Position", glm::value_ptr(pointLights[currLight].position), 0.01f);
 			ImGui::ColorEdit3("Color", glm::value_ptr(pointLights[currLight].color));
 			ImGui::SliderFloat("Intensity", &pointLights[currLight].intensity, 0.0f, 1.5f);
 			ImGui::EndTabItem();

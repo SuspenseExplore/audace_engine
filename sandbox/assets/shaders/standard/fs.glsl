@@ -5,6 +5,7 @@ struct Material {
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
+	vec3 emission;
 	float shininess;
 };
 struct Light {
@@ -54,5 +55,5 @@ void main() {
 
 	vec3 lightColor = calcLightColor(light[0]) + calcLightColor(light[1]) + calcLightColor(light[2]) + calcLightColor(light[3]);
 
-	fragColor = vec4(ambient + lightColor, 1.0);
+	fragColor = vec4(ambient + material.emission + lightColor, 1.0);
 }

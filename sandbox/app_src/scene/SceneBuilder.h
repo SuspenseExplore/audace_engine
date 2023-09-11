@@ -7,6 +7,7 @@
 #include "scene/Scene.h"
 #include "glm/glm.hpp"
 #include "renderer/Sprite.h"
+#include "renderer/material/Material.h"
 #include "renderer/light/PointLight.h"
 #include "scene/ForwardCamera.h"
 #include "scene/BasicCameraController.h"
@@ -23,6 +24,8 @@ class SceneBuilder : public Audace::Scene
 	float cameraYaw = 0;
 	float cameraPitch = 0;
 
+	Audace::Material *lightMats[4];
+	Audace::Sprite *lightSprites[4];
 	Audace::PointLight pointLights[4];
 
 	int selectedModelIndex = 0;

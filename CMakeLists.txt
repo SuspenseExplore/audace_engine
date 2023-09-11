@@ -58,6 +58,7 @@ target_include_directories(
 	${ENGINE_DIR}/glfw_platform
 	${ENGINE_DIR}/include
 	${ENGINE_DIR}/include/imgui
+	${ENGINE_DIR}/include/glm
 	${ENGINE_DIR}/include/freetype
 	${APP_DIR}
 )

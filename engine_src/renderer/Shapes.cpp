@@ -182,4 +182,55 @@ namespace Audace {
 									GL_UNSIGNED_SHORT, nullptr);
 		return mesh;
 	}
+
+	Mesh *Shapes::spherePositions(int xResolution, int yResolution) {
+		const float pi = 3.14159265359f;
+		std::vector<float> verts;
+		std::vector<unsigned short> inds;
+		
+		for (int x = 0; x <= xResolution; ++x) {
+			for (int y = 0; y <= yResolution; ++y) {
+				float xSeg = (float)x / (float)xResolution;
+				float ySeg = (float)y / (float)yResolution;
+				verts.push_back(cos(xSeg * 2.0f * pi) * sin(ySeg * pi)); //x
+				verts.push_back(cos(ySeg * pi)); //y
+				verts.push_back(sin(xSeg * 2.0f * pi) * sin(ySeg * pi)); //z
+			}
+		}
+
+		bool evenRow = true;
+		for (int y = 0; y < yResolution; ++y) {
+			if (evenRow) {
+				for (int x = 0; x <= xResolution; ++x) {
+					inds.push_back(y * (xResolution + 1) + x);
+					inds.push_back((y + 1) * (xResolution + 1) + x);
+				}
+			} else {
+				for (int x = xResolution; x >= 0; --x) {
+					inds.push_back((y + 1) * (xResolution + 1) + x);
+					inds.push_back(y * (xResolution + 1) + x);
+				}
+			}
+			evenRow = !evenRow;
+		}
+
+		DataBuffer *vertexBuffer = new DataBuffer(&verts[0], sizeof(float) * verts.size(), GL_ARRAY_BUFFER,
+												  GL_STATIC_DRAW);
+		vertexBuffer->create();
+		vertexBuffer->bind();
+
+		DataBuffer *indexBuffer = new DataBuffer(&inds[0], sizeof(unsigned short) * inds.size(),
+												 GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
+		indexBuffer->create();
+
+		VertexAttribute *posAttr = new VertexAttribute(0, 3, GL_FLOAT, false, sizeof(float) * 3, 0);
+		std::vector<VertexAttribute *> attrs;
+		attrs.push_back(posAttr);
+		VertexArray *vertexArray = new VertexArray(attrs);
+		vertexArray->create();
+
+		Mesh *mesh = new Mesh(vertexArray, indexBuffer, 0, inds.size(), GL_TRIANGLE_STRIP,
+									GL_UNSIGNED_SHORT, nullptr);
+		return mesh;
+	}
 }
