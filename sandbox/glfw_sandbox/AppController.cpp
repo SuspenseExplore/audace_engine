@@ -3,11 +3,12 @@
 #include "AppController.h"
 #include "content/AssetStore.h"
 #include "scene/MainScene.h"
-#include "scene/NavigationScene.h"
-#include "scene/SceneBuilder.h"
-#include "scene/DragDropScene.h"
-#include "scene/TextScene.h"
+// #include "scene/NavigationScene.h"
+// #include "scene/SceneBuilder.h"
+// #include "scene/DragDropScene.h"
+// #include "scene/TextScene.h"
 #include "scene/BasicCameraController.h"
+#include "scene/ForwardCamera.h"
 
 namespace Audace
 {
@@ -21,7 +22,6 @@ namespace Audace
 
 	void AppController::windowInitialized()
 	{
-		scene = new NavigationScene(this);
 		mousePos = window->getMousePos();
 
 		glEnable(GL_DEPTH_TEST);
@@ -60,39 +60,23 @@ namespace Audace
 
 	void AppController::startNextScene()
 	{
-		scene->disposeAssets();
-		delete scene;
+		if (scene != nullptr)
+		{
+			scene->disposeAssets();
+			delete scene;
+		}
 
 		switch (nextScene)
 		{
-		case NAVIGATION:
-			scene = new NavigationScene(this);
-			scene->loadAssets();
-			break;
+			// case NAVIGATION:
+			// 	scene = new NavigationScene(this);
+			// 	scene->loadAssets();
+			// 	break;
 
 		case MAIN:
-			scene = new MainScene(this, fileLoader);
-			scene->loadAssets();
-			break;
-
-		case DRAG_DROP:
-			scene = new DragDropScene(this, fileLoader);
-			MouseManager::setMouseMoveEventHandler([this](Vec2InputEvent event)
-												   { ((DragDropScene *)scene)->mouseMoved(event.state.x, event.state.y); });
-			MouseManager::addButtonEventHandler(0, [this](ButtonInputEvent event)
-												{ ((DragDropScene *)scene)->buttonChanged(event.pressed); });
-			scene->loadAssets();
-			break;
-
-		case TEXT:
-			scene = new TextScene(this, fileLoader);
-			scene->loadAssets();
-			break;
-
-		case BUILDER:
-			scene = new SceneBuilder(this, fileLoader);
-			BaseCamera *camera = scene->getCamera();
-			BasicCameraController *camCtl = new BasicCameraController((ForwardCamera *)camera);
+			scene = new MainScene(this);
+			ForwardCamera *camera = ForwardCamera::standard3d({0, 0, 1}, 1280, 720);
+			BasicCameraController *camCtl = new BasicCameraController(camera);
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_W, camCtl->forwardAction);
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_S, camCtl->backwardAction);
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_A, camCtl->leftAction);
@@ -101,8 +85,38 @@ namespace Audace
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Z, camCtl->downAction);
 			MouseManager::addButtonChangedEventHandler(1, camCtl->rightMouseAction);
 			MouseManager::setMouseMoveEventHandler(camCtl->aimAction);
-			scene->loadAssets();
+			scene->setCamera(camera);
+			scene->loadAssets(fileLoader);
 			break;
+
+			// case DRAG_DROP:
+			// 	scene = new DragDropScene(this, fileLoader);
+			// 	MouseManager::setMouseMoveEventHandler([this](Vec2InputEvent event)
+			// 										   { ((DragDropScene *)scene)->mouseMoved(event.state.x, event.state.y); });
+			// 	MouseManager::addButtonEventHandler(0, [this](ButtonInputEvent event)
+			// 										{ ((DragDropScene *)scene)->buttonChanged(event.pressed); });
+			// 	scene->loadAssets();
+			// 	break;
+
+			// case TEXT:
+			// 	scene = new TextScene(this, fileLoader);
+			// 	scene->loadAssets();
+			// 	break;
+
+			// case BUILDER:
+			// 	scene = new SceneBuilder(this, fileLoader);
+			// 	BaseCamera *camera = scene->getCamera();
+			// 	BasicCameraController *camCtl = new BasicCameraController((ForwardCamera *)camera);
+			// 	KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_W, camCtl->forwardAction);
+			// 	KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_S, camCtl->backwardAction);
+			// 	KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_A, camCtl->leftAction);
+			// 	KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_D, camCtl->rightAction);
+			// 	KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Q, camCtl->upAction);
+			// 	KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Z, camCtl->downAction);
+			// 	MouseManager::addButtonChangedEventHandler(1, camCtl->rightMouseAction);
+			// 	MouseManager::setMouseMoveEventHandler(camCtl->aimAction);
+			// 	scene->loadAssets();
+			// 	break;
 		}
 		nextScene = CURRENT;
 	}

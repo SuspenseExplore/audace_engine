@@ -9,19 +9,30 @@
 
 #include "audace_common.h"
 #include "EglWindow.h"
+#include "application/BaseAppController.h"
+#include "android_platform/FileLoader.h"
 #include "openxr/OpenxrContext.h"
-#include "game/Scene.h"
+#include "scene/Scene.h"
+#include "openxr/HmdCamera.h"
 #include "input/InputDevices.h"
+#include "scene/MainScene.h"
+#include "SceneEnum.h"
 
-class AppController {
+class AppController : public Audace::BaseAppController {
 	android_app *androidApp;
 	EglWindow window;
+	Audace::FileLoader *fileLoader;
 	XrFrameState currentFrameState;
 	GLuint framebuffer;
 
-	Scene scene;
+	HmdCamera *camera;
+	Audace::Scene *scene;
+	int nextScene = SandboxScene::CURRENT;
+
+	void startNextScene();
 
 public:
+	AppController() : scene(new MainScene(this)) {}
 	OpenxrContext xrContext;
 
 	bool init(android_app *app);
@@ -51,6 +62,10 @@ public:
 	OpenxrContext getXrContext() { return xrContext; }
 
 	EglWindow getWindow() { return window; }
+
+	void setScene(int nextScene) override;
+	int getWidth() override { return 0; }
+	int getHeight() override { return 0; }
 };
 
 

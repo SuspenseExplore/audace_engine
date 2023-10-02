@@ -21,7 +21,8 @@
 
 void Scene::init(AppController *controller, AAssetManager *assetManager) {
 	appController = controller;
-	fileLoader = new Audace::FileLoader(assetManager);
+
+	//TODO: move these into the app controller
 
 	glClearColor(0, 0, 1, 1);
 	glClearDepthf(1.0f);
@@ -108,13 +109,6 @@ void Scene::render(OpenxrView view) {
 		shaderProgram->setUniformFloat(prefix + ".intensity", pointLights[i].intensity);
 	}
 
-	glm::mat4 camMat = glm::mat4_cast(glm::quat(pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z));
-	camMat = glm::transpose(camMat);
-	camMat = glm::translate(camMat, -glm::vec3(pose.position.x, pose.position.y, pose.position.z));
-	glm::mat4 projMat = glm::frustum(tan(fov.angleLeft), tan(fov.angleRight), tan(fov.angleDown), tan(fov.angleUp), 1.0f, 100.0f);
-	glm::mat4 vpMat = projMat * camMat;
-	shaderProgram->setUniformMat4("vpMat", glm::value_ptr(vpMat));
-
 //	{
 //		// the aim pose
 //		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), aimPose.position);
@@ -131,25 +125,25 @@ void Scene::render(OpenxrView view) {
 //		AU_CHECK_GL_ERRORS();
 //	}
 	for (Audace::Sprite *sprite: sprites) {
-		sprite->render();
+		sprite->render(this);
 	}
 
 }
 
 void Scene::renderUi(OpenxrView view) {
-	bool checked;
-	float f;
-	if (view.getViewData().pose.position.x < 0.0f) {
-		ImGui::Begin("Left window");
-		ImGui::SetWindowPos(ImVec2(500 + 55, 800));
-	} else {
-		ImGui::Begin("Left window ");
-		ImGui::SetWindowPos(ImVec2(500 - 55, 800));
-	}
-	ImGui::Text("This is a text");
-	ImGui::Checkbox("check me out", &checked);
-	ImGui::SliderFloat("float", &f, 0, 1);
-	ImGui::End();
+//	bool checked;
+//	float f;
+//	if (view.getViewData().pose.position.x < 0.0f) {
+//		ImGui::Begin("Left window");
+//		ImGui::SetWindowPos(ImVec2(500 + 55, 800));
+//	} else {
+//		ImGui::Begin("Left window ");
+//		ImGui::SetWindowPos(ImVec2(500 - 55, 800));
+//	}
+//	ImGui::Text("This is a text");
+//	ImGui::Checkbox("check me out", &checked);
+//	ImGui::SliderFloat("float", &f, 0, 1);
+//	ImGui::End();
 
-	font->renderText("Sphynx of black quartz, judge my vow.");
+//	font->renderText("Sphynx of black quartz, judge my vow.");
 }

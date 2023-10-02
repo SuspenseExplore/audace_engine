@@ -5,11 +5,14 @@
 #include <GLES3/gl32.h>
 
 #include "AppController.h"
+#include "content/AssetStore.h"
 #include "openxr/openxr_common.h"
 #include "glm/glm.hpp"
 #include "input/InputDevices.h"
 
 bool AppController::createWindow() {
+	fileLoader = new Audace::FileLoader(androidApp->activity->assetManager);
+	Audace::AssetStore::init(fileLoader);
 	return window.init(androidApp);
 }
 
@@ -20,44 +23,50 @@ bool AppController::init(android_app *app) {
 
 bool AppController::createXrSession() {
 	glGenFramebuffers(1, &framebuffer);
-	scene.init(this, androidApp->activity->assetManager);
+	scene->loadAssets(fileLoader);
 	xrContext.createSession(window.getDisplay(), window.getContext());
+	camera = new HmdCamera(xrContext.views);
+	scene->setCamera(camera);
 
-	using namespace Audace;
-	{
-		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_GRIP_POSE;
-		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
-			if (event.changed) {
-				scene.setLightPos(event.state.position);
-			}
-		});
-	}
-	{
-		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_AIM_POSE;
-		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
-			if (event.changed) {
-				scene.setAimPose(event.state);
-			}
-		});
-	}
-	{
-		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_X_CLICK;
-		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {
-			if (event.changed) {
-				scene.setLightOn(event.state);
-			}
-		});
-	}
-	{
-		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_Y_CLICK;
-		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {
-			if (event.state && event.changed) {
-				scene.randomLightColor();
-			}
-		});
-	}
+//	using namespace Audace;
+//	{
+//		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_GRIP_POSE;
+//		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
+//			if (event.changed) {
+//				scene->setLightPos(event.state.position);
+//			}
+//		});
+//	}
+//	{
+//		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_AIM_POSE;
+//		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
+//			if (event.changed) {
+//				scene->setAimPose(event.state);
+//			}
+//		});
+//	}
+//	{
+//		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_X_CLICK;
+//		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {
+//			if (event.changed) {
+//				scene->setLightOn(event.state);
+//			}
+//		});
+//	}
+//	{
+//		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_Y_CLICK;
+//		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {
+//			if (event.state && event.changed) {
+//				scene->randomLightColor();
+//			}
+//		});
+//	}
 	xrContext.registerActions();
 	return true;
+}
+
+void AppController::setScene(int nextScene) {
+
 }
 
 XrFrameState *AppController::startFrame() {
@@ -148,6 +157,7 @@ uint32_t AppController::prepareViews(XrFrameState *frameState, XrSpace space) {
 
 void AppController::renderFrame() {
 	XrFrameState *frameState = startFrame();
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
 	if (frameState != nullptr) {
 		std::vector<XrCompositionLayerBaseHeader *> layers;
@@ -164,24 +174,24 @@ void AppController::renderFrame() {
 					}
 				}
 			}
-			viewCount = prepareViews(frameState, xrContext.xrViewSpace);
-			if (viewCount > 0) {
-				projectionLayerViews.resize(viewCount);
-				{
-					XrCompositionLayerProjection layer{XR_TYPE_COMPOSITION_LAYER_PROJECTION};
-					if (renderUiLayer(projectionLayerViews, layer)) {
-						layers.push_back(reinterpret_cast<XrCompositionLayerBaseHeader *>(&layer));
-					}
-				}
-			}
+//			viewCount = prepareViews(frameState, xrContext.xrViewSpace);
+//			if (viewCount > 0) {
+//				projectionLayerViews.resize(viewCount);
+//				{
+//					XrCompositionLayerProjection layer{XR_TYPE_COMPOSITION_LAYER_PROJECTION};
+//					if (renderUiLayer(projectionLayerViews, layer)) {
+//						layers.push_back(reinterpret_cast<XrCompositionLayerBaseHeader *>(&layer));
+//					}
+//				}
+//			}
 		}
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		endFrame(layers);
 	}
 }
 
 bool AppController::renderLayer(std::vector<XrCompositionLayerProjectionView> &projectionLayerViews,
 								XrCompositionLayerProjection &layer) {
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 	XrResult res;
 
 	// Render view to the appropriate part of the swapchain image.
@@ -200,12 +210,12 @@ bool AppController::renderLayer(std::vector<XrCompositionLayerProjectionView> &p
 		projectionLayerViews[i].subImage.imageRect.offset = {0, 0};
 		projectionLayerViews[i].subImage.imageRect.extent = {view.getWidth(), view.getHeight()};
 
+		camera->setActiveView(i);
 		renderView(view);
 		if (!swapchain.endFrame()) {
 			return false;
 		}
 	}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	layer.space = xrContext.xrWorldSpace;
 	layer.layerFlags = 0;
@@ -221,7 +231,6 @@ bool AppController::renderLayer(std::vector<XrCompositionLayerProjectionView> &p
 bool
 AppController::renderUiLayer(std::vector<XrCompositionLayerProjectionView> &projectionLayerViews,
 							 XrCompositionLayerProjection &layer) {
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 	XrResult res;
 
 	// Render view to the appropriate part of the swapchain image.
@@ -245,7 +254,6 @@ AppController::renderUiLayer(std::vector<XrCompositionLayerProjectionView> &proj
 			return false;
 		}
 	}
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	layer.space = xrContext.xrViewSpace;
 	layer.layerFlags = 0;
@@ -271,7 +279,7 @@ void AppController::renderView(OpenxrView view) {
 	AU_CHECK_GL_ERRORS();
 
 	window.beginFrame();
-	scene.render(view);
+	scene->render();
 	window.endFrame();
 
 	glBindVertexArray(0);
@@ -293,7 +301,7 @@ void AppController::renderUiView(OpenxrView view) {
 	AU_CHECK_GL_ERRORS();
 
 	window.beginFrame();
-	scene.renderUi(view);
+//	scene->renderUi(view);
 	window.endFrame();
 
 	glBindVertexArray(0);

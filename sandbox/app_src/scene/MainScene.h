@@ -11,32 +11,24 @@
 #include "renderer/Texture2d.h"
 #include "util/RandomUniformFloats.h"
 #include "math/Pose.h"
-#include "scene/ForwardCamera.h"
+#include "scene/BaseCamera.h"
 #include "application/BaseAppController.h"
 
 class MainScene : public Audace::Scene
 {
-	Audace::FileLoader *fileLoader;
 	std::vector<Audace::Sprite *> sprites;
 	Audace::ShaderProgram *shaderProgram;
-	Audace::Texture2d *darkGridTex;
-	Audace::Texture2d *greenChecksTex;
-	Audace::Texture2d *orangeChecksTex;
-	Audace::Texture2d *purpleChecksTex;
 
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
-	Audace::ForwardCamera camera = Audace::ForwardCamera::standard3d(glm::vec3(0, 0, 1), 1280.0f, 720.0f);
-	float cameraYaw = 0;
-	float cameraPitch = 0;
+	Audace::BaseCamera *camera;
 
 	glm::vec4 diffuseLight = glm::vec4(1, 1, 1, 1);
 	glm::vec3 lightPos = glm::vec3(0, 0, 7);
-	Audace::RandomUniformFloats rand = Audace::RandomUniformFloats::normalizedRange();
 
 public:
-	MainScene(Audace::BaseAppController *controller, Audace::FileLoader *fileLoader) : Scene(controller), fileLoader(fileLoader) {}
-	Audace::Sprite *loadSprite(std::string filename);
-	void loadAssets() override;
+	MainScene(Audace::BaseAppController *controller) : Scene(controller) {}
+	Audace::Sprite *loadSprite(Audace::FileLoader *fileLoader, std::string filename);
+	void loadAssets(Audace::FileLoader *fileLoader) override;
 	void render() override;
 	void disposeAssets() override;
 
@@ -55,29 +47,30 @@ public:
 		cameraVel.z = v;
 	}
 
-	void setLightBright(bool bright)
-	{
-		diffuseLight.w = bright ? 2 : 1;
-	}
+	// void setLightBright(bool bright)
+	// {
+	// 	diffuseLight.w = bright ? 2 : 1;
+	// }
 
-	void randomLightColor()
-	{
-		glm::vec3 v = glm::normalize(glm::vec3(rand.get(), rand.get(), rand.get()));
-		diffuseLight = glm::vec4(v, diffuseLight.w);
-	}
+	// void randomLightColor()
+	// {
+	// 	glm::vec3 v = glm::normalize(glm::vec3(rand.get(), rand.get(), rand.get()));
+	// 	diffuseLight = glm::vec4(v, diffuseLight.w);
+	// }
 
-	void setLightPos(float x, float y)
-	{
-		lightPos = glm::vec3((x - 640.0f) / 50.0f, (y - 360.0f) / -50.0f, lightPos.z);
-	}
+	// void setLightPos(float x, float y)
+	// {
+	// 	lightPos = glm::vec3((x - 640.0f) / 50.0f, (y - 360.0f) / -50.0f, lightPos.z);
+	// }
 
-	void rotateCamera(float x, float y, float z)
-	{
-		cameraYaw += z;
-		cameraPitch += x;
-	}
+	// void rotateCamera(float x, float y, float z)
+	// {
+	// 	cameraYaw += z;
+	// 	cameraPitch += x;
+	// }
 
-	Audace::BaseCamera* getCamera() override {return nullptr;}
+	Audace::BaseCamera* getCamera() override {return camera;}
+	void setCamera(Audace::BaseCamera *camera) override {this->camera = camera;}
 };
 
 #endif

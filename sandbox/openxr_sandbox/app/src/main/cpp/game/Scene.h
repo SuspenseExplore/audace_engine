@@ -8,7 +8,8 @@
 #include <GLES3/gl32.h>
 #include <jni.h>
 #include <android_native_app_glue.h>
-#include "android_platform/FileLoader.h"
+#include "scene/Scene.h"
+#include "openxr/HmdCamera.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/Texture2d.h"
 #include "renderer/Sprite.h"
@@ -21,9 +22,8 @@
 
 class AppController;
 
-class Scene {
+class Scene : public Audace::Scene {
 	AppController *appController;
-	Audace::FileLoader *fileLoader;
 	std::vector<Audace::Sprite*> sprites;
 	Audace::ShaderProgram *shaderProgram;
 	Audace::Texture2d *darkGridTex;
@@ -37,11 +37,13 @@ class Scene {
 	Audace::PointLight pointLights[4];
 	bool lightOn;
 
+	HmdCamera *camera;
 	Audace::Pose aimPose;
 
 	Audace::RandomUniformFloats rand = Audace::RandomUniformFloats::normalizedRange();
 
 public:
+	Scene(Audace::BaseAppController *controller) : Audace::Scene(controller) {} //TODO: nullptr is currently passed in from AppController.h
 	void init(AppController *controller, AAssetManager *assetManager);
 	Audace::Sprite* loadSprite(std::string filename);
 	void setLightPos(glm::vec3 pos) {pointLights[0].position = pos;}
@@ -50,6 +52,13 @@ public:
 	void setAimPose(Audace::Pose pose) {aimPose = pose;}
 	void render(OpenxrView view);
 	void renderUi(OpenxrView view);
+
+	void loadAssets() override {}
+	void render() override {}
+	void disposeAssets() override {}
+
+	void setCamera(HmdCamera *camera) {this->camera = camera;}
+	Audace::BaseCamera* getCamera() override {return camera;}
 };
 
 

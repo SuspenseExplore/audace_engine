@@ -9,6 +9,7 @@ cmake_minimum_required(VERSION 3.18.1)
 
 project("openxr_sandbox")
 set(ENGINE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../../engine_src)
+set(APP_DIR ${ENGINE_DIR}/../sandbox/app_src)
 
 # add android's native app glue
 add_library(native_app_glue STATIC
@@ -39,6 +40,7 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/android_platform/ImageData.cpp
 		${ENGINE_DIR}/android_platform/FileLoader.cpp
 		${ENGINE_DIR}/input/InputDevices.cpp
+		${ENGINE_DIR}/content/AssetStore.cpp
 		${ENGINE_DIR}/content/ByteBuffer.cpp
 		${ENGINE_DIR}/content/ModelLoader.cpp
 		${ENGINE_DIR}/renderer/DataBuffer.cpp
@@ -50,12 +52,14 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/renderer/Sprite.cpp
 		${ENGINE_DIR}/renderer/Shapes.cpp
 		${ENGINE_DIR}/renderer/text/BitmapFont.cpp
+		${ENGINE_DIR}/scene/Scene.cpp
 		openxr/OpenxrSwapchain.cpp
 		openxr/OpenxrView.cpp
 		openxr/OpenxrContext.cpp
+		openxr/HmdCamera.cpp
 		EglWindow.cpp
 		AppController.cpp
-		game/Scene.cpp
+		${APP_DIR}/scene/MainScene.cpp
 		)
 include_directories(
 		.
@@ -107,6 +111,7 @@ target_include_directories(
 		${ENGINE_DIR}/include/imgui
 		${ENGINE_DIR}/android_platform
 		${ENGINE_DIR}/android_platform/imgui
+		${APP_DIR}
 )
 
 add_library(
