@@ -6,6 +6,7 @@
 namespace Audace {
 	class BaseMaterial {
 		public:
+		virtual std::string getName() = 0;
 		virtual ShaderProgram* getShader() = 0;
 		virtual void setShader(ShaderProgram* shader) = 0;
 		virtual void apply() = 0;

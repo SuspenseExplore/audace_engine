@@ -15,15 +15,17 @@ namespace Audace
 		std::string name;
 		glm::vec3 ambientColor = glm::vec3(0.0f, 0.0f, 0.0f);
 		glm::vec3 diffuseColor = glm::vec3(0.0f, 0.0f, 0.0f);
+		int diffuseMap;
 		glm::vec3 specularColor = glm::vec3(0.0f, 0.0f, 0.0f);
 		glm::vec3 emissionColor = {0, 0, 0};
 		float shininess = 0.2f * 128;
 
 	public:
 		void setName(std::string name) {this->name = name;}
-		std::string getName() {return name;}
+		std::string getName() override {return name;}
 		void setAmbientColor(glm::vec3 color) { ambientColor = color; }
 		void setDiffuseColor(glm::vec3 color) { diffuseColor = color; }
+		void setDiffuseMap(int texUnit) { diffuseMap = texUnit; }
 		void setSpecularColor(glm::vec3 color) { specularColor = color; }
 		void setEmissionColor(glm::vec3 color) { emissionColor = color; }
 		void setShininess(float shininess) {this->shininess = shininess;}
@@ -34,6 +36,7 @@ namespace Audace
 			shaderProgram->bind();
 			shaderProgram->setUniformVec3("material.ambient", ambientColor.x, ambientColor.y, ambientColor.z);
 			shaderProgram->setUniformVec3("material.diffuse", diffuseColor.x, diffuseColor.y, diffuseColor.z);
+			shaderProgram->setUniformInt("material.diffuseMap", diffuseMap);
 			shaderProgram->setUniformVec3("material.specular", specularColor.x, specularColor.y, specularColor.z);
 			shaderProgram->setUniformVec3("material.emission", glm::value_ptr(emissionColor));
 			shaderProgram->setUniformFloat("material.shininess", shininess);

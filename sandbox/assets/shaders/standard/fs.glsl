@@ -4,6 +4,7 @@ precision mediump float;
 struct Material {
 	vec3 ambient;
 	vec3 diffuse;
+	sampler2D diffuseMap;
 	vec3 specular;
 	vec3 emission;
 	float shininess;
@@ -23,7 +24,7 @@ uniform vec4 diffusePos;
 uniform vec4 diffuseColor;
 uniform vec3 viewPos;
 
-in vec2 texCoord;
+in vec3 outTexCoord;
 in vec3 surfaceNormal;
 in vec3 fragPos;
 
@@ -32,7 +33,7 @@ out vec4 fragColor;
 vec3 calcDiffuse(Light light) {
 	vec3 lightDir = normalize(light.position - fragPos);
 	float diffuseIntensity = max(0.0, dot(surfaceNormal, lightDir)) * light.intensity;
-	vec3 diffuse = light.color * material.diffuse * diffuseIntensity;
+	vec3 diffuse = light.color * material.diffuse * texture(material.diffuseMap, outTexCoord.xy).rgb * diffuseIntensity;
 	return diffuse;
 }
 
@@ -50,7 +51,7 @@ vec3 calcLightColor(Light light) {
 }
 
 void main() {
-	vec4 objColor = texture(tex1, texCoord);
+	vec4 objColor = texture(tex1, outTexCoord.xy);
 	vec3 ambient = (ambientLight.xyz * ambientLight.w) * material.ambient;
 
 	vec3 lightColor = calcLightColor(light[0]) + calcLightColor(light[1]) + calcLightColor(light[2]) + calcLightColor(light[3]);
