@@ -9,6 +9,7 @@
 #include "renderer/Sprite.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/Texture2d.h"
+#include "renderer/material/Material.h"
 #include "util/RandomUniformFloats.h"
 #include "math/Pose.h"
 #include "scene/BaseCamera.h"
@@ -18,6 +19,11 @@ class MainScene : public Audace::Scene
 {
 	std::vector<Audace::Sprite *> sprites;
 	Audace::ShaderProgram *shaderProgram;
+
+	Audace::Material *grassMaterial;
+	Audace::Material *dirtMaterial;
+	Audace::Material *rockMaterial;
+	Audace::Material *waterMaterial;
 
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
 	Audace::BaseCamera *camera;

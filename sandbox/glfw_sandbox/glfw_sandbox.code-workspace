@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../app_src"
+		},
+		{
+			"path": "../assets"
 		}
 	],
 	"settings": {}

@@ -5,10 +5,13 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
+#include "content/AssetStore.h"
 #include "renderer/DataBuffer.h"
 #include "renderer/VertexAttribute.h"
 #include "renderer/VertexArray.h"
 #include "renderer/Sprite.h"
+#include "renderer/material/Material.h"
+#include "util/StringUtil.h"
 #include "imgui.h"
 #include "SceneEnum.h"
 
@@ -22,11 +25,48 @@ void MainScene::loadAssets(Audace::FileLoader *fileLoader)
 {
 	glClearColor(0, 0, 1, 0);
 
-	std::string vs = fileLoader->textFileToString("shaders/standard/vs.glsl");
-	std::string fs = fileLoader->textFileToString("shaders/standard/fs.glsl");
-	shaderProgram = new Audace::ShaderProgram(vs, fs);
-	shaderProgram->create();
+	shaderProgram = Audace::AssetStore::getShader("standard");
 	shaderProgram->bind();
+	shaderProgram->setUniformVec3("textureScale", 10, 10, 1);
+
+	Audace::AssetStore::getTexture("images/white.png")->bind(1);
+	Audace::AssetStore::getTexture("images/grass_004/Grass004_1K-JPG_Color.jpg")->bind(2);
+	Audace::AssetStore::getTexture("images/ground_067/Ground067_1K-JPG_Color.jpg")->bind(3);
+	Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_Color.jpg")->bind(4);
+	Audace::AssetStore::getTexture("images/ground_051/Ground051_1K-JPG_Color.jpg")->bind(5);
+
+	{
+		Audace::Material *mat = new Audace::Material();
+		mat->setName("grass");
+		mat->setShader(shaderProgram);
+		mat->setDiffuseColor({1, 1, 1});
+		mat->setDiffuseMap(2);
+		grassMaterial = mat;
+	}
+	{
+		Audace::Material *mat = new Audace::Material();
+		mat->setName("dirt");
+		mat->setShader(shaderProgram);
+		mat->setDiffuseColor({1, 1, 1});
+		mat->setDiffuseMap(3);
+		dirtMaterial = mat;
+	}
+	{
+		Audace::Material *mat = new Audace::Material();
+		mat->setName("stone");
+		mat->setShader(shaderProgram);
+		mat->setDiffuseColor({1, 1, 1});
+		mat->setDiffuseMap(4);
+		rockMaterial = mat;
+	}
+	{
+		Audace::Material *mat = new Audace::Material();
+		mat->setName("water");
+		mat->setShader(shaderProgram);
+		mat->setDiffuseColor({0.690196f, 0.956863f, 1.000000f});
+		mat->setDiffuseMap(1);
+		waterMaterial = mat;
+	}
 
 	glm::mat4 IDENTITY_MAT = glm::mat4(1.0f);
 	Audace::Sprite *sprite = loadSprite(fileLoader, "cliff_scene.obj");
@@ -43,7 +83,29 @@ Audace::Sprite *MainScene::loadSprite(Audace::FileLoader *fileLoader, std::strin
 	Audace::Model *model = fileLoader->readModelFile("models/", filename);
 	for (Audace::ModelSection *section : model->sections)
 	{
-		section->material->setShader(shaderProgram);
+		Audace::Material *mat = reinterpret_cast<Audace::Material *>(section->material);
+		mat->setShader(shaderProgram);
+		if (Audace::StringUtil::startsWith(mat->getName(), "grass"))
+		{
+			section->material = grassMaterial;
+		}
+		else if (Audace::StringUtil::startsWith(mat->getName(), "dirt"))
+		{
+			section->material = dirtMaterial;
+		}
+		else if (Audace::StringUtil::startsWith(mat->getName(), "stone"))
+		{
+			section->material = rockMaterial;
+		}
+		else if (Audace::StringUtil::startsWith(mat->getName(), "water"))
+		{
+			section->material = waterMaterial;
+		}
+		else
+		{
+			mat->setDiffuseMap(1);
+			AU_ENGINE_LOG_DEBUG(mat->getName());
+		}
 	}
 	Audace::Sprite *sprite = new Audace::Sprite(model);
 	delete model;
