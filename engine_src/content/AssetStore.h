@@ -27,6 +27,7 @@ namespace Audace
 		static ShaderProgram *simpleTextShader() { return shaders["AU_simple_text"]; }
 		static ShaderProgram *simpleBillboardShader() { return shaders["AU_simple_billboard"]; }
 		static SimpleBillboardMaterial *simpleBillboardMaterial() { return billboardMat; }
+		static Texture2d *getWhiteTexture() { return textures["AU_white_texture"]; }
 
 		static Texture2d *getTexture(const std::string &name);
 	};

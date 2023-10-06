@@ -4,6 +4,7 @@
 
 namespace Audace
 {
+	unsigned char WHITE_TEX[] = {255, 255, 255, 255};
 	FileLoader *AssetStore::fileLoader;
 	Mesh *AssetStore::squareMesh;
 	std::map<std::string, ShaderProgram *> AssetStore::shaders;
@@ -19,6 +20,11 @@ namespace Audace
 		billboardMat = new SimpleBillboardMaterial;
 		billboardMat->setShader(simpleBillboardShader());
 		billboardMat->setColor(glm::vec4(1, 1, 1, 1));
+
+		ImageData data(&WHITE_TEX[0], 1, 1, GL_RGBA);
+		Texture2d *whiteTex = new Texture2d(data);
+		whiteTex->create();
+		textures["AU_white_texture"] = whiteTex;
 	}
 
 	ShaderProgram *AssetStore::getShader(const std::string &name)
