@@ -118,6 +118,12 @@ namespace Audace
 		AU_RENDERER_LOG_TRACE("Set vec3 uniform in shader {} at location {} to value [{},{},{}]", glid, uniforms[name], x, y, z);
 	}
 
+	void ShaderProgram::setUniformVec3(std::string name, glm::vec3 value) {
+		glUniform3f(uniforms[name], value.x, value.y, value.z);
+		AU_CHECK_GL_ERRORS();
+		AU_RENDERER_LOG_TRACE("Set vec3 uniform in shader {} at location {} to value [{},{},{}]", glid, uniforms[name], value.x, value.y, value.z);
+	}
+
 	void ShaderProgram::setUniformVec3(std::string name, float *value) {
 		glUniform3f(uniforms[name], value[0], value[1], value[2]);
 		AU_CHECK_GL_ERRORS();
