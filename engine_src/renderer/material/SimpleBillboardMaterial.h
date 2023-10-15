@@ -25,7 +25,7 @@ namespace Audace {
 		glm::vec4 getColor() {return color;}
 		void setColor(glm::vec4 color) {this->color = color;}
 
-		void apply() {
+		void apply() override {
 			texture->bind(0);
 			shaderProgram->bind();
 			shaderProgram->setUniformInt("tex1", 0);

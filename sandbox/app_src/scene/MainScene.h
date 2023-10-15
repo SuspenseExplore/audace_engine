@@ -9,6 +9,7 @@
 #include "renderer/Sprite.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/Texture2d.h"
+#include "renderer/light/PointLight.h"
 #include "renderer/material/Material.h"
 #include "util/RandomUniformFloats.h"
 #include "math/Pose.h"
@@ -28,8 +29,7 @@ class MainScene : public Audace::Scene
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
 	Audace::BaseCamera *camera;
 
-	glm::vec4 diffuseLight = glm::vec4(1, 1, 1, 1);
-	glm::vec3 lightPos = glm::vec3(0, 0, 7);
+	Audace::PointLight *pointLights;
 
 public:
 	MainScene(Audace::BaseAppController *controller) : Scene(controller) {}

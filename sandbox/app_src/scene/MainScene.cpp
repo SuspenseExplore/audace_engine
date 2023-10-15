@@ -15,12 +15,6 @@
 #include "imgui.h"
 #include "SceneEnum.h"
 
-float verts[] = {
-	-0.5f, -0.5f,
-	-0.5f, 0.5f,
-	0.5f, -0.5f,
-	0.5f, 0.5f};
-
 void MainScene::loadAssets(Audace::FileLoader *fileLoader)
 {
 	glClearColor(0, 0, 1, 0);
@@ -75,6 +69,17 @@ void MainScene::loadAssets(Audace::FileLoader *fileLoader)
 	sprite->setModelMatrix(modelMat);
 	sprite->setPosition({0, 0, 0});
 	sprites.push_back(sprite);
+
+	pointLights = new Audace::PointLight[4];
+	pointLights[0].setPosition({2, 0, 1});
+	pointLights[0].setColor({1, 1, 0.8f});
+	pointLights[0].setIntensity(1);
+	sprites.push_back(&pointLights[0]);
+
+	pointLights[1].setPosition({-2, -2, 0.3f});
+	pointLights[1].setColor({1, 0.2f, 0.1f});
+	pointLights[1].setIntensity(0.6f);
+	sprites.push_back(&pointLights[1]);
 }
 
 Audace::Sprite *MainScene::loadSprite(Audace::FileLoader *fileLoader, std::string filename)
@@ -115,15 +120,19 @@ Audace::Sprite *MainScene::loadSprite(Audace::FileLoader *fileLoader, std::strin
 void MainScene::render()
 {
 	glDisable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera->update();
 
 	shaderProgram->bind();
-	shaderProgram->setUniformVec3("light[0].position", lightPos.x, lightPos.y, lightPos.z);
-	shaderProgram->setUniformFloat("light[0].intensity", 1.0f);
-	shaderProgram->setUniformVec3("light[0].color", diffuseLight.x, diffuseLight.y, diffuseLight.z);
-	shaderProgram->setUniformVec3("viewPos", camera->getPosition().x, camera->getPosition().y, camera->getPosition().z);
+	shaderProgram->setUniformVec3("light[0].position", pointLights[0].getPosition());
+	shaderProgram->setUniformFloat("light[0].intensity", pointLights[0].getIntensity());
+	shaderProgram->setUniformVec3("light[0].color", pointLights[0].getColor());
+	shaderProgram->setUniformVec3("light[1].position", pointLights[1].getPosition());
+	shaderProgram->setUniformFloat("light[1].intensity", pointLights[1].getIntensity());
+	shaderProgram->setUniformVec3("light[1].color", pointLights[1].getColor());
+	shaderProgram->setUniformVec3("viewPos", camera->getPosition());
 
 	shaderProgram->setUniformMat4("vpMat", camera->getViewProjMatrix());
 
