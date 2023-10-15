@@ -12,7 +12,6 @@
 
 bool AppController::createWindow() {
 	fileLoader = new Audace::FileLoader(androidApp->activity->assetManager);
-	Audace::AssetStore::init(fileLoader);
 	return window.init(androidApp);
 }
 
@@ -22,6 +21,7 @@ bool AppController::init(android_app *app) {
 }
 
 bool AppController::createXrSession() {
+	Audace::AssetStore::init(fileLoader);
 	glGenFramebuffers(1, &framebuffer);
 	scene->loadAssets(fileLoader);
 	xrContext.createSession(window.getDisplay(), window.getContext());
