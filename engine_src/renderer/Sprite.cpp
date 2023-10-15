@@ -59,6 +59,7 @@ namespace Audace
 		worldMat *= modelMatrix;
 		for (Mesh *mesh : meshes)
 		{
+			mesh->getMaterial()->getShader()->bind();
 			mesh->getMaterial()->getShader()->setUniformMat4("vpMat", scene->getCamera()->getViewProjMatrix());
 			mesh->render(worldMat);
 		}
