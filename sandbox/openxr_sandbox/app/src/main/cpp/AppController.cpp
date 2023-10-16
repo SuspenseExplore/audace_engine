@@ -28,7 +28,7 @@ bool AppController::createXrSession() {
 	camera = new HmdCamera(xrContext.views);
 	scene->setCamera(camera);
 
-//	using namespace Audace;
+	using namespace Audace;
 //	{
 //		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_GRIP_POSE;
 //		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
@@ -45,14 +45,12 @@ bool AppController::createXrSession() {
 //			}
 //		});
 //	}
-//	{
-//		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_X_CLICK;
-//		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {
-//			if (event.changed) {
-//				scene->setLightOn(event.state);
-//			}
-//		});
-//	}
+	{
+		OculusTouchController::InputName name = OculusTouchController::InputName::RIGHT_A_CLICK;
+		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {
+			reinterpret_cast<MainScene *>(scene)->enableAmbientOcclusion(!event.state);
+		});
+	}
 //	{
 //		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_Y_CLICK;
 //		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {

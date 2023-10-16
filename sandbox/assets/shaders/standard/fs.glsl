@@ -3,6 +3,7 @@ precision mediump float;
 
 struct Material {
 	vec3 ambient;
+	sampler2D ambientMap;
 	vec3 diffuse;
 	sampler2D diffuseMap;
 	vec3 specular;
@@ -51,8 +52,7 @@ vec3 calcLightColor(Light light) {
 }
 
 void main() {
-	vec4 objColor = texture(tex1, outTexCoord.xy);
-	vec3 ambient = (ambientLight.xyz * ambientLight.w) * material.ambient;
+	vec3 ambient = (ambientLight.rgb * ambientLight.a) * material.ambient * texture(material.ambientMap, outTexCoord.xy).r;
 
 	vec3 lightColor = calcLightColor(light[0]) + calcLightColor(light[1]) + calcLightColor(light[2]) + calcLightColor(light[3]);
 

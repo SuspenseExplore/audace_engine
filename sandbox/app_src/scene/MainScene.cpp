@@ -24,39 +24,50 @@ void MainScene::loadAssets(Audace::FileLoader *fileLoader)
 	shaderProgram->setUniformVec3("textureScale", 10, 10, 1);
 
 	Audace::AssetStore::getTexture("images/white.png")->bind(1);
-	Audace::AssetStore::getTexture("images/grass_004/Grass004_1K-JPG_Color.jpg")->bind(2);
-	Audace::AssetStore::getTexture("images/ground_067/Ground067_1K-JPG_Color.jpg")->bind(3);
-	Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_Color.jpg")->bind(4);
+	Audace::AssetStore::getTexture("images/grass_004/Grass004_1K-JPG_Color.jpg")->bind(20);
+	Audace::AssetStore::getTexture("images/grass_004/Grass004_1K-JPG_AmbientOcclusion.jpg")->bind(21);
+	Audace::AssetStore::getTexture("images/ground_067/Ground067_1K-JPG_Color.jpg")->bind(30);
+	Audace::AssetStore::getTexture("images/ground_067/Ground067_1K-JPG_AmbientOcclusion.jpg")->bind(31);
+	Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_Color.jpg")->bind(40);
+	Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_AmbientOcclusion.jpg")->bind(41);
 	Audace::AssetStore::getTexture("images/ground_051/Ground051_1K-JPG_Color.jpg")->bind(5);
 
 	{
 		Audace::Material *mat = new Audace::Material();
 		mat->setName("grass");
 		mat->setShader(shaderProgram);
+		mat->setAmbientColor({1, 1, 1});
+		mat->setAmbientOcclusionMap(21);
 		mat->setDiffuseColor({1, 1, 1});
-		mat->setDiffuseMap(2);
+		mat->setDiffuseMap(20);
 		grassMaterial = mat;
 	}
 	{
 		Audace::Material *mat = new Audace::Material();
 		mat->setName("dirt");
 		mat->setShader(shaderProgram);
+		mat->setAmbientColor({1, 1, 1});
+		mat->setAmbientOcclusionMap(31);
 		mat->setDiffuseColor({1, 1, 1});
-		mat->setDiffuseMap(3);
+		mat->setDiffuseMap(30);
 		dirtMaterial = mat;
 	}
 	{
 		Audace::Material *mat = new Audace::Material();
 		mat->setName("stone");
 		mat->setShader(shaderProgram);
+		mat->setAmbientColor({1, 1, 1});
+		mat->setAmbientOcclusionMap(41);
 		mat->setDiffuseColor({1, 1, 1});
-		mat->setDiffuseMap(4);
+		mat->setDiffuseMap(40);
 		rockMaterial = mat;
 	}
 	{
 		Audace::Material *mat = new Audace::Material();
 		mat->setName("water");
 		mat->setShader(shaderProgram);
+		mat->setAmbientColor({0.2f, 0.2f, 0.2f});
+		mat->setAmbientOcclusionMap(1);
 		mat->setDiffuseColor({0.690196f, 0.956863f, 1.000000f});
 		mat->setDiffuseMap(1);
 		waterMaterial = mat;
@@ -71,7 +82,7 @@ void MainScene::loadAssets(Audace::FileLoader *fileLoader)
 	sprites.push_back(sprite);
 
 	pointLights = new Audace::PointLight[4];
-	pointLights[0].setPosition({2, 0, 1});
+	pointLights[0].setPosition({2, 0, 1.5f});
 	pointLights[0].setColor({1, 1, 0.8f});
 	pointLights[0].setIntensity(1);
 	sprites.push_back(&pointLights[0]);
@@ -117,6 +128,15 @@ Audace::Sprite *MainScene::loadSprite(Audace::FileLoader *fileLoader, std::strin
 	return sprite;
 }
 
+void MainScene::enableAmbientOcclusion(bool enable)
+{
+	int c = enable ? 1 : 0;
+	glm::vec3 color = {c, c, c};
+	grassMaterial->setAmbientColor(color);
+	dirtMaterial->setAmbientColor(color);
+	rockMaterial->setAmbientColor(color);
+}
+
 void MainScene::render()
 {
 	glDisable(GL_CULL_FACE);
@@ -126,6 +146,7 @@ void MainScene::render()
 	camera->update();
 
 	shaderProgram->bind();
+	shaderProgram->setUniformVec4("ambientLight", 0.01f, 0.01f, 0.02f, 1);
 	shaderProgram->setUniformVec3("light[0].position", pointLights[0].getPosition());
 	shaderProgram->setUniformFloat("light[0].intensity", pointLights[0].getIntensity());
 	shaderProgram->setUniformVec3("light[0].color", pointLights[0].getColor());

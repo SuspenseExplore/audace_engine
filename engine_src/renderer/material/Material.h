@@ -14,6 +14,7 @@ namespace Audace
 		ShaderProgram *shaderProgram;
 		std::string name;
 		glm::vec3 ambientColor = glm::vec3(0.0f, 0.0f, 0.0f);
+		int ambientOcclusionMap;
 		glm::vec3 diffuseColor = glm::vec3(0.0f, 0.0f, 0.0f);
 		int diffuseMap;
 		glm::vec3 specularColor = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -24,6 +25,7 @@ namespace Audace
 		void setName(std::string name) {this->name = name;}
 		std::string getName() override {return name;}
 		void setAmbientColor(glm::vec3 color) { ambientColor = color; }
+		void setAmbientOcclusionMap(int texUnit) { ambientOcclusionMap = texUnit; }
 		void setDiffuseColor(glm::vec3 color) { diffuseColor = color; }
 		void setDiffuseMap(int texUnit) { diffuseMap = texUnit; }
 		void setSpecularColor(glm::vec3 color) { specularColor = color; }
@@ -35,6 +37,7 @@ namespace Audace
 		void apply() override {
 			shaderProgram->bind();
 			shaderProgram->setUniformVec3("material.ambient", ambientColor.x, ambientColor.y, ambientColor.z);
+			shaderProgram->setUniformInt("material.ambientMap", ambientOcclusionMap);
 			shaderProgram->setUniformVec3("material.diffuse", diffuseColor.x, diffuseColor.y, diffuseColor.z);
 			shaderProgram->setUniformInt("material.diffuseMap", diffuseMap);
 			shaderProgram->setUniformVec3("material.specular", specularColor.x, specularColor.y, specularColor.z);

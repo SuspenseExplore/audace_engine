@@ -83,6 +83,11 @@ namespace Audace
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_D, camCtl->rightAction);
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Q, camCtl->upAction);
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Z, camCtl->downAction);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_1,
+														  [this](BooleanInputEvent event)
+														  {
+															  reinterpret_cast<MainScene *>(scene)->enableAmbientOcclusion(!event.state);
+														  });
 			MouseManager::addButtonChangedEventHandler(1, camCtl->rightMouseAction);
 			MouseManager::setMouseMoveEventHandler(camCtl->aimAction);
 			scene->setCamera(camera);

@@ -53,6 +53,8 @@ public:
 		cameraVel.z = v;
 	}
 
+	void enableAmbientOcclusion(bool enable);
+
 	// void setLightBright(bool bright)
 	// {
 	// 	diffuseLight.w = bright ? 2 : 1;
