@@ -31,7 +31,17 @@ namespace Audace
 		int height;
 		int channels;
 		unsigned char *bytes = stbi_load((basePath + path).c_str(), &width, &height, &channels, 0);
-		ImageData img(bytes, width, height, channels == 3 ? GL_RGB : GL_RGBA);
+		int format = GL_RGBA;
+		switch (channels)
+		{
+			case 1:
+			format = GL_RED;
+			break;
+
+			case 3:
+			format = GL_RGB;
+		}
+		ImageData img(bytes, width, height, format);
 		return img;
 	}
 
