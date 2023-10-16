@@ -35,6 +35,7 @@ public:
 	std::map<Audace::OculusTouchController::InputName, std::function<void(Audace::PoseInputEvent)>> poseInputHandlers;
 
 	XrPath leftHandPath{XR_NULL_PATH};
+	XrPath rightHandPath{XR_NULL_PATH};
 	XrActionSet actionSet{XR_NULL_HANDLE};
 	XrSpace leftHandPoseSpace{XR_NULL_HANDLE};
 	XrSpace leftHandAimSpace{XR_NULL_HANDLE};
