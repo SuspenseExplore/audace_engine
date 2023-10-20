@@ -260,6 +260,21 @@ bool OpenxrContext::registerActions() {
 
 	// right hand
 	{
+		Audace::OculusTouchController::InputName name = Audace::OculusTouchController::RIGHT_GRIP_POSE;
+		XrActionCreateInfo actionInfo{XR_TYPE_ACTION_CREATE_INFO};
+		actionInfo.actionType = XR_ACTION_TYPE_POSE_INPUT;
+		strcpy(actionInfo.actionName, "right_hand_pose");
+		strcpy(actionInfo.localizedActionName, "Right hand pose");
+		actionInfo.countSubactionPaths = 1;
+		actionInfo.subactionPaths = &rightHandPath;
+
+		XrAction action;
+		XR_LOG_ERROR("xrCreateAction",
+					 xrCreateAction(actionSet, &actionInfo, &action));
+		actions[name] = action;
+		bindings.push_back(XrActionSuggestedBinding{action, Audace::OculusTouchController::paths[name]});
+	}
+	{
 		Audace::OculusTouchController::InputName name = Audace::OculusTouchController::RIGHT_A_CLICK;
 		XrActionCreateInfo actionInfo{XR_TYPE_ACTION_CREATE_INFO};
 		actionInfo.actionType = XR_ACTION_TYPE_BOOLEAN_INPUT;
@@ -304,6 +319,14 @@ bool OpenxrContext::registerActions() {
 		actionSpaceInfo.subactionPath = leftHandPath;
 		XR_ERROR_BAIL("xrCreateActionSpace",
 					  xrCreateActionSpace(xrSession, &actionSpaceInfo, &leftHandAimSpace));
+	}
+	{
+		XrActionSpaceCreateInfo actionSpaceInfo{XR_TYPE_ACTION_SPACE_CREATE_INFO};
+		actionSpaceInfo.action = actions[Audace::OculusTouchController::RIGHT_GRIP_POSE];
+		actionSpaceInfo.poseInActionSpace.orientation.w = 1;
+		actionSpaceInfo.subactionPath = rightHandPath;
+		XR_ERROR_BAIL("xrCreateActionSpace",
+					  xrCreateActionSpace(xrSession, &actionSpaceInfo, &rightHandPoseSpace));
 	}
 	XrSessionActionSetsAttachInfo attachInfo{XR_TYPE_SESSION_ACTION_SETS_ATTACH_INFO};
 	attachInfo.countActionSets = 1;
@@ -383,6 +406,23 @@ bool OpenxrContext::processActions(XrTime displayTime) {
 		handler(Audace::BooleanInputEvent(booleanState.currentState,
 										  booleanState.changedSinceLastSync,
 										  booleanState.lastChangeTime));
+	}
+	if (poseInputHandlers.find(Audace::OculusTouchController::RIGHT_GRIP_POSE) != poseInputHandlers.end()) {
+		Audace::OculusTouchController::InputName name = Audace::OculusTouchController::RIGHT_GRIP_POSE;
+		XrActionStateGetInfo getInfo{XR_TYPE_ACTION_STATE_GET_INFO};
+		getInfo.action = actions[name];
+
+		XrActionStatePose poseState{XR_TYPE_ACTION_STATE_POSE};
+		XR_ERROR_BAIL("xrGetActionStatePose",
+					  xrGetActionStatePose(xrSession, &getInfo, &poseState));
+		if (poseState.isActive == XR_TRUE && poseInputHandlers.find(name) != poseInputHandlers.end()) {
+			XrSpaceLocation location{XR_TYPE_SPACE_LOCATION};
+			xrLocateSpace(rightHandPoseSpace, xrWorldSpace, displayTime, &location);
+			Audace::Pose pose;
+			pose.position = glm::vec3(location.pose.position.x, location.pose.position.y, location.pose.position.z);
+			pose.orientation = glm::quat(location.pose.orientation.w, location.pose.orientation.x, location.pose.orientation.y, location.pose.orientation.z);
+			poseInputHandlers[name](Audace::PoseInputEvent(pose, true, displayTime));
+		}
 	}
 	if (booleanInputHandlers.find(Audace::OculusTouchController::RIGHT_A_CLICK) != booleanInputHandlers.end()) {
 		Audace::OculusTouchController::InputName name = Audace::OculusTouchController::RIGHT_A_CLICK;

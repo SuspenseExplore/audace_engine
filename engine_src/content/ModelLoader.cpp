@@ -74,12 +74,13 @@ namespace Audace
 			else if (StringUtil::startsWith(line, "f"))
 			{
 				// face
+				int inds[3]; // indices to the verts for calculating tangent space vectors
+
 				std::vector<std::string> vec = StringUtil::split(line, ' ');
 				for (int i = 1; i < 4; i++)
 				{
 					std::string face = vec[i];
-					auto iter = indexMap.find(face);
-					if (iter == indexMap.end())
+					if (indexMap.find(face) == indexMap.end())
 					{
 						// this vertex isn't in the map yet
 						Vertex vertex;
@@ -92,14 +93,33 @@ namespace Audace
 						indexMap[face] = index;
 						model->vertices.push_back(vertex);
 						currentSection->indices.push_back(index);
+						inds[i - 1] = index;
 						currentIndex++;
 					}
 					else
 					{
 						// this vertex already exists, just add the index
 						currentSection->indices.push_back(indexMap[face]);
+						inds[i - 1] = indexMap[face];
 						currentIndex++;
 					}
+				}
+
+				// calculate tangent space vectors
+				Vertex *verts[3];
+				for (int i = 0; i < 3; i++)
+				{
+					verts[i] = &model->vertices[inds[i]];
+				}
+				glm::vec3 dPos1 = verts[1]->position - verts[0]->position;
+				glm::vec3 dPos2 = verts[2]->position - verts[0]->position;
+				glm::vec3 dTexCoord1 = verts[1]->texCoord - verts[0]->texCoord;
+				glm::vec3 dTexCoord2 = verts[2]->texCoord - verts[0]->texCoord;
+				float r = 1.0f / (dTexCoord1.x * dTexCoord2.y - dTexCoord1.y * dTexCoord2.x);
+				glm::vec3 tangent = (dPos1 * dTexCoord2.y - dPos2 * dTexCoord1.y) * r;
+
+				for (int i = 0; i < 3; i++) {
+					verts[i]->tangent += tangent;
 				}
 			}
 			else if (StringUtil::startsWith(line, "mtllib"))

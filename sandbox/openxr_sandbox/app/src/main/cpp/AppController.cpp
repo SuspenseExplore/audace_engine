@@ -51,6 +51,14 @@ bool AppController::createXrSession() {
 			reinterpret_cast<MainScene *>(scene)->enableAmbientOcclusion(!event.state);
 		});
 	}
+	{
+		OculusTouchController::InputName name = OculusTouchController::InputName::RIGHT_GRIP_POSE;
+		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
+			if (event.changed) {
+				reinterpret_cast<MainScene*>(scene)->setLightPos(0, event.state.position);
+			}
+		});
+	}
 //	{
 //		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_Y_CLICK;
 //		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {

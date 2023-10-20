@@ -22,6 +22,7 @@ namespace Audace
 		std::ifstream fin(basePath + path, std::ios::in);
 		std::stringstream ss;
 		ss << fin.rdbuf();
+		fin.close();
 		return ss.str();
 	}
 

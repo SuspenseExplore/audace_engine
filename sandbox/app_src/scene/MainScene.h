@@ -66,10 +66,10 @@ public:
 	// 	diffuseLight = glm::vec4(v, diffuseLight.w);
 	// }
 
-	// void setLightPos(float x, float y)
-	// {
-	// 	lightPos = glm::vec3((x - 640.0f) / 50.0f, (y - 360.0f) / -50.0f, lightPos.z);
-	// }
+	 void setLightPos(int index, glm::vec3 position)
+	 {
+	 	pointLights[index].setPosition(position - glm::vec3(3, 1, 0));
+	 }
 
 	// void rotateCamera(float x, float y, float z)
 	// {

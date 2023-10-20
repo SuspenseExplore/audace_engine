@@ -18,16 +18,18 @@ namespace Audace
 		scale = glm::vec3(1.0f);
 
 		int vertexCount = model->vertices.size();
-		DataBuffer *buf = new DataBuffer(model->vertices.data(), vertexCount * 9 * sizeof(float), GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+		DataBuffer *buf = new DataBuffer(model->vertices.data(), vertexCount * 12 * sizeof(float), GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 		buf->create();
 
-		VertexAttribute posAttr(0, 3, GL_FLOAT, false, sizeof(float) * 9, 0);
-		VertexAttribute normAttr(1, 3, GL_FLOAT, false, sizeof(float) * 9, sizeof(float) * 3);
-		VertexAttribute texCoordAttr(2, 3, GL_FLOAT, false, sizeof(float) * 9, sizeof(float) * 6);
+		VertexAttribute posAttr(0, 3, GL_FLOAT, false, sizeof(float) * 12, 0);
+		VertexAttribute texCoordAttr(1, 3, GL_FLOAT, false, sizeof(float) * 12, sizeof(float) * 3);
+		VertexAttribute normalAttr(2, 3, GL_FLOAT, false, sizeof(float) * 12, sizeof(float) * 6);
+		VertexAttribute tangentAttr(3, 3, GL_FLOAT, false, sizeof(float) * 12, sizeof(float) * 9);
 		std::vector<VertexAttribute *> attrs;
 		attrs.push_back(&posAttr);
-		attrs.push_back(&normAttr);
 		attrs.push_back(&texCoordAttr);
+		attrs.push_back(&normalAttr);
+		attrs.push_back(&tangentAttr);
 		vertexArray = new VertexArray(attrs);
 		vertexArray->create();
 
