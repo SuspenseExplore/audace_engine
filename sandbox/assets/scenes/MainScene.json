@@ -1,0 +1,190 @@
+{
+    "ground_grass.obj": [
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -1.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -2.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -3.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -4.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -5.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -5.0,
+                -1.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -4.0,
+                -1.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -3.0,
+                -1.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -2.0,
+                -1.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -1.0,
+                -1.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                0.0,
+                -1.0,
+                0.0
+            ]
+        }
+    ],
+    "plant_flatShort.obj": [
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -2.0,
+                -1.0,
+                0.0
+            ]
+        }
+    ],
+    "platform_grass.obj": [
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                0.0,
+                -1.0,
+                0.0
+            ]
+        }
+    ],
+    "rock_tallB.obj": [
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -1.5,
+                0.0,
+                0.0
+            ]
+        }
+    ]
+}

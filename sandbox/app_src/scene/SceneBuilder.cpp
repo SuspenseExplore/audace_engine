@@ -1,3 +1,4 @@
+#include <fstream>
 #include "au_renderer.h"
 #include "SceneBuilder.h"
 #include "imgui.h"
@@ -16,10 +17,12 @@
 #include "MouseManager.h"
 #endif
 
-void SceneBuilder::loadAssets()
+void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 {
+	this->fileLoader = fileLoader;
 	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("standard");
 	shader->create();
+	Audace::AssetStore::getWhiteTexture()->bind(1);
 
 	quadMesh = Audace::Shapes::squarePositions();
 
@@ -27,65 +30,32 @@ void SceneBuilder::loadAssets()
 
 	modelBasePath = "models/";
 	modelFiles = fileLoader->listFilesInDir(modelBasePath + "*.obj");
+	modelCount = modelFiles.size();
 	currModel = loadModel(modelFiles[selectedModelIndex]);
 	currSprite = new Audace::Sprite(currModel);
 	currSprite->setModelMatrix(modelMat);
-
-	{
-		Audace::Mesh *mesh = Audace::Shapes::spherePositions(16, 16);
-		Audace::Material *mat = new Audace::Material;
-		mat->setShader(shader);
-		mat->setEmissionColor({1, 1, 1});
-		mesh->setMaterial(mat);
-		Audace::Sprite *sprite = new Audace::Sprite({mesh});
-		sprite->setScale({0.1f, 0.1f, 0.1f});
-		lightSprites[0] = sprite;
-		pointLights[0] = Audace::PointLight{glm::vec3(0, 0, 5), glm::vec3(1, 0.7f, 0.2f), 1};
-	}
-	{
-		Audace::Mesh *mesh = Audace::Shapes::spherePositions(16, 16);
-		Audace::Material *mat = new Audace::Material;
-		mat->setShader(shader);
-		mat->setEmissionColor({1, 1, 1});
-		mesh->setMaterial(mat);
-		Audace::Sprite *sprite = new Audace::Sprite({mesh});
-		sprite->setScale({0.1f, 0.1f, 0.1f});
-		lightSprites[1] = sprite;
-		pointLights[1] = Audace::PointLight{glm::vec3(-5, 0, 5), glm::vec3(1, 1, 0), 1};
-	}
-	{
-		Audace::Mesh *mesh = Audace::Shapes::spherePositions(16, 16);
-		Audace::Material *mat = new Audace::Material;
-		mat->setShader(shader);
-		mat->setEmissionColor({1, 1, 1});
-		mesh->setMaterial(mat);
-		Audace::Sprite *sprite = new Audace::Sprite({mesh});
-		sprite->setScale({0.1f, 0.1f, 0.1f});
-		lightSprites[2] = sprite;
-		pointLights[2] = Audace::PointLight{glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0};
-	}
-	{
-		Audace::Mesh *mesh = Audace::Shapes::spherePositions(16, 16);
-		Audace::Material *mat = new Audace::Material;
-		mat->setShader(shader);
-		mat->setEmissionColor({1, 1, 1});
-		mesh->setMaterial(mat);
-		Audace::Sprite *sprite = new Audace::Sprite({mesh});
-		sprite->setScale({0.1f, 0.1f, 0.1f});
-		lightSprites[3] = sprite;
-		pointLights[3] = Audace::PointLight{glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0};
-	}
 }
 
 Audace::Model *SceneBuilder::loadModel(std::string modelName)
 {
-	Audace::Model *model = fileLoader->readModelFile("models/", modelName);
+	Audace::Model *model = Audace::AssetStore::getModel(modelName);
 	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("standard");
 	for (Audace::ModelSection *section : model->sections)
 	{
+		Audace::Material *material = reinterpret_cast<Audace::Material *>(section->material);
 		section->material->setShader(shader);
+		material->setAmbientColor(material->getDiffuseColor());
+		material->setAmbientOcclusionMap(1);
 	}
 	return model;
+}
+
+void SceneBuilder::save(std::string filename)
+{
+	std::ofstream fout(filename, std::ios::out);
+	std::string s = jsonContent.dump(4);
+	fout.write(s.c_str(), s.length());
+	fout.close();
 }
 
 void SceneBuilder::render()
@@ -93,33 +63,23 @@ void SceneBuilder::render()
 	glClearColor(clearColor.x, clearColor.y, clearColor.z, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	camera.update();
+	camera->update();
 
 	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("standard");
 	shader->bind();
-	shader->setUniformVec4("ambientLight", 0.2f, 0.2f, 0.4f, 1.0f);
+	shader->setUniformVec4("ambientLight", 1, 1, 1, 1);
 
-	for (int i = 0; i < 4; i++)
-	{
-		std::string prefix = "light[";
-		prefix += '0' + i;
-		prefix += "]";
-		shader->setUniformVec3(prefix + ".position", glm::value_ptr(pointLights[i].position));
-		shader->setUniformVec3(prefix + ".color", glm::value_ptr(pointLights[i].color));
-		shader->setUniformFloat(prefix + ".intensity", pointLights[i].intensity);
-	}
-	// shader->setUniformVec3("light[1].position", glm::value_ptr(pointLights[1].position));
-	// shader->setUniformVec3("light[1].color", glm::value_ptr(pointLights[1].color));
-	// shader->setUniformFloat("light[1].intensity", pointLights[1].intensity);
+	// for (int i = 0; i < 4; i++)
+	// {
+	// 	std::string prefix = "light[";
+	// 	prefix += '0' + i;
+	// 	prefix += "]";
+	// 	shader->setUniformVec3(prefix + ".position", pointLights[i].getPosition());
+	// 	shader->setUniformVec3(prefix + ".color", pointLights[i].getColor());
+	// 	shader->setUniformFloat(prefix + ".intensity", pointLights[i].getIntensity());
+	// }
 
-	shader->setUniformVec3("viewPos", camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
-
-	for (int i = 0; i < 4; i++)
-	{
-		reinterpret_cast<Audace::Material*>(lightSprites[i]->getMaterial())->setEmissionColor(pointLights[i].color);
-		lightSprites[i]->setPosition(pointLights[i].position);
-		lightSprites[i]->render(this);
-	}
+	shader->setUniformVec3("viewPos", camera->getPosition());
 
 	for (Audace::Sprite *sprite : sprites)
 	{
@@ -175,6 +135,11 @@ void SceneBuilder::render()
 			}
 			if (ImGui::Button("Add"))
 			{
+				json obj = {
+					{"position", {spritePos.x, spritePos.y, spritePos.z}},
+					{"orientation", {spriteAngles.x, spriteAngles.y, spriteAngles.z}}};
+				jsonContent[modelFiles[selectedModelIndex]].push_back(obj);
+
 				currSprite->setPosition(spritePos);
 				currSprite->setOrientation(glm::quat(glm::radians(spriteAngles)));
 				currSprite->setScale(spriteScale);
@@ -226,9 +191,9 @@ void SceneBuilder::render()
 			ImGui::EndTabItem();
 		}
 
-		static int currLight = 0;
 		if (ImGui::BeginTabItem("Lights"))
 		{
+			static int currLight = 0;
 			ImGui::RadioButton("1", &currLight, 0);
 			ImGui::SameLine();
 			ImGui::RadioButton("2", &currLight, 1);
@@ -237,9 +202,32 @@ void SceneBuilder::render()
 			ImGui::SameLine();
 			ImGui::RadioButton("4", &currLight, 3);
 
-			ImGui::DragFloat3("Position", glm::value_ptr(pointLights[currLight].position), 0.01f);
-			ImGui::ColorEdit3("Color", glm::value_ptr(pointLights[currLight].color));
-			ImGui::SliderFloat("Intensity", &pointLights[currLight].intensity, 0.0f, 1.5f);
+			static glm::vec3 position;
+			static glm::vec3 color;
+			static float intensity;
+			if (ImGui::DragFloat3("Position", glm::value_ptr(position), 0.01f))
+			{
+				pointLights[currLight].setPosition(position);
+			}
+			if (ImGui::ColorEdit3("Color", glm::value_ptr(color)))
+			{
+				pointLights[currLight].setColor(color);
+			}
+			if (ImGui::SliderFloat("Intensity", &intensity, 0.0f, 1.5f))
+			{
+				pointLights[currLight].setIntensity(intensity);
+			}
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Output"))
+		{
+			ImGui::InputText("File path", sceneWritePath, scenePathLength);
+
+			if (ImGui::Button("Save"))
+			{
+				save(std::string(sceneWritePath));
+			}
 			ImGui::EndTabItem();
 		}
 

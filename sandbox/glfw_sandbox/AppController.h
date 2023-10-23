@@ -20,7 +20,7 @@ namespace Audace
 		GameWindow *window;
 		FileLoader *fileLoader;
 		Scene *scene = nullptr;
-		int nextScene = SandboxScene::MAIN;
+		int nextScene = SandboxScene::BUILDER;
 		glm::vec2 mousePos;
 
 		AppController() {}

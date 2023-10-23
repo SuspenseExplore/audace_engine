@@ -14,10 +14,10 @@ namespace Audace
 		ShaderProgram *shaderProgram;
 		std::string name;
 		glm::vec3 ambientColor = glm::vec3(0.0f, 0.0f, 0.0f);
-		int ambientOcclusionMap;
+		int ambientOcclusionMap = 0;
 		glm::vec3 diffuseColor = glm::vec3(0.0f, 0.0f, 0.0f);
-		int diffuseMap;
-		int normalMap;
+		int diffuseMap = 0;
+		int normalMap = 0;
 		glm::vec3 specularColor = glm::vec3(0.0f, 0.0f, 0.0f);
 		glm::vec3 emissionColor = {0, 0, 0};
 		float shininess = 0.2f * 128;
@@ -28,6 +28,7 @@ namespace Audace
 		void setAmbientColor(glm::vec3 color) { ambientColor = color; }
 		void setAmbientOcclusionMap(int texUnit) { ambientOcclusionMap = texUnit; }
 		void setDiffuseColor(glm::vec3 color) { diffuseColor = color; }
+		glm::vec3 getDiffuseColor() { return diffuseColor; }
 		void setDiffuseMap(int texUnit) { diffuseMap = texUnit; }
 		void setNormalMap(int texUnit) { normalMap = texUnit; }
 		void setSpecularColor(glm::vec3 color) { specularColor = color; }

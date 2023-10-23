@@ -14,7 +14,7 @@ add_executable(
 	AppController.cpp
 	${APP_DIR}/scene/MainScene.cpp
 	# ${APP_DIR}/scene/NavigationScene.cpp
-	# ${APP_DIR}/scene/SceneBuilder.cpp
+	${APP_DIR}/scene/SceneBuilder.cpp
 	# ${APP_DIR}/scene/DragDropScene.cpp
 	# ${APP_DIR}/scene/TextScene.cpp
 	${ENGINE_DIR}/AuLogger.cpp
@@ -109,9 +109,14 @@ set_target_properties(
 	IMPORTED_IMPLIB ${PLATFORM_DIR}/lib/freetype.lib
 )
 
+include (FetchContent)
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
 target_link_libraries(
 	sandbox_glfw
 	PUBLIC
 	glfw3
 	freetype
+	nlohmann_json::nlohmann_json
 )

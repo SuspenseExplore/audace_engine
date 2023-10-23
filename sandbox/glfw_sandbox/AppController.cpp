@@ -4,7 +4,7 @@
 #include "content/AssetStore.h"
 #include "scene/MainScene.h"
 // #include "scene/NavigationScene.h"
-// #include "scene/SceneBuilder.h"
+#include "scene/SceneBuilder.h"
 // #include "scene/DragDropScene.h"
 // #include "scene/TextScene.h"
 #include "scene/BasicCameraController.h"
@@ -74,7 +74,7 @@ namespace Audace
 			// 	break;
 
 		case MAIN:
-			scene = new MainScene(this);
+{			scene = new MainScene(this);
 			ForwardCamera *camera = ForwardCamera::standard3d({0, 0, 1}, 1280, 720);
 			BasicCameraController *camCtl = new BasicCameraController(camera);
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_W, camCtl->forwardAction);
@@ -92,7 +92,7 @@ namespace Audace
 			MouseManager::setMouseMoveEventHandler(camCtl->aimAction);
 			scene->setCamera(camera);
 			scene->loadAssets(fileLoader);
-			break;
+}			break;
 
 			// case DRAG_DROP:
 			// 	scene = new DragDropScene(this, fileLoader);
@@ -108,20 +108,21 @@ namespace Audace
 			// 	scene->loadAssets();
 			// 	break;
 
-			// case BUILDER:
-			// 	scene = new SceneBuilder(this, fileLoader);
-			// 	BaseCamera *camera = scene->getCamera();
-			// 	BasicCameraController *camCtl = new BasicCameraController((ForwardCamera *)camera);
-			// 	KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_W, camCtl->forwardAction);
-			// 	KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_S, camCtl->backwardAction);
-			// 	KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_A, camCtl->leftAction);
-			// 	KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_D, camCtl->rightAction);
-			// 	KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Q, camCtl->upAction);
-			// 	KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Z, camCtl->downAction);
-			// 	MouseManager::addButtonChangedEventHandler(1, camCtl->rightMouseAction);
-			// 	MouseManager::setMouseMoveEventHandler(camCtl->aimAction);
-			// 	scene->loadAssets();
-			// 	break;
+			case BUILDER:
+{				scene = new SceneBuilder(this);
+				BaseCamera *camera = Audace::ForwardCamera::standard3d(glm::vec3(0, -10, 2), getWidth(), getHeight());
+				scene->setCamera(camera);
+				BasicCameraController *camCtl = new BasicCameraController((ForwardCamera *)camera);
+				KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_W, camCtl->forwardAction);
+				KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_S, camCtl->backwardAction);
+				KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_A, camCtl->leftAction);
+				KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_D, camCtl->rightAction);
+				KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Q, camCtl->upAction);
+				KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Z, camCtl->downAction);
+				MouseManager::addButtonChangedEventHandler(1, camCtl->rightMouseAction);
+				MouseManager::setMouseMoveEventHandler(camCtl->aimAction);
+				scene->loadAssets(fileLoader);
+}				break;
 		}
 		nextScene = CURRENT;
 	}

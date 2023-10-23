@@ -68,7 +68,7 @@ public:
 
 	 void setLightPos(int index, glm::vec3 position)
 	 {
-	 	pointLights[index].setPosition(position - glm::vec3(3, 1, 0));
+	 	pointLights[index].setPosition(position - glm::vec3(0, 1, 0));
 	 }
 
 	// void rotateCamera(float x, float y, float z)

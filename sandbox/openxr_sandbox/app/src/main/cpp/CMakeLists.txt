@@ -129,6 +129,10 @@ set_target_properties(
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
+include (FetchContent)
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
 target_link_libraries( # Specifies the target library.
 		openxr_sandbox
 		android
@@ -137,6 +141,7 @@ target_link_libraries( # Specifies the target library.
 		GLESv3
 		openxr_loader
 		freetype
+		nlohmann_json::nlohmann_json
 
 		# Links the target library to the log library
 		# included in the NDK.

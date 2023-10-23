@@ -6,6 +6,8 @@
 #define AU_SPRITE_H
 
 #include <vector>
+#include <algorithm>
+#include <functional>
 #include "au_renderer.h"
 #include "glm/glm.hpp"
 #include "math/Pose.h"
@@ -79,6 +81,11 @@ namespace Audace
 
 		Mesh *getMesh(int i = 0) { return meshes[i]; }
 		BaseMaterial *getMaterial(int i = 0) { return getMesh(i)->getMaterial(); }
+
+		void forEachMesh(std::function<void(Mesh *)> fn)
+		{
+			std::for_each(meshes.begin(), meshes.end(), fn);
+		}
 	};
 
 } // Audace

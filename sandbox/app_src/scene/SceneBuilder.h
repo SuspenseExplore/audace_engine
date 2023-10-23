@@ -2,6 +2,7 @@
 #define AI_SCENEBUILDER_H
 
 #include <vector>
+#include <map>
 #include "application/BaseAppController.h"
 #include "FileLoader.h"
 #include "scene/Scene.h"
@@ -13,14 +14,17 @@
 #include "scene/BasicCameraController.h"
 #include "content/Model.h"
 
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 class SceneBuilder : public Audace::Scene
 {
-	Audace::FileLoader *fileLoader;
 	glm::vec4 clearColor = glm::vec4(0, 0, 1, 0);
 	Audace::Mesh *quadMesh;
+	Audace::FileLoader *fileLoader;
 
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
-	Audace::ForwardCamera camera;
+	Audace::BaseCamera *camera;
 	float cameraYaw = 0;
 	float cameraPitch = 0;
 
@@ -28,7 +32,7 @@ class SceneBuilder : public Audace::Scene
 	Audace::PointLight pointLights[4];
 
 	int selectedModelIndex = 0;
-	int modelCount = 6;
+	int modelCount;
 	std::string modelBasePath;
 	std::vector<std::string> modelFiles;
 
@@ -41,16 +45,21 @@ class SceneBuilder : public Audace::Scene
 
 	std::vector<Audace::Sprite *> sprites;
 
+	static const int scenePathLength = 64;
+	char sceneWritePath[scenePathLength];
+	json jsonContent = {};
+
 	Audace::Model *loadModel(std::string filename);
+	void save(std::string filename);
 
 public:
-	SceneBuilder(Audace::BaseAppController *controller, Audace::FileLoader *fileLoader)
-		: Scene(controller), fileLoader(fileLoader), 
-		camera(Audace::ForwardCamera::standard3d(glm::vec3(0, -10, 2), appController->getWidth(), appController->getHeight()))
+	SceneBuilder(Audace::BaseAppController *controller)
+		: Scene(controller)
 	{
+		strcpy(sceneWritePath, "D:/audace_engine/sandbox/assets/scenes/MainScene.json");
 	}
 
-	void loadAssets() override;
+	void loadAssets(Audace::FileLoader *fileLoader) override;
 	void render() override;
 	void disposeAssets() override;
 
@@ -75,7 +84,8 @@ public:
 		cameraPitch += x;
 	}
 
-	Audace::BaseCamera *getCamera() override { return &camera; }
+	void setCamera(Audace::BaseCamera *camera) override {this->camera = camera; }
+	Audace::BaseCamera *getCamera() override { return camera; }
 };
 
 #endif
