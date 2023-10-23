@@ -10,6 +10,8 @@ namespace Audace
 	std::map<std::string, ShaderProgram *> AssetStore::shaders;
 	SimpleBillboardMaterial *AssetStore::billboardMat;
 	std::map<std::string, Texture2d *> AssetStore::textures;
+	std::map<std::string, Model *> AssetStore::models;
+	std::map<std::string, Sprite *> AssetStore::sprites;
 
 	void AssetStore::init(FileLoader *loader)
 	{
@@ -62,5 +64,29 @@ namespace Audace
 		{
 			return textures[name];
 		}
+	}
+
+	Model *AssetStore::getModel(const std::string &name)
+	{
+		if (models.find(name) == models.end())
+		{
+			Model *model = fileLoader->readModelFile("models/", name);
+			models[name] = model;
+			return model;
+		}
+		else
+		{
+			return models[name];
+		}
+	}
+
+	Sprite *AssetStore::cloneSprite(const std::string &name)
+	{
+		if (sprites.find(name) == sprites.end())
+		{
+			Sprite *sprite = new Sprite(getModel(name));
+			sprites[name] = sprite;
+		}
+		return sprites[name]->clone();
 	}
 }
