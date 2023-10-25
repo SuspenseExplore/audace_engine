@@ -1,4 +1,5 @@
 #include <fstream>
+#include <sstream>
 #include "au_renderer.h"
 #include "SceneBuilder.h"
 #include "imgui.h"
@@ -50,12 +51,48 @@ Audace::Model *SceneBuilder::loadModel(std::string modelName)
 	return model;
 }
 
-void SceneBuilder::save(std::string filename)
+void SceneBuilder::saveScene(std::string filename)
 {
 	std::ofstream fout(filename, std::ios::out);
 	std::string s = jsonContent.dump(4);
 	fout.write(s.c_str(), s.length());
 	fout.close();
+}
+
+void SceneBuilder::loadScene(std::string filename)
+{
+	while (!sprites.empty())
+	{
+		Audace::Sprite *s = sprites.back();
+		delete s;
+		sprites.pop_back();
+	}
+
+	std::ifstream fin(filename, std::ios::in);
+	std::stringstream ss;
+	ss << fin.rdbuf();
+	jsonContent = json::parse(ss.str());
+
+	glm::mat4 IDENTITY_MAT = glm::mat4(1.0f);
+	glm::mat4 modelMat = glm::rotate(glm::scale(IDENTITY_MAT, {1, 1, 1}), glm::radians(90.0f), glm::vec3(1, 0, 0));
+
+	for (auto &item : jsonContent.items())
+	{
+		std::string filename = item.key();
+		json list = item.value();
+		for (auto &it : list.items())
+		{
+			json obj = it.value();
+			json pos = obj["position"];
+			json angles = obj["orientation"];
+			Audace::Model *m = loadModel(filename);
+			Audace::Sprite *sprite = new Audace::Sprite(m);
+			sprite->setModelMatrix(modelMat);
+			sprite->setPosition({pos[0], pos[1], pos[2]});
+			sprite->setOrientation(glm::quat(glm::radians(glm::vec3(angles[0], angles[1], angles[2]))));
+			sprites.push_back(sprite);
+		}
+	}
 }
 
 void SceneBuilder::render()
@@ -153,7 +190,6 @@ void SceneBuilder::render()
 		if (ImGui::BeginTabItem("Sprite Properties"))
 		{
 			if (ImGui::BeginTable("World Tx", 4, 0))
-				;
 			{
 				ImGui::TableSetupColumn("Tx", ImGuiTableColumnFlags_WidthFixed);
 				ImGui::TableSetupColumn("x", ImGuiTableColumnFlags_WidthStretch, 150);
@@ -162,29 +198,110 @@ void SceneBuilder::render()
 				ImGui::TableNextColumn();
 				ImGui::Text("Position");
 				ImGui::TableNextColumn();
-				ImGui::InputFloat("posx", &spritePos.x, 1.0f);
+				ImGui::DragFloat("posx", &spritePos.x, 0.05f);
+				if (ImGui::Button("-##posx"))
+				{
+					spritePos.x--;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("+##posx"))
+				{
+					spritePos.x++;
+				}
 				ImGui::TableNextColumn();
-				ImGui::InputFloat("posy", &spritePos.y, 1.0f);
+				ImGui::DragFloat("posy", &spritePos.y, 0.05f);
+				if (ImGui::Button("-##posy"))
+				{
+					spritePos.y--;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("+##posy"))
+				{
+					spritePos.y++;
+				}
 				ImGui::TableNextColumn();
-				ImGui::InputFloat("posz", &spritePos.z, 1.0f);
+				ImGui::DragFloat("posz", &spritePos.z, 0.05f);
+				if (ImGui::Button("-##posz"))
+				{
+					spritePos.z--;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("+##posz"))
+				{
+					spritePos.z ++;
+				}
 
 				ImGui::TableNextColumn();
 				ImGui::Text("Angles");
 				ImGui::TableNextColumn();
-				ImGui::InputFloat("th-x", &spriteAngles.x, 1.0f);
+				ImGui::DragFloat("th-x", &spriteAngles.x, 0.05f);
+				if (ImGui::Button("-##th-x"))
+				{
+					spriteAngles.x--;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("+##th-x"))
+				{
+					spriteAngles.x++;
+				}
 				ImGui::TableNextColumn();
-				ImGui::InputFloat("th-y", &spriteAngles.y, 1.0f);
+				ImGui::DragFloat("th-y", &spriteAngles.y, 0.05f);
+				if (ImGui::Button("-##th-y"))
+				{
+					spriteAngles.y--;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("+##th-y"))
+				{
+					spriteAngles.y++;
+				}
 				ImGui::TableNextColumn();
-				ImGui::InputFloat("th-z", &spriteAngles.z, 1.0f);
+				ImGui::DragFloat("th-z", &spriteAngles.z, 0.05f);
+				if (ImGui::Button("-##th-z"))
+				{
+					spriteAngles.z--;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("+##th-z"))
+				{
+					spriteAngles.z++;
+				}
 
 				ImGui::TableNextColumn();
 				ImGui::Text("Scale");
 				ImGui::TableNextColumn();
-				ImGui::InputFloat("scale x", &spriteScale.x, 1.0f);
+				ImGui::DragFloat("scale x", &spriteScale.x, 0.05f);
+				if (ImGui::Button("-##scalex"))
+				{
+					spriteScale.x--;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("+##scalex"))
+				{
+					spriteScale.x++;
+				}
 				ImGui::TableNextColumn();
-				ImGui::InputFloat("scale y", &spriteScale.y, 1.0f);
+				ImGui::DragFloat("scale y", &spriteScale.y, 0.05f);
+				if (ImGui::Button("-##scaley"))
+				{
+					spriteScale.y--;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("+##scaley"))
+				{
+					spriteScale.y++;
+				}
 				ImGui::TableNextColumn();
-				ImGui::InputFloat("scale z", &spriteScale.z, 1.0f);
+				ImGui::DragFloat("scale z", &spriteScale.z, 0.05f);
+				if (ImGui::Button("-##scalez"))
+				{
+					spriteScale.z--;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("+##scalez"))
+				{
+					spriteScale.z++;
+				}
 
 				ImGui::EndTable();
 			}
@@ -220,13 +337,18 @@ void SceneBuilder::render()
 			ImGui::EndTabItem();
 		}
 
-		if (ImGui::BeginTabItem("Output"))
+		if (ImGui::BeginTabItem("File"))
 		{
 			ImGui::InputText("File path", sceneWritePath, scenePathLength);
 
 			if (ImGui::Button("Save"))
 			{
-				save(std::string(sceneWritePath));
+				saveScene(std::string(sceneWritePath));
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Load"))
+			{
+				loadScene(std::string(sceneWritePath));
 			}
 			ImGui::EndTabItem();
 		}

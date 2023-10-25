@@ -50,7 +50,8 @@ class SceneBuilder : public Audace::Scene
 	json jsonContent = {};
 
 	Audace::Model *loadModel(std::string filename);
-	void save(std::string filename);
+	void saveScene(std::string filename);
+	void loadScene(std::string filename);
 
 public:
 	SceneBuilder(Audace::BaseAppController *controller)

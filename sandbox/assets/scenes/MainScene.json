@@ -1,4 +1,60 @@
 {
+    "bed.obj": [
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                -22.799999237060547
+            ],
+            "position": [
+                -1.0,
+                -0.8999999761581421,
+                0.0
+            ]
+        }
+    ],
+    "cliff_blockSlope_rock.obj": [
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -4.0,
+                1.0,
+                0.0
+            ]
+        }
+    ],
+    "cliff_halfCorner_rock.obj": [
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                90.0
+            ],
+            "position": [
+                -2.0,
+                1.0,
+                0.0
+            ]
+        }
+    ],
+    "cliff_half_rock.obj": [
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -3.0,
+                1.0,
+                0.0
+            ]
+        }
+    ],
     "ground_grass.obj": [
         {
             "orientation": [
@@ -141,6 +197,150 @@
             "position": [
                 0.0,
                 -1.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                0.0,
+                -2.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -1.0,
+                -2.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -2.0,
+                -2.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -3.0,
+                -2.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -4.0,
+                -2.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -5.0,
+                -2.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -5.0,
+                1.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -4.0,
+                1.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "position": [
+                -3.0,
+                1.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                90.0
+            ],
+            "position": [
+                -2.0,
+                1.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                90.0
+            ],
+            "position": [
+                -1.0,
+                1.0,
+                0.0
+            ]
+        },
+        {
+            "orientation": [
+                0.0,
+                0.0,
+                90.0
+            ],
+            "position": [
+                0.0,
+                1.0,
                 0.0
             ]
         }

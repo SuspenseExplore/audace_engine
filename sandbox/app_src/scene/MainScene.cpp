@@ -143,7 +143,6 @@ Audace::Sprite *MainScene::loadSprite(Audace::FileLoader *fileLoader, std::strin
 		else
 		{
 			mat->setDiffuseMap(1);
-			AU_ENGINE_LOG_DEBUG(mat->getName());
 		}
 	});
 	return sprite;
