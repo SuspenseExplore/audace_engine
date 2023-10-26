@@ -32,12 +32,15 @@ void MainScene::loadAssets(Audace::FileLoader *fileLoader)
 	Audace::AssetStore::getTexture("images/grass_004/Grass004_1K-JPG_Color.jpg")->bind(20);
 	Audace::AssetStore::getTexture("images/grass_004/Grass004_1K-JPG_AmbientOcclusion.jpg")->bind(21);
 	Audace::AssetStore::getTexture("images/grass_004/Grass004_1K-JPG_NormalDX.jpg")->bind(22);
+	Audace::AssetStore::getTexture("images/grass_004/Grass004_1K-JPG_Roughness.jpg")->bind(23);
 	Audace::AssetStore::getTexture("images/ground_067/Ground067_1K-JPG_Color.jpg")->bind(30);
 	Audace::AssetStore::getTexture("images/ground_067/Ground067_1K-JPG_AmbientOcclusion.jpg")->bind(31);
 	Audace::AssetStore::getTexture("images/ground_067/Ground067_1K-JPG_NormalDX.jpg")->bind(32);
+	Audace::AssetStore::getTexture("images/ground_067/Ground067_1K-JPG_Roughness.jpg")->bind(33);
 	Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_Color.jpg")->bind(40);
 	Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_AmbientOcclusion.jpg")->bind(41);
 	Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_NormalDX.jpg")->bind(42);
+	Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_Roughness.jpg")->bind(43);
 	Audace::AssetStore::getTexture("images/ground_051/Ground051_1K-JPG_Color.jpg")->bind(5);
 
 	{
@@ -49,6 +52,9 @@ void MainScene::loadAssets(Audace::FileLoader *fileLoader)
 		mat->setDiffuseColor({1, 1, 1});
 		mat->setDiffuseMap(20);
 		mat->setNormalMap(22);
+		mat->setSpecularColor({0.1f, 0.1f, 0.1f});
+		mat->setSpecularMap(23);
+		mat->setShininess(0.15f);
 		grassMaterial = mat;
 	}
 	{
@@ -60,6 +66,9 @@ void MainScene::loadAssets(Audace::FileLoader *fileLoader)
 		mat->setDiffuseColor({1, 1, 1});
 		mat->setDiffuseMap(30);
 		mat->setNormalMap(32);
+		mat->setSpecularColor({0.2f, 0.2f, 0.2f});
+		mat->setSpecularMap(33);
+		mat->setShininess(0.15f);
 		dirtMaterial = mat;
 	}
 	{
@@ -71,6 +80,9 @@ void MainScene::loadAssets(Audace::FileLoader *fileLoader)
 		mat->setDiffuseColor({1, 1, 1});
 		mat->setDiffuseMap(40);
 		mat->setNormalMap(42);
+		mat->setSpecularColor({0.5f, 0.5f, 0.5f});
+		mat->setSpecularMap(43);
+		mat->setShininess(0.1f);
 		rockMaterial = mat;
 	}
 	{
@@ -113,7 +125,7 @@ void MainScene::loadAssets(Audace::FileLoader *fileLoader)
 	pointLights[1].setPosition({-2, -2, 0.3f});
 	pointLights[1].setColor({1, 0.2f, 0.1f});
 	pointLights[1].setIntensity(0.6f);
-	//	sprites.push_back(&pointLights[1]);
+	sprites.push_back(&pointLights[1]);
 }
 
 Audace::Sprite *MainScene::loadSprite(Audace::FileLoader *fileLoader, std::string filename)
@@ -121,7 +133,7 @@ Audace::Sprite *MainScene::loadSprite(Audace::FileLoader *fileLoader, std::strin
 	glm::mat4 IDENTITY_MAT = glm::mat4(1.0f);
 	Audace::Sprite *sprite = Audace::AssetStore::cloneSprite(filename);
 	sprite->forEachMesh([this](Audace::Mesh *mesh)
-	{
+						{
 		Audace::Material *mat = reinterpret_cast<Audace::Material *>(mesh->getMaterial());
 		mat->setShader(shaderProgram);
 		if (Audace::StringUtil::startsWith(mat->getName(), "grass"))
@@ -143,8 +155,7 @@ Audace::Sprite *MainScene::loadSprite(Audace::FileLoader *fileLoader, std::strin
 		else
 		{
 			mat->setDiffuseMap(1);
-		}
-	});
+		} });
 	return sprite;
 }
 
@@ -170,9 +181,9 @@ void MainScene::render()
 	shaderProgram->setUniformVec3("light[0].position", pointLights[0].getPosition());
 	shaderProgram->setUniformFloat("light[0].intensity", pointLights[0].getIntensity());
 	shaderProgram->setUniformVec3("light[0].color", pointLights[0].getColor());
-	//	shaderProgram->setUniformVec3("light[1].position", pointLights[1].getPosition());
-	//	shaderProgram->setUniformFloat("light[1].intensity", pointLights[1].getIntensity());
-	//	shaderProgram->setUniformVec3("light[1].color", pointLights[1].getColor());
+	shaderProgram->setUniformVec3("light[1].position", pointLights[1].getPosition());
+	shaderProgram->setUniformFloat("light[1].intensity", pointLights[1].getIntensity());
+	shaderProgram->setUniformVec3("light[1].color", pointLights[1].getColor());
 	shaderProgram->setUniformVec3("viewPos", camera->getPosition());
 
 	shaderProgram->setUniformMat4("vpMat", camera->getViewProjMatrix());

@@ -8,6 +8,7 @@ struct Material {
 	sampler2D diffuseMap;
 	sampler2D normalMap;
 	vec3 specular;
+	sampler2D specularMap;
 	vec3 emission;
 	float shininess;
 };
@@ -42,10 +43,11 @@ vec3 calcDiffuse(int lightIndex, vec3 surfaceNormal) {
 }
 
 vec3 calcSpecular(int lightIndex, vec3 surfaceNormal) {
-	vec3 lightDir = normalize(tangentLightPos[lightIndex] - fragPos);
-	vec3 viewDir = normalize(tangentViewPos - fragPos);
+	vec3 lightDir = normalize(tangentLightPos[lightIndex] - tangentFragPos);
+	vec3 viewDir = normalize(tangentViewPos - tangentFragPos);
 	vec3 reflectDir = reflect(-lightDir, surfaceNormal);
-	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+
+	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess) * texture(material.specularMap, texCoord.xy).r;
 	vec3 specular = light[lightIndex].color * spec * material.specular;
 	return specular;
 }
