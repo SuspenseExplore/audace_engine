@@ -19,9 +19,6 @@ using json = nlohmann::json;
 
 void MainScene::loadAssets(Audace::FileLoader *fileLoader)
 {
-	std::string s = fileLoader->textFileToString("scenes/MainScene.json");
-	json jScene = json::parse(s);
-
 	glClearColor(0, 0, 1, 0);
 
 	shaderProgram = Audace::AssetStore::getShader("standard");
@@ -41,7 +38,10 @@ void MainScene::loadAssets(Audace::FileLoader *fileLoader)
 	Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_AmbientOcclusion.jpg")->bind(41);
 	Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_NormalDX.jpg")->bind(42);
 	Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_Roughness.jpg")->bind(43);
-	Audace::AssetStore::getTexture("images/ground_051/Ground051_1K-JPG_Color.jpg")->bind(5);
+	Audace::AssetStore::getTexture("images/ground_051/Ground051_1K-JPG_Color.jpg")->bind(50);
+	Audace::AssetStore::getTexture("images/ground_051/Ground051_1K-JPG_AmbientOcclusion.jpg")->bind(51);
+	Audace::AssetStore::getTexture("images/ground_051/Ground051_1K-JPG_NormalDX.jpg")->bind(52);
+	Audace::AssetStore::getTexture("images/ground_051/Ground051_1K-JPG_Roughness.jpg")->bind(53);
 
 	{
 		Audace::Material *mat = new Audace::Material();
@@ -62,12 +62,12 @@ void MainScene::loadAssets(Audace::FileLoader *fileLoader)
 		mat->setName("dirt");
 		mat->setShader(shaderProgram);
 		mat->setAmbientColor({1, 1, 1});
-		mat->setAmbientOcclusionMap(31);
+		mat->setAmbientOcclusionMap(51);
 		mat->setDiffuseColor({1, 1, 1});
-		mat->setDiffuseMap(30);
-		mat->setNormalMap(32);
+		mat->setDiffuseMap(50);
+		mat->setNormalMap(52);
 		mat->setSpecularColor({0.2f, 0.2f, 0.2f});
-		mat->setSpecularMap(33);
+		mat->setSpecularMap(53);
 		mat->setShininess(0.15f);
 		dirtMaterial = mat;
 	}
@@ -99,7 +99,10 @@ void MainScene::loadAssets(Audace::FileLoader *fileLoader)
 	glm::mat4 IDENTITY_MAT = glm::mat4(1.0f);
 	glm::mat4 modelMat = glm::rotate(glm::scale(IDENTITY_MAT, {1, 1, 1}), glm::radians(90.0f), glm::vec3(1, 0, 0));
 
-	for (auto &item : jScene.items())
+	std::string s = fileLoader->textFileToString("scenes/MainScene.json");
+	json jScene = json::parse(s);
+	camera->setOriginPos({jScene["startPos"][0], jScene["startPos"][1], jScene["startPos"][2]});
+	for (auto &item : jScene["sprites"].items())
 	{
 		std::string filename = item.key();
 		json list = item.value();

@@ -22,11 +22,12 @@ namespace Audace
 		float yaw = 0.0f;
 		float pitch = 0.0f;
 
-		float velFactor = 0.005f;
+		float velFactor = 0.01f;
 		glm::vec3 velocity = glm::vec3(0);
 
 	public:
 		BasicCameraController(ForwardCamera *camera);
+		void setVelocityFactor(float v) { velFactor = v; }
 		void update() override;
 
 		std::function<void(BooleanInputEvent)> forwardAction;

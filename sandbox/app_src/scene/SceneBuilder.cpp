@@ -35,6 +35,14 @@ void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 	currModel = loadModel(modelFiles[selectedModelIndex]);
 	currSprite = new Audace::Sprite(currModel);
 	currSprite->setModelMatrix(modelMat);
+
+	{
+		startPosMarker = new Audace::Sprite({Audace::Shapes::spherePositions(8, 8)});
+		Audace::SimpleBillboardMaterial *mat = Audace::AssetStore::simpleBillboardMaterial();
+		mat->setTexture(Audace::AssetStore::getWhiteTexture());
+		startPosMarker->getMesh()->setMaterial(mat);
+		startPosMarker->setScale({0.1f, 0.1f, 0.1f});
+	}
 }
 
 Audace::Model *SceneBuilder::loadModel(std::string modelName)
@@ -51,15 +59,7 @@ Audace::Model *SceneBuilder::loadModel(std::string modelName)
 	return model;
 }
 
-void SceneBuilder::saveScene(std::string filename)
-{
-	std::ofstream fout(filename, std::ios::out);
-	std::string s = jsonContent.dump(4);
-	fout.write(s.c_str(), s.length());
-	fout.close();
-}
-
-void SceneBuilder::loadScene(std::string filename)
+void SceneBuilder::newScene()
 {
 	while (!sprites.empty())
 	{
@@ -68,15 +68,32 @@ void SceneBuilder::loadScene(std::string filename)
 		sprites.pop_back();
 	}
 
+	jsonContent = {};
+}
+
+void SceneBuilder::saveScene(std::string filename)
+{
+	jsonContent["startPos"] = {startPos.x, startPos.y, startPos.z};
+	std::ofstream fout(filename, std::ios::out);
+	std::string s = jsonContent.dump(4);
+	fout.write(s.c_str(), s.length());
+	fout.close();
+}
+
+void SceneBuilder::loadScene(std::string filename)
+{
+	newScene();
+
 	std::ifstream fin(filename, std::ios::in);
 	std::stringstream ss;
 	ss << fin.rdbuf();
 	jsonContent = json::parse(ss.str());
+	startPos = {jsonContent["startPos"][0], jsonContent["startPos"][1], jsonContent["startPos"][2]};
 
 	glm::mat4 IDENTITY_MAT = glm::mat4(1.0f);
 	glm::mat4 modelMat = glm::rotate(glm::scale(IDENTITY_MAT, {1, 1, 1}), glm::radians(90.0f), glm::vec3(1, 0, 0));
 
-	for (auto &item : jsonContent.items())
+	for (auto &item : jsonContent["sprites"].items())
 	{
 		std::string filename = item.key();
 		json list = item.value();
@@ -128,6 +145,9 @@ void SceneBuilder::render()
 	currSprite->setScale(spriteScale);
 	currSprite->render(this);
 
+	startPosMarker->setPosition(startPos);
+	startPosMarker->render(this);
+
 	// ImGui::ShowDemoWindow();
 	ImGui::Begin("Scenes");
 	if (ImGui::Button("Navigation"))
@@ -143,9 +163,10 @@ void SceneBuilder::render()
 	ImGui::Begin("Scene Editor");
 	if (ImGui::BeginTabBar("Tools"))
 	{
-		if (ImGui::BeginTabItem("Clear State"))
+		if (ImGui::BeginTabItem("Scene"))
 		{
 			ImGui::ColorEdit3("Clear Color", glm::value_ptr(clearColor));
+			ImGui::DragFloat3("Start position", glm::value_ptr(startPos), 0.1f);
 			ImGui::EndTabItem();
 		}
 
@@ -175,7 +196,7 @@ void SceneBuilder::render()
 				json obj = {
 					{"position", {spritePos.x, spritePos.y, spritePos.z}},
 					{"orientation", {spriteAngles.x, spriteAngles.y, spriteAngles.z}}};
-				jsonContent[modelFiles[selectedModelIndex]].push_back(obj);
+				jsonContent["sprites"][modelFiles[selectedModelIndex]].push_back(obj);
 
 				currSprite->setPosition(spritePos);
 				currSprite->setOrientation(glm::quat(glm::radians(spriteAngles)));
@@ -228,7 +249,7 @@ void SceneBuilder::render()
 				ImGui::SameLine();
 				if (ImGui::Button("+##posz"))
 				{
-					spritePos.z ++;
+					spritePos.z++;
 				}
 
 				ImGui::TableNextColumn();
@@ -341,6 +362,11 @@ void SceneBuilder::render()
 		{
 			ImGui::InputText("File path", sceneWritePath, scenePathLength);
 
+			if (ImGui::Button("New"))
+			{
+				newScene();
+			}
+			ImGui::SameLine();
 			if (ImGui::Button("Save"))
 			{
 				saveScene(std::string(sceneWritePath));

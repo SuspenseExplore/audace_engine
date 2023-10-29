@@ -16,8 +16,7 @@
 #include "scene/BaseCamera.h"
 #include "application/BaseAppController.h"
 
-class MainScene : public Audace::Scene
-{
+class MainScene : public Audace::Scene {
 	std::vector<Audace::Sprite *> sprites;
 	Audace::ShaderProgram *shaderProgram;
 
@@ -33,23 +32,24 @@ class MainScene : public Audace::Scene
 
 public:
 	MainScene(Audace::BaseAppController *controller) : Scene(controller) {}
+
 	Audace::Sprite *loadSprite(Audace::FileLoader *fileLoader, std::string filename);
+
 	void loadAssets(Audace::FileLoader *fileLoader) override;
+
 	void render() override;
+
 	void disposeAssets() override;
 
-	void setVelX(float v)
-	{
+	void setVelX(float v) {
 		cameraVel.x = v;
 	}
 
-	void setVelY(float v)
-	{
+	void setVelY(float v) {
 		cameraVel.y = v;
 	}
 
-	void setVelZ(float v)
-	{
+	void setVelZ(float v) {
 		cameraVel.z = v;
 	}
 
@@ -66,10 +66,19 @@ public:
 	// 	diffuseLight = glm::vec4(v, diffuseLight.w);
 	// }
 
-	 void setLightPos(int index, glm::vec3 position)
-	 {
-	 	pointLights[index].setPosition(position - glm::vec3(0, 1, 0));
-	 }
+	void setLightPos(int index, glm::vec3 position) {
+		pointLights[index].setPosition(camera->getOriginPos() + position);
+	}
+
+	void teleport() {
+		// light pos includes origin already
+		// offset = light - camera - origin
+		// new origin = origin + offset
+		// new origin = origin + (light - camera - origin)
+]\
+'['		// new origin = light - camera
+		camera->setOriginPos(pointLights[0].getPosition() - camera->getPosition());
+	}
 
 	// void rotateCamera(float x, float y, float z)
 	// {
@@ -77,8 +86,9 @@ public:
 	// 	cameraPitch += x;
 	// }
 
-	Audace::BaseCamera* getCamera() override {return camera;}
-	void setCamera(Audace::BaseCamera *camera) override {this->camera = camera;}
+	Audace::BaseCamera *getCamera() override { return camera; }
+
+	void setCamera(Audace::BaseCamera *camera) override { this->camera = camera; }
 };
 
 #endif

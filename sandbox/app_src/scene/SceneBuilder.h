@@ -45,11 +45,15 @@ class SceneBuilder : public Audace::Scene
 
 	std::vector<Audace::Sprite *> sprites;
 
+	glm::vec3 startPos = {0, 0, 0};
+	Audace::Sprite *startPosMarker;
+
 	static const int scenePathLength = 64;
 	char sceneWritePath[scenePathLength];
 	json jsonContent = {};
 
 	Audace::Model *loadModel(std::string filename);
+	void newScene();
 	void saveScene(std::string filename);
 	void loadScene(std::string filename);
 

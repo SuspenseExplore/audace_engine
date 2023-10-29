@@ -23,7 +23,7 @@ public:
 
 	void setActiveView(int i) { activeView = i; }
 
-	const glm::vec3 &getPosition() override;
+	const glm::vec3 getPosition() override;
 
 	const glm::mat4 getViewProjMatrix() override;
 };

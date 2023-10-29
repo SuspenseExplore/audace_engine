@@ -10,5 +10,9 @@
 			"path": "../assets"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"vector": "cpp"
+		}
+	}
 }

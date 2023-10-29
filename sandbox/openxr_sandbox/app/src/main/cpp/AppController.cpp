@@ -23,10 +23,10 @@ bool AppController::init(android_app *app) {
 bool AppController::createXrSession() {
 	Audace::AssetStore::init(fileLoader);
 	glGenFramebuffers(1, &framebuffer);
-	scene->loadAssets(fileLoader);
 	xrContext.createSession(window.getDisplay(), window.getContext());
 	camera = new HmdCamera(xrContext.views);
 	scene->setCamera(camera);
+	scene->loadAssets(fileLoader);
 
 	using namespace Audace;
 //	{
@@ -48,14 +48,16 @@ bool AppController::createXrSession() {
 	{
 		OculusTouchController::InputName name = OculusTouchController::InputName::RIGHT_A_CLICK;
 		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {
-			reinterpret_cast<MainScene *>(scene)->enableAmbientOcclusion(!event.state);
+			if (event.changed && event.state) {
+				reinterpret_cast<MainScene *>(scene)->teleport();
+			}
 		});
 	}
 	{
 		OculusTouchController::InputName name = OculusTouchController::InputName::RIGHT_GRIP_POSE;
 		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
 			if (event.changed) {
-				reinterpret_cast<MainScene*>(scene)->setLightPos(0, event.state.position);
+				reinterpret_cast<MainScene *>(scene)->setLightPos(0, event.state.position);
 			}
 		});
 	}
