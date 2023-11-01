@@ -47,7 +47,7 @@ vec3 calcSpecular(int lightIndex, vec3 surfaceNormal) {
 	vec3 viewDir = normalize(tangentViewPos - tangentFragPos);
 	vec3 reflectDir = reflect(-lightDir, surfaceNormal);
 
-	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess) * texture(material.specularMap, texCoord.xy).r;
+	float spec = pow(max(dot(viewDir, reflectDir), 0.0), (1.0 - texture(material.specularMap, texCoord.xy).r) * 128.0);
 	vec3 specular = light[lightIndex].color * spec * material.specular;
 	return specular;
 }

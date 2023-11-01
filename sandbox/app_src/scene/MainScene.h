@@ -22,6 +22,7 @@ class MainScene : public Audace::Scene {
 
 	Audace::Material *grassMaterial;
 	Audace::Material *dirtMaterial;
+	Audace::Material *dirtDarkMaterial;
 	Audace::Material *rockMaterial;
 	Audace::Material *waterMaterial;
 

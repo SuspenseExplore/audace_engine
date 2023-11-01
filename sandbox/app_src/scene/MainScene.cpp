@@ -52,9 +52,8 @@ void MainScene::loadAssets(Audace::FileLoader *fileLoader)
 		mat->setDiffuseColor({1, 1, 1});
 		mat->setDiffuseMap(20);
 		mat->setNormalMap(22);
-		mat->setSpecularColor({0.1f, 0.1f, 0.1f});
+		mat->setSpecularColor({1, 1, 1});
 		mat->setSpecularMap(23);
-		mat->setShininess(0.15f);
 		grassMaterial = mat;
 	}
 	{
@@ -62,14 +61,26 @@ void MainScene::loadAssets(Audace::FileLoader *fileLoader)
 		mat->setName("dirt");
 		mat->setShader(shaderProgram);
 		mat->setAmbientColor({1, 1, 1});
+		mat->setAmbientOcclusionMap(31);
+		mat->setDiffuseColor({1, 1, 1});
+		mat->setDiffuseMap(30);
+		mat->setNormalMap(32);
+		mat->setSpecularColor({1, 1, 1});
+		mat->setSpecularMap(33);
+		dirtMaterial = mat;
+	}
+	{
+		Audace::Material *mat = new Audace::Material();
+		mat->setName("dirtDark");
+		mat->setShader(shaderProgram);
+		mat->setAmbientColor({1, 1, 1});
 		mat->setAmbientOcclusionMap(51);
 		mat->setDiffuseColor({1, 1, 1});
 		mat->setDiffuseMap(50);
 		mat->setNormalMap(52);
-		mat->setSpecularColor({0.2f, 0.2f, 0.2f});
+		mat->setSpecularColor({1, 1, 1});
 		mat->setSpecularMap(53);
-		mat->setShininess(0.15f);
-		dirtMaterial = mat;
+		dirtDarkMaterial = mat;
 	}
 	{
 		Audace::Material *mat = new Audace::Material();
@@ -80,9 +91,8 @@ void MainScene::loadAssets(Audace::FileLoader *fileLoader)
 		mat->setDiffuseColor({1, 1, 1});
 		mat->setDiffuseMap(40);
 		mat->setNormalMap(42);
-		mat->setSpecularColor({0.5f, 0.5f, 0.5f});
+		mat->setSpecularColor({1, 1, 1});
 		mat->setSpecularMap(43);
-		mat->setShininess(0.1f);
 		rockMaterial = mat;
 	}
 	{
@@ -143,6 +153,10 @@ Audace::Sprite *MainScene::loadSprite(Audace::FileLoader *fileLoader, std::strin
 		{
 			mesh->setMaterial(grassMaterial);
 		}
+		else if (Audace::StringUtil::startsWith(mat->getName(), "dirtDark"))
+		{
+			mesh->setMaterial(dirtDarkMaterial);
+		}
 		else if (Audace::StringUtil::startsWith(mat->getName(), "dirt"))
 		{
 			mesh->setMaterial(dirtMaterial);
@@ -187,7 +201,7 @@ void MainScene::render()
 	shaderProgram->setUniformVec3("light[1].position", pointLights[1].getPosition());
 	shaderProgram->setUniformFloat("light[1].intensity", pointLights[1].getIntensity());
 	shaderProgram->setUniformVec3("light[1].color", pointLights[1].getColor());
-	shaderProgram->setUniformVec3("viewPos", camera->getPosition());
+	shaderProgram->setUniformVec3("viewPos", camera->getPosition() + camera->getOriginPos());
 
 	shaderProgram->setUniformMat4("vpMat", camera->getViewProjMatrix());
 
