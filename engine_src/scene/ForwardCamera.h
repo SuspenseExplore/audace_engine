@@ -42,7 +42,7 @@ namespace Audace
 			move(v.x, v.y, v.z);
 		}
 
-		const glm::vec3 &getPosition() override
+		const glm::vec3 getPosition() override
 		{
 			return pose.position;
 		}

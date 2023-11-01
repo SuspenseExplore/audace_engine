@@ -75,8 +75,7 @@ public:
 		// offset = light - camera - origin
 		// new origin = origin + offset
 		// new origin = origin + (light - camera - origin)
-]\
-'['		// new origin = light - camera
+		// new origin = light - camera
 		camera->setOriginPos(pointLights[0].getPosition() - camera->getPosition());
 	}
 
