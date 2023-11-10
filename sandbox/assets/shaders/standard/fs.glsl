@@ -10,7 +10,6 @@ struct Material {
 	vec3 specular;
 	sampler2D specularMap;
 	vec3 emission;
-	float shininess;
 };
 
 uniform Material material;
@@ -57,7 +56,7 @@ vec3 calcLightColor(int lightIndex, vec3 surfaceNormal) {
 }
 
 void main() {
-	vec3 ambient = (ambientLight.rgb * ambientLight.a) * material.ambient * texture(material.ambientMap, texCoord.xy).r;
+	vec3 ambient = (ambientLight.rgb * ambientLight.a) * material.ambient * texture(material.ambientMap, texCoord.xy).r * material.diffuse * texture(material.diffuseMap, texCoord.xy).rgb;
 
 	vec3 surfaceNormal = texture(material.normalMap, texCoord.xy).rgb;
 	surfaceNormal = normalize(surfaceNormal * 2.0 - 1.0);

@@ -5,6 +5,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include "renderer/ShaderProgram.h"
+#include "renderer/Texture2d.h"
 #include "BaseMaterial.h"
 
 namespace Audace
@@ -14,39 +15,57 @@ namespace Audace
 		ShaderProgram *shaderProgram;
 		std::string name;
 		glm::vec3 ambientColor = glm::vec3(0.0f, 0.0f, 0.0f);
-		int ambientOcclusionMap = 0;
+		Texture2d *ambientOcclusionMap = nullptr;
 		glm::vec3 diffuseColor = glm::vec3(0.0f, 0.0f, 0.0f);
-		int diffuseMap = 0;
-		int normalMap = 0;
+		Texture2d *diffuseMap = nullptr;
+		Texture2d *normalMap = nullptr;
 		glm::vec3 specularColor = glm::vec3(0.0f, 0.0f, 0.0f);
-		int specularMap = 0;
+		Texture2d *specularMap = nullptr;
 		glm::vec3 emissionColor = {0, 0, 0};
 
 	public:
-		void setName(std::string name) {this->name = name;}
-		std::string getName() override {return name;}
+		void setName(std::string name) { this->name = name; }
+		std::string getName() override { return name; }
 		void setAmbientColor(glm::vec3 color) { ambientColor = color; }
-		void setAmbientOcclusionMap(int texUnit) { ambientOcclusionMap = texUnit; }
+		void setAmbientOcclusionMap(Texture2d *texture) { ambientOcclusionMap = texture; }
 		void setDiffuseColor(glm::vec3 color) { diffuseColor = color; }
 		glm::vec3 getDiffuseColor() { return diffuseColor; }
-		void setDiffuseMap(int texUnit) { diffuseMap = texUnit; }
-		void setNormalMap(int texUnit) { normalMap = texUnit; }
+		void setDiffuseMap(Texture2d *texture) { diffuseMap = texture; }
+		void setNormalMap(Texture2d *texture) { normalMap = texture; }
 		void setSpecularColor(glm::vec3 color) { specularColor = color; }
-		void setSpecularMap(int texUnit) { specularMap = texUnit; }
+		void setSpecularMap(Texture2d *texture) { specularMap = texture; }
 		void setEmissionColor(glm::vec3 color) { emissionColor = color; }
-		ShaderProgram* getShader() override {return shaderProgram;}
-		void setShader(ShaderProgram *shaderProgram) override {this->shaderProgram = shaderProgram;}
+		ShaderProgram *getShader() override { return shaderProgram; }
+		void setShader(ShaderProgram *shaderProgram) override { this->shaderProgram = shaderProgram; }
 
-		void apply() override {
+		void apply() override
+		{
 			shaderProgram->bind();
-			shaderProgram->setUniformVec3("material.ambient", ambientColor.x, ambientColor.y, ambientColor.z);
-			shaderProgram->setUniformInt("material.ambientMap", ambientOcclusionMap);
-			shaderProgram->setUniformVec3("material.diffuse", diffuseColor.x, diffuseColor.y, diffuseColor.z);
-			shaderProgram->setUniformInt("material.diffuseMap", diffuseMap);
-			shaderProgram->setUniformInt("material.normalMap", normalMap);
-			shaderProgram->setUniformVec3("material.specular", specularColor.x, specularColor.y, specularColor.z);
-			shaderProgram->setUniformInt("material.specularMap", specularMap);
+			shaderProgram->setUniformVec3("material.ambient", ambientColor);
+			shaderProgram->setUniformVec3("material.diffuse", diffuseColor);
+			shaderProgram->setUniformVec3("material.specular", specularColor);
 			shaderProgram->setUniformVec3("material.emission", glm::value_ptr(emissionColor));
+
+			if (ambientOcclusionMap != nullptr)
+			{
+				ambientOcclusionMap->bind(0);
+				shaderProgram->setUniformInt("material.ambientMap", 0);
+			}
+			if (diffuseMap != nullptr)
+			{
+				shaderProgram->setUniformInt("material.diffuseMap", 1);
+				diffuseMap->bind(1);
+			}
+			if (normalMap != nullptr)
+			{
+				shaderProgram->setUniformInt("material.normalMap", 2);
+				normalMap->bind(2);
+			}
+			if (specularMap != nullptr)
+			{
+				shaderProgram->setUniformInt("material.specularMap", 3);
+				specularMap->bind(3);
+			}
 		}
 	};
 }

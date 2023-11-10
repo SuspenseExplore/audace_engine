@@ -1,0 +1,12 @@
+{
+	"name": "waterFlat",
+	"shaderName": "standard",
+	"ambientMap": "AU_white_texture",
+	"ambientColor": [0.3, 0.3, 0.3],
+	"diffuseMap": "AU_white_texture",
+	"normalMap": "AU_white_texture",
+	"diffuseColor": [0.7, 0.95, 1.0],
+	"roughnessMap": "AU_white_texture",
+	"specularColor": [0.0, 0.0, 0.0],
+	"emissionColor": [0.0, 0.0, 0.0]
+}

@@ -31,6 +31,7 @@ namespace Audace {
 		void setUniformVec3(std::string name, glm::vec3 value);
 		void setUniformVec3(std::string name, float *value);
 		void setUniformVec4(std::string name, float x, float y, float z, float w);
+		void setUniformVec4(std::string name, glm::vec4 value);
 		void setUniformVec4(std::string name, float *value);
 		void setUniformMat4(std::string name, glm::mat4 mat);
 		void setUniformMat4(std::string name, float* value);

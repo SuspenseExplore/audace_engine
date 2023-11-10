@@ -43,6 +43,7 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/content/AssetStore.cpp
 		${ENGINE_DIR}/content/ByteBuffer.cpp
 		${ENGINE_DIR}/content/ModelLoader.cpp
+		${ENGINE_DIR}/content/JsonSerializer.cpp
 		${ENGINE_DIR}/renderer/DataBuffer.cpp
 		${ENGINE_DIR}/renderer/ShaderProgram.cpp
 		${ENGINE_DIR}/renderer/VertexAttribute.cpp

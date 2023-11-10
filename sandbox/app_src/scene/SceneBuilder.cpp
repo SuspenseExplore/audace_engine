@@ -4,10 +4,12 @@
 #include "SceneBuilder.h"
 #include "imgui.h"
 #include "SceneEnum.h"
+#include "content/JsonSerializer.h"
 #include "content/AssetStore.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/Shapes.h"
 #include "renderer/material/Material.h"
+#include "util/StringUtil.h"
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/matrix_inverse.hpp"
@@ -23,11 +25,26 @@ void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 	this->fileLoader = fileLoader;
 	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("standard");
 	shader->create();
-	Audace::AssetStore::getWhiteTexture()->bind(1);
+	Audace::Texture2d *whiteTex = Audace::AssetStore::getWhiteTexture();
 
 	quadMesh = Audace::Shapes::squarePositions();
 
 	modelMat = glm::rotate(modelMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+	{
+		json jcontent = json::parse(fileLoader->textFileToString("materials/grassFlat.json"));
+		grassMat = Audace::JsonSerializer::loadMaterial(jcontent);
+		grassMat->setAmbientOcclusionMap(whiteTex);
+		grassMat->setDiffuseMap(whiteTex);
+		grassMat->setSpecularMap(whiteTex);
+	}
+	{
+		json jcontent = json::parse(fileLoader->textFileToString("materials/dirtFlat.json"));
+		dirtMat = Audace::JsonSerializer::loadMaterial(jcontent);
+		dirtMat->setAmbientOcclusionMap(whiteTex);
+		dirtMat->setDiffuseMap(whiteTex);
+		dirtMat->setSpecularMap(whiteTex);
+	}
 
 	modelBasePath = "models/";
 	modelFiles = fileLoader->listFilesInDir(modelBasePath + "*.obj");
@@ -49,12 +66,25 @@ Audace::Model *SceneBuilder::loadModel(std::string modelName)
 {
 	Audace::Model *model = Audace::AssetStore::getModel(modelName);
 	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("standard");
+	Audace::Texture2d *whiteTex = Audace::AssetStore::getWhiteTexture();
 	for (Audace::ModelSection *section : model->sections)
 	{
 		Audace::Material *material = reinterpret_cast<Audace::Material *>(section->material);
-		section->material->setShader(shader);
-		material->setAmbientColor(material->getDiffuseColor());
-		material->setAmbientOcclusionMap(1);
+		if (Audace::StringUtil::startsWith(material->getName(), "grass"))
+		{
+			section->material = grassMat;
+		}
+		else if (Audace::StringUtil::startsWith(material->getName(), "dirt"))
+		{
+			section->material = dirtMat;
+		}
+		else
+		{
+			section->material->setShader(shader);
+			material->setAmbientColor(material->getDiffuseColor());
+			material->setAmbientOcclusionMap(whiteTex);
+			material->setNormalMap(whiteTex);
+		}
 	}
 	return model;
 }
@@ -134,7 +164,7 @@ void SceneBuilder::render()
 	// }
 
 	shader->setUniformVec3("viewPos", camera->getPosition());
-
+	
 	for (Audace::Sprite *sprite : sprites)
 	{
 		sprite->render(this);

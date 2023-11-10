@@ -1,0 +1,12 @@
+{
+	"name": "dirtFlat",
+	"shaderName": "standard",
+	"ambientMap": "images/ground_067/Ground067_1K-JPG_AmbientOcclusion.jpg",
+	"ambientColor": [0.3, 0.3, 0.3],
+	"diffuseMap": "images/ground_067/Ground067_1K-JPG_Color.jpg",
+	"normalMap": "images/ground_067/Ground067_1K-JPG_NormalDX.jpg",
+	"diffuseColor": [1, 1, 1],
+	"roughnessMap": "images/ground_067/Ground067_1K-JPG_Roughness.jpg",
+	"specularColor": [0.2, 0.2, 0.2],
+	"emissionColor": [0.0, 0.0, 0.0]
+}

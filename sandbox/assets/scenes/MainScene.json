@@ -1,4 +1,11 @@
 {
+	"materials": {
+		"grass": "materials/grassFlat.json",
+		"dirtDark": "materials/dirtDarkFlat.json",
+		"dirt": "materials/dirtFlat.json",
+		"stone": "materials/stoneFlat.json",
+		"water": "materials/waterFlat.json"
+	},
     "sprites": {
         "bridge_stoneRoundNarrow.obj": [
             {

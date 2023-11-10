@@ -1,0 +1,12 @@
+{
+	"name": "grassFlat",
+	"shaderName": "standard",
+	"ambientMap": "images/grass_004/Grass004_1K-JPG_AmbientOcclusion.jpg",
+	"ambientColor": [0.3, 0.3, 0.3],
+	"diffuseMap": "images/grass_004/Grass004_1K-JPG_Color.jpg",
+	"normalMap": "images/grass_004/Grass004_1K-JPG_NormalDX.jpg",
+	"diffuseColor": [1, 1, 1],
+	"roughnessMap": "images/grass_004/Grass004_1K-JPG_Roughness.jpg",
+	"specularColor": [0.2, 0.2, 0.2],
+	"emissionColor": [0.0, 0.0, 0.0]
+}

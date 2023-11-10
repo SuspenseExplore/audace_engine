@@ -1,6 +1,7 @@
 #ifndef AU_MAINSCENE_H
 #define AU_MAINSCENE_H
 
+#include <map>
 #include <vector>
 #include "glm/glm.hpp"
 #include "scene/Scene.h"
@@ -20,15 +21,12 @@ class MainScene : public Audace::Scene {
 	std::vector<Audace::Sprite *> sprites;
 	Audace::ShaderProgram *shaderProgram;
 
-	Audace::Material *grassMaterial;
-	Audace::Material *dirtMaterial;
-	Audace::Material *dirtDarkMaterial;
-	Audace::Material *rockMaterial;
-	Audace::Material *waterMaterial;
+	std::map<std::string, Audace::Material *> materials;
 
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
 	Audace::BaseCamera *camera;
 
+	glm::vec4 ambientLight = {1, 1, 1, 0.2f};
 	Audace::PointLight *pointLights;
 
 public:

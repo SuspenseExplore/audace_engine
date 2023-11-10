@@ -31,6 +31,9 @@ class SceneBuilder : public Audace::Scene
 	Audace::Sprite *lightSprites[4];
 	Audace::PointLight pointLights[4];
 
+	Audace::Material *grassMat;
+	Audace::Material *dirtMat;
+
 	int selectedModelIndex = 0;
 	int modelCount;
 	std::string modelBasePath;

@@ -18,6 +18,10 @@ namespace Audace {
 		return s;
 	}
 
+	json FileLoader::textFileToJson(const std::string &path){
+		return json::parse(textFileToString(path));
+	}
+
 	ByteBuffer* FileLoader::readFileToBuffer(const std::string &path) {
 		AAsset *asset = getAsset(path);
 		int length = AAsset_getLength(asset);

@@ -7,6 +7,8 @@
 #include "ImageData.h"
 #include "content/Model.h"
 #include "content/ByteBuffer.h"
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 namespace Audace {
 	class FileLoader {
@@ -17,6 +19,7 @@ namespace Audace {
 
 		ByteBuffer* readFileToBuffer(const std::string& path);
 		std::string textFileToString(std::string path);
+		json textFileToJson(std::string path);
 		ImageData readImageFile(std::string path);
 		Model* readModelFile(std::string path, std::string filename);
 

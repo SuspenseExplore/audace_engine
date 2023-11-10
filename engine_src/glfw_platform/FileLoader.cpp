@@ -26,6 +26,11 @@ namespace Audace
 		return ss.str();
 	}
 
+	json FileLoader::textFileToJson(std::string path)
+	{
+		return json::parse(textFileToString(path));
+	}
+
 	ImageData FileLoader::readImageFile(std::string path)
 	{
 		int width;
