@@ -11,8 +11,8 @@ namespace Audace
 	class PointLight : public Sprite
 	{
 	protected:
-		glm::vec3 color;
-		float intensity;
+		glm::vec3 color{1, 1, 1};
+		float intensity = 1;
 
 	public:
 		PointLight() : Sprite({Shapes::spherePositions(16, 16)})
