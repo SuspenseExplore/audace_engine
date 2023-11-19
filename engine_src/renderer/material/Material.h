@@ -27,14 +27,17 @@ namespace Audace
 		void setName(std::string name) { this->name = name; }
 		std::string getName() override { return name; }
 		void setAmbientColor(glm::vec3 color) { ambientColor = color; }
+		glm::vec3 getAmbientColor() { return ambientColor; }
 		void setAmbientOcclusionMap(Texture2d *texture) { ambientOcclusionMap = texture; }
 		void setDiffuseColor(glm::vec3 color) { diffuseColor = color; }
 		glm::vec3 getDiffuseColor() { return diffuseColor; }
 		void setDiffuseMap(Texture2d *texture) { diffuseMap = texture; }
 		void setNormalMap(Texture2d *texture) { normalMap = texture; }
 		void setSpecularColor(glm::vec3 color) { specularColor = color; }
+		glm::vec3 getSpecularColor() { return specularColor; }
 		void setSpecularMap(Texture2d *texture) { specularMap = texture; }
 		void setEmissionColor(glm::vec3 color) { emissionColor = color; }
+		glm::vec3 getEmissionColor() { return emissionColor; }
 		ShaderProgram *getShader() override { return shaderProgram; }
 		void setShader(ShaderProgram *shaderProgram) override { this->shaderProgram = shaderProgram; }
 
