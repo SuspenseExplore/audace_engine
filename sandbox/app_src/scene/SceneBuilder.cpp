@@ -25,32 +25,16 @@ void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 	this->fileLoader = fileLoader;
 	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("standard");
 	shader->create();
-	Audace::Texture2d *whiteTex = Audace::AssetStore::getWhiteTexture();
+	shader->setUniformVec3("textureScale", {10, 10, 10});
 
 	quadMesh = Audace::Shapes::squarePositions();
 
 	modelMat = glm::rotate(modelMat, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-	{
-		json jcontent = json::parse(fileLoader->textFileToString("materials/grassFlat.json"));
-		grassMat = Audace::JsonSerializer::loadMaterial(jcontent);
-		grassMat->setAmbientOcclusionMap(whiteTex);
-		grassMat->setDiffuseMap(whiteTex);
-		grassMat->setSpecularMap(whiteTex);
-	}
-	{
-		json jcontent = json::parse(fileLoader->textFileToString("materials/dirtFlat.json"));
-		dirtMat = Audace::JsonSerializer::loadMaterial(jcontent);
-		dirtMat->setAmbientOcclusionMap(whiteTex);
-		dirtMat->setDiffuseMap(whiteTex);
-		dirtMat->setSpecularMap(whiteTex);
-	}
-
 	modelBasePath = "models/";
 	modelFiles = fileLoader->listFilesInDir(modelBasePath + "*.obj");
 	modelCount = modelFiles.size();
-	currModel = loadModel(modelFiles[selectedModelIndex]);
-	currSprite = new Audace::Sprite(currModel);
+	currSprite = loadModel(modelFiles[selectedModelIndex]);
 	currSprite->setModelMatrix(modelMat);
 
 	{
@@ -62,30 +46,23 @@ void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 	}
 }
 
-Audace::Model *SceneBuilder::loadModel(std::string modelName)
+Audace::Sprite *SceneBuilder::loadModel(std::string modelName)
 {
-	Audace::Model *model = Audace::AssetStore::getModel(modelName);
+	Audace::Sprite *model = Audace::AssetStore::cloneSprite(modelName);
 	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("standard");
-	Audace::Texture2d *whiteTex = Audace::AssetStore::getWhiteTexture();
-	for (Audace::ModelSection *section : model->sections)
-	{
-		Audace::Material *material = reinterpret_cast<Audace::Material *>(section->material);
-		if (Audace::StringUtil::startsWith(material->getName(), "grass"))
+	model->forEachMesh([this, shader](Audace::Mesh *mesh)
+					   {
+		Audace::Material *material = reinterpret_cast<Audace::Material *>(mesh->getMaterial());
+
+		// set up a valid default material before replacing it
+		material->setShader(shader);
+		for (auto &item : matRecs)
 		{
-			section->material = grassMat;
-		}
-		else if (Audace::StringUtil::startsWith(material->getName(), "dirt"))
-		{
-			section->material = dirtMat;
-		}
-		else
-		{
-			section->material->setShader(shader);
-			material->setAmbientColor(material->getDiffuseColor());
-			material->setAmbientOcclusionMap(whiteTex);
-			material->setNormalMap(whiteTex);
-		}
-	}
+			if (Audace::StringUtil::startsWith(material->getName(), item.first))
+			{
+				mesh->setMaterial(item.second.material);
+			}
+		} });
 	return model;
 }
 
@@ -123,6 +100,22 @@ void SceneBuilder::loadScene(std::string filename)
 	glm::mat4 IDENTITY_MAT = glm::mat4(1.0f);
 	glm::mat4 modelMat = glm::rotate(glm::scale(IDENTITY_MAT, {1, 1, 1}), glm::radians(90.0f), glm::vec3(1, 0, 0));
 
+	for (auto &item : jsonContent["materials"].items())
+	{
+		std::string name = item.key();
+		std::string path = item.value();
+		Audace::Material *mat = Audace::JsonSerializer::loadMaterial(fileLoader->textFileToJson(path));
+		MaterialRec rec;
+		strcpy(rec.name, mat->getName().c_str());
+		rec.ambientColor = mat->getAmbientColor();
+		rec.diffuseColor = mat->getDiffuseColor();
+		rec.specularColor = mat->getSpecularColor();
+		rec.emissionColor = mat->getEmissionColor();
+		rec.material = mat;
+		matRecs[name] = rec;
+	}
+	currMaterial = (*matRecs.begin()).second.name;
+
 	for (auto &item : jsonContent["sprites"].items())
 	{
 		std::string filename = item.key();
@@ -132,14 +125,16 @@ void SceneBuilder::loadScene(std::string filename)
 			json obj = it.value();
 			json pos = obj["position"];
 			json angles = obj["orientation"];
-			Audace::Model *m = loadModel(filename);
-			Audace::Sprite *sprite = new Audace::Sprite(m);
+			Audace::Sprite *sprite = loadModel(filename);
 			sprite->setModelMatrix(modelMat);
 			sprite->setPosition({pos[0], pos[1], pos[2]});
 			sprite->setOrientation(glm::quat(glm::radians(glm::vec3(angles[0], angles[1], angles[2]))));
 			sprites.push_back(sprite);
 		}
 	}
+
+	pointLights[0].setPosition({0, 0, 5});
+	sprites.push_back(&pointLights[0]);
 }
 
 void SceneBuilder::render()
@@ -153,18 +148,18 @@ void SceneBuilder::render()
 	shader->bind();
 	shader->setUniformVec4("ambientLight", 1, 1, 1, 1);
 
-	// for (int i = 0; i < 4; i++)
-	// {
-	// 	std::string prefix = "light[";
-	// 	prefix += '0' + i;
-	// 	prefix += "]";
-	// 	shader->setUniformVec3(prefix + ".position", pointLights[i].getPosition());
-	// 	shader->setUniformVec3(prefix + ".color", pointLights[i].getColor());
-	// 	shader->setUniformFloat(prefix + ".intensity", pointLights[i].getIntensity());
-	// }
+	for (int i = 0; i < 1; i++)
+	{
+		std::string prefix = "light[";
+		prefix += '0' + i;
+		prefix += "]";
+		shader->setUniformVec3(prefix + ".position", pointLights[i].getPosition());
+		shader->setUniformVec3(prefix + ".color", pointLights[i].getColor());
+		shader->setUniformFloat(prefix + ".intensity", pointLights[i].getIntensity());
+	}
 
 	shader->setUniformVec3("viewPos", camera->getPosition());
-	
+
 	for (Audace::Sprite *sprite : sprites)
 	{
 		sprite->render(this);
@@ -210,8 +205,7 @@ void SceneBuilder::render()
 					if (ImGui::Selectable(modelFiles[i].c_str(), selected))
 					{
 						selectedModelIndex = i;
-						currModel = loadModel(modelFiles[i]);
-						currSprite = new Audace::Sprite(currModel);
+						currSprite = loadModel(modelFiles[i]);
 						currSprite->setModelMatrix(modelMat);
 					}
 					if (selected)
@@ -232,9 +226,45 @@ void SceneBuilder::render()
 				currSprite->setOrientation(glm::quat(glm::radians(spriteAngles)));
 				currSprite->setScale(spriteScale);
 				sprites.push_back(currSprite);
-				currSprite = new Audace::Sprite(currModel);
+				currSprite = currSprite->clone();
 				currSprite->setModelMatrix(modelMat);
 			}
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Materials"))
+		{
+
+			if (ImGui::BeginCombo("Material", currMaterial))
+			{
+				for (auto &item : matRecs)
+				{
+					MaterialRec &rec = item.second;
+					if (ImGui::Selectable(rec.name, currMaterial == rec.name))
+					{
+						currMaterial = rec.name;
+					}
+				}
+				ImGui::EndCombo();
+			}
+
+			MaterialRec &rec = matRecs[std::string(currMaterial)];
+			ImGui::ColorEdit3("Ambient##material", glm::value_ptr(rec.ambientColor));
+			ImGui::ColorEdit3("Diffuse##material", glm::value_ptr(rec.diffuseColor));
+			ImGui::ColorEdit3("Specular##material", glm::value_ptr(rec.specularColor));
+			ImGui::ColorEdit3("Emission##material", glm::value_ptr(rec.emissionColor));
+			// ImGui::InputText("Ambient Occlusion Map", rec.aoMap, 256);
+			// ImGui::InputText("Diffuse Map", rec.diffuseMap, 256);
+			// ImGui::InputText("Normal Map", rec.normalMap, 256);
+			// ImGui::InputText("Roughness Map", rec.roughnessMap, 256);
+			rec.material->setAmbientColor(rec.ambientColor);
+			rec.material->setDiffuseColor(rec.diffuseColor);
+			rec.material->setSpecularColor(rec.specularColor);
+			rec.material->setEmissionColor(rec.emissionColor);
+			// rec.material->setAmbientOcclusionMap(Audace::AssetStore::getTexture(rec.aoMap));
+			// rec.material->setDiffuseMap(Audace::AssetStore::getTexture(rec.diffuseMap));
+			// rec.material->setNormalMap(Audace::AssetStore::getTexture(rec.normalMap));
+			// rec.material->setSpecularMap(Audace::AssetStore::getTexture(rec.roughnessMap));
 			ImGui::EndTabItem();
 		}
 

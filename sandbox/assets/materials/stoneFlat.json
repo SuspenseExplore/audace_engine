@@ -1,5 +1,5 @@
 {
-	"name": "stoneFlat",
+	"name": "stone",
 	"shaderName": "standard",
 	"ambientMap": "images/rocks_011/Rocks011_1K-JPG_AmbientOcclusion.jpg",
 	"ambientColor": [0.3, 0.3, 0.3],

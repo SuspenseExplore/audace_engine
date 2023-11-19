@@ -1,5 +1,5 @@
 {
-	"name": "dirtDarkFlat",
+	"name": "dirtDark",
 	"shaderName": "standard",
 	"ambientMap": "images/ground_051/Ground051_1K-JPG_AmbientOcclusion.jpg",
 	"ambientColor": [0.3, 0.3, 0.3],

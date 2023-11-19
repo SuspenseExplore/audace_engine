@@ -20,7 +20,6 @@ struct Light {
 	float intensity;
 };
 
-uniform sampler2D tex1;
 uniform vec4 ambientLight;
 uniform vec4 diffusePos;
 uniform vec4 diffuseColor;

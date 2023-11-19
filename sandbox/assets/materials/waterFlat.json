@@ -1,5 +1,5 @@
 {
-	"name": "waterFlat",
+	"name": "water",
 	"shaderName": "standard",
 	"ambientMap": "AU_white_texture",
 	"ambientColor": [0.3, 0.3, 0.3],

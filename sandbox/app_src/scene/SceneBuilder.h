@@ -17,29 +17,42 @@
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
+struct MaterialRec
+{
+	char name[20];
+	Audace::Material *material;
+	glm::vec3 ambientColor;
+	glm::vec3 diffuseColor;
+	glm::vec3 specularColor;
+	glm::vec3 emissionColor;
+
+	char aoMap[256];
+	char diffuseMap[256];
+	char normalMap[256];
+	char roughnessMap[256];
+};
+
 class SceneBuilder : public Audace::Scene
 {
 	glm::vec4 clearColor = glm::vec4(0, 0, 1, 0);
 	Audace::Mesh *quadMesh;
 	Audace::FileLoader *fileLoader;
 
+	char *currMaterial;
+	std::map<std::string, MaterialRec> matRecs;
+
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
 	Audace::BaseCamera *camera;
 	float cameraYaw = 0;
 	float cameraPitch = 0;
 
-	Audace::Sprite *lightSprites[4];
 	Audace::PointLight pointLights[4];
-
-	Audace::Material *grassMat;
-	Audace::Material *dirtMat;
 
 	int selectedModelIndex = 0;
 	int modelCount;
 	std::string modelBasePath;
 	std::vector<std::string> modelFiles;
 
-	Audace::Model *currModel;
 	Audace::Sprite *currSprite;
 	glm::vec3 spritePos = glm::vec3(0, 0, 0);
 	glm::vec3 spriteAngles = glm::vec3(0, 0, 0);
@@ -55,7 +68,7 @@ class SceneBuilder : public Audace::Scene
 	char sceneWritePath[scenePathLength];
 	json jsonContent = {};
 
-	Audace::Model *loadModel(std::string filename);
+	Audace::Sprite *loadModel(std::string filename);
 	void newScene();
 	void saveScene(std::string filename);
 	void loadScene(std::string filename);

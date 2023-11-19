@@ -1,5 +1,5 @@
 {
-	"name": "grassFlat",
+	"name": "grass",
 	"shaderName": "standard",
 	"ambientMap": "images/grass_004/Grass004_1K-JPG_AmbientOcclusion.jpg",
 	"ambientColor": [0.3, 0.3, 0.3],
