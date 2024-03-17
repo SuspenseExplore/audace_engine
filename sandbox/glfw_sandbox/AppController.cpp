@@ -3,10 +3,10 @@
 #include "AppController.h"
 #include "content/AssetStore.h"
 #include "scene/MainScene.h"
-// #include "scene/NavigationScene.h"
+#include "scene/NavigationScene.h"
 #include "scene/SceneBuilder.h"
-// #include "scene/DragDropScene.h"
-// #include "scene/TextScene.h"
+#include "scene/DragDropScene.h"
+#include "scene/TextScene.h"
 #include "scene/BasicCameraController.h"
 #include "scene/ForwardCamera.h"
 
@@ -68,10 +68,10 @@ namespace Audace
 
 		switch (nextScene)
 		{
-			// case NAVIGATION:
-			// 	scene = new NavigationScene(this);
-			// 	scene->loadAssets();
-			// 	break;
+			case NAVIGATION:
+				scene = new NavigationScene(this);
+				scene->loadAssets(fileLoader);
+				break;
 
 		case MAIN:
 		{
@@ -96,19 +96,19 @@ namespace Audace
 		}
 		break;
 
-			// case DRAG_DROP:
-			// 	scene = new DragDropScene(this, fileLoader);
-			// 	MouseManager::setMouseMoveEventHandler([this](Vec2InputEvent event)
-			// 										   { ((DragDropScene *)scene)->mouseMoved(event.state.x, event.state.y); });
-			// 	MouseManager::addButtonEventHandler(0, [this](ButtonInputEvent event)
-			// 										{ ((DragDropScene *)scene)->buttonChanged(event.pressed); });
-			// 	scene->loadAssets();
-			// 	break;
+			case DRAG_DROP:
+				scene = new DragDropScene(this, fileLoader);
+				MouseManager::setMouseMoveEventHandler([this](Vec2InputEvent event)
+													   { ((DragDropScene *)scene)->mouseMoved(event.state.x, event.state.y); });
+				MouseManager::addButtonEventHandler(0, [this](ButtonInputEvent event)
+													{ ((DragDropScene *)scene)->buttonChanged(event.pressed); });
+				scene->loadAssets(fileLoader);
+				break;
 
-			// case TEXT:
-			// 	scene = new TextScene(this, fileLoader);
-			// 	scene->loadAssets();
-			// 	break;
+			case TEXT:
+				scene = new TextScene(this, fileLoader);
+				scene->loadAssets(fileLoader);
+				break;
 
 		case BUILDER:
 		{

@@ -30,7 +30,7 @@ class DragDropScene : public Audace::Scene
 	bool dragging = false;
 
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
-	Audace::ForwardCamera camera = Audace::ForwardCamera::standard2d(glm::vec3(0, 0, -1), 1280, 720);
+	Audace::ForwardCamera *camera = Audace::ForwardCamera::standard2d(glm::vec3(0, 0, -1), 1280, 720);
 
 	Audace::RandomUniformFloats rand = Audace::RandomUniformFloats::normalizedRange();
 
@@ -38,7 +38,7 @@ public:
 	DragDropScene(Audace::BaseAppController *controller, Audace::FileLoader *fileLoader)
 		: Audace::Scene(controller), fileLoader(fileLoader) {}
 	Audace::Sprite *loadSprite(std::string filename);
-	void loadAssets() override;
+	void loadAssets(Audace::FileLoader *fileLoader) override;
 	void render() override;
 	void disposeAssets() override;
 
@@ -56,7 +56,8 @@ public:
 
 	bool isMouseOverCard(float x, float y);
 
-	Audace::BaseCamera *getCamera() override { return &camera; }
+	Audace::BaseCamera *getCamera() override { return camera; }
+	void setCamera(Audace::BaseCamera *camera) override {}
 };
 
 #endif

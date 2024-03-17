@@ -13,10 +13,10 @@ add_executable(
 	main.cpp
 	AppController.cpp
 	${APP_DIR}/scene/MainScene.cpp
-	# ${APP_DIR}/scene/NavigationScene.cpp
+	${APP_DIR}/scene/NavigationScene.cpp
 	${APP_DIR}/scene/SceneBuilder.cpp
-	# ${APP_DIR}/scene/DragDropScene.cpp
-	# ${APP_DIR}/scene/TextScene.cpp
+	${APP_DIR}/scene/DragDropScene.cpp
+	${APP_DIR}/scene/TextScene.cpp
 	${ENGINE_DIR}/AuLogger.cpp
 	${ENGINE_DIR}/glfw_platform/GameWindow.cpp
 	${ENGINE_DIR}/glfw_platform/KeyboardManager.cpp

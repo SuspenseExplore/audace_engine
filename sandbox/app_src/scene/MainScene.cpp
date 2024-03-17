@@ -126,6 +126,4 @@ void MainScene::render()
 
 void MainScene::disposeAssets()
 {
-	shaderProgram->destroy();
-	delete shaderProgram;
 }

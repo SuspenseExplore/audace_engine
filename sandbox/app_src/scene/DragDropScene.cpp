@@ -14,7 +14,7 @@
 #include "imgui.h"
 #include "SceneEnum.h"
 
-void DragDropScene::loadAssets()
+void DragDropScene::loadAssets(Audace::FileLoader *fileLoader)
 {
 	glClearColor(0, 0, 1, 0);
 
@@ -62,7 +62,7 @@ Audace::Sprite *DragDropScene::loadSprite(std::string filename)
 
 void DragDropScene::mouseMoved(float x, float y)
 {
-	glm::vec3 ray = glm::unProjectNO(glm::vec3(x, 720 - y, 0), camera.getViewMat(), camera.getProjMat(), glm::vec4(0, 0, 1280, 720));
+	glm::vec3 ray = glm::unProjectNO(glm::vec3(x, 720 - y, 0), camera->getViewMat(), camera->getProjMat(), glm::vec4(0, 0, 1280, 720));
 	mousePos.x = ray.x;
 	mousePos.y = ray.y;
 	if (dragging)
@@ -108,7 +108,7 @@ void DragDropScene::render()
 	material->setTexture(cardTextures[0]);
 
 	shaderProgram->bind();
-	shaderProgram->setUniformMat4("vpMat", camera.getViewProjMatrix());
+	shaderProgram->setUniformMat4("vpMat", camera->getViewProjMatrix());
 	sprite->render(this);
 
 	ImGui::Begin("Scenes");
@@ -121,6 +121,4 @@ void DragDropScene::render()
 
 void DragDropScene::disposeAssets()
 {
-	shaderProgram->destroy();
-	delete shaderProgram;
 }

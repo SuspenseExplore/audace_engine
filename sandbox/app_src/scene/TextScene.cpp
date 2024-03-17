@@ -2,7 +2,7 @@
 #include "SceneEnum.h"
 #include "imgui.h"
 
-void TextScene::loadAssets()
+void TextScene::loadAssets(Audace::FileLoader *fileLoader)
 {
 	font = new Audace::BitmapFont(fileLoader, "arial.ttf");
 	label = new Audace::TextLabel(font, "Sphinx of black quartz, judge my vow.");

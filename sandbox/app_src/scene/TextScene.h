@@ -9,7 +9,7 @@
 
 class TextScene : public Audace::Scene {
 	Audace::FileLoader *fileLoader;
-	Audace::ForwardCamera camera;
+	Audace::ForwardCamera *camera;
 	glm::vec4 clearColor = glm::vec4(0, 0, 1, 0);
 	Audace::BitmapFont *font;
 	Audace::TextLabel *label;
@@ -21,10 +21,11 @@ public:
 	{
 	}
 
-	void loadAssets() override;
+	void loadAssets(Audace::FileLoader *fileLoader) override;
 	void render() override;
 	void disposeAssets() override;
-	Audace::BaseCamera *getCamera() override { return &camera; }
+	Audace::BaseCamera *getCamera() override { return camera; }
+	void setCamera(Audace::BaseCamera *camera) override {}
 };
 
 #endif
