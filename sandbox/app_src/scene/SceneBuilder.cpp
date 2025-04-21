@@ -23,7 +23,7 @@
 void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 {
 	this->fileLoader = fileLoader;
-	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("standard");
+	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("obj_mtl");
 	shader->create();
 	shader->setUniformVec3("textureScale", {10, 10, 10});
 
@@ -49,20 +49,28 @@ void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 Audace::Sprite *SceneBuilder::loadModel(std::string modelName)
 {
 	Audace::Sprite *model = Audace::AssetStore::cloneSprite(modelName);
-	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("standard");
+	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("obj_mtl");
 	model->forEachMesh([this, shader](Audace::Mesh *mesh)
 					   {
 		Audace::Material *material = reinterpret_cast<Audace::Material *>(mesh->getMaterial());
 
 		// set up a valid default material before replacing it
 		material->setShader(shader);
+		bool found = false;
 		for (auto &item : matRecs)
 		{
 			if (Audace::StringUtil::startsWith(material->getName(), item.first))
 			{
 				mesh->setMaterial(item.second.material);
+				found = true;
 			}
-		} });
+		} 
+		if (!found)
+		{
+			matRecs[material->getName()] = MaterialRec(material);
+		}
+	});
+	currMaterial = (*matRecs.begin()).second.name;
 	return model;
 }
 
@@ -144,7 +152,7 @@ void SceneBuilder::render()
 
 	camera->update();
 
-	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("standard");
+	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("obj_mtl");
 	shader->bind();
 	shader->setUniformVec4("ambientLight", 1, 1, 1, 1);
 
@@ -170,7 +178,7 @@ void SceneBuilder::render()
 	currSprite->setScale(spriteScale);
 	currSprite->render(this);
 
-	startPosMarker->setPosition(startPos);
+	startPosMarker->setPosition(pointLights[0].getPosition());
 	startPosMarker->render(this);
 
 	// ImGui::ShowDemoWindow();

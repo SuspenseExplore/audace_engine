@@ -30,6 +30,17 @@ struct MaterialRec
 	char diffuseMap[256];
 	char normalMap[256];
 	char roughnessMap[256];
+
+	MaterialRec() {}
+	MaterialRec(Audace::Material *mat)
+	{
+		material = mat;
+		strcpy(name, mat->getName().c_str());
+		ambientColor = mat->getAmbientColor();
+		diffuseColor = mat->getDiffuseColor();
+		specularColor = mat->getSpecularColor();
+		emissionColor = mat->getEmissionColor();
+	}
 };
 
 class SceneBuilder : public Audace::Scene
