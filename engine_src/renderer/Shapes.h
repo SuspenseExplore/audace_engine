@@ -13,7 +13,7 @@ namespace Audace {
 		static Mesh* squarePositions();
 		static Mesh* circlePositions();
 		static Mesh* cubePositions();
-		static Mesh* cubePosNorm();
+		static Mesh* cubePosNormTan();
 		static Mesh* spherePositions(int xResolution, int yResolution);
 	};
 }

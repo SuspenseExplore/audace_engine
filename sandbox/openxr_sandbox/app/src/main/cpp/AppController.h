@@ -15,7 +15,7 @@
 #include "scene/Scene.h"
 #include "openxr/HmdCamera.h"
 #include "input/InputDevices.h"
-#include "scene/MainScene.h"
+#include "scene/ProcTerrainScene.h"
 #include "SceneEnum.h"
 
 class AppController : public Audace::BaseAppController {
@@ -32,7 +32,7 @@ class AppController : public Audace::BaseAppController {
 	void startNextScene();
 
 public:
-	AppController() : scene(new MainScene(this)) {}
+	AppController() : scene(new ProcTerrainScene(this)) {}
 	OpenxrContext xrContext;
 
 	bool init(android_app *app);

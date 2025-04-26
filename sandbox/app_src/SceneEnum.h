@@ -5,5 +5,6 @@ enum SandboxScene
 	MAIN,
 	BUILDER,
 	DRAG_DROP,
-	TEXT
+	TEXT,
+	PROC_TERRAIN
 };

@@ -17,12 +17,14 @@ add_executable(
 	${APP_DIR}/scene/SceneBuilder.cpp
 	${APP_DIR}/scene/DragDropScene.cpp
 	${APP_DIR}/scene/TextScene.cpp
+	${APP_DIR}/scene/ProcTerrainScene.cpp
 	${ENGINE_DIR}/AuLogger.cpp
 	${ENGINE_DIR}/glfw_platform/GameWindow.cpp
 	${ENGINE_DIR}/glfw_platform/KeyboardManager.cpp
 	${ENGINE_DIR}/glfw_platform/MouseManager.cpp
 	${ENGINE_DIR}/glfw_platform/ImageData.cpp
 	${ENGINE_DIR}/glfw_platform/FileLoader.cpp
+	${ENGINE_DIR}/include/FastNoiseLite.h
 	${ENGINE_DIR}/include/imgui/imgui.cpp
 	${ENGINE_DIR}/include/imgui/imgui_demo.cpp
 	${ENGINE_DIR}/include/imgui/imgui_draw.cpp
@@ -45,6 +47,7 @@ add_executable(
 	${ENGINE_DIR}/content/ModelLoader.cpp
 	${ENGINE_DIR}/content/AssetStore.cpp
 	${ENGINE_DIR}/content/JsonSerializer.cpp
+	${ENGINE_DIR}/geom/VoxelTerrainGen.cpp
 	${ENGINE_DIR}/scene/Scene.cpp
 	${ENGINE_DIR}/scene/BaseCamera.h
 	${ENGINE_DIR}/scene/ForwardCamera.cpp

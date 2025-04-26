@@ -53,6 +53,7 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/renderer/Sprite.cpp
 		${ENGINE_DIR}/renderer/Shapes.cpp
 		${ENGINE_DIR}/renderer/text/BitmapFont.cpp
+		${ENGINE_DIR}/geom/VoxelTerrainGen.cpp
 		${ENGINE_DIR}/scene/Scene.cpp
 		openxr/OpenxrSwapchain.cpp
 		openxr/OpenxrView.cpp
@@ -61,6 +62,7 @@ add_library( # Sets the name of the library.
 		EglWindow.cpp
 		AppController.cpp
 		${APP_DIR}/scene/MainScene.cpp
+		${APP_DIR}/scene/ProcTerrainScene.cpp
 		)
 include_directories(
 		.

@@ -1,4 +1,5 @@
 #include <sstream>
+#include <vector>
 #include "AssetStore.h"
 #include "renderer/Shapes.h"
 
@@ -86,6 +87,18 @@ namespace Audace
 		{
 			Sprite *sprite = new Sprite(getModel(name));
 			sprites[name] = sprite;
+		}
+		return sprites[name]->clone();
+	}
+
+	Sprite *AssetStore::getCubeSprite()
+	{
+		std::string name = "AU_cube_sprite";
+		if (sprites.find(name) == sprites.end())
+		{
+			std::vector<Audace::Mesh *> v = {Audace::Shapes::cubePosNormTan()};
+			Sprite *s = new Sprite(v);
+			sprites[name] = s;
 		}
 		return sprites[name]->clone();
 	}

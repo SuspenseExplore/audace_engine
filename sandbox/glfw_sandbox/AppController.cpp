@@ -7,6 +7,7 @@
 #include "scene/SceneBuilder.h"
 #include "scene/DragDropScene.h"
 #include "scene/TextScene.h"
+#include "scene/ProcTerrainScene.h"
 #include "scene/BasicCameraController.h"
 #include "scene/ForwardCamera.h"
 
@@ -68,10 +69,10 @@ namespace Audace
 
 		switch (nextScene)
 		{
-			case NAVIGATION:
-				scene = new NavigationScene(this);
-				scene->loadAssets(fileLoader);
-				break;
+		case NAVIGATION:
+			scene = new NavigationScene(this);
+			scene->loadAssets(fileLoader);
+			break;
 
 		case MAIN:
 		{
@@ -96,23 +97,42 @@ namespace Audace
 		}
 		break;
 
-			case DRAG_DROP:
-				scene = new DragDropScene(this, fileLoader);
-				MouseManager::setMouseMoveEventHandler([this](Vec2InputEvent event)
-													   { ((DragDropScene *)scene)->mouseMoved(event.state.x, event.state.y); });
-				MouseManager::addButtonEventHandler(0, [this](ButtonInputEvent event)
-													{ ((DragDropScene *)scene)->buttonChanged(event.pressed); });
-				scene->loadAssets(fileLoader);
-				break;
+		case DRAG_DROP:
+			scene = new DragDropScene(this, fileLoader);
+			MouseManager::setMouseMoveEventHandler([this](Vec2InputEvent event)
+												   { ((DragDropScene *)scene)->mouseMoved(event.state.x, event.state.y); });
+			MouseManager::addButtonEventHandler(0, [this](ButtonInputEvent event)
+												{ ((DragDropScene *)scene)->buttonChanged(event.pressed); });
+			scene->loadAssets(fileLoader);
+			break;
 
-			case TEXT:
-				scene = new TextScene(this, fileLoader);
-				scene->loadAssets(fileLoader);
-				break;
+		case TEXT:
+			scene = new TextScene(this, fileLoader);
+			scene->loadAssets(fileLoader);
+			break;
 
 		case BUILDER:
 		{
 			scene = new SceneBuilder(this);
+			BaseCamera *camera = Audace::ForwardCamera::standard3d(glm::vec3(0, -10, 2), getWidth(), getHeight());
+			scene->setCamera(camera);
+			BasicCameraController *camCtl = new BasicCameraController((ForwardCamera *)camera);
+			camCtl->setVelocityFactor(0.1f);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_W, camCtl->forwardAction);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_S, camCtl->backwardAction);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_A, camCtl->leftAction);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_D, camCtl->rightAction);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Q, camCtl->upAction);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Z, camCtl->downAction);
+			MouseManager::addButtonChangedEventHandler(1, camCtl->rightMouseAction);
+			MouseManager::setMouseMoveEventHandler(camCtl->aimAction);
+			scene->loadAssets(fileLoader);
+		}
+		break;
+
+		case PROC_TERRAIN:
+		{
+			scene = new ProcTerrainScene(this);
 			BaseCamera *camera = Audace::ForwardCamera::standard3d(glm::vec3(0, -10, 2), getWidth(), getHeight());
 			scene->setCamera(camera);
 			BasicCameraController *camCtl = new BasicCameraController((ForwardCamera *)camera);

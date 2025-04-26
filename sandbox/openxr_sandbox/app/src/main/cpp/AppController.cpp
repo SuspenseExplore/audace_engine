@@ -49,7 +49,7 @@ bool AppController::createXrSession() {
 		OculusTouchController::InputName name = OculusTouchController::InputName::RIGHT_A_CLICK;
 		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {
 			if (event.changed && event.state) {
-				reinterpret_cast<MainScene *>(scene)->teleport();
+//				reinterpret_cast<MainScene *>(scene)->teleport();
 			}
 		});
 	}
@@ -57,7 +57,7 @@ bool AppController::createXrSession() {
 		OculusTouchController::InputName name = OculusTouchController::InputName::RIGHT_GRIP_POSE;
 		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
 			if (event.changed) {
-				reinterpret_cast<MainScene *>(scene)->setLightPos(0, event.state.position);
+//				reinterpret_cast<MainScene *>(scene)->setLightPos(0, event.state.position);
 			}
 		});
 	}

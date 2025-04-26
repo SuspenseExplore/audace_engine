@@ -112,39 +112,45 @@ namespace Audace {
 									GL_UNSIGNED_SHORT, nullptr);
 		return mesh;
 	}
+	// glm::vec3 dPos1 = verts[1]->position - verts[0]->position;
+	// glm::vec3 dPos2 = verts[2]->position - verts[0]->position;
+	// glm::vec3 dTexCoord1 = verts[1]->texCoord - verts[0]->texCoord;
+	// glm::vec3 dTexCoord2 = verts[2]->texCoord - verts[0]->texCoord;
+	// float r = 1.0f / (dTexCoord1.x * dTexCoord2.y - dTexCoord1.y * dTexCoord2.x);
+	// glm::vec3 tangent = (dPos1 * dTexCoord2.y - dPos2 * dTexCoord1.y) * r;
 
-	Mesh *Shapes::cubePosNorm() {
+	Mesh *Shapes::cubePosNormTan() {
 		float *verts = new float[]{
 				//-x
-				0, 0, 0, -1, 0, 0,
-				0, 0, 1, -1, 0, 0,
-				0, 1, 0, -1, 0, 0,
-				0, 1, 1, -1, 0, 0,
+				0, 0, 0,	-1, 0, 0,	0, 1, 0,
+				0, 0, 1,	-1, 0, 0,	0, 1, 0,
+				0, 1, 0,	-1, 0, 0,	0, 1, 0,
+				0, 1, 1,	-1, 0, 0,	0, 1, 0,
 				//+x
-				1, 0, 0,	1, 0, 0,
-				1, 0, 1,	1, 0, 0,
-				1, 1, 0,	1, 0, 0,
-				1, 1, 1,	1, 0, 0,
+				1, 0, 0,	1, 0, 0,	0, 1, 0,
+				1, 0, 1,	1, 0, 0,	0, 1, 0,
+				1, 1, 0,	1, 0, 0,	0, 1, 0,
+				1, 1, 1,	1, 0, 0,	0, 1, 0,
 				//-y
-				0, 0, 0,	0, -1, 0,
-				0, 0, 1,	0, -1, 0,
-				1, 0, 0,	0, -1, 0,
-				1, 0, 1,	0, -1, 0,
+				0, 0, 0,	0, -1, 0,	1, 0, 0,
+				0, 0, 1,	0, -1, 0,	1, 0, 0,
+				1, 0, 0,	0, -1, 0,	1, 0, 0,
+				1, 0, 1,	0, -1, 0,	1, 0, 0,
 				//+y
-				0, 1, 0,	0, 1, 0,
-				0, 1, 1,	0, 1, 0,
-				1, 1, 0,	0, 1, 0,
-				1, 1, 1,	0, 1, 0,
+				0, 1, 0,	0, 1, 0,	1, 0, 0,
+				0, 1, 1,	0, 1, 0,	1, 0, 0,
+				1, 1, 0,	0, 1, 0,	1, 0, 0,
+				1, 1, 1,	0, 1, 0,	1, 0, 0,
 				//-z
-				0, 0, 0,		0, 0, -1,
-				0, 1, 0,	0, 0, -1,
-				1, 0, 0,	0, 0, -1,
-				1, 1, 0,	0, 0, -1,
+				0, 0, 0,	0, 0, -1,	0, 0, 1,
+				0, 1, 0,	0, 0, -1,	0, 0, 1,
+				1, 0, 0,	0, 0, -1,	0, 0, 1,
+				1, 1, 0,	0, 0, -1,	0, 0, 1,
 				//+z
-				0, 0, 1,	0, 0, 1,
-				0, 1, 1,	0, 0, 1,
-				1, 0, 1,	0, 0, 1,
-				1, 1, 1,	0, 0, 1
+				0, 0, 1,	0, 0, 1,	0, 0, 1,
+				0, 1, 1,	0, 0, 1,	0, 0, 1,
+				1, 0, 1,	0, 0, 1,	0, 0, 1,
+				1, 1, 1,	0, 0, 1,	0, 0, 1,
 		};
 
 		unsigned short *indices = new unsigned short[]{
@@ -161,7 +167,7 @@ namespace Audace {
 				20, 21, 22,
 				21, 22, 23
 		};
-		DataBuffer *vertexBuffer = new DataBuffer(verts, sizeof(float) * 6 * 4 * 6, GL_ARRAY_BUFFER,
+		DataBuffer *vertexBuffer = new DataBuffer(verts, sizeof(float) * 6 * 4 * 9, GL_ARRAY_BUFFER,
 												  GL_STATIC_DRAW);
 		vertexBuffer->create();
 		vertexBuffer->bind();
@@ -170,11 +176,13 @@ namespace Audace {
 												 GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
 		indexBuffer->create();
 
-		VertexAttribute *posAttr = new VertexAttribute(0, 3, GL_FLOAT, false, sizeof(float) * 6, 0);
-		VertexAttribute *normAttr = new VertexAttribute(1, 3, GL_FLOAT, false, sizeof(float) * 6, sizeof(float) * 3);
+		VertexAttribute *posAttr = new VertexAttribute(0, 3, GL_FLOAT, false, sizeof(float) * 9, 0);
+		VertexAttribute *normAttr = new VertexAttribute(2, 3, GL_FLOAT, false, sizeof(float) * 9, sizeof(float) * 3);
+		VertexAttribute *tanAttr = new VertexAttribute(3, 3, GL_FLOAT, false, sizeof(float) * 9, sizeof(float) * 6);
 		std::vector<VertexAttribute *> attrs;
 		attrs.push_back(posAttr);
 		attrs.push_back(normAttr);
+		attrs.push_back(tanAttr);
 		VertexArray *vertexArray = new VertexArray(attrs);
 		vertexArray->create();
 
