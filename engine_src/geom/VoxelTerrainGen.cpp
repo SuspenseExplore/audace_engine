@@ -6,12 +6,17 @@ Audace::VoxelTerrainGen::VoxelTerrainGen()
 	noise.SetFrequency(0.01f);
 }
 
-Audace::Mesh *Audace::VoxelTerrainGen::genChunk(glm::vec3 chunkId)
+void Audace::VoxelTerrainGen::ChunkBuilder::addToBuffer(std::vector<float> &buf, glm::vec3 vec)
 {
-	std::vector<float> verts;
-	std::vector<unsigned int> inds;
+	buf.push_back(vec.x);
+	buf.push_back(vec.y);
+	buf.push_back(vec.z);
+}
+
+bool Audace::VoxelTerrainGen::ChunkBuilder::genGeometry()
+{
 	unsigned int baseInd = 0;
-	glm::vec3 basePos = (float)chunkSize * chunkId;
+	glm::vec3 basePos = (float)chunkSize * id;
 
 	float noiseVals[32][32][32];
 
@@ -27,6 +32,7 @@ Audace::Mesh *Audace::VoxelTerrainGen::genChunk(glm::vec3 chunkId)
 			}
 		}
 	}
+
 	for (int x = 0; x < chunkSize; x++)
 	{
 		for (int y = 0; y < chunkSize; y++)
@@ -222,6 +228,11 @@ Audace::Mesh *Audace::VoxelTerrainGen::genChunk(glm::vec3 chunkId)
 			}
 		}
 	}
+	return true;
+}
+
+Audace::Mesh* Audace::VoxelTerrainGen::ChunkBuilder::makeMesh()
+{
 	Audace::DataBuffer *vertexBuffer = new Audace::DataBuffer(verts.data(), sizeof(float) * verts.capacity(), GL_ARRAY_BUFFER,
 															  GL_STATIC_DRAW);
 	vertexBuffer->create();
@@ -245,12 +256,6 @@ Audace::Mesh *Audace::VoxelTerrainGen::genChunk(glm::vec3 chunkId)
 
 	Audace::Mesh *mesh = new Audace::Mesh(vertexArray, indexBuffer, 0, inds.capacity(), GL_TRIANGLES,
 										  GL_UNSIGNED_INT, nullptr);
+	loaded = true;
 	return mesh;
-}
-
-void Audace::VoxelTerrainGen::addToBuffer(std::vector<float> &buf, glm::vec3 vec)
-{
-	buf.push_back(vec.x);
-	buf.push_back(vec.y);
-	buf.push_back(vec.z);
 }

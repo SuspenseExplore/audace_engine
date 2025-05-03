@@ -6,10 +6,17 @@
 #include "renderer/Sprite.h"
 #include "geom/VoxelTerrainGen.h"
 #include "glm/glm.hpp"
+#include <map>
+#include <string>
+#include <vector>
 
 class ProcTerrainScene : public Audace::Scene
 {
+	const int CHUNK_SIZE = 32;
+
 	Audace::VoxelTerrainGen terrainGen;
+	std::map<std::string, Audace::VoxelTerrainGen::ChunkBuilder*> loadingChunks;
+	std::vector<Audace::Sprite*> sprites;
 
 	Audace::Sprite *cubeSprite;
 	Audace::Material *material;
