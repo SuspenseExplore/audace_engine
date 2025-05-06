@@ -12,14 +12,17 @@
 
 class ProcTerrainScene : public Audace::Scene
 {
-	const int CHUNK_SIZE = 32;
+	const int CHUNK_SIZE = 8;
 
 	Audace::VoxelTerrainGen terrainGen;
 	std::map<std::string, Audace::VoxelTerrainGen::ChunkBuilder*> loadingChunks;
 	std::vector<Audace::Sprite*> sprites;
 
 	Audace::Sprite *cubeSprite;
+	Audace::ShaderProgram *shader;
 	Audace::Material *material;
+
+	glm::vec3 lightPos = glm::vec3{30, 20, 30};
 
 	Audace::BaseCamera *camera;
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
@@ -41,6 +44,9 @@ class ProcTerrainScene : public Audace::Scene
 
 	void setCamera(Audace::BaseCamera *camera) override {this->camera = camera; }
 	Audace::BaseCamera *getCamera() override { return camera; }
+
+	void setLightPos(glm::vec3 pos) { lightPos = pos + camera->getOriginPos(); }
+	void teleport() { camera->setOriginPos(lightPos - camera->getPosition()); }
 };
 
 

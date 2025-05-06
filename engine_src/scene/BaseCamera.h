@@ -23,7 +23,7 @@ namespace Audace {
 		void setOriginPos(glm::vec3 pos) { originPos = pos; }
 		glm::vec3 getOriginPos() { return originPos; }
 
-		void update() {
+		virtual void update() {
 			if (controller != nullptr) {
 				controller->update();
 			}

@@ -33,7 +33,7 @@ bool AppController::createXrSession() {
 //		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_GRIP_POSE;
 //		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
 //			if (event.changed) {
-//				scene->setLightPos(event.state.position);
+//				((ProcTerrainScene*) scene)->setLightPos(event.state.position);
 //			}
 //		});
 //	}
@@ -49,7 +49,7 @@ bool AppController::createXrSession() {
 		OculusTouchController::InputName name = OculusTouchController::InputName::RIGHT_A_CLICK;
 		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {
 			if (event.changed && event.state) {
-//				reinterpret_cast<MainScene *>(scene)->teleport();
+				reinterpret_cast<ProcTerrainScene *>(scene)->teleport();
 			}
 		});
 	}
@@ -57,7 +57,25 @@ bool AppController::createXrSession() {
 		OculusTouchController::InputName name = OculusTouchController::InputName::RIGHT_GRIP_POSE;
 		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
 			if (event.changed) {
-//				reinterpret_cast<MainScene *>(scene)->setLightPos(0, event.state.position);
+				reinterpret_cast<ProcTerrainScene *>(scene)->setLightPos(event.state.position);
+			}
+		});
+	}
+	{
+		OculusTouchController::InputName name = OculusTouchController::InputName::RIGHT_THUMBSTICK_X;
+		xrContext.addFloatInputHandler(name, [this](FloatInputEvent event) {
+			if (event.changed) {
+//				AU_ENGINE_LOG_DEBUG("right stick x: {}", event.state);
+				camera->setVelocityX(event.state);
+			}
+		});
+	}
+	{
+		OculusTouchController::InputName name = OculusTouchController::InputName::RIGHT_THUMBSTICK_Y;
+		xrContext.addFloatInputHandler(name, [this](FloatInputEvent event) {
+			if (event.changed) {
+//				AU_ENGINE_LOG_DEBUG("right stick y: {}", event.state);
+				camera->setVelocityY(event.state);
 			}
 		});
 	}

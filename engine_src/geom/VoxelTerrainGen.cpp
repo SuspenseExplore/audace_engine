@@ -13,12 +13,10 @@ void Audace::VoxelTerrainGen::ChunkBuilder::addToBuffer(std::vector<float> &buf,
 	buf.push_back(vec.z);
 }
 
-bool Audace::VoxelTerrainGen::ChunkBuilder::genGeometry()
+bool Audace::VoxelTerrainGen::ChunkBuilder::genPositions()
 {
 	unsigned int baseInd = 0;
 	glm::vec3 basePos = (float)chunkSize * id;
-
-	float noiseVals[32][32][32];
 
 	for (int x = 0; x < chunkSize; x++)
 	{
@@ -28,206 +26,15 @@ bool Audace::VoxelTerrainGen::ChunkBuilder::genGeometry()
 			{
 				// TODO: this needs to be actual world coords
 				glm::vec3 pos = basePos + glm::vec3{x, y, z};
-				noiseVals[x][y][z] = -pos.z + noise.GetNoise(pos.x, pos.y, pos.z) * 20;
+				float n = noise.GetNoise(pos.x, pos.y, pos.z) * 20;
+				if (n > 0.0)
+				{
+					positions.push_back(pos);
+				}
 			}
 		}
 	}
 
-	for (int x = 0; x < chunkSize; x++)
-	{
-		for (int y = 0; y < chunkSize; y++)
-		{
-			for (int z = 0; z < chunkSize; z++)
-			{
-				float noiseVal = noiseVals[x][y][z];
-				glm::vec3 pos = basePos + glm::vec3{x, y, z};
-				if (noiseVal < 0)
-				{
-					continue;
-				}
-				if (x > 0 && x < chunkSize - 1 && 
-					y > 0 && y < chunkSize - 1 && 
-					z > 0 && z < chunkSize - 1 &&
-					noiseVals[x-1][y][z] > 0 &&
-					noiseVals[x+1][y][z] > 0 &&
-					noiseVals[x][y-1][z] > 0 &&
-					noiseVals[x][y+1][z] > 0 &&
-					noiseVals[x][y][z-1] > 0 &&
-					noiseVals[x][y][z+1] > 0)
-				{
-					continue;
-				}
-
-				// -x
-				addToBuffer(verts, {pos.x + 0, pos.y + 0, pos.z + 0});
-				addToBuffer(verts, {0, 0, 0});	// texCoord
-				addToBuffer(verts, {-1, 0, 0}); // normal
-				addToBuffer(verts, {0, 1, 0});	// tangent
-
-				addToBuffer(verts, {pos.x + 0, pos.y + 0, pos.z + 1});
-				addToBuffer(verts, {0, 1, 0});	// texCoord
-				addToBuffer(verts, {-1, 0, 0}); // normal
-				addToBuffer(verts, {0, 1, 0});	// tangent
-
-				addToBuffer(verts, {pos.x + 0, pos.y + 1, pos.z + 0});
-				addToBuffer(verts, {1, 0, 0});	// texCoord
-				addToBuffer(verts, {-1, 0, 0}); // normal
-				addToBuffer(verts, {0, 1, 0});	// tangent
-
-				addToBuffer(verts, {pos.x + 0, pos.y + 1, pos.z + 1});
-				addToBuffer(verts, {1, 1, 0});	// texCoord
-				addToBuffer(verts, {-1, 0, 0}); // normal
-				addToBuffer(verts, {0, 1, 0});	// tangent
-				inds.push_back(baseInd);
-				inds.push_back(baseInd + 1);
-				inds.push_back(baseInd + 2);
-				inds.push_back(baseInd + 1);
-				inds.push_back(baseInd + 2);
-				inds.push_back(baseInd + 3);
-				baseInd += 4;
-
-				// +x
-				addToBuffer(verts, {pos.x + 1, pos.y + 0, pos.z + 0});
-				addToBuffer(verts, {0, 0, 0}); // texCoord
-				addToBuffer(verts, {1, 0, 0}); // normal
-				addToBuffer(verts, {0, -1, 0}); // tangent
-
-				addToBuffer(verts, {pos.x + 1, pos.y + 0, pos.z + 1});
-				addToBuffer(verts, {0, 1, 0}); // texCoord
-				addToBuffer(verts, {1, 0, 0}); // normal
-				addToBuffer(verts, {0, -1, 0}); // tangent
-
-				addToBuffer(verts, {pos.x + 1, pos.y + 1, pos.z + 0});
-				addToBuffer(verts, {1, 0, 0}); // texCoord
-				addToBuffer(verts, {1, 0, 0}); // normal
-				addToBuffer(verts, {0, -1, 0}); // tangent
-
-				addToBuffer(verts, {pos.x + 1, pos.y + 1, pos.z + 1});
-				addToBuffer(verts, {1, 1, 0}); // texCoord
-				addToBuffer(verts, {1, 0, 0}); // normal
-				addToBuffer(verts, {0, -1, 0}); // tangent
-				inds.push_back(baseInd);
-				inds.push_back(baseInd + 1);
-				inds.push_back(baseInd + 2);
-				inds.push_back(baseInd + 1);
-				inds.push_back(baseInd + 2);
-				inds.push_back(baseInd + 3);
-				baseInd += 4;
-
-				// -y
-				addToBuffer(verts, {pos.x + 0, pos.y + 0, pos.z + 0});
-				addToBuffer(verts, {0, 0, 0});	// texCoord
-				addToBuffer(verts, {0, -1, 0}); // normal
-				addToBuffer(verts, {0, 0, 1});	// tangent
-
-				addToBuffer(verts, {pos.x + 0, pos.y + 0, pos.z + 1});
-				addToBuffer(verts, {0, 1, 0});	// texCoord
-				addToBuffer(verts, {0, -1, 0}); // normal
-				addToBuffer(verts, {0, 0, 1});	// tangent
-
-				addToBuffer(verts, {pos.x + 1, pos.y + 0, pos.z + 0});
-				addToBuffer(verts, {1, 0, 0});	// texCoord
-				addToBuffer(verts, {0, -1, 0}); // normal
-				addToBuffer(verts, {0, 0, 1});	// tangent
-
-				addToBuffer(verts, {pos.x + 1, pos.y + 0, pos.z + 1});
-				addToBuffer(verts, {1, 1, 0});	// texCoord
-				addToBuffer(verts, {0, -1, 0}); // normal
-				addToBuffer(verts, {0, 0, 1});	// tangent
-				inds.push_back(baseInd);
-				inds.push_back(baseInd + 1);
-				inds.push_back(baseInd + 2);
-				inds.push_back(baseInd + 1);
-				inds.push_back(baseInd + 2);
-				inds.push_back(baseInd + 3);
-				baseInd += 4;
-
-				// +y
-				addToBuffer(verts, {pos.x + 0, pos.y + 1, pos.z + 0});
-				addToBuffer(verts, {0, 0, 0}); // texCoord
-				addToBuffer(verts, {0, 1, 0}); // normal
-				addToBuffer(verts, {0, 0, -1});	// tangent
-
-				addToBuffer(verts, {pos.x + 0, pos.y + 1, pos.z + 1});
-				addToBuffer(verts, {0, 1, 0}); // texCoord
-				addToBuffer(verts, {0, 1, 0}); // normal
-				addToBuffer(verts, {0, 0, -1});	// tangent
-
-				addToBuffer(verts, {pos.x + 1, pos.y + 1, pos.z + 0});
-				addToBuffer(verts, {1, 0, 0}); // texCoord
-				addToBuffer(verts, {0, 1, 0}); // normal
-				addToBuffer(verts, {0, 0, -1});	// tangent
-
-				addToBuffer(verts, {pos.x + 1, pos.y + 1, pos.z + 1});
-				addToBuffer(verts, {1, 1, 0}); // texCoord
-				addToBuffer(verts, {0, 1, 0}); // normal
-				addToBuffer(verts, {0, 0, -1});	// tangent
-				inds.push_back(baseInd);
-				inds.push_back(baseInd + 1);
-				inds.push_back(baseInd + 2);
-				inds.push_back(baseInd + 1);
-				inds.push_back(baseInd + 2);
-				inds.push_back(baseInd + 3);
-				baseInd += 4;
-
-				// -z
-				addToBuffer(verts, {pos.x + 0, pos.y + 0, pos.z + 0});
-				addToBuffer(verts, {0, 0, 0});	// texCoord
-				addToBuffer(verts, {0, 0, -1}); // normal
-				addToBuffer(verts, {1, 0, 0});	// tangent
-
-				addToBuffer(verts, {pos.x + 0, pos.y + 1, pos.z + 0});
-				addToBuffer(verts, {0, 1, 0});	// texCoord
-				addToBuffer(verts, {0, 0, -1}); // normal
-				addToBuffer(verts, {1, 0, 0});	// tangent
-
-				addToBuffer(verts, {pos.x + 1, pos.y + 0, pos.z + 0});
-				addToBuffer(verts, {1, 0, 0});	// texCoord
-				addToBuffer(verts, {0, 0, -1}); // normal
-				addToBuffer(verts, {1, 0, 0});	// tangent
-
-				addToBuffer(verts, {pos.x + 1, pos.y + 1, pos.z + 0});
-				addToBuffer(verts, {1, 1, 0});	// texCoord
-				addToBuffer(verts, {0, 0, -1}); // normal
-				addToBuffer(verts, {1, 0, 0});	// tangent
-				inds.push_back(baseInd);
-				inds.push_back(baseInd + 1);
-				inds.push_back(baseInd + 2);
-				inds.push_back(baseInd + 1);
-				inds.push_back(baseInd + 2);
-				inds.push_back(baseInd + 3);
-				baseInd += 4;
-
-				// +z
-				addToBuffer(verts, {pos.x + 0, pos.y + 0, pos.z + 1});
-				addToBuffer(verts, {0, 0, 0}); // texCoord
-				addToBuffer(verts, {0, 0, 1}); // normal
-				addToBuffer(verts, {-1, 0, 0});	// tangent
-
-				addToBuffer(verts, {pos.x + 0, pos.y + 1, pos.z + 1});
-				addToBuffer(verts, {0, 1, 0}); // texCoord
-				addToBuffer(verts, {0, 0, 1}); // normal
-				addToBuffer(verts, {-1, 0, 0});	// tangent
-
-				addToBuffer(verts, {pos.x + 1, pos.y + 0, pos.z + 1});
-				addToBuffer(verts, {1, 0, 0}); // texCoord
-				addToBuffer(verts, {0, 0, 1}); // normal
-				addToBuffer(verts, {-1, 0, 0});	// tangent
-
-				addToBuffer(verts, {pos.x + 1, pos.y + 1, pos.z + 1});
-				addToBuffer(verts, {1, 1, 0}); // texCoord
-				addToBuffer(verts, {0, 0, 1}); // normal
-				addToBuffer(verts, {-1, 0, 0});	// tangent
-				inds.push_back(baseInd);
-				inds.push_back(baseInd + 1);
-				inds.push_back(baseInd + 2);
-				inds.push_back(baseInd + 1);
-				inds.push_back(baseInd + 2);
-				inds.push_back(baseInd + 3);
-				baseInd += 4;
-			}
-		}
-	}
 	return true;
 }
 

@@ -15,6 +15,7 @@
 #include "OpenxrView.h"
 #include "input/BooleanInputEvent.h"
 #include "input/PoseInputEvent.h"
+#include "input/FloatInputEvent.h"
 #include "input/InputDevices.h"
 
 class OpenxrContext {
@@ -33,6 +34,7 @@ public:
 	std::map<Audace::OculusTouchController::InputName, XrAction> actions;
 	std::map<Audace::OculusTouchController::InputName, std::function<void(Audace::BooleanInputEvent)>> booleanInputHandlers;
 	std::map<Audace::OculusTouchController::InputName, std::function<void(Audace::PoseInputEvent)>> poseInputHandlers;
+	std::map<Audace::OculusTouchController::InputName, std::function<void(Audace::FloatInputEvent)>> floatInputHandlers;
 
 	XrPath leftHandPath{XR_NULL_PATH};
 	XrPath rightHandPath{XR_NULL_PATH};
@@ -56,6 +58,11 @@ public:
 	void addBooleanInputHandler(Audace::OculusTouchController::InputName name,
 								std::function<void(Audace::BooleanInputEvent)> handler) {
 		booleanInputHandlers[name] = handler;
+	}
+
+	void addFloatInputHandler(Audace::OculusTouchController::InputName name,
+								std::function<void(Audace::FloatInputEvent)> handler) {
+		floatInputHandlers[name] = handler;
 	}
 
 	void addPoseInputHandler(Audace::OculusTouchController::InputName name,

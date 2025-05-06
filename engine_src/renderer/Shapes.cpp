@@ -120,67 +120,33 @@ namespace Audace {
 	// glm::vec3 tangent = (dPos1 * dTexCoord2.y - dPos2 * dTexCoord1.y) * r;
 
 	Mesh *Shapes::cubePosNormTan() {
-		float *verts = new float[]{
-				//-x
-				0, 0, 0,	-1, 0, 0,	0, 1, 0,
-				0, 0, 1,	-1, 0, 0,	0, 1, 0,
-				0, 1, 0,	-1, 0, 0,	0, 1, 0,
-				0, 1, 1,	-1, 0, 0,	0, 1, 0,
-				//+x
-				1, 0, 0,	1, 0, 0,	0, 1, 0,
-				1, 0, 1,	1, 0, 0,	0, 1, 0,
-				1, 1, 0,	1, 0, 0,	0, 1, 0,
-				1, 1, 1,	1, 0, 0,	0, 1, 0,
-				//-y
-				0, 0, 0,	0, -1, 0,	1, 0, 0,
-				0, 0, 1,	0, -1, 0,	1, 0, 0,
-				1, 0, 0,	0, -1, 0,	1, 0, 0,
-				1, 0, 1,	0, -1, 0,	1, 0, 0,
-				//+y
-				0, 1, 0,	0, 1, 0,	1, 0, 0,
-				0, 1, 1,	0, 1, 0,	1, 0, 0,
-				1, 1, 0,	0, 1, 0,	1, 0, 0,
-				1, 1, 1,	0, 1, 0,	1, 0, 0,
-				//-z
-				0, 0, 0,	0, 0, -1,	0, 0, 1,
-				0, 1, 0,	0, 0, -1,	0, 0, 1,
-				1, 0, 0,	0, 0, -1,	0, 0, 1,
-				1, 1, 0,	0, 0, -1,	0, 0, 1,
-				//+z
-				0, 0, 1,	0, 0, 1,	0, 0, 1,
-				0, 1, 1,	0, 0, 1,	0, 0, 1,
-				1, 0, 1,	0, 0, 1,	0, 0, 1,
-				1, 1, 1,	0, 0, 1,	0, 0, 1,
-		};
-
 		unsigned short *indices = new unsigned short[]{
-				0, 1, 2,
-				1, 2, 3,
-				4, 5, 6,
-				5, 6, 7,
-				8, 9, 10,
-				9, 10, 11,
-				12, 13, 14,
-				13, 14, 15,
-				16, 17, 18,
-				17, 18, 19,
-				20, 21, 22,
-				21, 22, 23
+			0, 1, 2,
+			1, 2, 3,
+			4, 5, 6,
+			5, 6, 7,
+			8, 9, 10,
+			9, 10, 11,
+			12, 13, 14,
+			13, 14, 15,
+			16, 17, 18,
+			17, 18, 19,
+			20, 21, 22,
+			21, 22, 23
 		};
-		DataBuffer *vertexBuffer = new DataBuffer(verts, sizeof(float) * 6 * 4 * 9, GL_ARRAY_BUFFER,
-												  GL_STATIC_DRAW);
-		vertexBuffer->create();
-		vertexBuffer->bind();
 
+		DataBuffer *vertexBuffer = cubeBuffer();
 		DataBuffer *indexBuffer = new DataBuffer(indices, sizeof(unsigned short) * 36,
 												 GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
 		indexBuffer->create();
 
-		VertexAttribute *posAttr = new VertexAttribute(0, 3, GL_FLOAT, false, sizeof(float) * 9, 0);
-		VertexAttribute *normAttr = new VertexAttribute(2, 3, GL_FLOAT, false, sizeof(float) * 9, sizeof(float) * 3);
-		VertexAttribute *tanAttr = new VertexAttribute(3, 3, GL_FLOAT, false, sizeof(float) * 9, sizeof(float) * 6);
+		VertexAttribute *posAttr = new VertexAttribute(0, 3, GL_FLOAT, false, sizeof(float) * 12, 0);
+		VertexAttribute *texCoordAttr = new VertexAttribute(1, 3, GL_FLOAT, false, sizeof(float) * 12, sizeof(float) * 3);
+		VertexAttribute *normAttr = new VertexAttribute(2, 3, GL_FLOAT, false, sizeof(float) * 12, sizeof(float) * 6);
+		VertexAttribute *tanAttr = new VertexAttribute(3, 3, GL_FLOAT, false, sizeof(float) * 12, sizeof(float) * 9);
 		std::vector<VertexAttribute *> attrs;
 		attrs.push_back(posAttr);
+		attrs.push_back(texCoordAttr);
 		attrs.push_back(normAttr);
 		attrs.push_back(tanAttr);
 		VertexArray *vertexArray = new VertexArray(attrs);
@@ -189,6 +155,47 @@ namespace Audace {
 		Mesh *mesh = new Mesh(vertexArray, indexBuffer, 0, 36, GL_TRIANGLES,
 									GL_UNSIGNED_SHORT, nullptr);
 		return mesh;
+	}
+
+	DataBuffer* Shapes::cubeBuffer()
+	{
+		float *verts = new float[]{
+			//-x
+			0, 0, 0,	0, 0, 0,	-1, 0, 0,	0, 1, 0,
+			0, 0, 1,	0, 1, 0,	-1, 0, 0,	0, 1, 0,
+			0, 1, 0,	1, 0, 0,	-1, 0, 0,	0, 1, 0,
+			0, 1, 1,	1, 1, 0,	-1, 0, 0,	0, 1, 0,
+			//+x	
+			1, 0, 0,	0, 0, 0,	1, 0, 0,	0, -1, 0,
+			1, 0, 1,	0, 1, 0,	1, 0, 0,	0, -1, 0,
+			1, 1, 0,	1, 0, 0,	1, 0, 0,	0, -1, 0,
+			1, 1, 1,	1, 1, 0,	1, 0, 0,	0, -1, 0,
+			//-y	
+			0, 0, 0,	0, 0, 0,	0, -1, 0,	0, 0, 1,
+			0, 0, 1,	0, 1, 0,	0, -1, 0,	0, 0, 1,
+			1, 0, 0,	1, 0, 0,	0, -1, 0,	0, 0, 1,
+			1, 0, 1,	1, 1, 0,	0, -1, 0,	0, 0, 1,
+			//+y	
+			0, 1, 0,	0, 0, 0,	0, 1, 0,	0, 0, -1,
+			0, 1, 1,	0, 1, 0,	0, 1, 0,	0, 0, -1,
+			1, 1, 0,	1, 0, 0,	0, 1, 0,	0, 0, -1,
+			1, 1, 1,	1, 1, 0,	0, 1, 0,	0, 0, -1,
+			//-z	
+			0, 0, 0,	0, 0, 0,	0, 0, -1,	1, 0, 0,
+			0, 1, 0,	0, 1, 0,	0, 0, -1,	1, 0, 0,
+			1, 0, 0,	1, 0, 0,	0, 0, -1,	1, 0, 0,
+			1, 1, 0,	1, 1, 0,	0, 0, -1,	1, 0, 0,
+			//+z	
+			0, 0, 1,	0, 0, 0,	0, 0, 1,	-1, 0, 0,
+			0, 1, 1,	0, 1, 0,	0, 0, 1,	-1, 0, 0,
+			1, 0, 1,	1, 0, 0,	0, 0, 1,	-1, 0, 0,
+			1, 1, 1,	1, 1, 0,	0, 0, 1,	-1, 0, 0,
+		};
+		DataBuffer *vertexBuffer = new DataBuffer(verts, sizeof(float) * 6 * 4 * 12, GL_ARRAY_BUFFER,
+												GL_STATIC_DRAW);
+		vertexBuffer->create();
+		vertexBuffer->bind();
+		return vertexBuffer;
 	}
 
 	Mesh *Shapes::spherePositions(int xResolution, int yResolution) {

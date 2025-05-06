@@ -6,6 +6,8 @@ layout (location = 1) in vec3 inTexCoord;
 layout (location = 2) in vec3 normal;
 layout (location = 3) in vec3 tangent;
 
+uniform vec3 voxelPos[8*8*8];
+
 struct Light {
 	vec3 position;
 	vec3 color;
@@ -25,9 +27,10 @@ out vec3 tangentFragPos;
 out vec3 tangentLightPos[4];
 
 void main() {
-	gl_Position = vpMat * worldMat * position;
+	vec4 pos = vec4(position.xyz + voxelPos[gl_InstanceID], 1.0);
+	gl_Position = vpMat * worldMat * pos;
 	texCoord = inTexCoord / textureScale;
-	fragPos = (worldMat * position).xyz;
+	fragPos = (worldMat * pos).xyz;
 
 	// calculate TBN matrix for normal mapping
 	vec3 N = normalize(worldMat * vec4(normal, 0.0)).xyz;

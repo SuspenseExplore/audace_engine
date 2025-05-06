@@ -8,6 +8,8 @@
 #include "renderer/VertexArray.h"
 #include "renderer/Mesh.h"
 #include "FastNoiseLite.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
 #ifdef AU_PLATFORM_GLFW
 #include "KeyboardManager.h"
@@ -16,9 +18,10 @@
 
 void ProcTerrainScene::loadAssets(Audace::FileLoader *fileLoader)
 {
+	shader = Audace::AssetStore::getShader("terrain");
 	material = new Audace::Material;
 	material->setName("groundMat");
-	material->setShader(Audace::AssetStore::getShader("terrain"));
+	material->setShader(shader);
 	material->setAmbientColor({1.0, 1.0, 1.0});
 	material->setDiffuseColor({1.0, 1.0, 1.0});
 	material->setSpecularColor({0.5, 0.5, 0.5});
@@ -28,33 +31,8 @@ void ProcTerrainScene::loadAssets(Audace::FileLoader *fileLoader)
 	material->setNormalMap(Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_NormalGL.jpg"));
 	material->setSpecularMap(Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_Roughness.jpg"));
 
-	// generateTerrain();
-}
-
-void ProcTerrainScene::generateTerrain()
-{
-	// std::vector<Audace::Mesh *> meshes;
-	// for (int x = -2; x < 2; x++)
-	// {
-	// 	for (int y = -2; y < 2; y++)
-	// 	{
-	// 		for (int z = -1; z < 2; z++)
-	// 		{
-	// 			Audace::Mesh *mesh = terrainGen.genChunk({x, y, z});
-	// 			mesh->setMaterial(material);
-	// 			meshes.push_back(mesh);
-	// 		}
-	// 	}
-	// }
-
-	// cubeSprite = new Audace::Sprite(meshes);
-}
-
-void ProcTerrainScene::addToBuffer(std::vector<float> &buf, glm::vec3 vec)
-{
-	buf.push_back(vec.x);
-	buf.push_back(vec.y);
-	buf.push_back(vec.z);
+	cubeSprite = Audace::AssetStore::getCubeSprite();
+	cubeSprite->getMesh()->setMaterial(material);
 }
 
 void ProcTerrainScene::render()
@@ -63,7 +41,7 @@ void ProcTerrainScene::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera->update();
-	glm::vec3 camPos = camera->getPosition();
+	glm::vec3 camPos = camera->getOriginPos() + camera->getPosition();
 	glm::vec3 baseChunk = glm::vec3{(int)camPos.x / CHUNK_SIZE, (int)camPos.y / CHUNK_SIZE, (int)camPos.z / CHUNK_SIZE};
 
 	// check for chunks that have loaded
@@ -71,12 +49,6 @@ void ProcTerrainScene::render()
 	{
 		if (iter->second->readyToLoad())
 		{
-			Audace::VoxelTerrainGen::ChunkBuilder *cb = iter->second;
-			Audace::Mesh *mesh = cb->makeMesh();
-			mesh->setMaterial(material);
-			Audace::Sprite *sprite = new Audace::Sprite({mesh});
-			sprites.push_back(sprite);
-			break;
 		}
 	}
 
@@ -92,8 +64,8 @@ void ProcTerrainScene::render()
 				std::string k = Audace::VoxelTerrainGen::ChunkBuilder::idString(chunk);
 				if (loadingChunks.find(k) == loadingChunks.end())
 				{
-					Audace::VoxelTerrainGen::ChunkBuilder *cb = terrainGen.builder(chunk);
-					cb->future = std::async(std::launch::async, &Audace::VoxelTerrainGen::ChunkBuilder::genGeometry, cb);
+					Audace::VoxelTerrainGen::ChunkBuilder *cb = terrainGen.builder(chunk, CHUNK_SIZE);
+					cb->future = std::async(std::launch::async | std::launch::deferred, &Audace::VoxelTerrainGen::ChunkBuilder::genPositions, cb);
 					loadingChunks[k] = cb;
 				}
 			}
@@ -103,17 +75,27 @@ void ProcTerrainScene::render()
 	Audace::ShaderProgram *shader = material->getShader();
 	shader->bind();
 	shader->setUniformVec4("ambientLight", 0.6, 0.6, 0.8, 1);
-	shader->setUniformVec3("light[0].position", 30, 20, 30);
+	shader->setUniformVec3("light[0].position", lightPos);
 	shader->setUniformVec3("light[0].color", 0.8, 0.8, 0.5);
 	shader->setUniformFloat("light[0].intensity", 1);
 	shader->setUniformVec3("textureScale", 1.0, 1.0, 1.0);
 	shader->setUniformVec3("viewPos", camPos);
+	material->apply();
 
-	for (auto iter = sprites.begin(); iter != sprites.end(); iter++)
+	for (auto iter = loadingChunks.begin(); iter != loadingChunks.end(); iter++)
 	{
-		(*iter)->render(this);
+		Audace::VoxelTerrainGen::ChunkBuilder *cb = iter->second;
+		if (cb->loaded && cb->positions.size() > 0)
+		{
+			shader->setUniformVec3Array("voxelPos[0]", glm::value_ptr(cb->positions[0]), cb->positions.size());
+			glm::mat4 worldMat = glm::mat4(1.0);
+			shader->setUniformMat4("worldMat", worldMat);
+			shader->setUniformMat4("vpMat", camera->getViewProjMatrix());
+			cubeSprite->getMesh()->getVertexArray()->bind();
+			cubeSprite->getMesh()->getIndexBuffer()->bind();
+			glDrawElementsInstanced(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0, cb->positions.size());
+		}
 	}
-	// cubeSprite->render(this);
 }
 
 void ProcTerrainScene::disposeAssets()

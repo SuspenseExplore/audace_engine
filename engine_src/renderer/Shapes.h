@@ -6,6 +6,7 @@
 #define AU_SHAPES_H
 
 #include "renderer/Mesh.h"
+#include "renderer/DataBuffer.h"
 
 namespace Audace {
 	class Shapes {
@@ -14,6 +15,7 @@ namespace Audace {
 		static Mesh* circlePositions();
 		static Mesh* cubePositions();
 		static Mesh* cubePosNormTan();
+		static DataBuffer* cubeBuffer();
 		static Mesh* spherePositions(int xResolution, int yResolution);
 	};
 }

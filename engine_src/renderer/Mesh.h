@@ -34,6 +34,8 @@ namespace Audace
 			return new Mesh(vertexArray, indexBuffer, startIndex, vertexCount, renderMode, indexType, material);
 		}
 
+		VertexArray* getVertexArray() {return vertexArray;}
+		DataBuffer* getIndexBuffer() {return indexBuffer;}
 		void setMaterial(BaseMaterial *mat) { material = mat; }
 		BaseMaterial* getMaterial() {return material;}
 	};
