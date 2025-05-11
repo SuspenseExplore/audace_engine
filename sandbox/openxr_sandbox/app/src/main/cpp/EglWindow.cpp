@@ -91,7 +91,7 @@ bool EglWindow::init(android_app* app) {
 	ImGui::StyleColorsDark();
 	ImGui_ImplAndroid_Init(app->window);
 	ImGui_ImplOpenGL3_Init("#version 300 es");
-	ImGui::GetStyle().ScaleAllSizes(2);
+	ImGui::GetStyle().ScaleAllSizes(4);
 
 	return true;
 }

@@ -9,6 +9,7 @@
 #include "openxr/openxr_common.h"
 #include "glm/glm.hpp"
 #include "input/InputDevices.h"
+#include "openxr/OpenxrSwapchain.h"
 
 bool AppController::createWindow() {
 	fileLoader = new Audace::FileLoader(androidApp->activity->assetManager);
@@ -200,16 +201,11 @@ void AppController::renderFrame() {
 					}
 				}
 			}
-//			viewCount = prepareViews(frameState, xrContext.xrViewSpace);
-//			if (viewCount > 0) {
-//				projectionLayerViews.resize(viewCount);
-//				{
-//					XrCompositionLayerProjection layer{XR_TYPE_COMPOSITION_LAYER_PROJECTION};
-//					if (renderUiLayer(projectionLayerViews, layer)) {
-//						layers.push_back(reinterpret_cast<XrCompositionLayerBaseHeader *>(&layer));
-//					}
-//				}
-//			}
+			XrCompositionLayerQuad quadLayer{XR_TYPE_COMPOSITION_LAYER_QUAD};
+			if (renderUiLayer(quadLayer))
+			{
+				layers.push_back(reinterpret_cast<XrCompositionLayerBaseHeader *>(&quadLayer));
+			}
 		}
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		endFrame(layers);
@@ -255,40 +251,33 @@ bool AppController::renderLayer(std::vector<XrCompositionLayerProjectionView> &p
 }
 
 bool
-AppController::renderUiLayer(std::vector<XrCompositionLayerProjectionView> &projectionLayerViews,
-							 XrCompositionLayerProjection &layer) {
+AppController::renderUiLayer(XrCompositionLayerQuad &layer) {
 	XrResult res;
+	OpenxrSwapchain sc = xrContext.uiSwapchain;
 
-	// Render view to the appropriate part of the swapchain image.
-	for (uint32_t i = 0; i < projectionLayerViews.size(); i++) {
-		// Each view has a separate swapchain which is acquired, rendered to, and released.
-		OpenxrView view = xrContext.getView(i);
-		OpenxrSwapchain swapchain = view.getSwapchain();
-		if (!swapchain.startFrame()) {
-			return false;
-		}
-
-		projectionLayerViews[i] = {XR_TYPE_COMPOSITION_LAYER_PROJECTION_VIEW};
-		projectionLayerViews[i].pose = view.getViewData().pose;
-		projectionLayerViews[i].fov = view.getViewData().fov;
-		projectionLayerViews[i].subImage.swapchain = swapchain.getHandle();
-		projectionLayerViews[i].subImage.imageRect.offset = {0, 0};
-		projectionLayerViews[i].subImage.imageRect.extent = {view.getWidth(), view.getHeight()};
-
-		renderUiView(view);
-		if (!swapchain.endFrame()) {
-			return false;
-		}
+	// Each view has a separate swapchain which is acquired, rendered to, and released.
+	if (!sc.startFrame())
+	{
+		return false;
 	}
 
+	layer.pose.position = {0, 0, -3};
+	layer.pose.orientation = {0, 0, 0, 1};
 	layer.space = xrContext.xrViewSpace;
-	layer.layerFlags = 0;
-//			m_options->Parsed.EnvironmentBlendMode == XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND
-//			? XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT |
-//			  XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT
-//			: 0;
-	layer.viewCount = (uint32_t) projectionLayerViews.size();
-	layer.views = projectionLayerViews.data();
+	layer.size = {5, 5};
+	layer.subImage.swapchain = sc.getHandle();
+	layer.subImage.imageRect.offset = {0, 0};
+	layer.subImage.imageRect.extent = {sc.getSize().x, sc.getSize().y};
+	layer.eyeVisibility = XR_EYE_VISIBILITY_BOTH;
+	layer.layerFlags =
+			XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT |
+			XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT;
+
+	renderUi();
+
+	if (!sc.endFrame()) {
+		return false;
+	}
 	return true;
 }
 
@@ -314,22 +303,32 @@ void AppController::renderView(OpenxrView view) {
 	AU_CHECK_GL_ERRORS();
 }
 
-void AppController::renderUiView(OpenxrView view) {
+void AppController::renderUi() {
+	window.beginFrame();
 
-	glViewport(0, 0, view.getWidth(), view.getHeight());
+	glm::ivec2 size = xrContext.uiSwapchain.getSize();
+	glViewport(0, 0, size.x, size.y);
 	AU_CHECK_GL_ERRORS();
 
-//	glFrontFace(GL_CW);
-//	glCullFace(GL_BACK);
+	glFrontFace(GL_CW);
+	glCullFace(GL_BACK);
 	glDisable(GL_CULL_FACE);
 	AU_CHECK_GL_ERRORS();
-	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_DEPTH_TEST);
+	AU_CHECK_GL_ERRORS();
+	glEnable(GL_BLEND);
+	AU_CHECK_GL_ERRORS();
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	AU_CHECK_GL_ERRORS();
 
-	window.beginFrame();
-//	scene->renderUi(view);
+	glClearColor(0, 0, 0, 0.5);
+	AU_CHECK_GL_ERRORS();
+	glClear(GL_COLOR_BUFFER_BIT);
+	AU_CHECK_GL_ERRORS();
+	((ProcTerrainScene*) scene)->renderUi();
 	window.endFrame();
 
+	glClearColor(0, 0, 1, 1);
 	glBindVertexArray(0);
 	AU_CHECK_GL_ERRORS();
 	glUseProgram(0);

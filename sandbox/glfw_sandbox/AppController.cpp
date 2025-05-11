@@ -155,6 +155,7 @@ namespace Audace
 	void AppController::renderFrame()
 	{
 		scene->render();
+		((ProcTerrainScene*)scene)->renderUi();
 	}
 
 	void AppController::shutdown()

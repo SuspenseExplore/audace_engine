@@ -51,11 +51,10 @@ public:
 
 	bool renderLayer(std::vector<XrCompositionLayerProjectionView> &projectionLayerViews,
 					 XrCompositionLayerProjection &layer);
-	bool renderUiLayer(std::vector<XrCompositionLayerProjectionView> &projectionLayerViews,
-					 XrCompositionLayerProjection &layer);
+	bool renderUiLayer(XrCompositionLayerQuad &layer);
 
 	void renderView(OpenxrView view);
-	void renderUiView(OpenxrView view);
+	void renderUi();
 
 	android_app *getAndroidApp() { return androidApp; }
 

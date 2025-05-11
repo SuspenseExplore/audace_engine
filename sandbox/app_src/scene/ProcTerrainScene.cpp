@@ -10,6 +10,7 @@
 #include "FastNoiseLite.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
+#include "imgui.h"
 
 #ifdef AU_PLATFORM_GLFW
 #include "KeyboardManager.h"
@@ -96,6 +97,16 @@ void ProcTerrainScene::render()
 			glDrawElementsInstanced(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0, cb->positions.size());
 		}
 	}
+}
+
+void ProcTerrainScene::renderUi() {
+	ImGui::Begin("GL Capabilities", nullptr, ImGuiWindowFlags_Modal);
+	ImGui::SetWindowPos(ImVec2(600, 600));
+	ImGui::Text("Vendor: %s", glGetString(GL_VENDOR));
+	ImGui::Text("Renderer: %s", glGetString(GL_RENDERER));
+	ImGui::Text("Version: %s", glGetString(GL_VERSION));
+	ImGui::Text("Shading Language Version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	ImGui::End();
 }
 
 void ProcTerrainScene::disposeAssets()

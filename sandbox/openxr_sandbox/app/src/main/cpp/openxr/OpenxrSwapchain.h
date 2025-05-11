@@ -8,11 +8,15 @@
 #include <vector>
 #include <map>
 #include <GLES/gl.h>
+#include "glm/glm.hpp"
 
 #include "openxr_common.h"
 
 class OpenxrSwapchain {
 	XrSwapchain handle;
+	bool usesDepthBuffer;
+	glm::ivec2 size;
+	int64_t format;
 
 	std::vector<XrSwapchainImageOpenGLESKHR> images;
 	std::vector<GLuint> depthBuffers;
@@ -20,7 +24,7 @@ class OpenxrSwapchain {
 	GLuint makeDepthBuffer(GLuint colorBuffer);
 
 public:
-	bool init(XrSession session, uint32_t w, uint32_t h, int64_t f);
+	bool init(XrSession session, uint32_t w, uint32_t h, int64_t f, bool useDepthBuffer = true);
 
 	XrSwapchain getHandle() {return handle;}
 	XrSwapchainImageOpenGLESKHR* getImage(uint32_t index) {return &images[index];}
@@ -28,6 +32,8 @@ public:
 
 	bool startFrame();
 	bool endFrame();
+
+	glm::ivec2 getSize() { return size; }
 };
 
 

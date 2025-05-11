@@ -114,13 +114,18 @@ bool OpenxrContext::createSession(EGLDisplay eglDisplay, EGLContext eglContext) 
 	views.resize(viewCount);
 
 	int64_t chosenFormat = chooseViewFormat(xrSession);
+	unsigned int width = 800, height = 600;
 	for (uint32_t j = 0; j < viewCount; j++) {
 		const XrViewConfigurationView &cfg = xrViewConfigs[j];
 
+		width = cfg.recommendedImageRectWidth;
+		height = cfg.recommendedImageRectHeight;
 		if (!views[j].init(xrSession, cfg, chosenFormat)) {
 			return false;
 		}
 	}
+
+	uiSwapchain.init(xrSession, width, height, chosenFormat, false);
 
 	return true;
 }

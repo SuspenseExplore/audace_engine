@@ -30,6 +30,7 @@ public:
 	std::vector<OpenxrView> views;
 	std::vector<XrViewConfigurationView> xrViewConfigs;
 	uint32_t viewCount;
+	OpenxrSwapchain uiSwapchain;
 
 	std::map<Audace::OculusTouchController::InputName, XrAction> actions;
 	std::map<Audace::OculusTouchController::InputName, std::function<void(Audace::BooleanInputEvent)>> booleanInputHandlers;

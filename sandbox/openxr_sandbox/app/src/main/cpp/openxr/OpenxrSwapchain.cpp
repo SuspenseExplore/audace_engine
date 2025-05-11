@@ -8,7 +8,10 @@
 #include "openxr_common.h"
 #include "OpenxrSwapchain.h"
 
-bool OpenxrSwapchain::init(XrSession session, uint32_t width, uint32_t height, int64_t format) {
+bool OpenxrSwapchain::init(XrSession session, uint32_t width, uint32_t height, int64_t format, bool useDepthBuffer) {
+	usesDepthBuffer = useDepthBuffer;
+	size = { width, height };
+
 	XrSwapchainCreateInfo swapchainCreateInfo{XR_TYPE_SWAPCHAIN_CREATE_INFO};
 	swapchainCreateInfo.arraySize = 1;
 	swapchainCreateInfo.format = format;
@@ -32,10 +35,11 @@ bool OpenxrSwapchain::init(XrSession session, uint32_t width, uint32_t height, i
 				  xrEnumerateSwapchainImages(handle, imageCount, &imageCount,
 											 reinterpret_cast<XrSwapchainImageBaseHeader *>(&images[0])));
 
-	for (XrSwapchainImageOpenGLESKHR img: images) {
-		depthBuffers.push_back(makeDepthBuffer(img.image));
+	if (usesDepthBuffer) {
+		for (XrSwapchainImageOpenGLESKHR img: images) {
+			depthBuffers.push_back(makeDepthBuffer(img.image));
+		}
 	}
-
 	return true;
 }
 
@@ -73,8 +77,10 @@ bool OpenxrSwapchain::startFrame() {
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
 						   getImage(swapchainImageIndex)->image,
 						   0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
-						   getDepthBuffer(swapchainImageIndex), 0);
+	if (usesDepthBuffer) {
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
+							   getDepthBuffer(swapchainImageIndex), 0);
+	}
 
 	return true;
 }
