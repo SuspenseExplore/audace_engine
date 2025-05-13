@@ -28,6 +28,7 @@ namespace Audace
 		Texture2d *whiteTex = new Texture2d(data);
 		whiteTex->create();
 		textures["AU_white_texture"] = whiteTex;
+		billboardMat->setTexture(whiteTex);
 	}
 
 	ShaderProgram *AssetStore::getShader(const std::string &name)

@@ -3,6 +3,7 @@
 
 #include "scene/Scene.h"
 #include "renderer/material/Material.h"
+#include "renderer/material/SimpleBillboardMaterial.h"
 #include "renderer/Sprite.h"
 #include "geom/VoxelTerrainGen.h"
 #include "glm/glm.hpp"
@@ -21,8 +22,10 @@ class ProcTerrainScene : public Audace::Scene
 	Audace::Sprite *cubeSprite;
 	Audace::ShaderProgram *shader;
 	Audace::Material *material;
+	Audace::SimpleBillboardMaterial *whiteMat;
 
 	glm::vec3 lightPos = glm::vec3{30, 20, 30};
+	Audace::Pose leftAimPose;
 
 	Audace::BaseCamera *camera;
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
@@ -48,6 +51,7 @@ class ProcTerrainScene : public Audace::Scene
 
 	void setLightPos(glm::vec3 pos) { lightPos = pos + camera->getOriginPos(); }
 	void teleport() { camera->setOriginPos(lightPos - camera->getPosition()); }
+	void setLeftAimPose(Audace::Pose p) { leftAimPose = p; }
 };
 
 

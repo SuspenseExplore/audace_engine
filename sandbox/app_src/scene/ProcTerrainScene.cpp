@@ -32,13 +32,15 @@ void ProcTerrainScene::loadAssets(Audace::FileLoader *fileLoader)
 	material->setNormalMap(Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_NormalGL.jpg"));
 	material->setSpecularMap(Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_Roughness.jpg"));
 
+	whiteMat = Audace::AssetStore::simpleBillboardMaterial();
 	cubeSprite = Audace::AssetStore::getCubeSprite();
-	cubeSprite->getMesh()->setMaterial(material);
+	cubeSprite->getMesh()->setMaterial(whiteMat);
+	cubeSprite->setScale({0.01, 0.01, -1.0});
 }
 
 void ProcTerrainScene::render()
 {
-	glClearColor(0, 0, 1, 1);
+	glClearColor(0, 0, 1, 0.2);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera->update();
@@ -97,6 +99,10 @@ void ProcTerrainScene::render()
 			glDrawElementsInstanced(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0, cb->positions.size());
 		}
 	}
+
+	cubeSprite->setPosition(leftAimPose.position);
+	cubeSprite->setOrientation(leftAimPose.orientation);
+	cubeSprite->render(this);
 }
 
 void ProcTerrainScene::renderUi() {

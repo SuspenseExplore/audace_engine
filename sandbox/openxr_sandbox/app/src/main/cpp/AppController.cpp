@@ -38,14 +38,14 @@ bool AppController::createXrSession() {
 //			}
 //		});
 //	}
-//	{
-//		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_AIM_POSE;
-//		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
-//			if (event.changed) {
-//				scene->setAimPose(event.state);
-//			}
-//		});
-//	}
+	{
+		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_AIM_POSE;
+		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
+			if (event.changed) {
+				reinterpret_cast<ProcTerrainScene*>(scene)->setLeftAimPose(event.state);
+			}
+		});
+	}
 	{
 		OculusTouchController::InputName name = OculusTouchController::InputName::RIGHT_A_CLICK;
 		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {
@@ -128,7 +128,7 @@ XrFrameState *AppController::startFrame() {
 bool AppController::endFrame(std::vector<XrCompositionLayerBaseHeader *> layers) {
 	XrFrameEndInfo frameEndInfo{XR_TYPE_FRAME_END_INFO};
 	frameEndInfo.displayTime = currentFrameState.predictedDisplayTime;
-	frameEndInfo.environmentBlendMode = XR_ENVIRONMENT_BLEND_MODE_OPAQUE;
+	frameEndInfo.environmentBlendMode = XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND;
 	frameEndInfo.layerCount = (uint32_t) layers.size();
 	frameEndInfo.layers = layers.data();
 	XR_ERROR_BAIL("xrEndFrame", xrEndFrame(xrContext.xrSession, &frameEndInfo));
@@ -240,7 +240,7 @@ bool AppController::renderLayer(std::vector<XrCompositionLayerProjectionView> &p
 	}
 
 	layer.space = xrContext.xrWorldSpace;
-	layer.layerFlags = 0;
+	layer.layerFlags = XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND;
 //			m_options->Parsed.EnvironmentBlendMode == XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND
 //			? XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT |
 //			  XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT
