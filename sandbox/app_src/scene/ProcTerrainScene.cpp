@@ -97,6 +97,7 @@ void ProcTerrainScene::render()
 			cubeSprite->getMesh()->getVertexArray()->bind();
 			cubeSprite->getMesh()->getIndexBuffer()->bind();
 			glDrawElementsInstanced(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0, cb->positions.size());
+			renderChunkData(cb->idString());
 		}
 	}
 
@@ -105,14 +106,28 @@ void ProcTerrainScene::render()
 	cubeSprite->render(this);
 }
 
-void ProcTerrainScene::renderUi() {
-	ImGui::Begin("GL Capabilities", nullptr, ImGuiWindowFlags_Modal);
-	ImGui::SetWindowPos(ImVec2(600, 600));
-	ImGui::Text("Vendor: %s", glGetString(GL_VENDOR));
-	ImGui::Text("Renderer: %s", glGetString(GL_RENDERER));
-	ImGui::Text("Version: %s", glGetString(GL_VERSION));
-	ImGui::Text("Shading Language Version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
-	ImGui::End();
+void ProcTerrainScene::renderChunkData(std::string chunkId)
+{
+	Audace::VoxelTerrainGen::ChunkBuilder *chunk = loadingChunks[chunkId];
+	glm::vec3 id = chunk->id;
+	glm::vec4 worldPos = glm::vec4(id * (float) chunk->chunkSize, 1.0);
+	glm::mat4 m = camera->getViewProjMatrix();
+	worldPos = m * worldPos;
+	worldPos = worldPos / worldPos.w;
+	if (worldPos.z > -1.0 && worldPos.z < 1.0)
+	{
+		std::string label = "Chunk " + chunkId;
+		ImGui::Begin(label.c_str(), nullptr, ImGuiWindowFlags_NoMove);
+		ImGui::SetWindowPos(ImVec2((worldPos.x + 1.0) * 0.5 * 1280.0, (1.0 - worldPos.y) * 0.5 * 720.0));
+
+		ImGui::Text("pos: %f,%f,%f", worldPos.x, worldPos.y, worldPos.z);
+		ImGui::End();
+	}
+}
+
+void ProcTerrainScene::renderUi()
+{
+	
 }
 
 void ProcTerrainScene::disposeAssets()

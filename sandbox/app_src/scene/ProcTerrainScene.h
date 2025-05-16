@@ -44,6 +44,7 @@ class ProcTerrainScene : public Audace::Scene
 	void loadAssets(Audace::FileLoader *fileLoader) override;
 	void render() override;
 	void renderUi();
+	void renderChunkData(std::string chunkId);
 	void disposeAssets() override;
 
 	void setCamera(Audace::BaseCamera *camera) override {this->camera = camera; }
