@@ -43,6 +43,7 @@ public:
 	XrSpace leftHandPoseSpace{XR_NULL_HANDLE};
 	XrSpace rightHandPoseSpace{XR_NULL_HANDLE};
 	XrSpace leftHandAimSpace{XR_NULL_HANDLE};
+	XrSpace leftAimViewSpace{XR_NULL_HANDLE};
 
 	bool init(android_app *app);
 

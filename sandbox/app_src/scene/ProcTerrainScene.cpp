@@ -97,7 +97,6 @@ void ProcTerrainScene::render()
 			cubeSprite->getMesh()->getVertexArray()->bind();
 			cubeSprite->getMesh()->getIndexBuffer()->bind();
 			glDrawElementsInstanced(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0, cb->positions.size());
-			renderChunkData(cb->idString());
 		}
 	}
 
@@ -117,8 +116,8 @@ void ProcTerrainScene::renderChunkData(std::string chunkId)
 	if (worldPos.z > -1.0 && worldPos.z < 1.0)
 	{
 		std::string label = "Chunk " + chunkId;
-		ImGui::Begin(label.c_str(), nullptr, ImGuiWindowFlags_NoMove);
-		ImGui::SetWindowPos(ImVec2((worldPos.x + 1.0) * 0.5 * 1280.0, (1.0 - worldPos.y) * 0.5 * 720.0));
+		ImGui::Begin(label.c_str(), nullptr, ImGuiWindowFlags_None);
+		ImGui::SetWindowPos(ImVec2((worldPos.x + 1.0) * 0.5 * appController->getWidth(), (1.0 - worldPos.y) * 0.5 * appController->getHeight()));
 
 		ImGui::Text("pos: %f,%f,%f", worldPos.x, worldPos.y, worldPos.z);
 		ImGui::End();
@@ -127,7 +126,15 @@ void ProcTerrainScene::renderChunkData(std::string chunkId)
 
 void ProcTerrainScene::renderUi()
 {
-	
+
+	for (auto iter = loadingChunks.begin(); iter != loadingChunks.end(); iter++)
+	{
+		Audace::VoxelTerrainGen::ChunkBuilder *cb = iter->second;
+		if (cb->loaded && cb->positions.size() > 0)
+		{
+			renderChunkData(cb->idString());
+		}
+	}
 }
 
 void ProcTerrainScene::disposeAssets()

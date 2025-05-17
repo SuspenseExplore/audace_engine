@@ -29,6 +29,8 @@ class AppController : public Audace::BaseAppController {
 	Audace::Scene *scene;
 	int nextScene = SandboxScene::CURRENT;
 
+	bool xButtonDown = false;
+
 	void startNextScene();
 
 public:
@@ -63,8 +65,10 @@ public:
 	EglWindow getWindow() { return window; }
 
 	void setScene(int nextScene) override;
-	int getWidth() override { return 0; }
-	int getHeight() override { return 0; }
+
+	// all the swapchains should have the same dimensions
+	int getWidth() override { return xrContext.uiSwapchain.getSize().x; }
+	int getHeight() override { return xrContext.uiSwapchain.getSize().y; }
 };
 
 

@@ -10,6 +10,7 @@
 #include "glm/glm.hpp"
 #include "input/InputDevices.h"
 #include "openxr/OpenxrSwapchain.h"
+#include "imgui.h"
 
 bool AppController::createWindow() {
 	fileLoader = new Audace::FileLoader(androidApp->activity->assetManager);
@@ -38,6 +39,17 @@ bool AppController::createXrSession() {
 //			}
 //		});
 //	}
+	{
+		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_AIM_VIEW_POSE;
+		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
+			if (event.changed) {
+				ImGuiIO &io = ImGui::GetIO();
+				float x = (event.state.position.x + 1.0) * xrContext.uiSwapchain.getSize().x * 0.5;
+				float y = (1.0 - event.state.position.y) * xrContext.uiSwapchain.getSize().y * 0.5;
+				io.AddMousePosEvent(x, y);
+			}
+		});
+	}
 	{
 		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_AIM_POSE;
 		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
@@ -80,14 +92,14 @@ bool AppController::createXrSession() {
 			}
 		});
 	}
-//	{
-//		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_Y_CLICK;
-//		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {
-//			if (event.state && event.changed) {
-//				scene->randomLightColor();
-//			}
-//		});
-//	}
+	{
+		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_X_CLICK;
+		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {
+			if (event.changed) {
+				xButtonDown = event.state;
+			}
+		});
+	}
 	xrContext.registerActions();
 	return true;
 }
@@ -122,6 +134,9 @@ XrFrameState *AppController::startFrame() {
 		LOGE("Failed to process XR actions");
 		return nullptr;
 	}
+	ImGuiIO &io = ImGui::GetIO();
+	io.AddMouseButtonEvent(0, xButtonDown);
+	io.MouseDrawCursor = false;
 	return &currentFrameState;
 }
 
@@ -185,6 +200,7 @@ uint32_t AppController::prepareViews(XrFrameState *frameState, XrSpace space) {
 void AppController::renderFrame() {
 	XrFrameState *frameState = startFrame();
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+	window.beginFrame();
 
 	if (frameState != nullptr) {
 		std::vector<XrCompositionLayerBaseHeader *> layers;
@@ -207,6 +223,7 @@ void AppController::renderFrame() {
 				layers.push_back(reinterpret_cast<XrCompositionLayerBaseHeader *>(&quadLayer));
 			}
 		}
+		window.endFrame();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		endFrame(layers);
 	}
@@ -293,9 +310,7 @@ void AppController::renderView(OpenxrView view) {
 	glEnable(GL_DEPTH_TEST);
 	AU_CHECK_GL_ERRORS();
 
-	window.beginFrame();
 	scene->render();
-	window.endFrame();
 
 	glBindVertexArray(0);
 	AU_CHECK_GL_ERRORS();
@@ -304,8 +319,6 @@ void AppController::renderView(OpenxrView view) {
 }
 
 void AppController::renderUi() {
-	window.beginFrame();
-
 	glm::ivec2 size = xrContext.uiSwapchain.getSize();
 	glViewport(0, 0, size.x, size.y);
 	AU_CHECK_GL_ERRORS();
@@ -325,8 +338,9 @@ void AppController::renderUi() {
 	AU_CHECK_GL_ERRORS();
 	glClear(GL_COLOR_BUFFER_BIT);
 	AU_CHECK_GL_ERRORS();
+	ImGuiIO &io = ImGui::GetIO();
+	io.MouseDrawCursor = true;
 	((ProcTerrainScene*) scene)->renderUi();
-	window.endFrame();
 
 	glClearColor(0, 0, 1, 1);
 	glBindVertexArray(0);

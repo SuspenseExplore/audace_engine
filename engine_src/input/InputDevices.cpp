@@ -27,6 +27,7 @@ namespace Audace {
 		stringPaths[LEFT_THUMBREST_TOUCH] = leftHandString + "/input/thumbrest/touch";
 		stringPaths[LEFT_GRIP_POSE] = leftHandString + "/input/grip/pose";
 		stringPaths[LEFT_AIM_POSE] = leftHandString + "/input/aim/pose";
+		stringPaths[LEFT_AIM_VIEW_POSE] = leftHandString + "/input/aim/pose";
 
 		stringPaths[RIGHT_A_CLICK] = rightHandString + "/input/a/click";
 		stringPaths[RIGHT_A_TOUCH] = rightHandString + "/input/a/touch";
