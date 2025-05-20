@@ -113,7 +113,7 @@ void MainScene::render()
 
 	for (Audace::Sprite *sprite : sprites)
 	{
-		sprite->render(this);
+		sprite->renderWorldSpace(this);
 	}
 
 	ImGui::Begin("Scenes");

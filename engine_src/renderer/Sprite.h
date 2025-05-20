@@ -19,6 +19,7 @@
 
 namespace Audace
 {
+	class Scene;
 
 	/**
 	 * Combines one or more Meshes with world transformation data to make a single coherent renderable object
@@ -49,7 +50,9 @@ namespace Audace
 		Sprite(Model *model);
 		Sprite(std::vector<Mesh *> meshes);
 
-		virtual void render(Scene *scene);
+		virtual void renderWorldSpace(Scene *scene);
+		virtual void renderViewSpace(Scene *scene);
+
 		Sprite *clone()
 		{
 			return new Sprite(this);

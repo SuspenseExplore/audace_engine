@@ -53,7 +53,7 @@ namespace Audace
 		this->meshes = meshes;
 	}
 
-	void Sprite::render(Scene *scene)
+	void Sprite::renderWorldSpace(Scene *scene)
 	{
 		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), pose.position);
 		worldMat *= glm::mat4_cast(pose.orientation);
@@ -65,5 +65,10 @@ namespace Audace
 			mesh->getMaterial()->getShader()->setUniformMat4("vpMat", scene->getCamera()->getViewProjMatrix());
 			mesh->render(worldMat);
 		}
+	}
+
+	void Sprite::renderViewSpace(Scene *scene)
+	{
+
 	}
 } // Audace

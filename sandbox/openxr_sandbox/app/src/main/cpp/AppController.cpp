@@ -10,6 +10,7 @@
 #include "glm/glm.hpp"
 #include "input/InputDevices.h"
 #include "openxr/OpenxrSwapchain.h"
+#include "AimIndicator.h"
 #include "imgui.h"
 
 bool AppController::createWindow() {
@@ -46,15 +47,7 @@ bool AppController::createXrSession() {
 				ImGuiIO &io = ImGui::GetIO();
 				float x = (event.state.position.x + 1.0) * xrContext.uiSwapchain.getSize().x * 0.5;
 				float y = (1.0 - event.state.position.y) * xrContext.uiSwapchain.getSize().y * 0.5;
-				io.AddMousePosEvent(x, y);
-			}
-		});
-	}
-	{
-		OculusTouchController::InputName name = OculusTouchController::InputName::LEFT_AIM_POSE;
-		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
-			if (event.changed) {
-				reinterpret_cast<ProcTerrainScene*>(scene)->setLeftAimPose(event.state);
+				io.AddMousePosEvent(x * 1.75, y * 1.75);
 			}
 		});
 	}
@@ -101,6 +94,18 @@ bool AppController::createXrSession() {
 		});
 	}
 	xrContext.registerActions();
+
+	AimIndicator *leftHandAim = new AimIndicator();
+	Audace::SimpleBillboardMaterial *whiteMat = Audace::AssetStore::simpleBillboardMaterial();
+	leftHandAim->getMesh()->setMaterial(whiteMat);
+	addLeftAimPoseHandler(
+			[=](Audace::PoseInputEvent e)
+			{
+				leftHandAim->handlePoseEvent(e);
+			}
+	);
+	scene->addSprite(leftHandAim);
+
 	return true;
 }
 
@@ -281,7 +286,7 @@ AppController::renderUiLayer(XrCompositionLayerQuad &layer) {
 	layer.pose.position = {0, 0, -3};
 	layer.pose.orientation = {0, 0, 0, 1};
 	layer.space = xrContext.xrViewSpace;
-	layer.size = {5, 5};
+	layer.size = {2, 2};
 	layer.subImage.swapchain = sc.getHandle();
 	layer.subImage.imageRect.offset = {0, 0};
 	layer.subImage.imageRect.extent = {sc.getSize().x, sc.getSize().y};
@@ -334,7 +339,7 @@ void AppController::renderUi() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	AU_CHECK_GL_ERRORS();
 
-	glClearColor(0, 0, 0, 0.5);
+	glClearColor(0, 0, 0, 0);
 	AU_CHECK_GL_ERRORS();
 	glClear(GL_COLOR_BUFFER_BIT);
 	AU_CHECK_GL_ERRORS();

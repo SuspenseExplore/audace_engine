@@ -25,7 +25,7 @@ void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 	this->fileLoader = fileLoader;
 	Audace::ShaderProgram *shader = Audace::AssetStore::getShader("obj_mtl");
 	shader->create();
-	shader->setUniformVec3("textureScale", {10, 10, 10});
+	// shader->setUniformVec3("textureScale", {10, 10, 10});
 
 	quadMesh = Audace::Shapes::squarePositions();
 
@@ -170,16 +170,16 @@ void SceneBuilder::render()
 
 	for (Audace::Sprite *sprite : sprites)
 	{
-		sprite->render(this);
+		sprite->renderWorldSpace(this);
 	}
 
 	currSprite->setPosition(spritePos);
 	currSprite->setOrientation(glm::quat(glm::radians(spriteAngles)));
 	currSprite->setScale(spriteScale);
-	currSprite->render(this);
+	currSprite->renderWorldSpace(this);
 
 	startPosMarker->setPosition(pointLights[0].getPosition());
-	startPosMarker->render(this);
+	startPosMarker->renderWorldSpace(this);
 
 	// ImGui::ShowDemoWindow();
 	ImGui::Begin("Scenes");

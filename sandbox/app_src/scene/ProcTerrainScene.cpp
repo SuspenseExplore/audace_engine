@@ -1,6 +1,6 @@
 #include "au_renderer.h"
+#include "AppController.h"
 #include "ProcTerrainScene.h"
-#include "SceneEnum.h"
 #include "content/AssetStore.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/DataBuffer.h"
@@ -32,15 +32,13 @@ void ProcTerrainScene::loadAssets(Audace::FileLoader *fileLoader)
 	material->setNormalMap(Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_NormalGL.jpg"));
 	material->setSpecularMap(Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_Roughness.jpg"));
 
-	whiteMat = Audace::AssetStore::simpleBillboardMaterial();
 	cubeSprite = Audace::AssetStore::getCubeSprite();
-	cubeSprite->getMesh()->setMaterial(whiteMat);
-	cubeSprite->setScale({0.01, 0.01, -1.0});
+	cubeSprite->getMesh()->setMaterial(material);
 }
 
 void ProcTerrainScene::render()
 {
-	glClearColor(0, 0, 1, 0.2);
+	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera->update();
@@ -100,9 +98,10 @@ void ProcTerrainScene::render()
 		}
 	}
 
-	cubeSprite->setPosition(leftAimPose.position);
-	cubeSprite->setOrientation(leftAimPose.orientation);
-	cubeSprite->render(this);
+	for (int i = 0; i < sprites.size(); i++)
+	{
+		sprites[i]->renderWorldSpace(this);
+	}
 }
 
 void ProcTerrainScene::renderChunkData(std::string chunkId)
@@ -126,15 +125,14 @@ void ProcTerrainScene::renderChunkData(std::string chunkId)
 
 void ProcTerrainScene::renderUi()
 {
+	std::for_each(sprites.begin(), sprites.end(), [this](Audace::Sprite *s)
+	{ s->renderViewSpace(this); });
 
-	for (auto iter = loadingChunks.begin(); iter != loadingChunks.end(); iter++)
-	{
-		Audace::VoxelTerrainGen::ChunkBuilder *cb = iter->second;
-		if (cb->loaded && cb->positions.size() > 0)
-		{
-			renderChunkData(cb->idString());
-		}
-	}
+	ImGui::Begin("Clear Color");
+	ImGui::SetWindowPos(ImVec2(800, 1000));
+	ImGui::SetWindowSize(ImVec2(500, 600));
+	ImGui::ColorPicker4("Color", glm::value_ptr(clearColor));
+	ImGui::End();
 }
 
 void ProcTerrainScene::disposeAssets()

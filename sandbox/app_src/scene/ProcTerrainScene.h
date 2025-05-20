@@ -17,8 +17,8 @@ class ProcTerrainScene : public Audace::Scene
 
 	Audace::VoxelTerrainGen terrainGen;
 	std::map<std::string, Audace::VoxelTerrainGen::ChunkBuilder*> loadingChunks;
-	std::vector<Audace::Sprite*> sprites;
 
+	glm::vec4 clearColor = {0, 0, 0, 0};
 	Audace::Sprite *cubeSprite;
 	Audace::ShaderProgram *shader;
 	Audace::Material *material;
@@ -52,7 +52,6 @@ class ProcTerrainScene : public Audace::Scene
 
 	void setLightPos(glm::vec3 pos) { lightPos = pos + camera->getOriginPos(); }
 	void teleport() { camera->setOriginPos(lightPos - camera->getPosition()); }
-	void setLeftAimPose(Audace::Pose p) { leftAimPose = p; }
 };
 
 

@@ -17,9 +17,9 @@ namespace Audace {
 
 		public:
 		void setName(std::string name) {this->name = name;}
-		std::string getName() {return name;}
-		ShaderProgram* getShader() {return shaderProgram;}
-		void setShader(ShaderProgram *shaderProgram) {this->shaderProgram = shaderProgram;}
+		std::string getName() override {return name;}
+		ShaderProgram* getShader() override {return shaderProgram;}
+		void setShader(ShaderProgram *shaderProgram) override {this->shaderProgram = shaderProgram;}
 		Texture2d *getTexture() {return texture;}
 		void setTexture(Texture2d *texture) {this->texture = texture;}
 		glm::vec4 getColor() {return color;}

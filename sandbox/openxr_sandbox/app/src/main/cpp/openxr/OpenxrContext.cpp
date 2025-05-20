@@ -367,7 +367,8 @@ bool OpenxrContext::registerActions() {
 	{
 		XrActionSpaceCreateInfo actionSpaceInfo{XR_TYPE_ACTION_SPACE_CREATE_INFO};
 		actionSpaceInfo.action = actions[Audace::OculusTouchController::LEFT_AIM_POSE];
-		actionSpaceInfo.poseInActionSpace.orientation.w = 1;
+		XrQuaternionf q = {0.0, 0.0, 0.0, 1.0};
+		actionSpaceInfo.poseInActionSpace.orientation = q;
 		actionSpaceInfo.subactionPath = leftHandPath;
 		XR_ERROR_BAIL("xrCreateActionSpace",
 					  xrCreateActionSpace(xrSession, &actionSpaceInfo, &leftHandAimSpace));

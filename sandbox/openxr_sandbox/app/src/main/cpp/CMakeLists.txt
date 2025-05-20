@@ -61,6 +61,7 @@ add_library( # Sets the name of the library.
 		openxr/HmdCamera.cpp
 		EglWindow.cpp
 		AppController.cpp
+		AimIndicator.cpp
 		${APP_DIR}/scene/MainScene.cpp
 		${APP_DIR}/scene/ProcTerrainScene.cpp
 		)

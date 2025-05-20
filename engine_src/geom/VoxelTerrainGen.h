@@ -13,7 +13,7 @@ namespace Audace
 		FastNoiseLite noise;
 
 	public:
-		static struct ChunkBuilder
+		struct ChunkBuilder
 		{
 			unsigned int chunkSize;
 

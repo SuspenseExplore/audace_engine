@@ -1,16 +1,21 @@
 #ifndef AU_SCENE_H
 #define AU_SCENE_H
 
+#include <vector>
 #include "application/BaseAppController.h"
 #include "FileLoader.h"
 #include "scene/BaseCamera.h"
+#include "renderer/Sprite.h"
 
 namespace Audace
 {
+	class Sprite;
+
 	class Scene
 	{
 	protected:
 		BaseAppController *appController;
+		std::vector<Sprite*> sprites;
 
 	public:
 		Scene(BaseAppController *controller);
@@ -21,6 +26,10 @@ namespace Audace
 
 		virtual BaseCamera* getCamera() = 0;
 		virtual void setCamera(BaseCamera *camera) = 0;
+
+		virtual void addSprite(Sprite *s) { 
+			sprites.push_back(s); 
+		}
 	};
 }
 

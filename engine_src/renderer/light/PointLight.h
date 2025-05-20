@@ -22,12 +22,13 @@ namespace Audace
 			meshes[0]->setMaterial(material);
 			setScale({0.01f, 0.01f, 0.01f});
 		}
-		void render(Scene *scene) override
+		void renderWorldSpace(Scene *scene) override
 		{
 			reinterpret_cast<Audace::SimpleBillboardMaterial*>(meshes[0]->getMaterial())->setColor({color, 1});
-			Sprite::render(scene);
+			Sprite::renderWorldSpace(scene);
 		}
 
+		void renderViewSpace(Scene *scene) override {};
 		void setColor(glm::vec3 color) { this->color = color; }
 		glm::vec3 getColor() { return color; }
 		void setIntensity(float i) { intensity = i; }

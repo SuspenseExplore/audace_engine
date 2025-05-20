@@ -69,6 +69,11 @@ public:
 	// all the swapchains should have the same dimensions
 	int getWidth() override { return xrContext.uiSwapchain.getSize().x; }
 	int getHeight() override { return xrContext.uiSwapchain.getSize().y; }
+
+	void addLeftAimPoseHandler(std::function<void(Audace::PoseInputEvent)> handler)
+	{
+		xrContext.addPoseInputHandler(Audace::OculusTouchController::InputName::LEFT_AIM_POSE, handler);
+	}
 };
 
 
