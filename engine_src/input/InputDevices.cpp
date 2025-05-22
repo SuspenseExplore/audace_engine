@@ -8,8 +8,8 @@
 namespace Audace {
 	const std::string OculusTouchController::leftHandString = "/user/hand/left";
 	const std::string OculusTouchController::rightHandString = "/user/hand/right";
-	std::string OculusTouchController::stringPaths[30];
-	XrPath OculusTouchController::paths[30];
+	std::string OculusTouchController::stringPaths[50];
+	XrPath OculusTouchController::paths[50];
 
 	void OculusTouchController::init(XrInstance instance) {
 		stringPaths[LEFT_X_CLICK] = leftHandString + "/input/x/click";
@@ -45,7 +45,7 @@ namespace Audace {
 		stringPaths[RIGHT_GRIP_POSE] = rightHandString + "/input/grip/pose";
 		stringPaths[RIGHT_AIM_POSE] = rightHandString + "/input/aim/pose";
 
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 31; i++) {
 			xrStringToPath(instance, stringPaths[i].c_str(), &paths[i]);
 		}
 	}

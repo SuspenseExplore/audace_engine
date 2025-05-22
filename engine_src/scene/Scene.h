@@ -26,6 +26,7 @@ namespace Audace
 
 		virtual BaseCamera* getCamera() = 0;
 		virtual void setCamera(BaseCamera *camera) = 0;
+		virtual void teleport(glm::vec3 pos) {}
 
 		virtual void addSprite(Sprite *s) { 
 			sprites.push_back(s); 

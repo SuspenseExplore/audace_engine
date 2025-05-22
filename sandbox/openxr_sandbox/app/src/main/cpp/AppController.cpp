@@ -11,6 +11,8 @@
 #include "input/InputDevices.h"
 #include "openxr/OpenxrSwapchain.h"
 #include "AimIndicator.h"
+#include "TeleportTool.h"
+#include "renderer/Shapes.h"
 #include "imgui.h"
 
 bool AppController::createWindow() {
@@ -52,36 +54,10 @@ bool AppController::createXrSession() {
 		});
 	}
 	{
-		OculusTouchController::InputName name = OculusTouchController::InputName::RIGHT_A_CLICK;
-		xrContext.addBooleanInputHandler(name, [this](BooleanInputEvent event) {
-			if (event.changed && event.state) {
-				reinterpret_cast<ProcTerrainScene *>(scene)->teleport();
-			}
-		});
-	}
-	{
 		OculusTouchController::InputName name = OculusTouchController::InputName::RIGHT_GRIP_POSE;
 		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
 			if (event.changed) {
 				reinterpret_cast<ProcTerrainScene *>(scene)->setLightPos(event.state.position);
-			}
-		});
-	}
-	{
-		OculusTouchController::InputName name = OculusTouchController::InputName::RIGHT_THUMBSTICK_X;
-		xrContext.addFloatInputHandler(name, [this](FloatInputEvent event) {
-			if (event.changed) {
-//				AU_ENGINE_LOG_DEBUG("right stick x: {}", event.state);
-				camera->setVelocityX(event.state);
-			}
-		});
-	}
-	{
-		OculusTouchController::InputName name = OculusTouchController::InputName::RIGHT_THUMBSTICK_Y;
-		xrContext.addFloatInputHandler(name, [this](FloatInputEvent event) {
-			if (event.changed) {
-//				AU_ENGINE_LOG_DEBUG("right stick y: {}", event.state);
-				camera->setVelocityY(event.state);
 			}
 		});
 	}
@@ -95,16 +71,43 @@ bool AppController::createXrSession() {
 	}
 	xrContext.registerActions();
 
-	AimIndicator *leftHandAim = new AimIndicator();
-	Audace::SimpleBillboardMaterial *whiteMat = Audace::AssetStore::simpleBillboardMaterial();
-	leftHandAim->getMesh()->setMaterial(whiteMat);
-	addLeftAimPoseHandler(
-			[=](Audace::PoseInputEvent e)
-			{
-				leftHandAim->handlePoseEvent(e);
-			}
-	);
-	scene->addSprite(leftHandAim);
+	SimpleBillboardMaterial *whiteMat = AssetStore::simpleBillboardMaterial();
+	SimpleBillboardMaterial *redMat = new SimpleBillboardMaterial();
+	redMat->setColor({1.0, 0.0, 0.0, 1.0});
+	{
+		AimIndicator *leftHandAim = new AimIndicator();
+		leftHandAim->getMesh()->setMaterial(whiteMat);
+		scene->addSprite(leftHandAim);
+
+		TeleportTool *teleportTool = new TeleportTool();
+		teleportTool->getMesh()->setMaterial(whiteMat);
+		scene->addSprite(teleportTool);
+
+		addPoseHandler(Audace::OculusTouchController::LEFT_AIM_POSE,
+				[=](PoseInputEvent e) {
+					leftHandAim->handlePoseEvent(e);
+				}
+		);
+		addPoseHandler(Audace::OculusTouchController::RIGHT_AIM_POSE,
+					   [=](PoseInputEvent e) {
+						   teleportTool->handlePoseEvent(e);
+					   });
+		addBooleanEventHandler(Audace::OculusTouchController::RIGHT_A_CLICK,
+							 [=](BooleanInputEvent e) {
+								 if (teleportTool->isTeleportReady() && e.state) {
+									 teleportTool->reset();
+									 scene->teleport(teleportTool->getPosition());
+								 }
+							 });
+		addFloatEventHandler(Audace::OculusTouchController::RIGHT_SQUEEZE_VALUE,
+							 [=](FloatInputEvent e) {
+								 teleportTool->handleSqueezeEvent(e);
+							 });
+		addFloatEventHandler(Audace::OculusTouchController::RIGHT_THUMBSTICK_Y,
+							 [=](FloatInputEvent e) {
+								 teleportTool->handleStickMotionEvent(e);
+							 });
+	}
 
 	return true;
 }
@@ -223,8 +226,7 @@ void AppController::renderFrame() {
 				}
 			}
 			XrCompositionLayerQuad quadLayer{XR_TYPE_COMPOSITION_LAYER_QUAD};
-			if (renderUiLayer(quadLayer))
-			{
+			if (renderUiLayer(quadLayer)) {
 				layers.push_back(reinterpret_cast<XrCompositionLayerBaseHeader *>(&quadLayer));
 			}
 		}
@@ -278,8 +280,7 @@ AppController::renderUiLayer(XrCompositionLayerQuad &layer) {
 	OpenxrSwapchain sc = xrContext.uiSwapchain;
 
 	// Each view has a separate swapchain which is acquired, rendered to, and released.
-	if (!sc.startFrame())
-	{
+	if (!sc.startFrame()) {
 		return false;
 	}
 
@@ -345,7 +346,7 @@ void AppController::renderUi() {
 	AU_CHECK_GL_ERRORS();
 	ImGuiIO &io = ImGui::GetIO();
 	io.MouseDrawCursor = true;
-	((ProcTerrainScene*) scene)->renderUi();
+	((ProcTerrainScene *) scene)->renderUi();
 
 	glClearColor(0, 0, 1, 1);
 	glBindVertexArray(0);

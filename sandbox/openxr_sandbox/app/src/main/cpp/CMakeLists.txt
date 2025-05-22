@@ -62,6 +62,7 @@ add_library( # Sets the name of the library.
 		EglWindow.cpp
 		AppController.cpp
 		AimIndicator.cpp
+		TeleportTool.cpp
 		${APP_DIR}/scene/MainScene.cpp
 		${APP_DIR}/scene/ProcTerrainScene.cpp
 		)

@@ -15,7 +15,7 @@
 class AimIndicator : public Audace::Sprite {
 	Audace::Pose pose;
 	glm::vec3 scale = {0.001, 0.001, 1.0};
-	glm::vec3 offset = {-0.5, -0.5, -0.999};
+	glm::vec3 offset = {-0.5, -0.5, -1.0};
 
 public:
 	AimIndicator() : Audace::Sprite({Audace::Shapes::cubePosNormTan()}) {
@@ -30,7 +30,7 @@ public:
 		}
 	}
 
-	void renderWorldSpace(Audace::Scene *scene)
+	void renderWorldSpace(Audace::Scene *scene) override
 	{
 		getMesh()->getMaterial()->getShader()->bind();
 		getMesh()->getMaterial()->getShader()->setUniformVec4("offset", {offset, 0.0});
@@ -38,15 +38,16 @@ public:
 		setOrientation(pose.orientation);
 		setScale(scale);
 		Audace::Sprite::renderWorldSpace(scene);
+		getMesh()->getMaterial()->getShader()->setUniformVec4("offset", {0.0, 0.0, 0.0, 0.0});
 	}
 
-	void renderViewSpace(Audace::Scene *scene)
+	void renderViewSpace(Audace::Scene *scene) override
 	{
-		ImGui::Begin("Left Hand Aim");
-		ImGui::SetWindowPos(ImVec2(600, 800));
-		ImGui::DragFloat3("offset", glm::value_ptr(offset), 0.01, -10.0, 10.0);
-		ImGui::DragFloat3("scale", glm::value_ptr(scale), 0.01, 0.0, 10.0);
-		ImGui::End();
+		// ImGui::Begin("Left Hand Aim");
+		// ImGui::SetWindowPos(ImVec2(600, 800));
+		// ImGui::DragFloat3("offset", glm::value_ptr(offset), 0.01, -10.0, 10.0);
+		// ImGui::DragFloat3("scale", glm::value_ptr(scale), 0.01, 0.0, 10.0);
+		// ImGui::End();
 	}
 };
 

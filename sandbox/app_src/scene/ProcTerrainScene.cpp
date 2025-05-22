@@ -128,11 +128,11 @@ void ProcTerrainScene::renderUi()
 	std::for_each(sprites.begin(), sprites.end(), [this](Audace::Sprite *s)
 	{ s->renderViewSpace(this); });
 
-	ImGui::Begin("Clear Color");
-	ImGui::SetWindowPos(ImVec2(800, 1000));
-	ImGui::SetWindowSize(ImVec2(500, 600));
-	ImGui::ColorPicker4("Color", glm::value_ptr(clearColor));
-	ImGui::End();
+//	ImGui::Begin("Clear Color");
+//	ImGui::SetWindowPos(ImVec2(800, 1000));
+//	ImGui::SetWindowSize(ImVec2(500, 600));
+//	ImGui::ColorPicker4("Color", glm::value_ptr(clearColor));
+//	ImGui::End();
 }
 
 void ProcTerrainScene::disposeAssets()

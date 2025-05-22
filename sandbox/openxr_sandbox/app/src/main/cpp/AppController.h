@@ -70,9 +70,20 @@ public:
 	int getWidth() override { return xrContext.uiSwapchain.getSize().x; }
 	int getHeight() override { return xrContext.uiSwapchain.getSize().y; }
 
-	void addLeftAimPoseHandler(std::function<void(Audace::PoseInputEvent)> handler)
+
+	void addPoseHandler(Audace::OculusTouchController::InputName name, std::function<void(Audace::PoseInputEvent)> handler)
 	{
-		xrContext.addPoseInputHandler(Audace::OculusTouchController::InputName::LEFT_AIM_POSE, handler);
+		xrContext.addPoseInputHandler(name, handler);
+	}
+
+	void addFloatEventHandler(Audace::OculusTouchController::InputName name, std::function<void(Audace::FloatInputEvent)> handler)
+	{
+		xrContext.addFloatInputHandler(name, handler);
+	}
+
+	void addBooleanEventHandler(Audace::OculusTouchController::InputName name, std::function<void(Audace::BooleanInputEvent)> handler)
+	{
+		xrContext.addBooleanInputHandler(name, handler);
 	}
 };
 

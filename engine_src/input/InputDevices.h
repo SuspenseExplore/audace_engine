@@ -32,8 +32,8 @@ namespace Audace {
 
 		static const std::string leftHandString;
 		static const std::string rightHandString;
-		static std::string stringPaths[30];
-		static XrPath paths[30];
+		static std::string stringPaths[50];
+		static XrPath paths[50];
 
 		static void init(XrInstance instance);
 	};

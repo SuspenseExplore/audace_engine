@@ -42,6 +42,7 @@ public:
 	XrActionSet actionSet{XR_NULL_HANDLE};
 	XrSpace leftHandPoseSpace{XR_NULL_HANDLE};
 	XrSpace rightHandPoseSpace{XR_NULL_HANDLE};
+	XrSpace rightAimPoseSpace{XR_NULL_HANDLE};
 	XrSpace leftHandAimSpace{XR_NULL_HANDLE};
 	XrSpace leftAimViewSpace{XR_NULL_HANDLE};
 

@@ -18,7 +18,7 @@ class ProcTerrainScene : public Audace::Scene
 	Audace::VoxelTerrainGen terrainGen;
 	std::map<std::string, Audace::VoxelTerrainGen::ChunkBuilder*> loadingChunks;
 
-	glm::vec4 clearColor = {0, 0, 0, 0};
+	glm::vec4 clearColor = {0, 0, 0, 0.75};
 	Audace::Sprite *cubeSprite;
 	Audace::ShaderProgram *shader;
 	Audace::Material *material;
@@ -28,9 +28,6 @@ class ProcTerrainScene : public Audace::Scene
 	Audace::Pose leftAimPose;
 
 	Audace::BaseCamera *camera;
-	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
-	float cameraYaw = 0;
-	float cameraPitch = 0;
 
 	void generateTerrain();
 	void addToBuffer(std::vector<float> &buf, glm::vec3 vec);
@@ -51,7 +48,7 @@ class ProcTerrainScene : public Audace::Scene
 	Audace::BaseCamera *getCamera() override { return camera; }
 
 	void setLightPos(glm::vec3 pos) { lightPos = pos + camera->getOriginPos(); }
-	void teleport() { camera->setOriginPos(lightPos - camera->getPosition()); }
+	void teleport(glm::vec3 pos) override { camera->setOriginPos(pos); }
 };
 
 
