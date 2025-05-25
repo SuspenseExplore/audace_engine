@@ -1,0 +1,112 @@
+{
+	"filename": "assets/models/_index.json",
+	"folders": {
+		"kenney": {
+			"folders": {
+				"furniture": {
+					"folders": {
+						"bathroom": {
+							"folders": {},
+							"files": [
+								"bathroomCabinet.obj",
+								"bathroomCabinetDrawer.obj",
+								"bathroomMirror.obj",
+								"bathroomSink.obj",
+								"bathroomSinkSquare.obj",
+								"bathtub.obj",
+								"shower.obj",
+								"showerRound.obj"
+							]
+						},
+						"bedroom": {
+							"folders": {},
+							"files": [
+								"bed_floor.obj",
+								"bed.obj",
+								"bedBunk.obj",
+								"bedDouble.obj",
+								"bedSingle.obj"
+							]
+						},
+						"cabinets": {
+							"folders": {},
+							"files": [
+								"cabinetBed.obj",
+								"cabinetBedDrawe.obj",
+								"cabinetBedDrawerTable.obj",
+								"cabinetTelevision.obj",
+								"cabinetTelevisionDoors.obj"
+							]
+						},
+						"decorations": {
+							"folders": {},
+							"files": []
+						},
+						"kitchen": {
+							"folders": {},
+							"files": []
+						},
+						"livingroom": {
+							"folders": {},
+							"files": []
+						},
+						"office": {
+							"folders": {},
+							"files": []
+						},
+						"seating": {
+							"folders": {},
+							"files": []
+						},
+						"walls_floors": {
+							"folders": {},
+							"files": []
+						}
+					},
+					"files": [
+						"cardboardBoxClosed.obj",
+						"cardboardBoxOpen.obj"
+					]
+				},
+				"nature": {
+					"folders": {
+						"bridges": {
+							"folders": {},
+							"files": []
+						},
+						"camping": {
+							"folders": {},
+							"files": []
+						},
+						"cliffs": {
+							"folders": {},
+							"files": []
+						},
+						"fences": {
+							"folders": {},
+							"files": []
+						},
+						"ground": {
+							"folders": {},
+							"files": []
+						},
+						"plants": {
+							"folders": {},
+							"files": []
+						},
+						"rocks": {
+							"folders": {},
+							"files": []
+						}
+					},
+					"files": [
+						"canoe_paddle.obj",
+						"canoe.obj"
+					]
+				}
+			},
+			"files": []
+		}
+	},
+	"files": []
+}

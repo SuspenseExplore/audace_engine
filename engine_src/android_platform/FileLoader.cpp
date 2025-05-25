@@ -54,7 +54,10 @@ namespace Audace {
 
 	Model *FileLoader::readModelFile(std::string path, std::string filename)
 	{
-		Model* model = ModelLoader::loadObj(this, path, filename);
+		// filename could have part of the path, so put them together and them take them apart again
+		std::string fullName = path + filename;
+		int i = fullName.find_last_of('/') + 1;
+		Model* model = ModelLoader::loadObj(this, fullName.substr(0, i), fullName.substr(i));
 		return model;
 	}
 

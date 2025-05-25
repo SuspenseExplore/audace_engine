@@ -16,6 +16,7 @@
 #include "openxr/HmdCamera.h"
 #include "input/InputDevices.h"
 #include "scene/ProcTerrainScene.h"
+#include "scene/SceneBuilder.h"
 #include "SceneEnum.h"
 
 class AppController : public Audace::BaseAppController {
@@ -27,14 +28,14 @@ class AppController : public Audace::BaseAppController {
 
 	HmdCamera *camera;
 	Audace::Scene *scene;
-	int nextScene = SandboxScene::CURRENT;
+	int nextScene = SandboxScene::BUILDER;
 
 	bool xButtonDown = false;
 
 	void startNextScene();
 
 public:
-	AppController() : scene(new ProcTerrainScene(this)) {}
+	AppController() : scene(new SceneBuilder(this)) {}
 	OpenxrContext xrContext;
 
 	bool init(android_app *app);

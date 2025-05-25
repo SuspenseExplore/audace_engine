@@ -47,18 +47,18 @@ bool AppController::createXrSession() {
 		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
 			if (event.changed) {
 				ImGuiIO &io = ImGui::GetIO();
-				float x = (event.state.position.x + 1.0) * xrContext.uiSwapchain.getSize().x * 0.5;
-				float y = (1.0 - event.state.position.y) * xrContext.uiSwapchain.getSize().y * 0.5;
-				io.AddMousePosEvent(x * 1.75, y * 1.75);
+				float x = (event.state.position.x + 0.5) * xrContext.uiSwapchain.getSize().x * 0.5;
+				float y = (0.5 - event.state.position.y) * xrContext.uiSwapchain.getSize().y * 0.5;
+				io.AddMousePosEvent(x * 2.0, y * 2.0);
 			}
 		});
 	}
 	{
 		OculusTouchController::InputName name = OculusTouchController::InputName::RIGHT_GRIP_POSE;
 		xrContext.addPoseInputHandler(name, [this](PoseInputEvent event) {
-			if (event.changed) {
-				reinterpret_cast<ProcTerrainScene *>(scene)->setLightPos(event.state.position);
-			}
+//			if (event.changed) {
+//				reinterpret_cast<ProcTerrainScene *>(scene)->setLightPos(event.state.position);
+//			}
 		});
 	}
 	{

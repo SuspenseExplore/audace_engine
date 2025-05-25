@@ -22,6 +22,7 @@ namespace Audace
 		virtual ~Scene() {}
 		virtual void loadAssets(Audace::FileLoader *fileLoader) = 0;
 		virtual void render() = 0;
+		virtual void renderUi() {}
 		virtual void disposeAssets() = 0;
 
 		virtual BaseCamera* getCamera() = 0;

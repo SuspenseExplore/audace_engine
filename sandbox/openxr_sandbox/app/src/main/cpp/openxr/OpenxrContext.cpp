@@ -163,7 +163,8 @@ bool OpenxrContext::beginSession() {
 		XR_ERROR_BAIL("xrCreateReferenceSpace",
 					  xrCreateReferenceSpace(xrSession, &referenceSpaceCreateInfo,
 											 &xrViewSpace));
-	}	return true;
+	}
+	return true;
 }
 
 int64_t OpenxrContext::chooseViewFormat(XrSession session) {

@@ -65,6 +65,7 @@ add_library( # Sets the name of the library.
 		TeleportTool.cpp
 		${APP_DIR}/scene/MainScene.cpp
 		${APP_DIR}/scene/ProcTerrainScene.cpp
+		${APP_DIR}/scene/SceneBuilder.cpp
 		)
 include_directories(
 		.
