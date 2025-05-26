@@ -49,8 +49,9 @@ public:
 	void render() override;
 	void renderUi() override;
 	void disposeAssets() override;
-	void setCamera(Audace::BaseCamera *camera) override {this->camera = camera; }
+	void setCamera(Audace::BaseCamera *camera) override { this->camera = camera; }
 	Audace::BaseCamera *getCamera() override { return camera; }
+	void teleport(glm::vec3 pos) override { camera->setOriginPos(pos); }
 };
 
 #endif

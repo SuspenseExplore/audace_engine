@@ -13,7 +13,8 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include "imgui/imgui_impl_android.h"
 
-bool EglWindow::init(android_app* app) {
+bool EglWindow::init(android_app *app)
+{
 	const EGLint attrs[] = {EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
 							EGL_RENDERABLE_TYPE, EGL_OPENGL_ES3_BIT,
 							EGL_BLUE_SIZE, 8,
@@ -35,7 +36,8 @@ bool EglWindow::init(android_app* app) {
 	LOGD("EGL version: %d.%d", major, minor);
 
 	auto i = 0;
-	for (; i < numCfg; i++) {
+	for (; i < numCfg; i++)
+	{
 		auto &cfg = supportedCfgs[i];
 		EGLint r, g, b, d;
 		eglGetConfigAttrib(display, cfg, EGL_RED_SIZE, &r);
@@ -43,15 +45,18 @@ bool EglWindow::init(android_app* app) {
 		eglGetConfigAttrib(display, cfg, EGL_BLUE_SIZE, &b);
 		eglGetConfigAttrib(display, cfg, EGL_DEPTH_SIZE, &d);
 		LOGD("EGL Config: %d,%d,%d,%d", r, g, b, d);
-		if (r == 8 && g == 8 && b == 8 && d == 24) {
+		if (r == 8 && g == 8 && b == 8 && d == 24)
+		{
 			config = supportedCfgs[i];
 			break;
 		}
 	}
-	if (i == numCfg) {
+	if (i == numCfg)
+	{
 		config = supportedCfgs[0];
 	}
-	if (config == nullptr) {
+	if (config == nullptr)
+	{
 		LOGE("EGL createViews failed: could not find valid config");
 		return false;
 	}
@@ -63,7 +68,8 @@ bool EglWindow::init(android_app* app) {
 	surface = eglCreateWindowSurface(display, config, app->window, nullptr);
 	context = eglCreateContext(display, config, nullptr, contextAttrs);
 
-	if (eglMakeCurrent(display, surface, surface, context) == EGL_FALSE) {
+	if (eglMakeCurrent(display, surface, surface, context) == EGL_FALSE)
+	{
 		LOGE("EGL createViews failed: could not make current");
 		return false;
 	}
@@ -73,7 +79,8 @@ bool EglWindow::init(android_app* app) {
 	LOGD("Surface size: %dx%d", width, height);
 
 	auto glInfo = {GL_VENDOR, GL_RENDERER, GL_VERSION, GL_EXTENSIONS};
-	for (auto name: glInfo) {
+	for (auto name : glInfo)
+	{
 		auto info = glGetString(name);
 		LOGD("GL info: %s", info);
 	}
@@ -91,13 +98,14 @@ bool EglWindow::init(android_app* app) {
 	ImGui::StyleColorsDark();
 	ImGui_ImplAndroid_Init(app->window);
 	ImGui_ImplOpenGL3_Init("#version 300 es");
-	io.FontGlobalScale = 2;
-	ImGui::GetStyle().ScaleAllSizes(4);
+	//	io.FontGlobalScale = 2;
+	ImGui::GetStyle().ScaleAllSizes(1.5);
 
 	return true;
 }
 
-void EglWindow::beginFrame() {
+void EglWindow::beginFrame()
+{
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplAndroid_NewFrame();
 	ImGui::NewFrame();
@@ -107,23 +115,28 @@ void EglWindow::beginFrame() {
 	}
 }
 
-void EglWindow::endFrame() {
+void EglWindow::endFrame()
+{
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void EglWindow::close() {
+void EglWindow::close()
+{
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplAndroid_Shutdown();
 	ImGui::DestroyContext();
 
-	if (display != EGL_NO_DISPLAY) {
+	if (display != EGL_NO_DISPLAY)
+	{
 		eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 	}
-	if (context != EGL_NO_CONTEXT) {
+	if (context != EGL_NO_CONTEXT)
+	{
 		eglDestroyContext(display, context);
 	}
-	if (surface != EGL_NO_SURFACE) {
+	if (surface != EGL_NO_SURFACE)
+	{
 		eglDestroySurface(display, surface);
 	}
 	eglTerminate(display);

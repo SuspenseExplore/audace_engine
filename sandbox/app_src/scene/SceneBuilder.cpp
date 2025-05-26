@@ -69,8 +69,8 @@ void SceneBuilder::renderUi()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	ImGui::Begin("Editor");
-	ImGui::SetWindowPos(ImVec2(400, 500));
-	ImGui::SetWindowSize(ImVec2(800, 1000));
+	ImGui::SetWindowPos(ImVec2(600, 800));
+	ImGui::SetWindowSize(ImVec2(400, 400));
 	if (ImGui::BeginTabBar("Tabs1"))
 	{
 
