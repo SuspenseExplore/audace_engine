@@ -42,6 +42,9 @@ void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 	pointLight->setPosition({0, 0, 0});
 	pointLight->setColor({1, 1, 1});
 	pointLight->setIntensity(1);
+
+	Audace::AssetStore::getWhiteTexture()->bind(0);
+	shader->setUniformInt("material.diffuseMap", 0);
 }
 
 void SceneBuilder::render()
@@ -65,8 +68,6 @@ void SceneBuilder::render()
 
 void SceneBuilder::renderUi()
 {
-	glClearColor(0, 0, 0, 0.5);
-	glClear(GL_COLOR_BUFFER_BIT);
 
 	ImGui::Begin("Editor");
 	ImGui::SetWindowPos(ImVec2(600, 800));

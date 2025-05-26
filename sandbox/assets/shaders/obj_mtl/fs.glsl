@@ -2,14 +2,8 @@
 precision mediump float;
 
 struct Material {
-	vec3 ambient;
-	sampler2D ambientMap;
 	vec3 diffuse;
 	sampler2D diffuseMap;
-	sampler2D normalMap;
-	vec3 specular;
-	sampler2D specularMap;
-	vec3 emission;
 };
 
 uniform Material material;

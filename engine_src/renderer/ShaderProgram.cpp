@@ -100,66 +100,83 @@ namespace Audace
 		AU_RENDERER_LOG_TRACE("Set float uniform in shader {} at location {} to value {}", glid, uniforms[name], value);
 	}
 
-	void ShaderProgram::setUniformVec2(std::string name, float x, float y) {
+	void ShaderProgram::setUniformVec2(std::string name, float x, float y)
+	{
 		glUniform2f(uniforms[name], x, y);
 		AU_CHECK_GL_ERRORS();
 		AU_RENDERER_LOG_TRACE("Set vec2 uniform in shader {} at location {} to value [{},{}]", glid, uniforms[name], x, y);
 	}
 
-	void ShaderProgram::setUniformVec2(std::string name, float *value) {
+	void ShaderProgram::setUniformVec2(std::string name, float *value)
+	{
 		glUniform2f(uniforms[name], value[0], value[1]);
 		AU_CHECK_GL_ERRORS();
 		AU_RENDERER_LOG_TRACE("Set vec2 uniform in shader {} at location {} to value [{},{}]", glid, uniforms[name], value[0], value[1]);
 	}
 
-	void ShaderProgram::setUniformVec3(std::string name, float x, float y, float z) {
+	void ShaderProgram::setUniformVec3(std::string name, float x, float y, float z)
+	{
 		glUniform3f(uniforms[name], x, y, z);
 		AU_CHECK_GL_ERRORS();
 		AU_RENDERER_LOG_TRACE("Set vec3 uniform {} in shader {} at location {} to value [{},{},{}]", name, glid, uniforms[name], x, y, z);
 	}
 
-	void ShaderProgram::setUniformVec3(std::string name, glm::vec3 value) {
-		glUniform3f(uniforms[name], value.x, value.y, value.z);
-		AU_CHECK_GL_ERRORS();
-		AU_RENDERER_LOG_TRACE("Set vec3 uniform {} in shader {} at location {} to value [{},{},{}]", name, glid, uniforms[name], value.x, value.y, value.z);
+	void ShaderProgram::setUniformVec3(std::string name, glm::vec3 value)
+	{
+		if (uniforms.find(name) != uniforms.end())
+		{
+			glUniform3f(uniforms[name], value.x, value.y, value.z);
+			AU_CHECK_GL_ERRORS();
+			AU_RENDERER_LOG_TRACE("Set vec3 uniform {} in shader {} at location {} to value [{},{},{}]", name, glid, uniforms[name], value.x, value.y, value.z);
+		}
 	}
 
-	void ShaderProgram::setUniformVec3(std::string name, float *value) {
-		glUniform3f(uniforms[name], value[0], value[1], value[2]);
-		AU_CHECK_GL_ERRORS();
-		AU_RENDERER_LOG_TRACE("Set vec3 uniform {} in shader {} at location {} to value [{},{},{}]", name, glid, uniforms[name], value[0], value[1], value[2]);
+	void ShaderProgram::setUniformVec3(std::string name, float *value)
+	{
+		if (uniforms.find(name) != uniforms.end())
+		{
+			glUniform3f(uniforms[name], value[0], value[1], value[2]);
+			AU_CHECK_GL_ERRORS();
+			AU_RENDERER_LOG_TRACE("Set vec3 uniform {} in shader {} at location {} to value [{},{},{}]", name, glid, uniforms[name], value[0], value[1], value[2]);
+		}
 	}
 
-	void ShaderProgram::setUniformVec3Array(std::string name, float *value, int count) {
+	void ShaderProgram::setUniformVec3Array(std::string name, float *value, int count)
+	{
 		glUniform3fv(uniforms[name], count, value);
 		AU_CHECK_GL_ERRORS();
 		AU_RENDERER_LOG_TRACE("Set vec3 uniform {} in shader {} at location {} to value [{},{},{}]", name, glid, uniforms[name], value[0], value[1], value[2]);
 	}
 
-	void ShaderProgram::setUniformVec4(std::string name, float x, float y, float z, float w) {
+	void ShaderProgram::setUniformVec4(std::string name, float x, float y, float z, float w)
+	{
 		glUniform4f(uniforms[name], x, y, z, w);
 		AU_CHECK_GL_ERRORS();
 		AU_RENDERER_LOG_TRACE("Set vec4 uniform in shader {} at location {} to value [{},{},{},{}]", glid, uniforms[name], x, y, z, w);
 	}
 
-	void ShaderProgram::setUniformVec4(std::string name, glm::vec4 value) {
+	void ShaderProgram::setUniformVec4(std::string name, glm::vec4 value)
+	{
 		glUniform4f(uniforms[name], value.x, value.y, value.z, value.w);
 		AU_CHECK_GL_ERRORS();
 		AU_RENDERER_LOG_TRACE("Set vec4 uniform in shader {} at location {} to value [{},{},{},{}]", glid, uniforms[name], value.x, value.y, value.z, value.w);
 	}
 
-	void ShaderProgram::setUniformVec4(std::string name, float *value) {
+	void ShaderProgram::setUniformVec4(std::string name, float *value)
+	{
 		glUniform4f(uniforms[name], value[0], value[1], value[2], value[3]);
 		AU_CHECK_GL_ERRORS();
 		AU_RENDERER_LOG_TRACE("Set vec4 uniform in shader {} at location {} to value [{},{},{},{}]", glid, uniforms[name], value[0], value[1], value[2], value[3]);
 	}
 
-	void ShaderProgram::setUniformMat4(std::string name, glm::mat4 value) {
+	void ShaderProgram::setUniformMat4(std::string name, glm::mat4 value)
+	{
 		glUniformMatrix4fv(uniforms[name], 1, false, glm::value_ptr(value));
 		AU_CHECK_GL_ERRORS();
 	}
 
-	void ShaderProgram::setUniformMat4(std::string name, float* value) {
+	void ShaderProgram::setUniformMat4(std::string name, float *value)
+	{
 		glUniformMatrix4fv(uniforms[name], 1, false, value);
 		AU_CHECK_GL_ERRORS();
 	}
