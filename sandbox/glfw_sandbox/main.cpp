@@ -8,7 +8,7 @@ int main()
 
 	Audace::AppController appController;
 
-	if (!appController.createWindow(1280, 720, "Audace Sandbox")) {
+	if (!appController.createWindow(1920, 1080, "Audace Sandbox")) {
 		return -1;
 	}
 

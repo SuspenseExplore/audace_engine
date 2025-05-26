@@ -74,6 +74,9 @@ namespace Audace
 
 	void GameWindow::beginFrame()
 	{
+		glfwGetWindowSize(window, &width, &height);
+		glViewport(0, 0, width, height);
+
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
