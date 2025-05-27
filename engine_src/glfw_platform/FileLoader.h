@@ -23,7 +23,7 @@ namespace Audace {
 		ImageData readImageFile(std::string path);
 		Model* readModelFile(std::string path, std::string filename);
 
-		std::vector<std::string> listFilesInDir(const std::string& path);
+		std::vector<std::string> listFilesInDir(const std::string& path, bool recursive = false);
 	};
 }
 

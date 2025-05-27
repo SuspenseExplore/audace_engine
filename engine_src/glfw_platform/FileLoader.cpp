@@ -61,21 +61,40 @@ namespace Audace
 		return model;
 	}
 
-	std::vector<std::string> FileLoader::listFilesInDir(const std::string &path)
+	std::vector<std::string> FileLoader::listFilesInDir(const std::string &path, bool recursive)
 	{
+		std::string searchPath = basePath + path + "/*";
 		std::vector<std::string> filenames;
 		WIN32_FIND_DATA data;
-		HANDLE handle = ::FindFirstFile((basePath + path).c_str(), &data);
+		HANDLE handle = ::FindFirstFile(searchPath.c_str(), &data);
 		if (handle != INVALID_HANDLE_VALUE)
 		{
 			do
 			{
 				if (!(data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
 				{
-					filenames.push_back(data.cFileName);
+					filenames.push_back(path + "/" + data.cFileName);
 				}
 			} while (::FindNextFile(handle, &data));
 			::FindClose(handle);
+		}
+
+		if (recursive)
+		{
+			handle = ::FindFirstFile(searchPath.c_str(), &data);
+			if (handle != INVALID_HANDLE_VALUE)
+			{
+				do
+				{
+					if (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY &&
+						data.cFileName[0] != '.')
+					{
+						std::vector<std::string> r = listFilesInDir(path + "/" + data.cFileName, true);
+						filenames.insert(filenames.end(), r.begin(), r.end());
+					}
+				} while (::FindNextFile(handle, &data));
+				::FindClose(handle);
+			}
 		}
 
 		return filenames;

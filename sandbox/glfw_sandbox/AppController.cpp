@@ -1,3 +1,4 @@
+#include <fstream>
 #include "glfw3.h"
 #include "au_renderer.h"
 #include "AppController.h"
@@ -29,6 +30,51 @@ namespace Audace
 		AU_RENDERER_LOG_TRACE("Renderer initialized");
 
 		fileLoader = new FileLoader("../../assets/");
+
+		// build an index file for models in assets/models/
+		json index = json::object();
+		index["folders"] = json::object();
+		index["files"] = json::array();
+		std::string folder;
+		int i;
+		std::vector<std::string> files = fileLoader->listFilesInDir("models", true);
+		for (std::string s : files)
+		{
+			if (s.find(".obj") == s.npos) {
+				continue;
+			}
+			// file entries all start with "models/" and we want to skip that part
+			s = s.substr(7);
+
+			json *j = &index;
+			while ((i = s.find_first_of('/')) != s.npos)
+			{
+				std::string f = s.substr(0, i);
+				s = s.substr(i + 1);
+				j = &((*j)["folders"]);
+				if (!j->contains(f))
+				{
+					(*j)[f] = json::object();
+				}
+				j = &((*j)[f]);
+				if (!j->contains("folders"))
+				{
+					(*j)["folders"] = json::object();
+				}
+			}
+			if (!j->contains("files"))
+			{
+				(*j)["files"] = json::array();
+			}
+			if (s != "_index.json")
+			{
+				(*j)["files"].push_back(s);
+			}
+		}
+		std::ofstream fout("../../../assets/models/_index.json");
+		fout << index.dump(4);
+		fout.close();
+
 		AssetStore::init(fileLoader);
 	}
 
@@ -155,7 +201,7 @@ namespace Audace
 	void AppController::renderFrame()
 	{
 		scene->render();
-		((ProcTerrainScene*)scene)->renderUi();
+		((ProcTerrainScene *)scene)->renderUi();
 	}
 
 	void AppController::shutdown()
