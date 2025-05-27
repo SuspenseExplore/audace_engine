@@ -18,6 +18,7 @@ namespace Audace
 		std::map<int, std::function<void(ButtonInputEvent)>> buttonEventHandlers;
 		std::map<int, std::function<void(BooleanInputEvent)>> buttonChangedEventHandlers;
 		std::function<void(Vec2InputEvent)> mouseMoveEventHandler;
+		std::function<void(Vec2InputEvent)> mouseWheelEventHandler;
 
 	public:
 		static void addButtonEventHandler(int button, std::function<void(ButtonInputEvent)> handler)
@@ -31,6 +32,10 @@ namespace Audace
 		static void setMouseMoveEventHandler(std::function<void(Vec2InputEvent)> handler)
 		{
 			INSTANCE->mouseMoveEventHandler = handler;
+		}
+		static void setMouseWheelEventHandler(std::function<void(Vec2InputEvent)> handler)
+		{
+			INSTANCE->mouseWheelEventHandler = handler;
 		}
 
 		static void setStaticRef(MouseManager *mouseManager) { MouseManager::INSTANCE = mouseManager; };
@@ -55,6 +60,13 @@ namespace Audace
 			if (INSTANCE->mouseMoveEventHandler != nullptr)
 			{
 				INSTANCE->mouseMoveEventHandler(Vec2InputEvent(glm::vec2(x, y), true, std::chrono::high_resolution_clock::now().time_since_epoch().count()));
+			}
+		}
+		static void wheelEventCallback(GLFWwindow *window, double xOffset, double yOffset)
+		{
+			if (INSTANCE->mouseWheelEventHandler != nullptr)
+			{
+				INSTANCE->mouseWheelEventHandler(Vec2InputEvent(glm::vec2(xOffset, yOffset), true, std::chrono::high_resolution_clock::now().time_since_epoch().count()));
 			}
 		}
 	};

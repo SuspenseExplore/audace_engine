@@ -80,6 +80,12 @@ bool AppController::createXrSession()
 							   io.AddMousePosEvent(x, y);
 						   }
 					   });
+		addFloatEventHandler(Audace::OculusTouchController::LEFT_THUMBSTICK_Y,
+							 [=](FloatInputEvent e)
+							 {
+								 ImGuiIO &io = ImGui::GetIO();
+								 io.AddMouseWheelEvent(0, e.state);
+							 });
 		addPoseHandler(Audace::OculusTouchController::RIGHT_AIM_POSE,
 					   [=](PoseInputEvent e)
 					   {

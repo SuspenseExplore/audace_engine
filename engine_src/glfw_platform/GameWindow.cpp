@@ -50,6 +50,12 @@ namespace Audace
 		MouseManager::setStaticRef(&mouseManager);
 		glfwSetMouseButtonCallback(window, MouseManager::buttonEventCallback);
 		glfwSetCursorPosCallback(window, MouseManager::moveEventCallback);
+		glfwSetScrollCallback(window, MouseManager::wheelEventCallback);
+		MouseManager::setMouseWheelEventHandler(
+			[=](Vec2InputEvent e) {
+				ImGuiIO &io = ImGui::GetIO();
+				io.AddMouseWheelEvent(e.state.x, e.state.y);
+			});
 		return true;
 	}
 
