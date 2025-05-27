@@ -31,12 +31,6 @@ void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 
 	modelIndex = fileLoader->textFileToJson("models/_index.json");
 	shader = Audace::AssetStore::getShader("obj_mtl");
-	Audace::Sprite *s = Audace::AssetStore::cloneSprite("kenney/nature/canoe.obj");
-
-	s->forEachMesh([this](Audace::Mesh *mesh)
-				   { mesh->getMaterial()->setShader(shader); });
-	s->setModelMatrix(modelMat);
-	sprites.push_back(s);
 
 	pointLight = new Audace::PointLight();
 	pointLight->setPosition({0, 0, 0});
@@ -45,6 +39,20 @@ void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 
 	Audace::AssetStore::getWhiteTexture()->bind(0);
 	shader->setUniformInt("material.diffuseMap", 0);
+}
+
+void SceneBuilder::loadModel(std::string path, std::string filename)
+{
+	if (currSprite != nullptr)
+	{
+		addSprite(currSprite);
+	}
+
+	currSprite = Audace::AssetStore::cloneSprite(path + filename);
+	currSprite->forEachMesh([this](Audace::Mesh *mesh)
+							{ mesh->getMaterial()->setShader(shader); });
+	currSprite->setModelMatrix(modelMat);
+	currSprite->setName(filename + "_" + std::to_string(nextSpriteId++));
 }
 
 void SceneBuilder::render()
@@ -63,6 +71,11 @@ void SceneBuilder::render()
 	for (int i = 0; i < sprites.size(); i++)
 	{
 		sprites[i]->renderWorldSpace(this);
+	}
+
+	if (currSprite != nullptr)
+	{
+		currSprite->renderWorldSpace(this);
 	}
 }
 
@@ -85,6 +98,26 @@ void SceneBuilder::renderUi()
 		{
 			traverseModelIndex(modelIndex, 0);
 			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Sprite"))
+		{
+			glm::vec3 pos;
+			glm::vec3 scale = {1, 1, 1};
+			glm::vec3 orientation;
+			if (currSprite != nullptr)
+			{
+				pos = currSprite->getPosition();
+				scale = currSprite->getScale();
+				orientation = glm::degrees(glm::eulerAngles(currSprite->getOrientation()));
+			}
+			ImGui::DragFloat3("Position", glm::value_ptr(pos), 0.1f);
+			ImGui::DragFloat3("Scale", glm::value_ptr(scale), 0.1f);
+			ImGui::DragFloat3("Orientation", glm::value_ptr(orientation));
+			ImGui::EndTabItem();
+			currSprite->setPosition(pos);
+			currSprite->setScale(scale);
+			currSprite->setOrientation(glm::quat(glm::radians(orientation)));
 		}
 
 		if (ImGui::BeginTabItem("Lighting"))
@@ -159,25 +192,17 @@ void SceneBuilder::traverseModelIndex(json jsonListing, int level)
 		{
 			if (ImGui::Selectable(el.value().template get<std::string>().c_str(), false))
 			{
-				AU_ENGINE_LOG_DEBUG("Selected {}", el.value());
+				std::string path;
+				for (std::string p : indexPath)
+				{
+					path += p;
+					path += "/";
+				}
+				loadModel(path, el.value());
 			}
 		}
 		ImGui::EndCombo();
 	}
-	// int sel = 0;
-	// std::string selValue = f1[sel].template get<std::string>();
-	// if (ImGui::BeginCombo("Filename", selValue.c_str())) {
-	// 	for (int i = 0; i < (int) f1.size(); i++) {
-	// 		std::string v = f1[i].template get<std::string>();
-	// 		if (ImGui::Selectable(v.c_str(), i == sel)) {
-	// 			sel = i;
-	// 		}
-	// 		if (i == sel) {
-	// 			ImGui::SetItemDefaultFocus();
-	// 		}
-	// 	}
-	// 	ImGui::EndCombo();
-	// }
 }
 
 void SceneBuilder::disposeAssets()

@@ -36,6 +36,9 @@ class SceneBuilder : public Audace::Scene
 	Audace::PointLight *pointLight;
 	glm::mat4 modelMat;
 
+	Audace::Sprite *currSprite = nullptr;
+	int nextSpriteId = 0;
+
 public:
 	SceneBuilder(Audace::BaseAppController *controller)
 		: Scene(controller)
@@ -43,6 +46,7 @@ public:
 		strcpy(sceneWritePath, "D:/audace_engine/sandbox/assets/scenes/MainScene.json");
 	}
 
+	void loadModel(std::string path, std::string filename);
 	void traverseModelIndex(json index, int i);
 
 	void loadAssets(Audace::FileLoader *fileLoader) override;

@@ -99,7 +99,7 @@ bool EglWindow::init(android_app *app)
 	ImGui_ImplAndroid_Init(app->window);
 	ImGui_ImplOpenGL3_Init("#version 300 es");
 	//	io.FontGlobalScale = 2;
-	ImGui::GetStyle().ScaleAllSizes(1.5);
+	ImGui::GetStyle().ScaleAllSizes(2.0);
 
 	return true;
 }

@@ -27,6 +27,7 @@ namespace Audace
 	class Sprite
 	{
 	protected:
+		std::string name;
 		VertexArray *vertexArray;
 		std::vector<Mesh *> meshes;
 		glm::mat4 modelMatrix;
@@ -49,6 +50,8 @@ namespace Audace
 	public:
 		Sprite(Model *model);
 		Sprite(std::vector<Mesh *> meshes);
+		void setName(std::string name) { this->name = name; }
+		std::string getName() { return name; }
 
 		virtual void renderWorldSpace(Scene *scene);
 		virtual void renderViewSpace(Scene *scene);
