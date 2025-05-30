@@ -290,7 +290,8 @@ bool AppController::renderLayer(std::vector<XrCompositionLayerProjectionView> &p
 	}
 
 	layer.space = xrContext.xrWorldSpace;
-	layer.layerFlags = XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND;
+	layer.layerFlags = XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT |
+			XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT;
 	//			m_options->Parsed.EnvironmentBlendMode == XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND
 	//			? XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT |
 	//			  XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT

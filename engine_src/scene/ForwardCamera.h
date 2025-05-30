@@ -13,6 +13,7 @@ namespace Audace
 	{
 		Pose pose;
 		glm::mat4 projMat;
+		glm::vec2 viewSize;
 
 	public:
 		ForwardCamera(Pose pose, glm::mat4 projection) : pose(pose), projMat(projection) {}
@@ -21,13 +22,19 @@ namespace Audace
 		{
 			glm::quat q = glm::quat(glm::vec3(0.0f, 0.0f, 0.0f));
 			glm::mat4 proj = glm::perspectiveFov(glm::radians(45.0f), viewWidth, viewHeight, 0.1f, 500.0f);
-			return new ForwardCamera(Pose(position, q), proj);
+
+			ForwardCamera *c = new ForwardCamera(Pose(position, q), proj);
+			c->viewSize = glm::vec2(viewWidth, viewHeight);
+			return c;
 		}
 		static ForwardCamera *standard2d(glm::vec3 position, float viewWidth, float viewHeight)
 		{
 			glm::quat q = glm::quat(glm::vec3(glm::radians(-90.0f), 0.0f, 0.0f));
 			glm::mat4 proj = glm::ortho(viewWidth * -0.5f, viewWidth * 0.5f, viewHeight * -0.5f, viewHeight * 0.5f, 0.1f, 100.0f);
-			return new ForwardCamera(Pose(position, q), proj);
+
+			ForwardCamera *c = new ForwardCamera(Pose(position, q), proj);
+			c->viewSize = glm::vec2(viewWidth, viewHeight);
+			return c;
 		}
 
 		void move(float x, float y, float z)
@@ -112,6 +119,11 @@ namespace Audace
 		const glm::mat4 getViewProjMatrix() override
 		{
 			return getProjMat() * getViewMat();
+		}
+
+		const glm::vec2 getViewSize() override
+		{
+			return viewSize;
 		}
 	};
 }

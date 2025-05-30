@@ -54,6 +54,7 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/renderer/Shapes.cpp
 		${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 		${ENGINE_DIR}/geom/VoxelTerrainGen.cpp
+		${ENGINE_DIR}/editor/SpriteEditWindow.cpp
 		${ENGINE_DIR}/scene/Scene.cpp
 		openxr/OpenxrSwapchain.cpp
 		openxr/OpenxrView.cpp

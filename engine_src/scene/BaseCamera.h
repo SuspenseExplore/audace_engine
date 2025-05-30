@@ -15,6 +15,7 @@ namespace Audace {
 		virtual const glm::vec3 getPosition() = 0;
 
 		virtual const glm::mat4 getViewProjMatrix() = 0;
+		virtual const glm::vec2 getViewSize() = 0;
 
 		void setProjectionMatrix(glm::mat4 mat) { projMat = mat; }
 

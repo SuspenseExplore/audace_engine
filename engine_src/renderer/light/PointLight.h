@@ -20,7 +20,7 @@ namespace Audace
 			Audace::SimpleBillboardMaterial *material = AssetStore::simpleBillboardMaterial();
 			material->setTexture(AssetStore::getWhiteTexture());
 			meshes[0]->setMaterial(material);
-			setScale({0.01f, 0.01f, 0.01f});
+			setScale({0.02f, 0.02f, 0.02f});
 		}
 		void renderWorldSpace(Scene *scene) override
 		{

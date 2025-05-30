@@ -14,6 +14,7 @@
 #include "scene/BasicCameraController.h"
 #include "content/Model.h"
 #include "renderer/light/PointLight.h"
+#include "editor/SpriteEditWindow.h"
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -37,7 +38,9 @@ class SceneBuilder : public Audace::Scene
 	glm::mat4 modelMat;
 
 	Audace::Sprite *currSprite = nullptr;
+	Audace::SpriteEditWindow *editWin = nullptr;
 	int nextSpriteId = 0;
+	std::vector<Audace::Sprite*> builderSprites;
 
 public:
 	SceneBuilder(Audace::BaseAppController *controller)

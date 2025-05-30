@@ -36,28 +36,29 @@ void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 	pointLight->setPosition({0, 0, 0});
 	pointLight->setColor({1, 1, 1});
 	pointLight->setIntensity(1);
+	addSprite(pointLight);
 
 	Audace::AssetStore::getWhiteTexture()->bind(0);
 	shader->setUniformInt("material.diffuseMap", 0);
+
+	editWin = new Audace::SpriteEditWindow();
 }
 
 void SceneBuilder::loadModel(std::string path, std::string filename)
 {
-	if (currSprite != nullptr)
-	{
-		addSprite(currSprite);
-	}
-
 	currSprite = Audace::AssetStore::cloneSprite(path + filename);
 	currSprite->forEachMesh([this](Audace::Mesh *mesh)
 							{ mesh->getMaterial()->setShader(shader); });
 	currSprite->setModelMatrix(modelMat);
 	currSprite->setName(filename + "_" + std::to_string(nextSpriteId++));
+
+	builderSprites.push_back(currSprite);
+	editWin->setSprite(currSprite);
 }
 
 void SceneBuilder::render()
 {
-	glClearColor(clearColor.x, clearColor.y, clearColor.z, 0);
+	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera->update();
@@ -68,23 +69,32 @@ void SceneBuilder::render()
 	shader->setUniformVec3("light[0].color", pointLight->getColor());
 	shader->setUniformFloat("light[0].intensity", pointLight->getIntensity());
 
-	for (int i = 0; i < sprites.size(); i++)
+	for (Audace::Sprite *s : sprites)
 	{
-		sprites[i]->renderWorldSpace(this);
+		s->renderWorldSpace(this);
+	}
+	for (Audace::Sprite *s : builderSprites)
+	{
+		s->renderWorldSpace(this);
 	}
 
 	if (currSprite != nullptr)
 	{
 		currSprite->renderWorldSpace(this);
+		editWin->renderWorldSpace(this);
 	}
 }
 
 void SceneBuilder::renderUi()
 {
+	if (currSprite != nullptr)
+	{
+		editWin->renderViewSpace(this);
+	}
 
 	ImGui::Begin("Editor");
-	ImGui::SetWindowPos(ImVec2(600, 800));
-	ImGui::SetWindowSize(ImVec2(400, 400));
+	ImGui::SetWindowPos(ImVec2(600, 800), ImGuiCond_Once);
+	ImGui::SetWindowSize(ImVec2(600, 600), ImGuiCond_Once);
 	if (ImGui::BeginTabBar("Tabs1"))
 	{
 
@@ -100,29 +110,63 @@ void SceneBuilder::renderUi()
 			ImGui::EndTabItem();
 		}
 
-		if (ImGui::BeginTabItem("Sprite"))
+		if (ImGui::BeginTabItem("Sprites"))
 		{
-			glm::vec3 pos;
-			glm::vec3 scale = {1, 1, 1};
-			glm::vec3 orientation;
-			if (currSprite != nullptr)
+			if (ImGui::BeginListBox("Sprites"))
 			{
-				pos = currSprite->getPosition();
-				scale = currSprite->getScale();
-				orientation = glm::degrees(glm::eulerAngles(currSprite->getOrientation()));
+				for (Audace::Sprite *s : builderSprites)
+				{
+					bool selected = (currSprite != nullptr && s->getName() == currSprite->getName());
+					if (ImGui::Selectable(s->getName().c_str(), selected))
+					{
+						currSprite = s;
+						editWin->setSprite(s);
+						if (selected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+				}
+				ImGui::EndListBox();
 			}
-			ImGui::DragFloat3("Position", glm::value_ptr(pos), 0.1f);
-			ImGui::DragFloat3("Scale", glm::value_ptr(scale), 0.1f);
-			ImGui::DragFloat3("Orientation", glm::value_ptr(orientation));
+			if (ImGui::Button("Remove"))
+			{
+				for (auto iter = builderSprites.begin(); iter != builderSprites.end(); iter++)
+				{
+					if ((*iter)->getName() == currSprite->getName())
+					{
+						builderSprites.erase(iter);
+						delete currSprite;
+						currSprite = nullptr;
+						break;
+					}
+				}
+			}
 			ImGui::EndTabItem();
-			currSprite->setPosition(pos);
-			currSprite->setScale(scale);
-			currSprite->setOrientation(glm::quat(glm::radians(orientation)));
 		}
 
 		if (ImGui::BeginTabItem("Lighting"))
 		{
-			ImGui::ColorPicker4("Ambient color", glm::value_ptr(ambientColor));
+			if (ImGui::BeginTabBar("Lighting"))
+			{
+				if (ImGui::BeginTabItem("Ambient light"))
+				{
+					ImGui::ColorPicker4("Ambient color", glm::value_ptr(ambientColor));
+					ImGui::EndTabItem();
+				}
+				if (ImGui::BeginTabItem("Point light"))
+				{
+					static glm::vec4 pointLightColor = glm::vec4(pointLight->getColor(), pointLight->getIntensity());
+					static glm::vec3 lightPos = pointLight->getPosition();
+					ImGui::DragFloat3("Position", glm::value_ptr(lightPos), 0.01);
+					ImGui::ColorPicker4("Color", glm::value_ptr(pointLightColor));
+					pointLight->setPosition(lightPos);
+					pointLight->setColor(glm::vec3(pointLightColor));
+					pointLight->setIntensity(pointLightColor.a);
+					ImGui::EndTabItem();
+				}
+				ImGui::EndTabBar();
+			}
 			ImGui::EndTabItem();
 		}
 

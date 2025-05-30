@@ -47,6 +47,10 @@ public:
 		}
 	}
 
+	const glm::vec2 getViewSize() override
+	{
+		return glm::vec2(views[activeView].getWidth(), views[activeView].getHeight());
+	}
 	const glm::mat4 getViewProjMatrix() override;
 };
 

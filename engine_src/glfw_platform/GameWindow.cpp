@@ -38,11 +38,13 @@ namespace Audace
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO &io = ImGui::GetIO();
+		io.FontGlobalScale = 2;
 		// io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		// io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
 		ImGui::StyleColorsDark();
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 100");
+		// ImGui::GetStyle().ScaleAllSizes(2.0);
 
 		KeyboardManager::setStaticRef(&keyboardManager);
 		glfwSetKeyCallback(window, KeyboardManager::eventCallback);
@@ -52,7 +54,8 @@ namespace Audace
 		glfwSetCursorPosCallback(window, MouseManager::moveEventCallback);
 		glfwSetScrollCallback(window, MouseManager::wheelEventCallback);
 		MouseManager::setMouseWheelEventHandler(
-			[=](Vec2InputEvent e) {
+			[=](Vec2InputEvent e)
+			{
 				ImGuiIO &io = ImGui::GetIO();
 				io.AddMouseWheelEvent(e.state.x, e.state.y);
 			});

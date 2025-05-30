@@ -1,7 +1,5 @@
 {
-    "files": [
-        "wallNarrowWood.obj"
-    ],
+    "files": [],
     "folders": {
         "kenney": {
             "folders": {
@@ -197,7 +195,6 @@
                                 "wallDoorway.obj",
                                 "wallDoorwayWide.obj",
                                 "wallHalf.obj",
-                                "wallNarrowWood.obj",
                                 "wallWindow.obj",
                                 "wallWindowSlide.obj"
                             ],
