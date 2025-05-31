@@ -6,12 +6,12 @@ layout (location = 1) in vec3 inTexCoord;
 layout (location = 2) in vec3 normal;
 layout (location = 3) in vec3 tangent;
 
-struct Light {
+struct PointLight {
 	vec3 position;
 	vec3 color;
 	float intensity;
 };
-uniform Light light[4];
+uniform PointLight light[4];
 
 uniform mat4 worldMat;
 uniform mat4 vpMat;
@@ -21,6 +21,7 @@ uniform vec3 viewPos;
 out vec3 texCoord;
 out vec3 tangentViewPos;
 out vec3 fragPos;
+out vec3 surfaceNormal;
 out vec3 tangentFragPos;
 out vec3 tangentLightPos[4];
 
@@ -28,6 +29,8 @@ void main() {
 	gl_Position = vpMat * worldMat * position;
 	texCoord = inTexCoord / textureScale;
 	fragPos = (worldMat * position).xyz;
+	surfaceNormal = normal.xzy;
+	surfaceNormal.y = -surfaceNormal.y;
 
 	// calculate TBN matrix for normal mapping
 	vec3 N = normalize(worldMat * vec4(normal, 0.0)).xyz;

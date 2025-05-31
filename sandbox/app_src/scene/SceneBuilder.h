@@ -34,6 +34,8 @@ class SceneBuilder : public Audace::Scene
 
 	Audace::ShaderProgram *shader;
 	glm::vec4 ambientColor = {0.5, 0.5, 0.5, 1.0};
+	glm::vec3 dirLightDirection = {0, 1, 0};
+	glm::vec4 dirLightColor = {1, 1, 0.8, 0.7};
 	Audace::PointLight *pointLight;
 	glm::mat4 modelMat;
 
@@ -41,6 +43,8 @@ class SceneBuilder : public Audace::Scene
 	Audace::SpriteEditWindow *editWin = nullptr;
 	int nextSpriteId = 0;
 	std::vector<Audace::Sprite*> builderSprites;
+
+	int renderType = 0;
 
 public:
 	SceneBuilder(Audace::BaseAppController *controller)

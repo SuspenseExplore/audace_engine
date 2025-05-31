@@ -24,6 +24,8 @@ using json = nlohmann::json;
 #include "MouseManager.h"
 #endif
 
+enum RenderType {POSITION, MTL_COLOR, NORMAL, AMBIENT, DIR_LIGHT, FULL};
+
 void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 {
 	this->fileLoader = fileLoader;
@@ -33,7 +35,7 @@ void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 	shader = Audace::AssetStore::getShader("obj_mtl");
 
 	pointLight = new Audace::PointLight();
-	pointLight->setPosition({0, 0, 0});
+	pointLight->setPosition({0, 0, 10});
 	pointLight->setColor({1, 1, 1});
 	pointLight->setIntensity(1);
 	addSprite(pointLight);
@@ -42,6 +44,7 @@ void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 	shader->setUniformInt("material.diffuseMap", 0);
 
 	editWin = new Audace::SpriteEditWindow();
+	loadModel("kenney/nature/cliffs/", "cliff_scene.obj");
 }
 
 void SceneBuilder::loadModel(std::string path, std::string filename)
@@ -65,9 +68,18 @@ void SceneBuilder::render()
 
 	shader->bind();
 	shader->setUniformVec4("ambientLight", ambientColor);
+	shader->setUniformVec4("dirLightColor", dirLightColor);
+	shader->setUniformVec3("dirLightDirection", dirLightDirection);
 	shader->setUniformVec3("light[0].position", pointLight->getPosition());
 	shader->setUniformVec3("light[0].color", pointLight->getColor());
 	shader->setUniformFloat("light[0].intensity", pointLight->getIntensity());
+
+	shader->setUniformFloat("outPosition", renderType == RenderType::POSITION ? 1.0 : 0.0);
+	shader->setUniformFloat("outMtlColor", renderType == RenderType::MTL_COLOR ? 1.0 : 0.0);
+	shader->setUniformFloat("outNormal", renderType == RenderType::NORMAL ? 1.0 : 0.0);
+	shader->setUniformFloat("outAmbient", renderType == RenderType::AMBIENT ? 1.0 : 0.0);
+	shader->setUniformFloat("outDirLight", renderType == RenderType::DIR_LIGHT ? 1.0 : 0.0);
+	shader->setUniformFloat("outFull", renderType == RenderType::FULL ? 1.0 : 0.0);
 
 	for (Audace::Sprite *s : sprites)
 	{
@@ -94,7 +106,7 @@ void SceneBuilder::renderUi()
 
 	ImGui::Begin("Editor");
 	ImGui::SetWindowPos(ImVec2(600, 800), ImGuiCond_Once);
-	ImGui::SetWindowSize(ImVec2(600, 600), ImGuiCond_Once);
+	ImGui::SetWindowSize(ImVec2(800, 600), ImGuiCond_Once);
 	if (ImGui::BeginTabBar("Tabs1"))
 	{
 
@@ -154,6 +166,19 @@ void SceneBuilder::renderUi()
 					ImGui::ColorPicker4("Ambient color", glm::value_ptr(ambientColor));
 					ImGui::EndTabItem();
 				}
+				if (ImGui::BeginTabItem("Directional Light"))
+				{
+					static glm::vec3 angles = {0, 0, 0};
+					ImGui::DragFloat3("Direction", glm::value_ptr(angles));
+					ImGui::ColorPicker4("Color", glm::value_ptr(dirLightColor));
+
+					glm::mat4 m = glm::mat4(1.0);
+					m = glm::rotate(m, glm::radians(angles.x), {1, 0, 0});
+					m = glm::rotate(m, glm::radians(angles.y), {0, 1, 0});
+					m = glm::rotate(m, glm::radians(angles.z), {0, 0, 1});
+					dirLightDirection = m * glm::vec4(0, 1, 0, 0);
+					ImGui::EndTabItem();
+				}
 				if (ImGui::BeginTabItem("Point light"))
 				{
 					static glm::vec4 pointLightColor = glm::vec4(pointLight->getColor(), pointLight->getIntensity());
@@ -167,6 +192,41 @@ void SceneBuilder::renderUi()
 				}
 				ImGui::EndTabBar();
 			}
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Render Output"))
+		{
+			if (ImGui::RadioButton("Position", renderType == RenderType::POSITION))
+			{
+				renderType = RenderType::POSITION;
+			}
+			ImGui::SameLine();
+			if (ImGui::RadioButton("Material", renderType == RenderType::MTL_COLOR))
+			{
+				renderType = RenderType::MTL_COLOR;
+			}
+			ImGui::SameLine();
+			if (ImGui::RadioButton("Normal", renderType == RenderType::NORMAL))
+			{
+				renderType = RenderType::NORMAL;
+			}
+			ImGui::SameLine();
+			if (ImGui::RadioButton("Ambient", renderType == RenderType::AMBIENT))
+			{
+				renderType = RenderType::AMBIENT;
+			}
+			ImGui::SameLine();
+			if (ImGui::RadioButton("Dir Light", renderType == RenderType::DIR_LIGHT))
+			{
+				renderType = RenderType::DIR_LIGHT;
+			}
+			ImGui::SameLine();
+			if (ImGui::RadioButton("Full", renderType == RenderType::FULL))
+			{
+				renderType = RenderType::FULL;
+			}
+
 			ImGui::EndTabItem();
 		}
 
