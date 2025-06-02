@@ -44,12 +44,14 @@ add_executable(
 	${ENGINE_DIR}/renderer/light/PointLight.h
 	${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 	${ENGINE_DIR}/renderer/text/TextLabel.cpp
+	${ENGINE_DIR}/content/IFileLoader.h
 	${ENGINE_DIR}/content/ModelLoader.cpp
 	${ENGINE_DIR}/content/AssetStore.cpp
 	${ENGINE_DIR}/content/JsonSerializer.cpp
 	${ENGINE_DIR}/editor/SpriteEditWindow.cpp
 	${ENGINE_DIR}/geom/VoxelTerrainGen.cpp
 	${ENGINE_DIR}/scene/Scene.cpp
+	${ENGINE_DIR}/scene/SceneDescriptor.cpp
 	${ENGINE_DIR}/scene/BaseCamera.h
 	${ENGINE_DIR}/scene/ForwardCamera.cpp
 	${ENGINE_DIR}/scene/BasicCameraController.cpp

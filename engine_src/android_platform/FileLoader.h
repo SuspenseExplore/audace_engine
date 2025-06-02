@@ -5,6 +5,7 @@
 #ifndef AU_FILELOADER_H
 #define AU_FILELOADER_H
 
+#include "content/IFileLoader.h"
 #include <jni.h>
 #include <android_native_app_glue.h>
 #include <string>
@@ -16,20 +17,22 @@
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
-namespace Audace {
-	class FileLoader {
+namespace Audace
+{
+	class FileLoader : public IFileLoader
+	{
 		AAssetManager *assetManager;
 
-		AAsset* getAsset(const std::string& path);
-		char* readAssetToBuffer(AAsset *asset);
+		AAsset *getAsset(const std::string &path);
+		char *readAssetToBuffer(AAsset *asset);
 
 	public:
 		FileLoader(AAssetManager *assets) : assetManager(assets) {}
-		ByteBuffer* readFileToBuffer(const std::string& path);
-		std::string textFileToString(const std::string& path);
-		json textFileToJson(const std::string &path);
-		ImageData readImageFile(const std::string& path);
-		Model* readModelFile(std::string path, std::string filename);
+		ByteBuffer *readFileToBuffer(const std::string &path);
+		std::string textFileToString(const std::string &path) override;
+		json textFileToJson(const std::string &path) override;
+		ImageData readImageFile(const std::string &path);
+		Model *readModelFile(std::string path, std::string filename);
 	};
 }
 

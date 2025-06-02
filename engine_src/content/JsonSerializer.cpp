@@ -1,5 +1,6 @@
 #include "JsonSerializer.h"
 #include "content/AssetStore.h"
+#include "glm/gtc/matrix_transform.hpp"
 
 namespace Audace
 {
@@ -23,5 +24,57 @@ namespace Audace
 	glm::vec3 JsonSerializer::getVec3(json jcontent)
 	{
 		return {jcontent[0], jcontent[1], jcontent[2]};
+	}
+
+	glm::vec4 JsonSerializer::getVec4(json jcontent)
+	{
+		return {jcontent[0], jcontent[1], jcontent[2], jcontent[3]};
+	}
+
+	glm::quat JsonSerializer::getQuat(json jcontent)
+	{
+		return glm::quat(jcontent[3], jcontent[0], jcontent[1], jcontent[2]);
+	}
+
+	// jcontent is an array of transformations
+	glm::mat4 JsonSerializer::getMatrix(json &jcontent)
+	{
+		glm::mat4 result = glm::mat4(1.0);
+		for (int i = 0; i < jcontent.size(); i++)
+		{
+			auto &el = jcontent[i];
+			for (auto &tx : el.items())
+			{
+				std::string name = tx.key();
+				if (name == "offset" || name == "translate")
+				{
+					glm::mat4 m = getTranslation(tx.value());
+					result = m * result;
+				}
+				else if (name == "rotateEulerDegrees")
+				{
+					glm::mat4 m = getRotationEulerDegrees(tx.value());
+					result = m * result;
+				}
+			}
+		}
+		return result;
+	}
+
+	glm::mat4 JsonSerializer::getTranslation(json jcontent)
+	{
+		return glm::translate(glm::mat4(1.0), glm::vec3(jcontent[0], jcontent[1], jcontent[2]));
+	}
+
+	glm::mat4 JsonSerializer::getRotationEulerDegrees(json jcontent)
+	{
+		glm::mat4 result = glm::mat4(1.0);
+		float x = jcontent[0];
+		float y = jcontent[1];
+		float z = jcontent[2];
+		result = glm::rotate(result, glm::radians(x), {1, 0, 0});
+		result = glm::rotate(result, glm::radians(y), {0, 1, 0});
+		result = glm::rotate(result, glm::radians(z), {0, 0, 1});
+		return result;
 	}
 }

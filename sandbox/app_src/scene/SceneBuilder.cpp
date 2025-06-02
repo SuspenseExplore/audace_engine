@@ -9,6 +9,7 @@
 #include "renderer/ShaderProgram.h"
 #include "renderer/Shapes.h"
 #include "renderer/material/Material.h"
+#include "scene/SceneDescriptor.h"
 #include "util/StringUtil.h"
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -24,10 +25,19 @@ using json = nlohmann::json;
 #include "MouseManager.h"
 #endif
 
-enum RenderType {POSITION, MTL_COLOR, NORMAL, AMBIENT, DIR_LIGHT, FULL};
+enum RenderType
+{
+	POSITION,
+	MTL_COLOR,
+	NORMAL,
+	AMBIENT,
+	DIR_LIGHT,
+	FULL
+};
 
 void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 {
+	renderType = RenderType::FULL;
 	this->fileLoader = fileLoader;
 	modelMat = glm::rotate(glm::mat4(1.0), glm::half_pi<float>(), glm::vec3(1.0, 0.0, 0.0));
 
@@ -44,7 +54,16 @@ void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 	shader->setUniformInt("material.diffuseMap", 0);
 
 	editWin = new Audace::SpriteEditWindow();
-	loadModel("kenney/nature/cliffs/", "cliff_scene.obj");
+	// loadModel("kenney/nature/cliffs/", "cliff_scene.obj");
+
+	// load a scene file
+	Audace::SceneDescriptor desc("scenes/cliffs.json");
+	desc.loadSceneAssets(fileLoader);
+	for (auto item : desc.sprites)
+	{
+		// item.second->setModelMatrix(modelMat);
+		builderSprites.emplace_back(item);
+	}
 }
 
 void SceneBuilder::loadModel(std::string path, std::string filename)
@@ -126,17 +145,19 @@ void SceneBuilder::renderUi()
 		{
 			if (ImGui::BeginListBox("Sprites"))
 			{
-				for (Audace::Sprite *s : builderSprites)
+				for (int i = 0; i < builderSprites.size(); i++)
 				{
-					bool selected = (currSprite != nullptr && s->getName() == currSprite->getName());
-					if (ImGui::Selectable(s->getName().c_str(), selected))
+					Audace::Sprite *s = builderSprites[i];
+
+					bool selected = (currSprite != nullptr && currSprite == s);
+					if (ImGui::Selectable((s->getName() + "_" + std::to_string(i)).c_str(), selected))
 					{
 						currSprite = s;
 						editWin->setSprite(s);
-						if (selected)
-						{
-							ImGui::SetItemDefaultFocus();
-						}
+					}
+					if (selected)
+					{
+						ImGui::SetItemDefaultFocus();
 					}
 				}
 				ImGui::EndListBox();
