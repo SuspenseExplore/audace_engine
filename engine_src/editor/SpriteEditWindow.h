@@ -8,8 +8,8 @@ namespace Audace
 {
 	class SpriteEditWindow
 	{
-		Sprite *sprite;
-		Sprite *positionMark;
+		Sprite* sprite;
+		Sprite* positionMark;
 
 		glm::vec3 position;
 		glm::vec3 scale;
@@ -18,12 +18,12 @@ namespace Audace
 	public:
 		SpriteEditWindow();
 
-		void setSprite(Sprite *s);
-		void renderWorldSpace(Scene *scene);
-		void renderViewSpace(Scene *scene);
+		void setSprite(Sprite* s);
+		void renderWorldSpace(Scene* scene);
+		void renderViewSpace(Scene* scene);
 
-		void editorCellFloat(std::string label, float *val, float interval);
-		void editorCellAngle(std::string label, float *val, float interval);
+		void editorCellFloat(std::string label, float* val, float interval);
+		void editorCellAngle(std::string label, float* val, float interval);
 	};
 }
 

@@ -1,46 +1,26 @@
 {
 	"filename": "scenes/cliffs.json",
-	"scene": {
-		"clearColor": [0.0, 0.0, 0.5, 1.0],
-		"modelMats": {
-			"offsetMat": [
-					{"offset": [0.0, -0.5, 0.0]}
-			],
-			"rotateMat": [
-					{"offset": [0.0, -0.5, 0.0]},
-					{"rotateEulerDegrees": [90, 0, 0]}
-			]
-		},
-		"images": {},
-		"shaders": ["obj_mtl"],
-		"materials": {},
-		"material_mapping": {},
-		"sprites": {
-			"kenney/nature/cliffs/cliff_block_stone.obj": [
-				{
-					"pose": [
-						[0.0, 0.0, 0.0],
-						[0.0, 0.0, 0.0, 1.0]
-					],
-					"shader": "obj_mtl"
-				},
-				{
-					"modelMat": "offsetMat",
-					"pose": [
-						[1.0, 0.0, 0.0],
-						[0.0, 0.0, 0.0, 1.0]
-					],
-					"shader": "obj_mtl"
-				},
-				{
-					"modelMat": "rotateMat",
-					"pose": [
-						[2.0, 0.0, 0.0],
-						[0.0, 0.0, 0.0, 1.0]
-					],
-					"shader": "obj_mtl"
-				}
-			]
-		}
+	"clearColor": [0.0, 0.0, 0.5, 1.0],
+	"sprites": {
+		"kenney/nature/cliffs/cliff_block_stone.obj": [
+			{
+				"pose": [
+					[0.0, 0.0, 0.0],
+					[0.0, 0.0, 0.0, 1.0]
+				]
+			},
+			{
+				"pose": [
+					[1.0, 0.0, 0.0],
+					[0.0, 0.0, 0.0, 1.0]
+				]
+			},
+			{
+				"pose": [
+					[2.0, 0.0, 0.0],
+					[0.0, 0.0, 0.0, 1.0]
+				]
+			}
+		]
 	}
 }

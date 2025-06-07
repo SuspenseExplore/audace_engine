@@ -5,16 +5,16 @@
 
 namespace Audace
 {
-	unsigned char WHITE_TEX[] = {255, 255, 255, 255};
-	FileLoader *AssetStore::fileLoader;
-	Mesh *AssetStore::squareMesh;
-	std::map<std::string, ShaderProgram *> AssetStore::shaders;
-	SimpleBillboardMaterial *AssetStore::billboardMat;
-	std::map<std::string, Texture2d *> AssetStore::textures;
-	std::map<std::string, Model *> AssetStore::models;
-	std::map<std::string, Sprite *> AssetStore::sprites;
+	unsigned char WHITE_TEX[] = { 255, 255, 255, 255 };
+	FileLoader* AssetStore::fileLoader;
+	Mesh* AssetStore::squareMesh;
+	std::map<std::string, ShaderProgram*> AssetStore::shaders;
+	SimpleBillboardMaterial* AssetStore::billboardMat;
+	std::map<std::string, Texture2d*> AssetStore::textures;
+	std::map<std::string, Model*> AssetStore::models;
+	std::map<std::string, Sprite*> AssetStore::sprites;
 
-	void AssetStore::init(FileLoader *loader)
+	void AssetStore::init(FileLoader* loader)
 	{
 		fileLoader = loader;
 		squareMesh = Shapes::squarePositions();
@@ -25,13 +25,13 @@ namespace Audace
 		billboardMat->setColor(glm::vec4(1, 1, 1, 1));
 
 		ImageData data(&WHITE_TEX[0], 1, 1, GL_RGBA);
-		Texture2d *whiteTex = new Texture2d(data);
+		Texture2d* whiteTex = new Texture2d(data);
 		whiteTex->create();
 		textures["AU_white_texture"] = whiteTex;
 		billboardMat->setTexture(whiteTex);
 	}
 
-	ShaderProgram *AssetStore::getShader(const std::string &name)
+	ShaderProgram* AssetStore::getShader(const std::string& name)
 	{
 		if (shaders.find(name) == shaders.end())
 		{
@@ -41,7 +41,7 @@ namespace Audace
 			ss.str(std::string());
 			ss << "shaders/" << name << "/fs.glsl";
 			std::string fs = fileLoader->textFileToString(ss.str());
-			ShaderProgram *shaderProgram = new ShaderProgram(vs, fs);
+			ShaderProgram* shaderProgram = new ShaderProgram(vs, fs);
 			shaderProgram->create();
 			shaders[name] = shaderProgram;
 			return shaderProgram;
@@ -52,12 +52,12 @@ namespace Audace
 		}
 	}
 
-	Texture2d *AssetStore::getTexture(const std::string &name)
+	Texture2d* AssetStore::getTexture(const std::string& name)
 	{
 		if (textures.find(name) == textures.end())
 		{
 			ImageData img = fileLoader->readImageFile(name);
-			Texture2d *tex = new Texture2d(img);
+			Texture2d* tex = new Texture2d(img);
 			tex->create();
 			textures[name] = tex;
 			return tex;
@@ -68,11 +68,11 @@ namespace Audace
 		}
 	}
 
-	Model *AssetStore::getModel(const std::string &name)
+	Model* AssetStore::getModel(const std::string& name)
 	{
 		if (models.find(name) == models.end())
 		{
-			Model *model = fileLoader->readModelFile("models/", name);
+			Model* model = fileLoader->readModelFile("models/", name);
 			models[name] = model;
 			return model;
 		}
@@ -82,23 +82,24 @@ namespace Audace
 		}
 	}
 
-	Sprite *AssetStore::cloneSprite(const std::string &name)
+	Sprite* AssetStore::cloneSprite(const std::string& name)
 	{
 		if (sprites.find(name) == sprites.end())
 		{
-			Sprite *sprite = new Sprite(getModel(name));
+			Sprite* sprite = new Sprite(getModel(name));
+			sprite->setName(name);
 			sprites[name] = sprite;
 		}
 		return sprites[name]->clone();
 	}
 
-	Sprite *AssetStore::getCubeSprite()
+	Sprite* AssetStore::getCubeSprite()
 	{
 		std::string name = "AU_cube_sprite";
 		if (sprites.find(name) == sprites.end())
 		{
-			std::vector<Audace::Mesh *> v = {Audace::Shapes::cubePosNormTan()};
-			Sprite *s = new Sprite(v);
+			std::vector<Audace::Mesh*> v = { Audace::Shapes::cubePosNormTan() };
+			Sprite* s = new Sprite(v);
 			sprites[name] = s;
 		}
 		return sprites[name]->clone();

@@ -15,6 +15,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/matrix_inverse.hpp"
 #include "glm/gtc/type_ptr.hpp"
+#include "editor/SceneEditor.h"
 
 #include <nlohmann/json.hpp>
 
@@ -35,7 +36,7 @@ enum RenderType
 	FULL
 };
 
-void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
+void SceneBuilder::loadAssets(Audace::FileLoader* fileLoader)
 {
 	renderType = RenderType::FULL;
 	this->fileLoader = fileLoader;
@@ -45,8 +46,8 @@ void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 	shader = Audace::AssetStore::getShader("obj_mtl");
 
 	pointLight = new Audace::PointLight();
-	pointLight->setPosition({0, 0, 10});
-	pointLight->setColor({1, 1, 1});
+	pointLight->setPosition({ 0, 0, 10 });
+	pointLight->setColor({ 1, 1, 1 });
 	pointLight->setIntensity(1);
 	addSprite(pointLight);
 
@@ -56,21 +57,17 @@ void SceneBuilder::loadAssets(Audace::FileLoader *fileLoader)
 	editWin = new Audace::SpriteEditWindow();
 	// loadModel("kenney/nature/cliffs/", "cliff_scene.obj");
 
-	// load a scene file
-	Audace::SceneDescriptor desc("scenes/cliffs.json");
-	desc.loadSceneAssets(fileLoader);
-	for (auto item : desc.sprites)
-	{
-		// item.second->setModelMatrix(modelMat);
-		builderSprites.emplace_back(item);
-	}
+	editor = new Audace::SceneEditor(fileLoader);
+	editor->attachToScene(this);
+	editor->load("scenes/cliffs.json");
+	clearColor = editor->sceneData.clearColor;
 }
 
 void SceneBuilder::loadModel(std::string path, std::string filename)
 {
 	currSprite = Audace::AssetStore::cloneSprite(path + filename);
-	currSprite->forEachMesh([this](Audace::Mesh *mesh)
-							{ mesh->getMaterial()->setShader(shader); });
+	currSprite->forEachMesh([this](Audace::Mesh* mesh)
+		{ mesh->getMaterial()->setShader(shader); });
 	currSprite->setModelMatrix(modelMat);
 	currSprite->setName(filename + "_" + std::to_string(nextSpriteId++));
 
@@ -100,11 +97,11 @@ void SceneBuilder::render()
 	shader->setUniformFloat("outDirLight", renderType == RenderType::DIR_LIGHT ? 1.0 : 0.0);
 	shader->setUniformFloat("outFull", renderType == RenderType::FULL ? 1.0 : 0.0);
 
-	for (Audace::Sprite *s : sprites)
+	for (Audace::Sprite* s : sprites)
 	{
 		s->renderWorldSpace(this);
 	}
-	for (Audace::Sprite *s : builderSprites)
+	for (Audace::Sprite* s : builderSprites)
 	{
 		s->renderWorldSpace(this);
 	}
@@ -132,6 +129,10 @@ void SceneBuilder::renderUi()
 		if (ImGui::BeginTabItem("Scene"))
 		{
 			ImGui::DragFloat4("Clear color", glm::value_ptr(clearColor), 0.01, 0.0, 1.0);
+			if (ImGui::Button("Save"))
+			{
+				editor->save("out.json");
+			}
 			ImGui::EndTabItem();
 		}
 
@@ -145,9 +146,9 @@ void SceneBuilder::renderUi()
 		{
 			if (ImGui::BeginListBox("Sprites"))
 			{
-				for (int i = 0; i < builderSprites.size(); i++)
+				for (int i = 0; i < sprites.size(); i++)
 				{
-					Audace::Sprite *s = builderSprites[i];
+					Audace::Sprite* s = sprites[i];
 
 					bool selected = (currSprite != nullptr && currSprite == s);
 					if (ImGui::Selectable((s->getName() + "_" + std::to_string(i)).c_str(), selected))
@@ -164,11 +165,11 @@ void SceneBuilder::renderUi()
 			}
 			if (ImGui::Button("Remove"))
 			{
-				for (auto iter = builderSprites.begin(); iter != builderSprites.end(); iter++)
+				for (auto iter = sprites.begin(); iter != sprites.end(); iter++)
 				{
 					if ((*iter)->getName() == currSprite->getName())
 					{
-						builderSprites.erase(iter);
+						sprites.erase(iter);
 						delete currSprite;
 						currSprite = nullptr;
 						break;
@@ -189,14 +190,14 @@ void SceneBuilder::renderUi()
 				}
 				if (ImGui::BeginTabItem("Directional Light"))
 				{
-					static glm::vec3 angles = {0, 0, 0};
+					static glm::vec3 angles = { 0, 0, 0 };
 					ImGui::DragFloat3("Direction", glm::value_ptr(angles));
 					ImGui::ColorPicker4("Color", glm::value_ptr(dirLightColor));
 
 					glm::mat4 m = glm::mat4(1.0);
-					m = glm::rotate(m, glm::radians(angles.x), {1, 0, 0});
-					m = glm::rotate(m, glm::radians(angles.y), {0, 1, 0});
-					m = glm::rotate(m, glm::radians(angles.z), {0, 0, 1});
+					m = glm::rotate(m, glm::radians(angles.x), { 1, 0, 0 });
+					m = glm::rotate(m, glm::radians(angles.y), { 0, 1, 0 });
+					m = glm::rotate(m, glm::radians(angles.z), { 0, 0, 1 });
 					dirLightDirection = m * glm::vec4(0, 1, 0, 0);
 					ImGui::EndTabItem();
 				}
@@ -301,7 +302,7 @@ void SceneBuilder::traverseModelIndex(json jsonListing, int level)
 	}
 
 	// now list current contents; folder buttons, then files combo box
-	for (auto &el : folders.items())
+	for (auto& el : folders.items())
 	{
 		if (ImGui::Button(el.key().c_str()))
 		{
@@ -313,7 +314,7 @@ void SceneBuilder::traverseModelIndex(json jsonListing, int level)
 
 	if (ImGui::BeginCombo("Filename", ""))
 	{
-		for (auto &el : files.items())
+		for (auto& el : files.items())
 		{
 			if (ImGui::Selectable(el.value().template get<std::string>().c_str(), false))
 			{

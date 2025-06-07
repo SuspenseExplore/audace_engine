@@ -28,19 +28,20 @@ namespace Audace
 	{
 	protected:
 		std::string name;
-		VertexArray *vertexArray;
-		std::vector<Mesh *> meshes;
+		VertexArray* vertexArray;
+		std::vector<Mesh*> meshes;
 		glm::mat4 modelMatrix;
 		Pose pose;
 		glm::vec3 scale;
 
-		Sprite(Sprite *sprite)
+		Sprite(Sprite* sprite)
 		{
 			vertexArray = sprite->vertexArray;
-			for (Mesh *mesh : sprite->meshes)
+			for (Mesh* mesh : sprite->meshes)
 			{
 				meshes.push_back(mesh);
 			}
+			name = sprite->name;
 			modelMatrix = glm::mat4(sprite->modelMatrix);
 			pose.position = glm::vec3(sprite->pose.position);
 			pose.orientation = glm::quat(sprite->pose.orientation);
@@ -48,15 +49,15 @@ namespace Audace
 		}
 
 	public:
-		Sprite(Model *model);
-		Sprite(std::vector<Mesh *> meshes);
+		Sprite(Model* model);
+		Sprite(std::vector<Mesh*> meshes);
 		void setName(std::string name) { this->name = name; }
 		std::string getName() { return name; }
 
-		virtual void renderWorldSpace(Scene *scene);
-		virtual void renderViewSpace(Scene *scene);
+		virtual void renderWorldSpace(Scene* scene);
+		virtual void renderViewSpace(Scene* scene);
 
-		Sprite *clone()
+		Sprite* clone()
 		{
 			return new Sprite(this);
 		}
@@ -85,10 +86,10 @@ namespace Audace
 		glm::quat getOrientation() { return pose.orientation; }
 		glm::vec3 getScale() { return scale; }
 
-		Mesh *getMesh(int i = 0) { return meshes[i]; }
-		BaseMaterial *getMaterial(int i = 0) { return getMesh(i)->getMaterial(); }
+		Mesh* getMesh(int i = 0) { return meshes[i]; }
+		BaseMaterial* getMaterial(int i = 0) { return getMesh(i)->getMaterial(); }
 
-		void forEachMesh(std::function<void(Mesh *)> fn)
+		void forEachMesh(std::function<void(Mesh*)> fn)
 		{
 			std::for_each(meshes.begin(), meshes.end(), fn);
 		}

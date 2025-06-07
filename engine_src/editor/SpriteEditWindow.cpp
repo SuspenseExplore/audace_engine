@@ -8,12 +8,12 @@ namespace Audace
 {
 	SpriteEditWindow::SpriteEditWindow()
 	{
-		positionMark = new Sprite({Shapes::spherePositions(8, 8)});
+		positionMark = new Sprite({ Shapes::spherePositions(8, 8) });
 		positionMark->getMesh()->setMaterial(AssetStore::simpleBillboardMaterial());
-		positionMark->setScale({0.05, 0.05, 0.05});
+		positionMark->setScale({ 0.05, 0.05, 0.05 });
 	}
 
-	void SpriteEditWindow::setSprite(Sprite *s)
+	void SpriteEditWindow::setSprite(Sprite* s)
 	{
 		sprite = s;
 		position = sprite->getPosition();
@@ -21,7 +21,7 @@ namespace Audace
 		angles = glm::degrees(glm::eulerAngles(sprite->getOrientation()));
 	}
 
-	void SpriteEditWindow::renderWorldSpace(Scene *scene)
+	void SpriteEditWindow::renderWorldSpace(Scene* scene)
 	{
 		positionMark->setPosition(sprite->getPosition());
 		glDisable(GL_DEPTH_TEST);
@@ -29,10 +29,10 @@ namespace Audace
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	void SpriteEditWindow::renderViewSpace(Scene *scene)
+	void SpriteEditWindow::renderViewSpace(Scene* scene)
 	{
-		std::vector<float> intervals = {0.1, 1, 5, 10, 15};
-		std::vector<float> angleIntervals = {0.1, 1, 5, 15, 45, 90};
+		std::vector<float> intervals = { 0.1, 1, 5, 10, 15 };
+		std::vector<float> angleIntervals = { 0.1, 1, 5, 15, 45, 90 };
 		static int intervalIndex = 1;
 		static int angleIntervalIndex = 1;
 
@@ -105,13 +105,13 @@ namespace Audace
 		sprite->setPosition(position);
 		sprite->setScale(scale);
 		glm::mat4 m = glm::mat4(1.0);
-		m = glm::rotate(m, glm::radians(angles.x), {1, 0, 0});
-		m = glm::rotate(m, glm::radians(angles.y), {0, 1, 0});
-		m = glm::rotate(m, glm::radians(angles.z), {0, 0, 1});
+		m = glm::rotate(m, glm::radians(angles.x), { 1, 0, 0 });
+		m = glm::rotate(m, glm::radians(angles.y), { 0, 1, 0 });
+		m = glm::rotate(m, glm::radians(angles.z), { 0, 0, 1 });
 		sprite->setOrientation(glm::quat(m));
 	}
 
-	void SpriteEditWindow::editorCellFloat(std::string label, float *val, float interval)
+	void SpriteEditWindow::editorCellFloat(std::string label, float* val, float interval)
 	{
 		char c[5];
 		std::snprintf(c, 5, "%.1f", interval);
@@ -137,7 +137,7 @@ namespace Audace
 		}
 	}
 
-	void SpriteEditWindow::editorCellAngle(std::string label, float *val, float interval)
+	void SpriteEditWindow::editorCellAngle(std::string label, float* val, float interval)
 	{
 		char c[5];
 		std::snprintf(c, 5, "%.1f", interval);
@@ -162,4 +162,5 @@ namespace Audace
 			*val += interval;
 		}
 	}
+
 }
