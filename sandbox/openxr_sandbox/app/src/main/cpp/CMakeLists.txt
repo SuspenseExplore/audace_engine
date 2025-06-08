@@ -40,6 +40,7 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/android_platform/ImageData.cpp
 		${ENGINE_DIR}/android_platform/FileLoader.cpp
 		${ENGINE_DIR}/input/InputDevices.cpp
+		${ENGINE_DIR}/content/IFileLoader.h
 		${ENGINE_DIR}/content/AssetStore.cpp
 		${ENGINE_DIR}/content/ByteBuffer.cpp
 		${ENGINE_DIR}/content/ModelLoader.cpp
@@ -54,6 +55,9 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/renderer/Shapes.cpp
 		${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 		${ENGINE_DIR}/geom/VoxelTerrainGen.cpp
+		${ENGINE_DIR}/editor/SpriteData.cpp
+		${ENGINE_DIR}/editor/SceneData.cpp
+		${ENGINE_DIR}/editor/SceneEditor.cpp
 		${ENGINE_DIR}/editor/SpriteEditWindow.cpp
 		${ENGINE_DIR}/scene/Scene.cpp
 		openxr/OpenxrSwapchain.cpp

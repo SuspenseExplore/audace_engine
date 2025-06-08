@@ -2,6 +2,7 @@
 #include <fstream>
 #include "content/AssetStore.h"
 #include "renderer/ShaderProgram.h"
+#include "FileLoader.h"
 #include "imgui.h"
 
 namespace Audace
@@ -123,7 +124,7 @@ namespace Audace
 				{
 					// TODO: be able to save to a better place than the build folder
 					int i = sceneData.filename.find_last_of("/");
-					save("../../../assets/scenes/", sceneData.filename.substr(i + 1));
+					save(fileLoader->fileWriteBasePath() + "scenes/", sceneData.filename.substr(i + 1));
 				}
 				ImGui::EndTabItem();
 			}

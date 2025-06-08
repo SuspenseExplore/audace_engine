@@ -58,7 +58,7 @@ void SceneBuilder::loadAssets(Audace::FileLoader* fileLoader)
 
 	editor = new Audace::SceneEditor(fileLoader);
 	editor->attachToScene(this);
-	editor->load("scenes/", "cliffs.json");
+	editor->load(fileLoader->assetReadBasePath() + "scenes/", "cliffs.json");
 }
 
 void SceneBuilder::loadModel(std::string path, std::string filename)

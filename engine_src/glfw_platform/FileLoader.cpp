@@ -7,17 +7,17 @@
 
 namespace Audace
 {
-	ByteBuffer *FileLoader::readFileToBuffer(const std::string &path)
+	ByteBuffer* FileLoader::readFileToBuffer(const std::string& path)
 	{
 		std::ifstream fin(basePath + path, std::ios::in | std::ios::binary | std::ios::ate);
 		int size = fin.tellg();
 		fin.seekg(0);
-		char *buf = new char[size];
+		char* buf = new char[size];
 		fin.read(buf, size);
 		return new ByteBuffer(buf, size);
 	}
 
-	std::string FileLoader::textFileToString(std::string path)
+	std::string FileLoader::textFileToString(const std::string& path)
 	{
 		std::ifstream fin(basePath + path, std::ios::in);
 		std::stringstream ss;
@@ -26,7 +26,7 @@ namespace Audace
 		return ss.str();
 	}
 
-	json FileLoader::textFileToJson(std::string path)
+	json FileLoader::textFileToJson(const std::string& path)
 	{
 		std::string s = textFileToString(path);
 		return json::parse(s);
@@ -37,22 +37,22 @@ namespace Audace
 		int width;
 		int height;
 		int channels;
-		unsigned char *bytes = stbi_load((basePath + path).c_str(), &width, &height, &channels, 0);
+		unsigned char* bytes = stbi_load((basePath + path).c_str(), &width, &height, &channels, 0);
 		int format = GL_RGBA;
 		switch (channels)
 		{
-			case 1:
+		case 1:
 			format = GL_RED;
 			break;
 
-			case 3:
+		case 3:
 			format = GL_RGB;
 		}
 		ImageData img(bytes, width, height, format);
 		return img;
 	}
 
-	Model *FileLoader::readModelFile(std::string path, std::string filename)
+	Model* FileLoader::readModelFile(std::string path, std::string filename)
 	{
 		// filename could have part of the path, so put them together and them take them apart again
 		std::string fullName = path + filename;
@@ -61,7 +61,7 @@ namespace Audace
 		return model;
 	}
 
-	std::vector<std::string> FileLoader::listFilesInDir(const std::string &path, bool recursive)
+	std::vector<std::string> FileLoader::listFilesInDir(const std::string& path, bool recursive)
 	{
 		std::string searchPath = basePath + path + "/*";
 		std::vector<std::string> filenames;

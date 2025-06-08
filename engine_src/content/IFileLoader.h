@@ -12,8 +12,13 @@ namespace Audace
 	class IFileLoader
 	{
 	public:
-		virtual std::string textFileToString(std::string path) = 0;
-		virtual json textFileToJson(std::string path) = 0;
+		virtual std::string textFileToString(const std::string& path) = 0;
+		virtual json textFileToJson(const std::string& path) = 0;
+
+		virtual std::string assetReadBasePath() = 0;
+		virtual std::string fileWriteBasePath() = 0;
+
+		virtual void setExternalFilePath(std::string path) = 0;
 	};
 }
 

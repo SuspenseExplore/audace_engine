@@ -21,18 +21,24 @@ namespace Audace
 {
 	class FileLoader : public IFileLoader
 	{
-		AAssetManager *assetManager;
+		AAssetManager* assetManager;
+		std::string externalFilePath;
 
-		AAsset *getAsset(const std::string &path);
-		char *readAssetToBuffer(AAsset *asset);
+		AAsset* getAsset(const std::string& path);
+		char* readAssetToBuffer(AAsset* asset);
 
 	public:
-		FileLoader(AAssetManager *assets) : assetManager(assets) {}
-		ByteBuffer *readFileToBuffer(const std::string &path);
-		std::string textFileToString(const std::string &path) override;
-		json textFileToJson(const std::string &path) override;
-		ImageData readImageFile(const std::string &path);
-		Model *readModelFile(std::string path, std::string filename);
+		FileLoader(AAssetManager* assets) : assetManager(assets) {}
+		ByteBuffer* readFileToBuffer(const std::string& path);
+		std::string textFileToString(const std::string& path) override;
+		json textFileToJson(const std::string& path) override;
+		ImageData readImageFile(const std::string& path);
+		Model* readModelFile(std::string path, std::string filename);
+
+		std::string assetReadBasePath() override { return ""; }
+		std::string fileWriteBasePath() override { return externalFilePath; }
+
+		void setExternalFilePath(std::string path) { externalFilePath = path; }
 	};
 }
 
