@@ -54,29 +54,21 @@ void SceneBuilder::loadAssets(Audace::FileLoader* fileLoader)
 	Audace::AssetStore::getWhiteTexture()->bind(0);
 	shader->setUniformInt("material.diffuseMap", 0);
 
-	editWin = new Audace::SpriteEditWindow();
 	// loadModel("kenney/nature/cliffs/", "cliff_scene.obj");
 
 	editor = new Audace::SceneEditor(fileLoader);
 	editor->attachToScene(this);
-	editor->load("scenes/cliffs.json");
-	clearColor = editor->sceneData.clearColor;
+	editor->load("scenes/", "cliffs.json");
 }
 
 void SceneBuilder::loadModel(std::string path, std::string filename)
 {
-	currSprite = Audace::AssetStore::cloneSprite(path + filename);
-	currSprite->forEachMesh([this](Audace::Mesh* mesh)
-		{ mesh->getMaterial()->setShader(shader); });
-	currSprite->setModelMatrix(modelMat);
-	currSprite->setName(filename + "_" + std::to_string(nextSpriteId++));
-
-	builderSprites.push_back(currSprite);
-	editWin->setSprite(currSprite);
 }
 
 void SceneBuilder::render()
 {
+	editor->syncToScene();
+
 	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -101,40 +93,22 @@ void SceneBuilder::render()
 	{
 		s->renderWorldSpace(this);
 	}
-	for (Audace::Sprite* s : builderSprites)
-	{
-		s->renderWorldSpace(this);
-	}
-
-	if (currSprite != nullptr)
-	{
-		currSprite->renderWorldSpace(this);
-		editWin->renderWorldSpace(this);
-	}
 }
 
 void SceneBuilder::renderUi()
 {
-	if (currSprite != nullptr)
-	{
-		editWin->renderViewSpace(this);
-	}
+	// if (currSprite != nullptr)
+	// {
+	// 	editWin->renderViewSpace(this);
+	// }
+	editor->sceneEditWindow();
 
+#ifdef UNDEFINED_THING
 	ImGui::Begin("Editor");
 	ImGui::SetWindowPos(ImVec2(600, 800), ImGuiCond_Once);
 	ImGui::SetWindowSize(ImVec2(800, 600), ImGuiCond_Once);
 	if (ImGui::BeginTabBar("Tabs1"))
 	{
-
-		if (ImGui::BeginTabItem("Scene"))
-		{
-			ImGui::DragFloat4("Clear color", glm::value_ptr(clearColor), 0.01, 0.0, 1.0);
-			if (ImGui::Button("Save"))
-			{
-				editor->save("out.json");
-			}
-			ImGui::EndTabItem();
-		}
 
 		if (ImGui::BeginTabItem("Files"))
 		{
@@ -256,6 +230,7 @@ void SceneBuilder::renderUi()
 	}
 
 	ImGui::End();
+#endif
 }
 
 void SceneBuilder::traverseModelIndex(json jsonListing, int level)

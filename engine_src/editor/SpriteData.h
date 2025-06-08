@@ -5,6 +5,7 @@
 #include <vector>
 #include "math/Pose.h"
 #include "content/JsonSerializer.h"
+#include "renderer/Sprite.h"
 
 #include <nlohmann/json.hpp>
 
@@ -16,6 +17,10 @@ namespace Audace
 	{
 		std::string filename;
 		Pose pose;
+		glm::vec3 scale;
+		Sprite* sprite;
+
+		void syncToSprite();
 	};
 }
 

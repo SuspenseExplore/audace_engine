@@ -2,10 +2,11 @@
 #include <fstream>
 #include "content/AssetStore.h"
 #include "renderer/ShaderProgram.h"
+#include "imgui.h"
 
 namespace Audace
 {
-	void SceneEditor::load(std::string filename)
+	void SceneEditor::load(std::string path, std::string filename)
 	{
 		if (scene == nullptr)
 		{
@@ -13,7 +14,8 @@ namespace Audace
 			return;
 		}
 
-		json j = fileLoader->textFileToJson(filename);
+		json j = fileLoader->textFileToJson(path + filename);
+		sceneData.filepath = path;
 		sceneData.filename = j["filename"];
 		sceneData.clearColor = JsonSerializer::getVec4(j, "clearColor");
 		sceneData.spriteData.clear();
@@ -33,27 +35,37 @@ namespace Audace
 
 								p.position = JsonSerializer::getVec3(el2[0]);
 								p.orientation = JsonSerializer::getQuat(el2[1]);
+								if (el1.contains("scale"))
+								{
+									sd.scale = JsonSerializer::getVec3(el1["scale"]);
+								}
+								else
+								{
+									sd.scale = glm::vec3(1.0, 1.0, 1.0);
+								}
 
 								sd.filename = name;
 								sd.pose = p;
-								sceneData.spriteData.emplace_back(sd);
 
 								ShaderProgram* shader = AssetStore::getShader("obj_mtl");
-								Sprite* sp = AssetStore::cloneSprite(name);
-								sp->setPosition(p.position);
-								sp->setOrientation(p.orientation);
-								sp->forEachMesh([=](Mesh* mesh)
+								sd.sprite = AssetStore::cloneSprite(name);
+								sd.sprite->setName(name);
+								sd.sprite->setPosition(p.position);
+								sd.sprite->setOrientation(p.orientation);
+								sd.sprite->setScale(sd.scale);
+								sd.sprite->forEachMesh([=](Mesh* mesh)
 									{
 										mesh->getMaterial()->setShader(shader);
 									});
-								scene->addSprite(sp);
+								scene->addSprite(sd.sprite);
+								sceneData.spriteData.emplace_back(sd);
 							});
 					});
 
 			});
 	}
 
-	void SceneEditor::save(std::string filename)
+	void SceneEditor::save(std::string path, std::string filename)
 	{
 		json j = {};
 		j["filename"] = filename;
@@ -64,13 +76,89 @@ namespace Audace
 		{
 			json jPose = {
 				{sd.pose.position.x, sd.pose.position.y, sd.pose.position.z},
-				{sd.pose.orientation.x, sd.pose.orientation.y, sd.pose.orientation.z, sd.pose.orientation.w} };
-			jSprites[sd.filename].emplace_back(json{ "pose", jPose });
+				{sd.pose.orientation.w, sd.pose.orientation.x, sd.pose.orientation.y, sd.pose.orientation.z} };
+			json jobj = {};
+			jobj["pose"] = jPose;
+			jobj["scale"] = { sd.scale.x, sd.scale.y, sd.scale.z };
+			jSprites[sd.filename].emplace_back(jobj);
 		}
 		j["sprites"] = jSprites;
 
-		std::ofstream fout(filename);
+		std::ofstream fout(path + filename);
 		fout << j.dump(4);
 		fout.close();
+	}
+
+	void SceneEditor::syncToScene()
+	{
+		scene->setClearColor(sceneData.clearColor);
+	}
+
+	void SceneEditor::renderWorldSpace(Scene* scene)
+	{
+		if (selectedSprite != -1 && selectedSprite < sceneData.spriteData.size())
+		{
+			editWin.renderWorldSpace(scene);
+		}
+	}
+
+	void SceneEditor::sceneEditWindow()
+	{
+		if (selectedSprite != -1 && selectedSprite < sceneData.spriteData.size())
+		{
+			editWin.renderViewSpace(scene);
+		}
+
+		ImGui::Begin("Scene Editor");
+		ImGui::SetWindowPos(ImVec2(600, 800), ImGuiCond_Once);
+		ImGui::SetWindowSize(ImVec2(800, 600), ImGuiCond_Once);
+
+		if (ImGui::BeginTabBar("SceneTabs"))
+		{
+			if (ImGui::BeginTabItem("Scene"))
+			{
+				ImGui::Text("Name: %s", sceneData.filename.c_str());
+				ImGui::DragFloat4("Clear color", glm::value_ptr(sceneData.clearColor), 0.01, 0.0, 1.0);
+				if (ImGui::Button("Save"))
+				{
+					// TODO: be able to save to a better place than the build folder
+					int i = sceneData.filename.find_last_of("/");
+					save("../../../assets/scenes/", sceneData.filename.substr(i + 1));
+				}
+				ImGui::EndTabItem();
+			}
+
+			if (ImGui::BeginTabItem("Sprites"))
+			{
+				if (ImGui::BeginListBox("SpriteList"))
+				{
+					for (int i = 0; i < sceneData.spriteData.size(); i++)
+					{
+						ImGui::PushID(i);
+						Audace::Sprite* s = sceneData.spriteData[i].sprite;
+						bool selected = (i == selectedSprite);
+						if (ImGui::Selectable(s->getName().c_str(), selected))
+						{
+							selected = true;
+							selectedSprite = i;
+							editWin.setSprite(&sceneData.spriteData[i]);
+						}
+						if (selected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+						ImGui::PopID();
+					}
+
+					ImGui::EndListBox();
+				}
+
+				ImGui::EndTabItem();
+			}
+
+			ImGui::EndTabBar();
+		}
+
+		ImGui::End();
 	}
 }

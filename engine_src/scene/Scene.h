@@ -14,24 +14,26 @@ namespace Audace
 	class Scene
 	{
 	protected:
-		BaseAppController *appController;
+		BaseAppController* appController;
 		std::vector<Sprite*> sprites;
 
 	public:
-		Scene(BaseAppController *controller);
+		Scene(BaseAppController* controller);
 		virtual ~Scene() {}
-		virtual void loadAssets(Audace::FileLoader *fileLoader) = 0;
+		virtual void loadAssets(Audace::FileLoader* fileLoader) = 0;
 		virtual void render() = 0;
 		virtual void renderUi() {}
 		virtual void disposeAssets() = 0;
 
 		virtual BaseCamera* getCamera() = 0;
-		virtual void setCamera(BaseCamera *camera) = 0;
+		virtual void setCamera(BaseCamera* camera) = 0;
 		virtual void teleport(glm::vec3 pos) {}
 
-		virtual void addSprite(Sprite *s) { 
-			sprites.push_back(s); 
+		virtual void addSprite(Sprite* s) {
+			sprites.push_back(s);
 		}
+
+		virtual void setClearColor(glm::vec4 color) {}
 	};
 }
 

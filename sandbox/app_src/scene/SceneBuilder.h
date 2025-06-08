@@ -41,11 +41,6 @@ class SceneBuilder : public Audace::Scene
 	Audace::PointLight* pointLight;
 	glm::mat4 modelMat;
 
-	Audace::Sprite* currSprite = nullptr;
-	Audace::SpriteEditWindow* editWin = nullptr;
-	int nextSpriteId = 0;
-	std::vector<Audace::Sprite*> builderSprites;
-
 	int renderType = 0;
 
 public:
@@ -54,6 +49,8 @@ public:
 	{
 		strcpy(sceneWritePath, "D:/audace_engine/sandbox/assets/scenes/MainScene.json");
 	}
+
+	void setClearColor(glm::vec4 color) override { clearColor = color; }
 
 	void loadModel(std::string path, std::string filename);
 	void traverseModelIndex(json index, int i);

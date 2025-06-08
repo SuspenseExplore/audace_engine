@@ -13,17 +13,15 @@ namespace Audace
 		positionMark->setScale({ 0.05, 0.05, 0.05 });
 	}
 
-	void SpriteEditWindow::setSprite(Sprite* s)
+	void SpriteEditWindow::setSprite(SpriteData* sd)
 	{
-		sprite = s;
-		position = sprite->getPosition();
-		scale = sprite->getScale();
-		angles = glm::degrees(glm::eulerAngles(sprite->getOrientation()));
+		spriteData = sd;
+		angles = glm::degrees(glm::eulerAngles(sd->sprite->getOrientation()));
 	}
 
 	void SpriteEditWindow::renderWorldSpace(Scene* scene)
 	{
-		positionMark->setPosition(sprite->getPosition());
+		positionMark->setPosition(spriteData->sprite->getPosition());
 		glDisable(GL_DEPTH_TEST);
 		positionMark->renderWorldSpace(scene);
 		glEnable(GL_DEPTH_TEST);
@@ -43,21 +41,21 @@ namespace Audace
 			ImGui::TableNextColumn();
 			ImGui::Text("Position");
 			ImGui::TableNextColumn();
-			editorCellFloat("##Xpos", &position.x, intervals[intervalIndex]);
+			editorCellFloat("##Xpos", &spriteData->pose.position.x, intervals[intervalIndex]);
 			ImGui::TableNextColumn();
-			editorCellFloat("##Ypos", &position.y, intervals[intervalIndex]);
+			editorCellFloat("##Ypos", &spriteData->pose.position.y, intervals[intervalIndex]);
 			ImGui::TableNextColumn();
-			editorCellFloat("##Zpos", &position.z, intervals[intervalIndex]);
+			editorCellFloat("##Zpos", &spriteData->pose.position.z, intervals[intervalIndex]);
 
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
 			ImGui::Text("Scale");
 			ImGui::TableNextColumn();
-			editorCellFloat("##Xscale", &scale.x, intervals[intervalIndex]);
+			editorCellFloat("##Xscale", &spriteData->scale.x, intervals[intervalIndex]);
 			ImGui::TableNextColumn();
-			editorCellFloat("##Yscale", &scale.y, intervals[intervalIndex]);
+			editorCellFloat("##Yscale", &spriteData->scale.y, intervals[intervalIndex]);
 			ImGui::TableNextColumn();
-			editorCellFloat("##Zscale", &scale.z, intervals[intervalIndex]);
+			editorCellFloat("##Zscale", &spriteData->scale.z, intervals[intervalIndex]);
 
 			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
@@ -102,13 +100,8 @@ namespace Audace
 		ImGui::PopID();
 
 		ImGui::End();
-		sprite->setPosition(position);
-		sprite->setScale(scale);
-		glm::mat4 m = glm::mat4(1.0);
-		m = glm::rotate(m, glm::radians(angles.x), { 1, 0, 0 });
-		m = glm::rotate(m, glm::radians(angles.y), { 0, 1, 0 });
-		m = glm::rotate(m, glm::radians(angles.z), { 0, 0, 1 });
-		sprite->setOrientation(glm::quat(m));
+		spriteData->pose.orientation = glm::quat(glm::radians(glm::vec3(angles.x, angles.y, angles.z)));
+		spriteData->syncToSprite();
 	}
 
 	void SpriteEditWindow::editorCellFloat(std::string label, float* val, float interval)

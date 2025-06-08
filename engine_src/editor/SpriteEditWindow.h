@@ -2,23 +2,22 @@
 #define AU_SPRITEEDITWINDOW_H
 
 #include "renderer/Sprite.h"
+#include "SpriteData.h"
 #include "scene/Scene.h"
 
 namespace Audace
 {
 	class SpriteEditWindow
 	{
-		Sprite* sprite;
+		SpriteData* spriteData;
 		Sprite* positionMark;
 
-		glm::vec3 position;
-		glm::vec3 scale;
 		glm::vec3 angles;
 
 	public:
 		SpriteEditWindow();
 
-		void setSprite(Sprite* s);
+		void setSprite(SpriteData* sd);
 		void renderWorldSpace(Scene* scene);
 		void renderViewSpace(Scene* scene);
 

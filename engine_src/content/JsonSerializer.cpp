@@ -77,13 +77,13 @@ namespace Audace
 
 	glm::quat JsonSerializer::getQuat(json jcontent)
 	{
-		return glm::quat(jcontent[3], jcontent[0], jcontent[1], jcontent[2]);
+		return glm::quat(jcontent[0], jcontent[1], jcontent[2], jcontent[3]);
 	}
 
 	glm::quat JsonSerializer::getQuat(json jcontent, std::string name)
 	{
 		json j = jcontent[name];
-		return { j[0], j[1], j[2], j[4] };
+		return { j[0], j[1], j[2], j[3] };
 	}
 
 	// jcontent is an array of transformations

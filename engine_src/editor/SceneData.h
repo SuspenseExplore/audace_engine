@@ -12,6 +12,7 @@ namespace Audace
 	struct SceneData
 	{
 		std::string filename;
+		std::string filepath;
 		glm::vec4 clearColor;
 		std::vector<SpriteData> spriteData;
 	};

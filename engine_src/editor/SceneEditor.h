@@ -4,23 +4,29 @@
 #include "content/IFileLoader.h"
 #include "scene/Scene.h"
 #include "SceneData.h"
+#include "SpriteEditWindow.h"
 
 namespace Audace
 {
 	class SceneEditor
 	{
 		IFileLoader* fileLoader;
-		Scene *scene;
-
-	public:
-		std::string filename;
+		Scene* scene;
 		SceneData sceneData;
 
-		SceneEditor(IFileLoader* fileLoader) : fileLoader(fileLoader) {}
-		void load(std::string filename);
-		void save(std::string filename);
+		int selectedSprite = -1;
+		SpriteEditWindow editWin;
 
-		void attachToScene(Scene *scene) {this->scene = scene;}
+	public:
+		SceneEditor(IFileLoader* fileLoader) : fileLoader(fileLoader) {}
+		void load(std::string path, std::string filename);
+		void save(std::string path, std::string filename);
+
+		void attachToScene(Scene* scene) { this->scene = scene; }
+		void syncToScene();
+
+		void renderWorldSpace(Scene* scene);
+		void sceneEditWindow();
 	};
 }
 
