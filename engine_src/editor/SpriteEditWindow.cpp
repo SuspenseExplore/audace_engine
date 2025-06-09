@@ -21,7 +21,7 @@ namespace Audace
 
 	void SpriteEditWindow::renderWorldSpace(Scene* scene)
 	{
-		positionMark->setPosition(spriteData->sprite->getPosition());
+		positionMark->setPosition(spriteData->pose.position);
 		glDisable(GL_DEPTH_TEST);
 		positionMark->renderWorldSpace(scene);
 		glEnable(GL_DEPTH_TEST);
@@ -29,10 +29,10 @@ namespace Audace
 
 	void SpriteEditWindow::renderViewSpace(Scene* scene)
 	{
-		std::vector<float> intervals = { 0.1, 1, 5, 10, 15 };
-		std::vector<float> angleIntervals = { 0.1, 1, 5, 15, 45, 90 };
-		static int intervalIndex = 1;
-		static int angleIntervalIndex = 1;
+		std::vector<float> intervals = { 0.01, 0.1, 1, 5, 10, 15 };
+		std::vector<float> angleIntervals = { 0.01, 0.1, 1, 5, 15, 45, 90 };
+		static int intervalIndex = 2;
+		static int angleIntervalIndex = 6;
 
 		ImGui::Begin("Edit object");
 		if (ImGui::BeginTable("Sprite Transformation", 4, ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Borders))
@@ -75,7 +75,7 @@ namespace Audace
 		for (int i = 0; i < intervals.size(); i++)
 		{
 			ImGui::PushID(i);
-			std::snprintf(c, 5, "%.1f", intervals[i]);
+			std::snprintf(c, 5, "%.2f", intervals[i]);
 			if (ImGui::RadioButton(c, &intervalIndex, i))
 			{
 				intervalIndex = i;
@@ -88,7 +88,7 @@ namespace Audace
 		for (int i = 0; i < angleIntervals.size(); i++)
 		{
 			ImGui::PushID(i);
-			std::snprintf(c, 5, "%.1f", angleIntervals[i]);
+			std::snprintf(c, 5, "%.2f", angleIntervals[i]);
 			if (ImGui::RadioButton(c, &angleIntervalIndex, i))
 			{
 				angleIntervalIndex = i;
@@ -107,7 +107,7 @@ namespace Audace
 	void SpriteEditWindow::editorCellFloat(std::string label, float* val, float interval)
 	{
 		char c[5];
-		std::snprintf(c, 5, "%.1f", interval);
+		std::snprintf(c, 5, "%.2f", interval);
 		ImGui::DragFloat(label.c_str(), val, 0.01);
 		if (ImGui::Button((std::string("-") + c + label).c_str()))
 		{
@@ -133,7 +133,7 @@ namespace Audace
 	void SpriteEditWindow::editorCellAngle(std::string label, float* val, float interval)
 	{
 		char c[5];
-		std::snprintf(c, 5, "%.1f", interval);
+		std::snprintf(c, 5, "%.2f", interval);
 		ImGui::DragFloat(label.c_str(), val, 0.1);
 		if (ImGui::Button((std::string("-") + c + label).c_str()))
 		{

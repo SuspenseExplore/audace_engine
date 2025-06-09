@@ -16,8 +16,8 @@ namespace Audace
 	struct SpriteData
 	{
 		std::string filename;
-		Pose pose;
-		glm::vec3 scale;
+		Pose pose = {{0.0, 0.0, 0.0}, {1.0, 0.0, 0.0, 0.0}};
+		glm::vec3 scale = {1.0, 1.0, 1.0};
 		Sprite* sprite;
 
 		void syncToSprite();

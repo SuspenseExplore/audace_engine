@@ -95,6 +95,21 @@ namespace Audace
 		scene->setClearColor(sceneData.clearColor);
 	}
 
+	void SceneEditor::loadSprite(std::string name)
+	{
+		ShaderProgram* shader = AssetStore::getShader("obj_mtl");
+		SpriteData sd;
+		sd.filename = name;
+		sd.sprite = AssetStore::cloneSprite(name);
+		sd.sprite->setName(name);
+		sd.sprite->forEachMesh([=](Mesh* mesh)
+			{
+				mesh->getMaterial()->setShader(shader);
+			});
+		scene->addSprite(sd.sprite);
+		sceneData.spriteData.emplace_back(sd);
+	}
+
 	void SceneEditor::renderWorldSpace(Scene* scene)
 	{
 		if (selectedSprite != -1 && selectedSprite < sceneData.spriteData.size())
@@ -129,6 +144,13 @@ namespace Audace
 				ImGui::EndTabItem();
 			}
 
+			if (ImGui::BeginTabItem("Models"))
+			{
+				fileListingPane(modelIndex);
+
+				ImGui::EndTabItem();
+			}
+
 			if (ImGui::BeginTabItem("Sprites"))
 			{
 				if (ImGui::BeginListBox("SpriteList"))
@@ -153,6 +175,12 @@ namespace Audace
 
 					ImGui::EndListBox();
 				}
+				if (ImGui::Button("Remove") && selectedSprite > -1 && selectedSprite < sceneData.spriteData.size())
+				{
+					scene->removeSprite(sceneData.spriteData[selectedSprite].sprite);
+					sceneData.spriteData.erase(sceneData.spriteData.begin() + selectedSprite);
+					selectedSprite = -1;
+				}
 
 				ImGui::EndTabItem();
 			}
@@ -161,5 +189,35 @@ namespace Audace
 		}
 
 		ImGui::End();
+	}
+
+	void SceneEditor::fileListingPane(json fileIndex, std::string currPath)
+	{
+		json folders = fileIndex["folders"];
+		json files = fileIndex["files"];
+		for (auto& i : folders.items())
+		{
+			if (ImGui::TreeNode(i.key().c_str()))
+			{
+				fileListingPane(i.value(), currPath + i.key() + "/");
+
+				ImGui::TreePop();
+			}
+		}
+
+		int c = 0;
+		for (std::string i : files)
+		{
+			ImGui::PushID(c++);
+			if (ImGui::SmallButton("Add"))
+			{
+				loadSprite(currPath + i);
+				selectedSprite = sceneData.spriteData.size() - 1;
+				editWin.setSprite(&sceneData.spriteData[selectedSprite]);
+			}
+			ImGui::SameLine();
+			ImGui::Text("%s", i.c_str());
+			ImGui::PopID();
+		}
 	}
 }

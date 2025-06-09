@@ -33,6 +33,18 @@ namespace Audace
 			sprites.push_back(s);
 		}
 
+		virtual void removeSprite(Sprite* s)
+		{
+			for (auto iter = sprites.begin(); iter != sprites.end(); iter++)
+			{
+				if (*iter == s)
+				{
+					sprites.erase(iter);
+					return;
+				}
+			}
+		}
+
 		virtual void setClearColor(glm::vec4 color) {}
 	};
 }

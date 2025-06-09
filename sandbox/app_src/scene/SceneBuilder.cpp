@@ -93,6 +93,7 @@ void SceneBuilder::render()
 	{
 		s->renderWorldSpace(this);
 	}
+	editor->renderWorldSpace(this);
 }
 
 void SceneBuilder::renderUi()
