@@ -8,17 +8,17 @@
 
 namespace Audace
 {
-	Model *ModelLoader::loadObj(FileLoader *fileLoader, std::string path, std::string filename)
+	Model* ModelLoader::loadObj(FileLoader* fileLoader, std::string path, std::string filename)
 	{
-		Model *model = new Model;
+		Model* model = new Model;
 		std::vector<glm::vec3> positions;
 		std::vector<glm::vec3> normals;
 		std::vector<glm::vec3> texCoords;
 		std::map<std::string, unsigned int> indexMap;
 
 		unsigned int currentIndex = 0;
-		ModelSection *currentSection = nullptr;
-		std::map<std::string, Material *> materials;
+		ModelSection* currentSection = nullptr;
+		std::map<std::string, Material*> materials;
 
 		std::string fileContent = fileLoader->textFileToString(path + filename);
 		std::stringstream ss(fileContent);
@@ -61,7 +61,7 @@ namespace Audace
 			{
 				// tex coord
 				std::vector<std::string> vec = StringUtil::split(line, ' ');
-				glm::vec3 pos = glm::vec3(std::stof(vec[1]), std::stof(vec[2]), 0);
+				glm::vec3 pos = glm::vec3(std::stod(vec[1]), std::stod(vec[2]), 0);
 				texCoords.push_back(pos);
 			}
 			else if (StringUtil::startsWith(line, "v"))
@@ -106,7 +106,7 @@ namespace Audace
 				}
 
 				// calculate tangent space vectors
-				Vertex *verts[3];
+				Vertex* verts[3];
 				for (int i = 0; i < 3; i++)
 				{
 					verts[i] = &model->vertices[inds[i]];
@@ -136,14 +136,14 @@ namespace Audace
 		return model;
 	}
 
-	std::map<std::string, Material *> ModelLoader::loadMtl(FileLoader *fileLoader, std::string path, std::string filename)
+	std::map<std::string, Material*> ModelLoader::loadMtl(FileLoader* fileLoader, std::string path, std::string filename)
 	{
-		std::map<std::string, Material *> mats;
+		std::map<std::string, Material*> mats;
 		std::string fileContent = fileLoader->textFileToString(path + filename);
 		std::stringstream ss(fileContent);
 		std::string line;
 
-		Material *mat = nullptr;
+		Material* mat = nullptr;
 		bool foundAmbientColor = false;
 		glm::vec3 diffuseColor;
 
