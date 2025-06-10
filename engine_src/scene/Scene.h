@@ -46,6 +46,9 @@ namespace Audace
 		}
 
 		virtual void setClearColor(glm::vec4 color) {}
+		virtual void setAmbientLight(glm::vec4 color) {}
+		virtual void setDirLight(glm::vec3 dir, glm::vec4 color) {}
+		virtual void setPointLight(int i, glm::vec3 pos, glm::vec4 color) {}
 	};
 }
 

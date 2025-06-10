@@ -36,9 +36,9 @@ class SceneBuilder : public Audace::Scene
 
 	Audace::ShaderProgram* shader;
 	glm::vec4 ambientColor = { 0.5, 0.5, 0.5, 1.0 };
-	glm::vec3 dirLightDirection = { 0, 1, 0 };
+	glm::vec3 dirLightDirection = { 0, 0, -1 };
 	glm::vec4 dirLightColor = { 1, 1, 0.8, 0.7 };
-	Audace::PointLight* pointLight;
+	std::vector<Audace::PointLight*> ptLights;
 	glm::mat4 modelMat;
 
 	int renderType = 0;
@@ -51,6 +51,21 @@ public:
 	}
 
 	void setClearColor(glm::vec4 color) override { clearColor = color; }
+	void setAmbientLight(glm::vec4 color) override { ambientColor = color; }
+	void setDirLight(glm::vec3 dir, glm::vec4 color)
+	{
+		dirLightDirection = dir;
+		dirLightColor = color;
+	}
+	void setPointLight(int i, glm::vec3 pos, glm::vec4 color)
+	{
+		if (i > -1 && i < ptLights.size())
+		{
+			ptLights[i]->setPosition(pos);
+			ptLights[i]->setColor(glm::vec3(color));
+			ptLights[i]->setIntensity(color.w);
+		}
+	}
 
 	void loadModel(std::string path, std::string filename);
 	void traverseModelIndex(json index, int i);

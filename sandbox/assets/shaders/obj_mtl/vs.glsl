@@ -29,8 +29,7 @@ void main() {
 	gl_Position = vpMat * worldMat * position;
 	texCoord = inTexCoord / textureScale;
 	fragPos = (worldMat * position).xyz;
-	surfaceNormal = normal.xzy;
-	surfaceNormal.y = -surfaceNormal.y;
+	surfaceNormal = (worldMat * vec4(normal, 0.0)).xyz;
 
 	// calculate TBN matrix for normal mapping
 	vec3 N = normalize(worldMat * vec4(normal, 0.0)).xyz;

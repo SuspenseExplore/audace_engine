@@ -19,6 +19,23 @@ namespace Audace
 		sceneData.filepath = path;
 		sceneData.filename = j["filename"];
 		sceneData.clearColor = JsonSerializer::getVec4(j, "clearColor");
+		sceneData.ambLightColor = JsonSerializer::getVec4(j, "ambLightColor");
+		sceneData.dirLightDir = JsonSerializer::getVec3(j["dirLight"], "dir");
+		sceneData.dirLightColor = JsonSerializer::getVec4(j["dirLight"], "color");
+
+		JsonSerializer::ifContains(j, "ptLights", [=](json& el)
+			{
+				JsonSerializer::forEach(el, [=](json& jPtLt)
+					{
+						PointLight* ptLight = new PointLight();
+						ptLight->setPosition(JsonSerializer::getVec3(jPtLt, "position"));
+						glm::vec4 c = JsonSerializer::getVec4(jPtLt, "color");
+						ptLight->setColor(glm::vec3(c));
+						ptLight->setIntensity(c.a);
+						sceneData.ptLights.emplace_back(ptLight);
+					});
+			});
+
 		sceneData.spriteData.clear();
 
 		JsonSerializer::forEach(j, "sprites", [=](std::string name, json& val)
@@ -93,6 +110,9 @@ namespace Audace
 	void SceneEditor::syncToScene()
 	{
 		scene->setClearColor(sceneData.clearColor);
+		scene->setAmbientLight(sceneData.ambLightColor);
+		scene->setDirLight(sceneData.dirLightDir, sceneData.dirLightColor);
+		scene->setPointLight(0, sceneData.ptLights[0]->getPosition(), glm::vec4(sceneData.ptLights[0]->getColor(), sceneData.ptLights[0]->getIntensity()));
 	}
 
 	void SceneEditor::loadSprite(std::string name)
@@ -182,6 +202,40 @@ namespace Audace
 					selectedSprite = -1;
 				}
 
+				ImGui::EndTabItem();
+			}
+
+			if (ImGui::BeginTabItem("Lighting"))
+			{
+				if (ImGui::BeginTabBar("Lighting"))
+				{
+					if (ImGui::BeginTabItem("Ambient light"))
+					{
+						ImGui::ColorPicker4("Ambient color", glm::value_ptr(sceneData.ambLightColor));
+						ImGui::EndTabItem();
+					}
+					if (ImGui::BeginTabItem("Directional Light"))
+					{
+						static glm::vec3 angles = sceneData.dirLightDir;
+						ImGui::DragFloat3("Direction", glm::value_ptr(angles));
+						ImGui::ColorPicker4("Color", glm::value_ptr(sceneData.dirLightColor));
+						sceneData.dirLightDir = glm::normalize(angles);
+						ImGui::EndTabItem();
+					}
+					if (ImGui::BeginTabItem("Point light"))
+					{
+						PointLight* pointLight = sceneData.ptLights[0];
+						static glm::vec4 pointLightColor = glm::vec4(pointLight->getColor(), pointLight->getIntensity());
+						static glm::vec3 lightPos = pointLight->getPosition();
+						ImGui::DragFloat3("Position", glm::value_ptr(lightPos), 0.01);
+						ImGui::ColorPicker4("Color", glm::value_ptr(pointLightColor));
+						pointLight->setPosition(lightPos);
+						pointLight->setColor(glm::vec3(pointLightColor));
+						pointLight->setIntensity(pointLightColor.a);
+						ImGui::EndTabItem();
+					}
+					ImGui::EndTabBar();
+				}
 				ImGui::EndTabItem();
 			}
 

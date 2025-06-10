@@ -5,6 +5,17 @@
         0.0,
         1.0
     ],
+	"ambLightColor": [0.5, 0.5, 0.5, 1.0],
+	"dirLight": {
+		"dir": [1.0, 0.0, 0.0, 0.0],
+		"color": [1.0, 1.0, 0.8, 0.7]
+	},
+	"ptLights": [
+		{
+			"position": [0.0, 0.0, 5.0],
+			"color": [1.0, 1.0, 1.0, 0.8]
+		}
+	],
     "filename": "house.json",
     "sprites": {
         "kenney/furniture/cabinets/cabinetTelevisionDoors.obj": [
