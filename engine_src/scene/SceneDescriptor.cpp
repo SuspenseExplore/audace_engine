@@ -4,7 +4,7 @@
 
 namespace Audace
 {
-	void SceneDescriptor::loadSceneAssets(IFileLoader* fileLoader)
+	void SceneDescriptor::loadSceneAssets(IFileAccess* fileLoader)
 	{
 		jsonDescriptor = fileLoader->textFileToJson(descriptorFilename);
 

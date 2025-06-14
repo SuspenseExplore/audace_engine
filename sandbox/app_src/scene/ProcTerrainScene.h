@@ -38,7 +38,7 @@ public:
 
 	}
 
-	void loadAssets(Audace::FileLoader* fileLoader) override;
+	void loadAssets(Audace::IFileAccess* fileLoader) override;
 	void render() override;
 	void renderUi() override;
 	void renderChunkData(std::string chunkId);

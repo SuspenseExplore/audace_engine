@@ -2,7 +2,7 @@
 #include <fstream>
 #include "content/AssetStore.h"
 #include "renderer/ShaderProgram.h"
-#include "FileLoader.h"
+#include "content/IFileAccess.h"
 #include "imgui.h"
 
 namespace Audace
@@ -18,10 +18,19 @@ namespace Audace
 		json j = fileLoader->textFileToJson(path + filename);
 		sceneData.filepath = path;
 		sceneData.filename = j["filename"];
-		sceneData.clearColor = JsonSerializer::getVec4(j, "clearColor");
-		sceneData.ambLightColor = JsonSerializer::getVec4(j, "ambLightColor");
-		sceneData.dirLightDir = JsonSerializer::getVec3(j["dirLight"], "dir");
-		sceneData.dirLightColor = JsonSerializer::getVec4(j["dirLight"], "color");
+		JsonSerializer::ifContains(j, "clearColor", [=](json& el)
+			{
+				sceneData.clearColor = JsonSerializer::getVec4(el);
+			});
+		JsonSerializer::ifContains(j, "ambLightColor", [=](json& el)
+			{
+				sceneData.ambLightColor = JsonSerializer::getVec4(el);
+			});
+		JsonSerializer::ifContains(j, "dirLight", [=](json& el)
+			{
+				sceneData.dirLightDir = JsonSerializer::getVec3(el, "dir");
+				sceneData.dirLightColor = JsonSerializer::getVec4(el, "color");
+			});
 
 		JsonSerializer::ifContains(j, "ptLights", [=](json& el)
 			{
@@ -112,7 +121,10 @@ namespace Audace
 		scene->setClearColor(sceneData.clearColor);
 		scene->setAmbientLight(sceneData.ambLightColor);
 		scene->setDirLight(sceneData.dirLightDir, sceneData.dirLightColor);
-		scene->setPointLight(0, sceneData.ptLights[0]->getPosition(), glm::vec4(sceneData.ptLights[0]->getColor(), sceneData.ptLights[0]->getIntensity()));
+		for (int i = 0; i < sceneData.ptLights.size(); i++)
+		{
+			scene->setPointLight(i, sceneData.ptLights[i]->getPosition(), glm::vec4(sceneData.ptLights[i]->getColor(), sceneData.ptLights[i]->getIntensity()));
+		}
 	}
 
 	void SceneEditor::loadSprite(std::string name)

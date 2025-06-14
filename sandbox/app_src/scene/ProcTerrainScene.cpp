@@ -17,16 +17,16 @@
 #include "MouseManager.h"
 #endif
 
-void ProcTerrainScene::loadAssets(Audace::FileLoader *fileLoader)
+void ProcTerrainScene::loadAssets(Audace::IFileAccess* fileLoader)
 {
 	shader = Audace::AssetStore::getShader("terrain");
 	material = new Audace::Material;
 	material->setName("groundMat");
 	material->setShader(shader);
-	material->setAmbientColor({1.0, 1.0, 1.0});
-	material->setDiffuseColor({1.0, 1.0, 1.0});
-	material->setSpecularColor({0.5, 0.5, 0.5});
-	material->setEmissionColor({0.0, 0.0, 0.0});
+	material->setAmbientColor({ 1.0, 1.0, 1.0 });
+	material->setDiffuseColor({ 1.0, 1.0, 1.0 });
+	material->setSpecularColor({ 0.5, 0.5, 0.5 });
+	material->setEmissionColor({ 0.0, 0.0, 0.0 });
 	material->setAmbientOcclusionMap(Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_AmbientOcclusion.jpg"));
 	material->setDiffuseMap(Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_Color.jpg"));
 	material->setNormalMap(Audace::AssetStore::getTexture("images/rocks_011/Rocks011_1K-JPG_NormalGL.jpg"));
@@ -43,7 +43,7 @@ void ProcTerrainScene::render()
 
 	camera->update();
 	glm::vec3 camPos = camera->getOriginPos() + camera->getPosition();
-	glm::vec3 baseChunk = glm::vec3{(int)camPos.x / CHUNK_SIZE, (int)camPos.y / CHUNK_SIZE, (int)camPos.z / CHUNK_SIZE};
+	glm::vec3 baseChunk = glm::vec3{ (int)camPos.x / CHUNK_SIZE, (int)camPos.y / CHUNK_SIZE, (int)camPos.z / CHUNK_SIZE };
 
 	// check for chunks that have loaded
 	for (auto iter = loadingChunks.begin(); iter != loadingChunks.end(); iter++)
@@ -61,11 +61,11 @@ void ProcTerrainScene::render()
 		{
 			for (int z = -rad; z < rad; z++)
 			{
-				glm::vec3 chunk = baseChunk + glm::vec3{x, y, z};
+				glm::vec3 chunk = baseChunk + glm::vec3{ x, y, z };
 				std::string k = Audace::VoxelTerrainGen::ChunkBuilder::idString(chunk);
 				if (loadingChunks.find(k) == loadingChunks.end())
 				{
-					Audace::VoxelTerrainGen::ChunkBuilder *cb = terrainGen.builder(chunk, CHUNK_SIZE);
+					Audace::VoxelTerrainGen::ChunkBuilder* cb = terrainGen.builder(chunk, CHUNK_SIZE);
 					cb->future = std::async(std::launch::async | std::launch::deferred, &Audace::VoxelTerrainGen::ChunkBuilder::genPositions, cb);
 					loadingChunks[k] = cb;
 				}
@@ -73,7 +73,7 @@ void ProcTerrainScene::render()
 		}
 	}
 
-	Audace::ShaderProgram *shader = material->getShader();
+	Audace::ShaderProgram* shader = material->getShader();
 	shader->bind();
 	shader->setUniformVec4("ambientLight", 0.6, 0.6, 0.8, 1);
 	shader->setUniformVec3("light[0].position", lightPos);
@@ -85,7 +85,7 @@ void ProcTerrainScene::render()
 
 	for (auto iter = loadingChunks.begin(); iter != loadingChunks.end(); iter++)
 	{
-		Audace::VoxelTerrainGen::ChunkBuilder *cb = iter->second;
+		Audace::VoxelTerrainGen::ChunkBuilder* cb = iter->second;
 		if (cb->loaded && cb->positions.size() > 0)
 		{
 			shader->setUniformVec3Array("voxelPos[0]", glm::value_ptr(cb->positions[0]), cb->positions.size());
@@ -106,9 +106,9 @@ void ProcTerrainScene::render()
 
 void ProcTerrainScene::renderChunkData(std::string chunkId)
 {
-	Audace::VoxelTerrainGen::ChunkBuilder *chunk = loadingChunks[chunkId];
+	Audace::VoxelTerrainGen::ChunkBuilder* chunk = loadingChunks[chunkId];
 	glm::vec3 id = chunk->id;
-	glm::vec4 worldPos = glm::vec4(id * (float) chunk->chunkSize, 1.0);
+	glm::vec4 worldPos = glm::vec4(id * (float)chunk->chunkSize, 1.0);
 	glm::mat4 m = camera->getViewProjMatrix();
 	worldPos = m * worldPos;
 	worldPos = worldPos / worldPos.w;
@@ -125,14 +125,14 @@ void ProcTerrainScene::renderChunkData(std::string chunkId)
 
 void ProcTerrainScene::renderUi()
 {
-	std::for_each(sprites.begin(), sprites.end(), [this](Audace::Sprite *s)
-	{ s->renderViewSpace(this); });
+	std::for_each(sprites.begin(), sprites.end(), [this](Audace::Sprite* s)
+		{ s->renderViewSpace(this); });
 
-//	ImGui::Begin("Clear Color");
-//	ImGui::SetWindowPos(ImVec2(800, 1000));
-//	ImGui::SetWindowSize(ImVec2(500, 600));
-//	ImGui::ColorPicker4("Color", glm::value_ptr(clearColor));
-//	ImGui::End();
+	//	ImGui::Begin("Clear Color");
+	//	ImGui::SetWindowPos(ImVec2(800, 1000));
+	//	ImGui::SetWindowSize(ImVec2(500, 600));
+	//	ImGui::ColorPicker4("Color", glm::value_ptr(clearColor));
+	//	ImGui::End();
 }
 
 void ProcTerrainScene::disposeAssets()

@@ -10,12 +10,12 @@ class NavigationScene : public Audace::Scene
 
 public:
 	NavigationScene(Audace::BaseAppController* controller) : Audace::Scene(controller) {}
-	void loadAssets(Audace::FileLoader *fileLoader) override {}
+	void loadAssets(Audace::IFileAccess* fileLoader) override {}
 	void render() override;
 	void disposeAssets() override {}
 
-	Audace::BaseCamera* getCamera() override {return nullptr;}
-	void setCamera(Audace::BaseCamera *camera) override {}
+	Audace::BaseCamera* getCamera() override { return nullptr; }
+	void setCamera(Audace::BaseCamera* camera) override {}
 };
 
 #endif

@@ -10,7 +10,7 @@
 #include "audace_common.h"
 #include "EglWindow.h"
 #include "application/BaseAppController.h"
-#include "android_platform/FileLoader.h"
+#include "android_platform/FileAccessAndroid.h"
 #include "openxr/OpenxrContext.h"
 #include "scene/Scene.h"
 #include "openxr/HmdCamera.h"
@@ -20,46 +20,46 @@
 #include "SceneEnum.h"
 
 class AppController : public Audace::BaseAppController {
-	android_app *androidApp;
+	android_app* androidApp;
 	EglWindow window;
-	Audace::FileLoader *fileLoader;
+	Audace::FileAccessAndroid* fileLoader;
 	XrFrameState currentFrameState;
 	GLuint framebuffer;
 
-	HmdCamera *camera;
-	Audace::Scene *scene;
-	int nextScene = SandboxScene::BUILDER;
+	HmdCamera* camera;
+	Audace::Scene* scene;
+	int nextScene = SandboxScene::PROC_TERRAIN;
 
 	bool xButtonDown = false;
 
 	void startNextScene();
 
 public:
-	AppController() : scene(new SceneBuilder(this)) {}
+	AppController() : scene(new ProcTerrainScene(this)) {}
 	OpenxrContext xrContext;
 
-	bool init(android_app *app);
+	bool init(android_app* app);
 
 	bool createWindow();
 
 	bool createXrSession();
 
-	XrFrameState *startFrame();
+	XrFrameState* startFrame();
 
-	bool endFrame(std::vector<XrCompositionLayerBaseHeader *> layers);
+	bool endFrame(std::vector<XrCompositionLayerBaseHeader*> layers);
 
-	uint32_t prepareViews(XrFrameState *frameState, XrSpace space);
+	uint32_t prepareViews(XrFrameState* frameState, XrSpace space);
 
 	void renderFrame();
 
-	bool renderLayer(std::vector<XrCompositionLayerProjectionView> &projectionLayerViews,
-					 XrCompositionLayerProjection &layer);
-	bool renderUiLayer(XrCompositionLayerQuad &layer);
+	bool renderLayer(std::vector<XrCompositionLayerProjectionView>& projectionLayerViews,
+		XrCompositionLayerProjection& layer);
+	bool renderUiLayer(XrCompositionLayerQuad& layer);
 
 	void renderView(OpenxrView view);
 	void renderUi();
 
-	android_app *getAndroidApp() { return androidApp; }
+	android_app* getAndroidApp() { return androidApp; }
 
 	OpenxrContext getXrContext() { return xrContext; }
 

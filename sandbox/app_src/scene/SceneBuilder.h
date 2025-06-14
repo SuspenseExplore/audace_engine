@@ -4,7 +4,7 @@
 #include <vector>
 #include <map>
 #include "application/BaseAppController.h"
-#include "FileLoader.h"
+#include "content/IFileAccess.h"
 #include "scene/Scene.h"
 #include "glm/glm.hpp"
 #include "renderer/Sprite.h"
@@ -23,7 +23,7 @@ using json = nlohmann::json;
 class SceneBuilder : public Audace::Scene
 {
 	glm::vec4 clearColor = glm::vec4(0, 0, 1, 1);
-	Audace::FileLoader* fileLoader;
+	Audace::IFileAccess* fileLoader;
 	Audace::SceneEditor* editor;
 
 	static const int scenePathLength = 64;
@@ -52,12 +52,12 @@ public:
 
 	void setClearColor(glm::vec4 color) override { clearColor = color; }
 	void setAmbientLight(glm::vec4 color) override { ambientColor = color; }
-	void setDirLight(glm::vec3 dir, glm::vec4 color)
+	void setDirLight(glm::vec3 dir, glm::vec4 color) override
 	{
 		dirLightDirection = dir;
 		dirLightColor = color;
 	}
-	void setPointLight(int i, glm::vec3 pos, glm::vec4 color)
+	void setPointLight(int i, glm::vec3 pos, glm::vec4 color) override
 	{
 		if (i > -1 && i < ptLights.size())
 		{
@@ -70,7 +70,7 @@ public:
 	void loadModel(std::string path, std::string filename);
 	void traverseModelIndex(json index, int i);
 
-	void loadAssets(Audace::FileLoader* fileLoader) override;
+	void loadAssets(Audace::IFileAccess* fileLoader) override;
 	void render() override;
 	void renderUi() override;
 	void disposeAssets() override;

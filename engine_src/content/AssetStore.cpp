@@ -6,7 +6,7 @@
 namespace Audace
 {
 	unsigned char WHITE_TEX[] = { 255, 255, 255, 255 };
-	FileLoader* AssetStore::fileLoader;
+	IFileAccess* AssetStore::fileLoader;
 	Mesh* AssetStore::squareMesh;
 	std::map<std::string, ShaderProgram*> AssetStore::shaders;
 	SimpleBillboardMaterial* AssetStore::billboardMat;
@@ -14,7 +14,7 @@ namespace Audace
 	std::map<std::string, Model*> AssetStore::models;
 	std::map<std::string, Sprite*> AssetStore::sprites;
 
-	void AssetStore::init(FileLoader* loader)
+	void AssetStore::init(IFileAccess* loader)
 	{
 		fileLoader = loader;
 		squareMesh = Shapes::squarePositions();
@@ -86,7 +86,8 @@ namespace Audace
 	{
 		if (sprites.find(name) == sprites.end())
 		{
-			Sprite* sprite = new Sprite(getModel(name));
+			Model* model = getModel(name);
+			Sprite* sprite = new Sprite(model);
 			sprite->setName(name);
 			sprites[name] = sprite;
 		}

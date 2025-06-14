@@ -14,7 +14,7 @@
 #include "imgui.h"
 #include "SceneEnum.h"
 
-void DragDropScene::loadAssets(Audace::FileLoader *fileLoader)
+void DragDropScene::loadAssets(Audace::IFileAccess* fileLoader)
 {
 	glClearColor(0, 0, 1, 0);
 
@@ -30,7 +30,7 @@ void DragDropScene::loadAssets(Audace::FileLoader *fileLoader)
 				ss.str("");
 				ss << "images/playing_cards/card" << suitNames[j] << rankNames[k] << ".png";
 				Audace::ImageData img = fileLoader->readImageFile(ss.str());
-				Audace::Texture2d *tex = new Audace::Texture2d(img);
+				Audace::Texture2d* tex = new Audace::Texture2d(img);
 				tex->create();
 				cardTextures[i++] = tex;
 			}
@@ -39,23 +39,23 @@ void DragDropScene::loadAssets(Audace::FileLoader *fileLoader)
 	material = new Audace::SimpleBillboardMaterial;
 	material->setShader(shaderProgram);
 
-	Audace::Mesh *mesh = Audace::Shapes::cubePositions();
-	mesh->setMaterial((Audace::BaseMaterial *)material);
-	sprite = new Audace::Sprite(std::vector<Audace::Mesh *>{mesh});
+	Audace::Mesh* mesh = Audace::Shapes::cubePositions();
+	mesh->setMaterial((Audace::BaseMaterial*)material);
+	sprite = new Audace::Sprite(std::vector<Audace::Mesh*>{mesh});
 	sprite->setPosition(glm::vec3(0, 0, 0));
 	sprite->setScale(glm::vec3(140.0f, 190.0f, 1.0f));
 }
 
-Audace::Sprite *DragDropScene::loadSprite(std::string filename)
+Audace::Sprite* DragDropScene::loadSprite(std::string filename)
 {
 
 	glm::mat4 IDENTITY_MAT = glm::mat4(1.0f);
-	Audace::Model *model = fileLoader->readModelFile("models/", filename);
-	for (Audace::ModelSection *section : model->sections)
+	Audace::Model* model = fileLoader->readModelFile("models/", filename);
+	for (Audace::ModelSection* section : model->sections)
 	{
 		section->material->setShader(shaderProgram);
 	}
-	Audace::Sprite *sprite = new Audace::Sprite(model);
+	Audace::Sprite* sprite = new Audace::Sprite(model);
 	delete model;
 	return sprite;
 }

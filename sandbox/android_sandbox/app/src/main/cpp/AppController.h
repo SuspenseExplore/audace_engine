@@ -15,9 +15,9 @@
 
 namespace Audace {
 	class AppController : public EngineEventListener, BaseAppController {
-		android_app *androidApp;
-		FileLoader *fileLoader;
-		Scene *scene;
+		android_app* androidApp;
+		FileAccessGlfw* fileLoader;
+		Scene* scene;
 		int nextScene = SandboxScene::CURRENT;
 
 		void startNextScene();
@@ -25,8 +25,8 @@ namespace Audace {
 	public:
 		EglWindow window;
 
-		AppController(android_app *app) : androidApp(app),
-										  fileLoader(new FileLoader(app->activity->assetManager)) {
+		AppController(android_app* app) : androidApp(app),
+			fileLoader(new FileAccessGlfw(app->activity->assetManager)) {
 		}
 
 		bool createWindow();
@@ -39,12 +39,12 @@ namespace Audace {
 
 		void setScene(int newScene) override;
 
-		static void pollSystemEvents(android_app *app);
+		static void pollSystemEvents(android_app* app);
 
 		void windowInitialized() override;
 
-		int getWidth() override {return window.getWidth();}
-		int getHeight() override {return window.getHeight();}
+		int getWidth() override { return window.getWidth(); }
+		int getHeight() override { return window.getHeight(); }
 	};
 }
 

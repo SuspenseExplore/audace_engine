@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "application/BaseAppController.h"
-#include "FileLoader.h"
+#include "content/IFileAccess.h"
 #include "scene/BaseCamera.h"
 #include "renderer/Sprite.h"
 
@@ -20,7 +20,7 @@ namespace Audace
 	public:
 		Scene(BaseAppController* controller);
 		virtual ~Scene() {}
-		virtual void loadAssets(Audace::FileLoader* fileLoader) = 0;
+		virtual void loadAssets(Audace::IFileAccess* fileLoader) = 0;
 		virtual void render() = 0;
 		virtual void renderUi() {}
 		virtual void disposeAssets() = 0;

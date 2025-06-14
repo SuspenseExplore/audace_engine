@@ -6,7 +6,7 @@
 
 namespace Audace
 {
-	BitmapFont::BitmapFont(FileLoader *loader, std::string filepath)
+	BitmapFont::BitmapFont(IFileAccess* loader, std::string filepath)
 	{
 		shader = AssetStore::simpleTextShader();
 		shader->create();
@@ -20,9 +20,9 @@ namespace Audace
 			return;
 		}
 
-		ByteBuffer *buffer = loader->readFileToBuffer("fonts/arial.ttf");
+		ByteBuffer* buffer = loader->readFileToBuffer("fonts/arial.ttf");
 		FT_Face face;
-		if (FT_New_Memory_Face(freetype, (unsigned char *)buffer->getBuffer(), buffer->getLength(), 0, &face))
+		if (FT_New_Memory_Face(freetype, (unsigned char*)buffer->getBuffer(), buffer->getLength(), 0, &face))
 		{
 			AU_ENGINE_LOG_ERROR("Freetype failed to load font: {}", "arial.ttf");
 			return;

@@ -22,8 +22,7 @@ add_executable(
 	${ENGINE_DIR}/glfw_platform/GameWindow.cpp
 	${ENGINE_DIR}/glfw_platform/KeyboardManager.cpp
 	${ENGINE_DIR}/glfw_platform/MouseManager.cpp
-	${ENGINE_DIR}/glfw_platform/ImageData.cpp
-	${ENGINE_DIR}/glfw_platform/FileLoader.cpp
+	${ENGINE_DIR}/glfw_platform/FileAccessGlfw.cpp
 	${ENGINE_DIR}/include/FastNoiseLite.h
 	${ENGINE_DIR}/include/imgui/imgui.cpp
 	${ENGINE_DIR}/include/imgui/imgui_demo.cpp
@@ -44,7 +43,7 @@ add_executable(
 	${ENGINE_DIR}/renderer/light/PointLight.h
 	${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 	${ENGINE_DIR}/renderer/text/TextLabel.cpp
-	${ENGINE_DIR}/content/IFileLoader.h
+	${ENGINE_DIR}/content/ImageData.cpp
 	${ENGINE_DIR}/content/ModelLoader.cpp
 	${ENGINE_DIR}/content/AssetStore.cpp
 	${ENGINE_DIR}/content/JsonSerializer.cpp
@@ -61,13 +60,6 @@ add_executable(
 )
 
 add_compile_definitions(AU_PLATFORM_GLFW)
-
-add_custom_command(
-	TARGET sandbox_glfw POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy_directory
-	${CMAKE_CURRENT_SOURCE_DIR}/../assets
-	${CMAKE_CURRENT_SOURCE_DIR}/assets
-)
 
 target_include_directories(
 	sandbox_glfw

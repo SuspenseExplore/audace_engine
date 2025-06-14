@@ -36,7 +36,7 @@ enum RenderType
 	FULL
 };
 
-void SceneBuilder::loadAssets(Audace::FileLoader* fileLoader)
+void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 {
 	renderType = RenderType::FULL;
 	this->fileLoader = fileLoader;
@@ -59,7 +59,7 @@ void SceneBuilder::loadAssets(Audace::FileLoader* fileLoader)
 
 	editor = new Audace::SceneEditor(fileLoader);
 	editor->attachToScene(this);
-	editor->load(fileLoader->assetReadBasePath() + "scenes/", "house.json");
+	editor->load("scenes/", "cliffs.json");
 }
 
 void SceneBuilder::loadModel(std::string path, std::string filename)

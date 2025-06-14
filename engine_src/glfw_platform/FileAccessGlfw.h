@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include "content/IFileLoader.h"
+#include "content/IFileAccess.h"
 #include "ImageData.h"
 #include "content/Model.h"
 #include "content/ByteBuffer.h"
@@ -13,24 +13,23 @@ using json = nlohmann::json;
 
 namespace Audace
 {
-	class FileLoader : public IFileLoader
+	class FileAccessGlfw : public IFileAccess
 	{
-		std::string basePath;
 		std::string externalFilePath;
 
 	public:
-		FileLoader(std::string basePath) : basePath(basePath) {}
+		FileAccessGlfw() {}
 
-		ByteBuffer* readFileToBuffer(const std::string& path);
+		ByteBuffer* readFileToBuffer(const std::string& path) override;
 		std::string textFileToString(const std::string& path) override;
 		json textFileToJson(const std::string& path) override;
-		ImageData readImageFile(std::string path);
-		Model* readModelFile(std::string path, std::string filename);
+		ImageData readImageFile(const std::string& path) override;
+		Model* readModelFile(std::string path, std::string filename) override;
 
 		std::vector<std::string> listFilesInDir(const std::string& path, bool recursive = false);
 
-		std::string assetReadBasePath() { return basePath; }
-		std::string fileWriteBasePath() { return "../../../assets/"; }
+		std::string assetReadBasePath() override { return fileWriteBasePath(); }
+		std::string fileWriteBasePath() override { return "../../../assets/"; }
 
 		void setExternalFilePath(std::string path) { externalFilePath = path; }
 	};

@@ -5,7 +5,7 @@
 #include <vector>
 #include "glm/glm.hpp"
 #include "scene/Scene.h"
-#include "FileLoader.h"
+#include "content/IFileAccess.h"
 #include "renderer/Mesh.h"
 #include "renderer/Sprite.h"
 #include "renderer/ShaderProgram.h"
@@ -18,23 +18,23 @@
 #include "application/BaseAppController.h"
 
 class MainScene : public Audace::Scene {
-	std::vector<Audace::Sprite *> sprites;
-	Audace::ShaderProgram *shaderProgram;
+	std::vector<Audace::Sprite*> sprites;
+	Audace::ShaderProgram* shaderProgram;
 
-	std::map<std::string, Audace::Material *> materials;
+	std::map<std::string, Audace::Material*> materials;
 
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
-	Audace::BaseCamera *camera;
+	Audace::BaseCamera* camera;
 
-	glm::vec4 ambientLight = {1, 1, 1, 0.2f};
-	Audace::PointLight *pointLights;
+	glm::vec4 ambientLight = { 1, 1, 1, 0.2f };
+	Audace::PointLight* pointLights;
 
 public:
-	MainScene(Audace::BaseAppController *controller) : Scene(controller) {}
+	MainScene(Audace::BaseAppController* controller) : Scene(controller) {}
 
-	Audace::Sprite *loadSprite(Audace::FileLoader *fileLoader, std::string filename);
+	Audace::Sprite* loadSprite(Audace::IFileAccess* fileLoader, std::string filename);
 
-	void loadAssets(Audace::FileLoader *fileLoader) override;
+	void loadAssets(Audace::IFileAccess* fileLoader) override;
 
 	void render() override;
 
@@ -84,9 +84,9 @@ public:
 	// 	cameraPitch += x;
 	// }
 
-	Audace::BaseCamera *getCamera() override { return camera; }
+	Audace::BaseCamera* getCamera() override { return camera; }
 
-	void setCamera(Audace::BaseCamera *camera) override { this->camera = camera; }
+	void setCamera(Audace::BaseCamera* camera) override { this->camera = camera; }
 };
 
 #endif

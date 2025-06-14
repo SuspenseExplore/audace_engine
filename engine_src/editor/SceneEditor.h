@@ -1,7 +1,7 @@
 #ifndef AU_SCENEEDITOR_H
 #define AU_SCENEEDITOR_H
 
-#include "content/IFileLoader.h"
+#include "content/IFileAccess.h"
 #include "scene/Scene.h"
 #include "SceneData.h"
 #include "SpriteEditWindow.h"
@@ -10,7 +10,7 @@ namespace Audace
 {
 	class SceneEditor
 	{
-		IFileLoader* fileLoader;
+		IFileAccess* fileLoader;
 		Scene* scene;
 		SceneData sceneData;
 
@@ -21,7 +21,7 @@ namespace Audace
 		std::vector<std::string> modelIndexPath; // the currently selected path in modelIndex
 
 	public:
-		SceneEditor(IFileLoader* fileLoader) : fileLoader(fileLoader)
+		SceneEditor(IFileAccess* fileLoader) : fileLoader(fileLoader)
 		{
 			modelIndex = fileLoader->textFileToJson("models/_index.json");
 		}

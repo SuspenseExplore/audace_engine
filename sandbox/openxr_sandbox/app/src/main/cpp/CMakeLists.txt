@@ -37,12 +37,12 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/include/imgui/imgui_widgets.cpp
 		${ENGINE_DIR}/android_platform/imgui/imgui_impl_android.cpp
 		${ENGINE_DIR}/android_platform/imgui/imgui_impl_opengl3.cpp
-		${ENGINE_DIR}/android_platform/ImageData.cpp
-		${ENGINE_DIR}/android_platform/FileLoader.cpp
+		${ENGINE_DIR}/android_platform/FileAccessAndroid.cpp
 		${ENGINE_DIR}/input/InputDevices.cpp
-		${ENGINE_DIR}/content/IFileLoader.h
+		${ENGINE_DIR}/content/IFileAccess.h
 		${ENGINE_DIR}/content/AssetStore.cpp
 		${ENGINE_DIR}/content/ByteBuffer.cpp
+		${ENGINE_DIR}/content/ImageData.cpp
 		${ENGINE_DIR}/content/ModelLoader.cpp
 		${ENGINE_DIR}/content/JsonSerializer.cpp
 		${ENGINE_DIR}/renderer/DataBuffer.cpp
@@ -81,13 +81,6 @@ target_compile_definitions(
 		openxr_sandbox
 		PRIVATE
 		IMGUI_IMPL_OPENGL_ES3
-)
-
-add_custom_command(
-		TARGET openxr_sandbox POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_directory
-		${ENGINE_DIR}/../sandbox/assets
-		${CMAKE_CURRENT_SOURCE_DIR}/../assets
 )
 
 # add the oculus loader for openxr

@@ -8,7 +8,7 @@
 #include "renderer/Sprite.h"
 #include "renderer/ShaderProgram.h"
 #include "Scene.h"
-#include "content/IFileLoader.h"
+#include "content/IFileAccess.h"
 #include "glm/glm.hpp"
 
 #include <nlohmann/json.hpp>
@@ -24,15 +24,15 @@ namespace Audace
 		int nextSpriteId = 0;
 
 	public:
-		glm::vec4 clearColor{0.5, 0, 0.5, 1.0};
+		glm::vec4 clearColor{ 0.5, 0, 0.5, 1.0 };
 		std::map<std::string, glm::mat4> modelMats;
-		std::map<std::string, ShaderProgram *> shaders;
-		std::vector<Sprite *> sprites;
+		std::map<std::string, ShaderProgram*> shaders;
+		std::vector<Sprite*> sprites;
 
 		SceneDescriptor(std::string filename) : descriptorFilename(filename) {}
 
-		void loadSceneAssets(IFileLoader *fileLoader);
-		void apply(Scene *scene);
+		void loadSceneAssets(IFileAccess* fileLoader);
+		void apply(Scene* scene);
 	};
 }
 

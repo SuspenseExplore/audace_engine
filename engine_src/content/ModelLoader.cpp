@@ -8,7 +8,7 @@
 
 namespace Audace
 {
-	Model* ModelLoader::loadObj(FileLoader* fileLoader, std::string path, std::string filename)
+	Model* ModelLoader::loadObj(IFileAccess* fileLoader, std::string path, std::string filename)
 	{
 		Model* model = new Model;
 		std::vector<glm::vec3> positions;
@@ -136,7 +136,7 @@ namespace Audace
 		return model;
 	}
 
-	std::map<std::string, Material*> ModelLoader::loadMtl(FileLoader* fileLoader, std::string path, std::string filename)
+	std::map<std::string, Material*> ModelLoader::loadMtl(IFileAccess* fileLoader, std::string path, std::string filename)
 	{
 		std::map<std::string, Material*> mats;
 		std::string fileContent = fileLoader->textFileToString(path + filename);

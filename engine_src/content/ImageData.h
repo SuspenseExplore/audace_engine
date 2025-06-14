@@ -10,13 +10,14 @@
 namespace Audace {
 	class ImageData {
 	public:
-		unsigned char *bytes;
+		unsigned char* bytes;
 		int width;
 		int height;
 		GLenum format;
 
-		ImageData(unsigned char *bytes, int width, int height, GLenum format)
-				: bytes(bytes), width(width), height(height), format(format) {}
+		ImageData(unsigned char* bytes, int width, int height, GLenum format)
+			: bytes(bytes), width(width), height(height), format(format) {
+		}
 
 		void release();
 	};

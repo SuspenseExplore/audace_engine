@@ -29,7 +29,7 @@ namespace Audace
 		glEnable(GL_DEPTH_TEST);
 		AU_RENDERER_LOG_TRACE("Renderer initialized");
 
-		fileLoader = new FileLoader("../../assets/");
+		fileLoader = new FileAccessGlfw();
 
 		// build an index file for models in assets/models/
 		json index = json::object();
@@ -46,7 +46,7 @@ namespace Audace
 			// file entries all start with "models/" and we want to skip that part
 			s = s.substr(7);
 
-			json *j = &index;
+			json* j = &index;
 			while ((i = s.find_first_of('/')) != s.npos)
 			{
 				std::string f = s.substr(0, i);
@@ -123,8 +123,8 @@ namespace Audace
 		case MAIN:
 		{
 			scene = new MainScene(this);
-			ForwardCamera *camera = ForwardCamera::standard3d({0, 0, 1}, 1280, 720);
-			BasicCameraController *camCtl = new BasicCameraController(camera);
+			ForwardCamera* camera = ForwardCamera::standard3d({ 0, 0, 1 }, 1280, 720);
+			BasicCameraController* camCtl = new BasicCameraController(camera);
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_W, camCtl->forwardAction);
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_S, camCtl->backwardAction);
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_A, camCtl->leftAction);
@@ -132,10 +132,10 @@ namespace Audace
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Q, camCtl->upAction);
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Z, camCtl->downAction);
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_1,
-														  [this](BooleanInputEvent event)
-														  {
-															  reinterpret_cast<MainScene *>(scene)->enableAmbientOcclusion(!event.state);
-														  });
+				[this](BooleanInputEvent event)
+				{
+					reinterpret_cast<MainScene*>(scene)->enableAmbientOcclusion(!event.state);
+				});
 			MouseManager::addButtonChangedEventHandler(1, camCtl->rightMouseAction);
 			MouseManager::setMouseMoveEventHandler(camCtl->aimAction);
 			scene->setCamera(camera);
@@ -146,9 +146,9 @@ namespace Audace
 		case DRAG_DROP:
 			scene = new DragDropScene(this, fileLoader);
 			MouseManager::setMouseMoveEventHandler([this](Vec2InputEvent event)
-												   { ((DragDropScene *)scene)->mouseMoved(event.state.x, event.state.y); });
+				{ ((DragDropScene*)scene)->mouseMoved(event.state.x, event.state.y); });
 			MouseManager::addButtonEventHandler(0, [this](ButtonInputEvent event)
-												{ ((DragDropScene *)scene)->buttonChanged(event.pressed); });
+				{ ((DragDropScene*)scene)->buttonChanged(event.pressed); });
 			scene->loadAssets(fileLoader);
 			break;
 
@@ -160,9 +160,9 @@ namespace Audace
 		case BUILDER:
 		{
 			scene = new SceneBuilder(this);
-			BaseCamera *camera = Audace::ForwardCamera::standard3d(glm::vec3(0, -10, 2), getWidth(), getHeight());
+			BaseCamera* camera = Audace::ForwardCamera::standard3d(glm::vec3(0, -10, 2), getWidth(), getHeight());
 			scene->setCamera(camera);
-			BasicCameraController *camCtl = new BasicCameraController((ForwardCamera *)camera);
+			BasicCameraController* camCtl = new BasicCameraController((ForwardCamera*)camera);
 			camCtl->setVelocityFactor(0.1f);
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_W, camCtl->forwardAction);
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_S, camCtl->backwardAction);
@@ -179,9 +179,9 @@ namespace Audace
 		case PROC_TERRAIN:
 		{
 			scene = new ProcTerrainScene(this);
-			BaseCamera *camera = Audace::ForwardCamera::standard3d(glm::vec3(0, -10, 2), getWidth(), getHeight());
+			BaseCamera* camera = Audace::ForwardCamera::standard3d(glm::vec3(0, -10, 2), getWidth(), getHeight());
 			scene->setCamera(camera);
-			BasicCameraController *camCtl = new BasicCameraController((ForwardCamera *)camera);
+			BasicCameraController* camCtl = new BasicCameraController((ForwardCamera*)camera);
 			camCtl->setVelocityFactor(0.1f);
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_W, camCtl->forwardAction);
 			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_S, camCtl->backwardAction);
@@ -201,7 +201,7 @@ namespace Audace
 	void AppController::renderFrame()
 	{
 		scene->render();
-		((ProcTerrainScene *)scene)->renderUi();
+		((ProcTerrainScene*)scene)->renderUi();
 	}
 
 	void AppController::shutdown()

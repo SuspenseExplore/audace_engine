@@ -6,7 +6,7 @@
 #include "GameWindow.h"
 #include "EngineEventListener.h"
 #include "application/BaseAppController.h"
-#include "FileLoader.h"
+#include "FileAccessGlfw.h"
 #include "scene/Scene.h"
 #include "SceneEnum.h"
 
@@ -17,9 +17,9 @@ namespace Audace
 		void startNextScene();
 
 	public:
-		GameWindow *window;
-		FileLoader *fileLoader;
-		Scene *scene = nullptr;
+		GameWindow* window;
+		FileAccessGlfw* fileLoader;
+		Scene* scene = nullptr;
 		int nextScene = SandboxScene::BUILDER;
 		glm::vec2 mousePos;
 

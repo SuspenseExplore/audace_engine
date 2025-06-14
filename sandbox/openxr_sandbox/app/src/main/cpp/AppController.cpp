@@ -17,7 +17,7 @@
 
 bool AppController::createWindow()
 {
-	fileLoader = new Audace::FileLoader(androidApp->activity->assetManager);
+	fileLoader = new Audace::FileAccessAndroid();
 	fileLoader->setExternalFilePath(std::string(androidApp->activity->externalDataPath) + "/");
 	return window.init(androidApp);
 }

@@ -2,7 +2,7 @@
 #define AU_BITMAPFONT_H
 
 #include <map>
-#include "FileLoader.h"
+#include "content/IFileAccess.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/Texture2d.h"
 #include "renderer/Shapes.h"
@@ -13,7 +13,7 @@
 namespace Audace
 {
 	struct Character {
-		Texture2d *texture;
+		Texture2d* texture;
 		glm::vec2 size;
 		glm::vec2 bearing;
 		int advance;
@@ -21,16 +21,16 @@ namespace Audace
 
 	class BitmapFont
 	{
-		ShaderProgram *shader;
+		ShaderProgram* shader;
 		std::map<char, Character> characters;
-		Mesh *quadMesh;
+		Mesh* quadMesh;
 
 	public:
-		BitmapFont(FileLoader* loader, std::string filepath);
+		BitmapFont(IFileAccess* loader, std::string filepath);
 		void renderText(std::string text, glm::vec4 color = glm::vec4(1, 1, 1, 1));
 
-		ShaderProgram *getShader() {return shader;}
-		Character getChar(char c) {return characters[c];}
+		ShaderProgram* getShader() { return shader; }
+		Character getChar(char c) { return characters[c]; }
 	};
 }
 
