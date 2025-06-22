@@ -18,6 +18,7 @@ add_executable(
 	${APP_DIR}/scene/DragDropScene.cpp
 	${APP_DIR}/scene/TextScene.cpp
 	${APP_DIR}/scene/ProcTerrainScene.cpp
+	${APP_DIR}/scene/GltfViewerScene.cpp
 	${ENGINE_DIR}/AuLogger.cpp
 	${ENGINE_DIR}/glfw_platform/GameWindow.cpp
 	${ENGINE_DIR}/glfw_platform/KeyboardManager.cpp
@@ -29,6 +30,9 @@ add_executable(
 	${ENGINE_DIR}/include/imgui/imgui_draw.cpp
 	${ENGINE_DIR}/include/imgui/imgui_tables.cpp
 	${ENGINE_DIR}/include/imgui/imgui_widgets.cpp
+	${ENGINE_DIR}/include/b64/cencode.c
+	${ENGINE_DIR}/include/b64/cdecode.c
+	${ENGINE_DIR}/util/TimeUtil.h
 	${ENGINE_DIR}/glfw_platform/imgui/imgui_impl_glfw.cpp
 	${ENGINE_DIR}/glfw_platform/imgui/imgui_impl_opengl3.cpp
 	${ENGINE_DIR}/renderer/DataBuffer.cpp
@@ -44,6 +48,7 @@ add_executable(
 	${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 	${ENGINE_DIR}/renderer/text/TextLabel.cpp
 	${ENGINE_DIR}/content/ImageData.cpp
+	${ENGINE_DIR}/content/gltf/GltfLoader.cpp
 	${ENGINE_DIR}/content/ModelLoader.cpp
 	${ENGINE_DIR}/content/AssetStore.cpp
 	${ENGINE_DIR}/content/JsonSerializer.cpp
@@ -57,6 +62,9 @@ add_executable(
 	${ENGINE_DIR}/scene/BaseCamera.h
 	${ENGINE_DIR}/scene/ForwardCamera.cpp
 	${ENGINE_DIR}/scene/BasicCameraController.cpp
+	${ENGINE_DIR}/scene/graph/SceneGraph.cpp
+	${ENGINE_DIR}/scene/graph/SceneGraphNode.cpp
+	${ENGINE_DIR}/scene/graph/RotationAnimation.cpp
 )
 
 add_compile_definitions(AU_PLATFORM_GLFW)

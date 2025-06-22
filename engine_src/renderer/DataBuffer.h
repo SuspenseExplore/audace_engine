@@ -8,16 +8,17 @@ namespace Audace
 	class DataBuffer
 	{
 		GLuint glid = -1;
-		void *data;
+		void* data;
 		GLuint size;
 		GLuint target;
 		GLuint usage;
 
 	public:
-		DataBuffer(void *data, GLuint size, GLuint bufferTarget, GLuint usageHint) : data(data), size(size), target(bufferTarget), usage(usageHint) {}
-		~DataBuffer() {destroy();}
+		DataBuffer(void* data, GLuint size, GLuint bufferTarget, GLuint usageHint) : data(data), size(size), target(bufferTarget), usage(usageHint) {}
+		~DataBuffer() { destroy(); }
 		void create();
 		void bind();
+		void bind(GLuint bindTarget);
 		void unbind();
 		void destroy()
 		{

@@ -28,8 +28,8 @@ namespace Audace
 
 		std::vector<std::string> listFilesInDir(const std::string& path, bool recursive = false);
 
-		std::string assetReadBasePath() override { return fileWriteBasePath(); }
-		std::string fileWriteBasePath() override { return "../../../assets/"; }
+		std::string assetReadBasePath() override { return externalFilePath; }
+		std::string fileWriteBasePath() override { return externalFilePath; }
 
 		void setExternalFilePath(std::string path) { externalFilePath = path; }
 	};

@@ -13,8 +13,8 @@ namespace Audace {
 
 	public:
 		ByteBuffer(char* buffer, int length) : buffer(buffer), length(length) {}
-		const char* getBuffer() {return buffer;}
-		int getLength() {return length;}
+		char* getBuffer() { return buffer; }
+		int getLength() { return length; }
 	};
 
 }

@@ -10,7 +10,11 @@ void Audace::DataBuffer::create() {
 }
 
 void Audace::DataBuffer::bind() {
-	glBindBuffer(target, glid);
+	bind(target);
+}
+
+void Audace::DataBuffer::bind(GLuint bindTarget) {
+	glBindBuffer(bindTarget, glid);
 	AU_CHECK_GL_ERRORS();
 	AU_RENDERER_LOG_TRACE("Bound DataBuffer {}", glid);
 }

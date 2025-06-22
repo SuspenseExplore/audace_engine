@@ -93,7 +93,10 @@
 			"xtree": "cpp",
 			"xutility": "cpp",
 			"coroutine": "cpp",
-			"resumable": "cpp"
+			"resumable": "cpp",
+			"csignal": "cpp",
+			"set": "cpp",
+			"unordered_set": "cpp"
 		}
 	}
 }

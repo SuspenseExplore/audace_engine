@@ -52,6 +52,31 @@ namespace Audace
 			fn(jcontent[name]);
 		}
 	}
+	std::string JsonSerializer::getString(json jcontent, std::string name)
+	{
+		return jcontent[name].template get<std::string>();
+	}
+
+	int JsonSerializer::getInt(json jcontent, std::string name)
+	{
+		return jcontent[name].template get<int>();
+	}
+
+	float JsonSerializer::getFloat(json jcontent, std::string name)
+	{
+		return jcontent[name].template get<float>();
+	}
+
+	glm::vec2 JsonSerializer::getVec2(json jcontent)
+	{
+		return { jcontent[0], jcontent[1] };
+	}
+
+	glm::vec2 JsonSerializer::getVec2(json jcontent, std::string name)
+	{
+		json j = jcontent[name];
+		return { j[0], j[1] };
+	}
 
 	glm::vec3 JsonSerializer::getVec3(json jcontent)
 	{

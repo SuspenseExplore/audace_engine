@@ -13,7 +13,6 @@
 #include "math/Pose.h"
 #include "content/Model.h"
 #include "renderer/Mesh.h"
-#include "renderer/VertexArray.h"
 #include "renderer/material/BaseMaterial.h"
 #include "scene/Scene.h"
 
@@ -28,15 +27,13 @@ namespace Audace
 	{
 	protected:
 		std::string name;
-		VertexArray* vertexArray;
 		std::vector<Mesh*> meshes;
-		glm::mat4 modelMatrix;
+		glm::mat4 modelMatrix = glm::mat4(1.0);
 		Pose pose;
-		glm::vec3 scale;
+		glm::vec3 scale{ 1.0, 1.0, 1.0 };
 
 		Sprite(Sprite* sprite)
 		{
-			vertexArray = sprite->vertexArray;
 			for (Mesh* mesh : sprite->meshes)
 			{
 				meshes.push_back(mesh);

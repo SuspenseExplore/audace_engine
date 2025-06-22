@@ -20,6 +20,11 @@ namespace Audace
 		static void forEach(json jcontent, std::string name, std::function<void(std::string name, json& val)> fn);
 		static void ifContains(json jcontent, std::string name, std::function<void(json& el)> fn);
 
+		static std::string getString(json jcontent, std::string name);
+		static int getInt(json jcontent, std::string name);
+		static float getFloat(json jcontent, std::string name);
+		static glm::vec2 getVec2(json jcontent);
+		static glm::vec2 getVec2(json jcontent, std::string name);
 		static glm::vec3 getVec3(json jcontent);
 		static glm::vec3 getVec3(json jcontent, std::string name);
 		static glm::vec4 getVec4(json jcontent);

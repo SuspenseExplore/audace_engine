@@ -11,7 +11,7 @@
 namespace Audace {
 	struct Pose {
 		glm::vec3 position = glm::vec3(0.0f);
-		glm::quat orientation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+		glm::quat orientation = glm::quat(0.0f, 0.0f, 0.0f, 1.0f);
 
 		Pose() {}
 		Pose(glm::vec3 pos, glm::quat ori) : position(pos), orientation(ori) {}

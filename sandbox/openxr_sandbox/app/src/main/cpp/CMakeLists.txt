@@ -35,6 +35,8 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/include/imgui/imgui_draw.cpp
 		${ENGINE_DIR}/include/imgui/imgui_tables.cpp
 		${ENGINE_DIR}/include/imgui/imgui_widgets.cpp
+		${ENGINE_DIR}/include/b64/cencode.c
+		${ENGINE_DIR}/include/b64/cdecode.c
 		${ENGINE_DIR}/android_platform/imgui/imgui_impl_android.cpp
 		${ENGINE_DIR}/android_platform/imgui/imgui_impl_opengl3.cpp
 		${ENGINE_DIR}/android_platform/FileAccessAndroid.cpp
@@ -45,6 +47,7 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/content/ImageData.cpp
 		${ENGINE_DIR}/content/ModelLoader.cpp
 		${ENGINE_DIR}/content/JsonSerializer.cpp
+		${ENGINE_DIR}/content/gltf/GltfLoader.cpp
 		${ENGINE_DIR}/renderer/DataBuffer.cpp
 		${ENGINE_DIR}/renderer/ShaderProgram.cpp
 		${ENGINE_DIR}/renderer/VertexAttribute.cpp
@@ -60,6 +63,9 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/editor/SceneEditor.cpp
 		${ENGINE_DIR}/editor/SpriteEditWindow.cpp
 		${ENGINE_DIR}/scene/Scene.cpp
+		${ENGINE_DIR}/scene/graph/SceneGraph.cpp
+		${ENGINE_DIR}/scene/graph/SceneGraphNode.cpp
+		${ENGINE_DIR}/scene/graph/RotationAnimation.cpp
 		openxr/OpenxrSwapchain.cpp
 		openxr/OpenxrView.cpp
 		openxr/OpenxrContext.cpp
@@ -71,6 +77,7 @@ add_library( # Sets the name of the library.
 		${APP_DIR}/scene/MainScene.cpp
 		${APP_DIR}/scene/ProcTerrainScene.cpp
 		${APP_DIR}/scene/SceneBuilder.cpp
+		${APP_DIR}/scene/GltfViewerScene.cpp
 		)
 include_directories(
 		.

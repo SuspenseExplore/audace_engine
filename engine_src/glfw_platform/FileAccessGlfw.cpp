@@ -19,6 +19,7 @@ namespace Audace
 
 	std::string FileAccessGlfw::textFileToString(const std::string& path)
 	{
+		AU_ENGINE_LOG_DEBUG("{}", fileWriteBasePath() + path);
 		std::ifstream fin(fileWriteBasePath() + path, std::ios::in);
 		std::stringstream ss;
 		ss << fin.rdbuf();
