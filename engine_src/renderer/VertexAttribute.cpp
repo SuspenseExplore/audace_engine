@@ -8,14 +8,34 @@ namespace Audace {
 		{
 			index = 0;
 		}
+		else if (attrName == "NORMAL")
+		{
+			index = 2;
+		}
+		else if (attrName == "TEXCOORD_0")
+		{
+			index = 1;
+		}
+		else if (attrName == "TEXCOORD_1")
+		{
+			index = 4;
+		}
 
 		if (typeName == "SCALAR")
 		{
 			size = 1;
 		}
+		else if (typeName == "VEC2")
+		{
+			size = 2;
+		}
 		else if (typeName == "VEC3")
 		{
 			size = 3;
+		}
+		else if (typeName == "VEC4")
+		{
+			size = 4;
 		}
 	}
 
@@ -30,6 +50,10 @@ namespace Audace {
 	}
 
 	void VertexAttribute::bind() {
+		if (buffer != nullptr)
+		{
+			buffer->bind(GL_ARRAY_BUFFER);
+		}
 		enable();
 		glVertexAttribPointer(index, size, type, normalized, stride, (void*)offset);
 		AU_CHECK_GL_ERRORS();

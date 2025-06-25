@@ -33,6 +33,15 @@ namespace Audace
 				ByteBuffer* byteBuf = new ByteBuffer(bytes, gltfBuffer.byteLength);
 				gltfBuffer.buffer = byteBuf;
 			}
+			else
+			{
+				ind = uri.find(".bin");
+				if (ind > -1)
+				{
+					ByteBuffer* b = fileLoader->readFileToBuffer(fileData.filepath + uri);
+					gltfBuffer.buffer = b;
+				}
+			}
 		}
 	}
 
@@ -67,7 +76,10 @@ namespace Audace
 			GltfAccessor& gltfAccessor = accessors[i];
 			gltfAccessor.id = i;
 			gltfAccessor.bufferViewId = jser::getInt(jAccessor, "bufferView");
-			gltfAccessor.byteOffset = jser::getInt(jAccessor, "byteOffset");
+			if (jAccessor.contains("byteOffset"))
+			{
+				gltfAccessor.byteOffset = jser::getInt(jAccessor, "byteOffset");
+			}
 			gltfAccessor.componentType = jser::getInt(jAccessor, "componentType");
 			gltfAccessor.count = jser::getInt(jAccessor, "count");
 			gltfAccessor.type = jser::getString(jAccessor, "type");
@@ -80,6 +92,11 @@ namespace Audace
 			{
 				gltfAccessor.min.resize(3);
 				gltfAccessor.max.resize(3);
+			}
+			else if (gltfAccessor.type == "VEC2")
+			{
+				gltfAccessor.min.resize(2);
+				gltfAccessor.max.resize(2);
 			}
 			else if (gltfAccessor.type == "SCALAR")
 			{
@@ -237,7 +254,9 @@ namespace Audace
 
 	void GltfLoader::loadFile(IFileAccess* fileLoader, std::string path, std::string filename)
 	{
-		fileData.filename = path + filename;
+		this->fileLoader = fileLoader;
+		fileData.filename = filename;
+		fileData.filepath = path;
 		json jRoot = fileLoader->textFileToJson(path + filename);
 		{
 			json& jAsset = jRoot["asset"];
@@ -320,6 +339,22 @@ namespace Audace
 		return ret;
 	}
 
+	vector<glm::vec2> GltfLoader::getDataVec2(int accessorId)
+	{
+		vector<glm::vec2> ret;
+		GltfAccessor& acc = accessors[accessorId];
+		GltfBufferView& bv = bufferViews[acc.bufferViewId];
+		float* data = (float*)getDataChunk(acc.bufferViewId, acc.byteOffset);
+		for (int i = 0; i < acc.count; i++)
+		{
+			float x = data[i * 2 + 0];
+			float y = data[i * 2 + 1];
+			ret.emplace_back(glm::vec2(x, y));
+		}
+
+		return ret;
+	}
+
 	vector<glm::vec3> GltfLoader::getDataVec3(int accessorId)
 	{
 		vector<glm::vec3> ret;
@@ -376,11 +411,11 @@ namespace Audace
 	Sprite* GltfLoader::getSprite(int meshId)
 	{
 		GltfMesh& gltfMesh = meshes[meshId];
-		vector<VertexAttribute*> attrs;
 		vector<Mesh*> meshes;
 
 		for (GltfPrimitive& prim : gltfMesh.primitives)
 		{
+			vector<VertexAttribute*> attrs;
 			DataBuffer* indexBuffer = nullptr;
 			int indexType;
 			int count = -1;
@@ -392,12 +427,38 @@ namespace Audace
 				GltfAccessor& accessor = accessors[accId];
 				GltfBufferView& bv = bufferViews[accessor.bufferViewId];
 				count = max(count, accessor.count);
+
 				VertexAttribute* attr = new VertexAttribute(name, accessor.type, accessor.componentType, false, bv.byteStride, accessor.byteOffset);
 				attrs.emplace_back(attr);
 
-				vector<glm::vec3> verts = getDataVec3(accId);
-				DataBuffer* vertexBuffer = new DataBuffer(verts.data(), bv.byteLength, bv.target, GL_STATIC_DRAW);
-				vertexBuffer->create();
+				if (accessor.type == "VEC4")
+				{
+					vector<glm::vec4> verts = getDataVec4(accId);
+					DataBuffer* vertexBuffer = new DataBuffer(verts.data(), verts.size() * 16, bv.target, GL_STATIC_DRAW);
+					vertexBuffer->create();
+					attr->setBuffer(vertexBuffer);
+				}
+				if (accessor.type == "VEC3")
+				{
+					vector<glm::vec3> verts = getDataVec3(accId);
+					DataBuffer* vertexBuffer = new DataBuffer(verts.data(), verts.size() * 12, bv.target, GL_STATIC_DRAW);
+					vertexBuffer->create();
+					attr->setBuffer(vertexBuffer);
+				}
+				if (accessor.type == "VEC2")
+				{
+					vector<glm::vec2> verts = getDataVec2(accId);
+					DataBuffer* vertexBuffer = new DataBuffer(verts.data(), verts.size() * 8, bv.target, GL_STATIC_DRAW);
+					vertexBuffer->create();
+					attr->setBuffer(vertexBuffer);
+				}
+				if (accessor.type == "SCALAR")
+				{
+					vector<float> verts = getDataFloat(accId);
+					DataBuffer* vertexBuffer = new DataBuffer(verts.data(), verts.size() * 4, bv.target, GL_STATIC_DRAW);
+					vertexBuffer->create();
+					attr->setBuffer(vertexBuffer);
+				}
 			}
 
 			VertexArray* va = new VertexArray(attrs);

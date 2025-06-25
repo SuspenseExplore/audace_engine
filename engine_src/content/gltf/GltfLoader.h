@@ -90,11 +90,13 @@ namespace Audace
 	struct GltfFile
 	{
 		string filename;
+		string filepath;
 		string version;
 	};
 
 	class GltfLoader
 	{
+		IFileAccess* fileLoader;
 		GltfFile fileData;
 		int defaultSceneId = 0;
 		vector<GltfScene> scenes;
@@ -118,6 +120,7 @@ namespace Audace
 		char* getDataChunk(int bufferViewId, int startByte);
 		vector<unsigned short> getDataUShort(int accessorId);
 		vector<float> getDataFloat(int accessorId);
+		vector<glm::vec2> getDataVec2(int accessorId);
 		vector<glm::vec3> getDataVec3(int accessorId);
 		vector<glm::vec4> getDataVec4(int accessorId);
 		vector<glm::quat> getDataQuat(int accessorId);

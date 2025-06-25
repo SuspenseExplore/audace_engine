@@ -7,7 +7,7 @@ void GltfViewerScene::loadAssets(Audace::IFileAccess* fileLoader)
 	Audace::BaseMaterial* mat = Audace::AssetStore::simpleBillboardMaterial();
 
 	Audace::GltfLoader loader;
-	loader.loadFile(fileLoader, "models/", "triangle_spin.gltf");
+	loader.loadFile(fileLoader, "models/quaternius/medieval_village/", "Overhang_RoofIncline_UnevenBricks.gltf");
 	sceneGraph = loader.getSceneGraph(this);
 	for (Audace::Sprite* s : sprites)
 	{
