@@ -3,6 +3,7 @@
 
 #include "scene/Scene.h"
 #include "scene/graph/SceneGraph.h"
+#include "renderer/light/PointLight.h"
 
 class GltfViewerScene : public Audace::Scene
 {
@@ -11,6 +12,7 @@ class GltfViewerScene : public Audace::Scene
 	Audace::BaseCamera* camera;
 
 	Audace::SceneGraph* sceneGraph;
+	Audace::PointLight* ptLight;
 
 public:
 	GltfViewerScene(Audace::BaseAppController* controller) : Scene(controller) {}

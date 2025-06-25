@@ -3,7 +3,9 @@
 #include "b64/decode.h"
 #include <sstream>
 #include "au_renderer.h"
+#include "content/AssetStore.h"
 #include "scene/graph/RotationAnimation.h"
+#include "renderer/material/PbrMetalRoughMat.h"
 
 namespace Audace
 {
@@ -166,6 +168,10 @@ namespace Audace
 				{
 					gltfPrim.isIndexed = false;
 				}
+				if (jPrim.contains("material"))
+				{
+					gltfPrim.materialId = jser::getInt(jPrim, "material");
+				}
 			}
 		}
 	}
@@ -237,6 +243,35 @@ namespace Audace
 		}
 	}
 
+	void GltfLoader::parseMaterials(json& jMaterials)
+	{
+		materials.reserve(jMaterials.size());
+		for (json& jMat : jMaterials)
+		{
+			BaseMaterial* mat = nullptr;
+			if (jMat.contains("pbrMetallicRoughness"))
+			{
+				json& jpbr = jMat["pbrMetallicRoughness"];
+				PbrMetalRoughMat* pbrMat = new PbrMetalRoughMat();
+				pbrMat->setShader(AssetStore::getShader("pbr"));
+				mat = pbrMat;
+				if (jpbr.contains("baseColorFactor"))
+				{
+					pbrMat->setBaseColorFactor(jser::getVec4(jpbr, "baseColorFactor"));
+				}
+				if (jpbr.contains("metallicFactor"))
+				{
+					pbrMat->setMetallicFactor(jser::getFloat(jpbr, "metallicFactor"));
+				}
+				if (jpbr.contains("roughnessFactor"))
+				{
+					pbrMat->setRoughnessFactor(jser::getFloat(jpbr, "roughnessFactor"));
+				}
+			}
+			materials.emplace_back(mat);
+		}
+	}
+
 	void GltfLoader::parseScenes(json& jScenes)
 	{
 		scenes.resize(jScenes.size());
@@ -296,6 +331,11 @@ namespace Audace
 		{
 			json& jAnimations = jRoot["animations"];
 			parseAnimations(jAnimations);
+		}
+
+		if (jRoot.contains("materials")) {
+			json& jMaterials = jRoot["materials"];
+			parseMaterials(jMaterials);
 		}
 
 		{
@@ -464,6 +504,7 @@ namespace Audace
 			VertexArray* va = new VertexArray(attrs);
 			va->create();
 
+			Mesh* mesh = nullptr;
 			if (prim.isIndexed)
 			{
 				GltfAccessor& indAccessor = accessors[prim.indAccessorId];
@@ -471,14 +512,17 @@ namespace Audace
 				vector<unsigned short> data = getDataUShort(indAccessor.id);
 				indexBuffer = new DataBuffer(data.data(), bv.byteLength, bv.target, GL_STATIC_DRAW);
 				indexBuffer->create();
-				Mesh* mesh = new Mesh(va, indexBuffer, 0, indAccessor.count, prim.mode, indAccessor.componentType, nullptr);
-				meshes.emplace_back(mesh);
+				mesh = new Mesh(va, indexBuffer, 0, indAccessor.count, prim.mode, indAccessor.componentType, nullptr);
 			}
 			else
 			{
-				Mesh* mesh = new Mesh(va, 0, count, prim.mode, nullptr);
-				meshes.emplace_back(mesh);
+				mesh = new Mesh(va, 0, count, prim.mode, nullptr);
 			}
+			if (prim.materialId > -1)
+			{
+				mesh->setMaterial(materials[prim.materialId]);
+			}
+			meshes.emplace_back(mesh);
 		}
 
 		Sprite* sprite = new Sprite(meshes);

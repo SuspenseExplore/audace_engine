@@ -50,6 +50,7 @@ namespace Audace
 		int indAccessorId;
 		bool isIndexed;
 		int mode = GL_TRIANGLES;
+		int materialId = -1;
 	};
 	struct GltfMesh
 	{
@@ -107,6 +108,7 @@ namespace Audace
 		vector<GltfBufferView> bufferViews;
 		vector<GltfAccessor> accessors;
 
+		vector<BaseMaterial*> materials;
 		vector<Sprite*> sprites;
 
 		void parseBuffers(json& jBuffers);
@@ -116,6 +118,7 @@ namespace Audace
 		void parseNodes(json& jNodes);
 		void parseAnimations(json& jAnimations);
 		void parseScenes(json& jScenes);
+		void parseMaterials(json& jMaterials);
 
 		char* getDataChunk(int bufferViewId, int startByte);
 		vector<unsigned short> getDataUShort(int accessorId);
