@@ -2,6 +2,9 @@
 #include "content/AssetStore.h"
 #include "content/gltf/GltfLoader.h"
 #include "renderer/material/PbrMetalRoughMat.h"
+#include "scene/graph/RotationAnimation.h"
+#include <vector>
+using std::vector;
 
 void GltfViewerScene::loadAssets(Audace::IFileAccess* fileLoader)
 {
@@ -11,19 +14,29 @@ void GltfViewerScene::loadAssets(Audace::IFileAccess* fileLoader)
 	// std::string path = "models/quaternius/medieval_village/";
 	// std::string filename = "Overhang_RoofIncline_UnevenBricks.gltf";
 	std::string path = "models/_test/";
-	std::string filename = "gold_triangle.gltf";
+	std::string filename = "WaterBottle.gltf";
 	loader.loadFile(fileLoader, path, filename);
 	sceneGraph = loader.getSceneGraph(this);
+
+	Audace::RotationAnimation* anim = new Audace::RotationAnimation();
+	vector<float> times = { 0.0, 0.25, 0.5, 0.75, 1.0 };
+	vector<glm::quat> values = {
+		{0.0,   0.0,	0.0,     1.0},
+		{0.0, 0.707,	0.0,   0.707},
+		{0.0,   1.0,	0.0,     0.0},
+		{0.0, 0.707,	0.0,  -0.707},
+		{0.0,   0.0,	0.0,     1.0}
+	};
+	anim->setFrameTimes(times);
+	anim->setFrameStates(values);
+	anim->setTimeFactor(0.1);
+	Audace::SceneGraphNode* node = sceneGraph->getRootNode();
+	node->addAnimation(anim);
+
 	ptLight = new Audace::PointLight();
 	ptLight->setColor({ 1, 1, 1 });
 	ptLight->setIntensity(1);
-	ptLight->setPosition({ 0.5, 0.5, 5 });
-	Audace::Texture2d* normTex = Audace::AssetStore::getTexture("images/quaternius/T_Plaster_Normal.png");
-	Audace::Texture2d* metalRoughTex = Audace::AssetStore::getTexture("images/quaternius/T_Plaster_ORM.png");
-	Audace::PbrMetalRoughMat* pbrMat = reinterpret_cast<Audace::PbrMetalRoughMat*>(sprites[0]->getMaterial());
-	pbrMat->setNormalMap(normTex);
-	pbrMat->setMetallicMap(metalRoughTex);
-	pbrMat->setRoughnessMap(metalRoughTex);
+	ptLight->setPosition({ 5, 0.5, 3 });
 }
 
 void GltfViewerScene::render()
@@ -36,12 +49,15 @@ void GltfViewerScene::render()
 	for (Audace::Sprite* s : sprites)
 	{
 		Audace::ShaderProgram* shader = s->getMesh()->getMaterial()->getShader();
+		shader->bind();
 		shader->setUniformVec3("viewPos", camera->getPosition());
+		shader->setUniformVec4("ambientLight", 1, 1, 1, 0.2);
 		shader->setUniformVec3("ptLight[0].position", ptLight->getPosition());
 		shader->setUniformVec3("ptLight[0].color", ptLight->getColor());
 		shader->setUniformFloat("ptLight[0].intensity", ptLight->getIntensity());
 		s->renderWorldSpace(this);
 	}
+	ptLight->renderWorldSpace(this);
 }
 
 void GltfViewerScene::renderUi()

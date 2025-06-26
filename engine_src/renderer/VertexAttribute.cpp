@@ -10,11 +10,15 @@ namespace Audace {
 		}
 		else if (attrName == "NORMAL")
 		{
+			index = 1;
+		}
+		else if (attrName == "TANGENT")
+		{
 			index = 2;
 		}
 		else if (attrName == "TEXCOORD_0")
 		{
-			index = 1;
+			index = 3;
 		}
 		else if (attrName == "TEXCOORD_1")
 		{

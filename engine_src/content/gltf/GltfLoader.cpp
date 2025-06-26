@@ -56,7 +56,10 @@ namespace Audace
 			GltfBufferView& gltfView = bufferViews[i];
 			gltfView.id = i;
 			gltfView.bufferId = jser::getInt(jView, "buffer");
-			gltfView.byteOffset = jser::getInt(jView, "byteOffset");
+			if (jView.contains("byteOffset"))
+			{
+				gltfView.byteOffset = jser::getInt(jView, "byteOffset");
+			}
 			gltfView.byteLength = jser::getInt(jView, "byteLength");
 			if (jView.contains("byteStride"))
 			{
@@ -223,7 +226,7 @@ namespace Audace
 			for (int j = 0; j < jSamplers.size(); j++)
 			{
 				json& jSampler = jSamplers[j];
-				GltfSampler& sampler = animation.samplers[j];
+				GltfAnimSampler& sampler = animation.samplers[j];
 				sampler.inputAccessorId = jser::getInt(jSampler, "input");
 				sampler.outputAccessorId = jser::getInt(jSampler, "output");
 				sampler.interpolation = jser::getString(jSampler, "interpolation");
@@ -240,6 +243,50 @@ namespace Audace
 				channel.targetPath = jser::getString(jChannel["target"], "path");
 				nodes[channel.targetNodeId].animationIds.emplace_back(animation.id);
 			}
+		}
+	}
+
+	void GltfLoader::parseImages(json& jImages)
+	{
+		images.resize(jImages.size());
+		for (int i = 0; i < jImages.size(); i++)
+		{
+			json& jImg = jImages[i];
+
+			string uri = jser::getString(jImg, "uri");
+			ImageData t = fileLoader->readImageFile("images/_test/" + uri);
+			ImageData* data = new ImageData(t.bytes, t.width, t.height, t.format);
+			images[i].imgData = data;
+		}
+	}
+
+	void GltfLoader::parseTexSamplers(json& jTexSamplers)
+	{
+		texSamplers.resize(jTexSamplers.size());
+		for (int i = 0; i < jTexSamplers.size(); i++)
+		{
+			json& jSampler = jTexSamplers[i];
+			texSamplers[i].minFilter = jser::getInt(jSampler, "minFilter");
+			texSamplers[i].magFilter = jser::getInt(jSampler, "magFilter");
+			texSamplers[i].wrapS = jser::getInt(jSampler, "wrapS");
+			texSamplers[i].wrapT = jser::getInt(jSampler, "wrapT");
+		}
+	}
+
+	void GltfLoader::parseTextures(json& jTextures)
+	{
+		textures.reserve(jTextures.size());
+		for (int i = 0; i < jTextures.size(); i++)
+		{
+			json& jTex = jTextures[i];
+			int source = jser::getInt(jTex, "source");
+			if (jTex.contains("sampler"))
+			{
+				int sampler = jser::getInt(jTex, "sampler");
+			}
+			Texture2d* tex = new Texture2d(*(images[source].imgData));
+			tex->create();
+			textures.emplace_back(tex);
 		}
 	}
 
@@ -266,6 +313,38 @@ namespace Audace
 				if (jpbr.contains("roughnessFactor"))
 				{
 					pbrMat->setRoughnessFactor(jser::getFloat(jpbr, "roughnessFactor"));
+				}
+				if (jpbr.contains("baseColorTexture"))
+				{
+					int ind = jser::getInt(jpbr["baseColorTexture"], "index");
+					pbrMat->setBaseColorMap(textures[ind]);
+				}
+				if (jpbr.contains("metallicRoughnessTexture"))
+				{
+					int ind = jser::getInt(jpbr["metallicRoughnessTexture"], "index");
+					pbrMat->setMetallicMap(textures[ind]);
+					pbrMat->setRoughnessMap(textures[ind]);
+				}
+
+				// these aren't actually part of the PBR GLTF object.  they're here temporarily
+				if (jMat.contains("emissiveFactor"))
+				{
+					pbrMat->setEmissiveFactor(jser::getVec3(jMat, "emissiveFactor"));
+				}
+				if (jMat.contains("normalTexture"))
+				{
+					int ind = jser::getInt(jMat["normalTexture"], "index");
+					pbrMat->setNormalMap(textures[ind]);
+				}
+				if (jMat.contains("occlusionTexture"))
+				{
+					int ind = jser::getInt(jMat["occlusionTexture"], "index");
+					pbrMat->setOcclusionMap(textures[ind]);
+				}
+				if (jMat.contains("emissiveTexture"))
+				{
+					int ind = jser::getInt(jMat["emissiveTexture"], "index");
+					pbrMat->setEmissiveMap(textures[ind]);
 				}
 			}
 			materials.emplace_back(mat);
@@ -331,6 +410,24 @@ namespace Audace
 		{
 			json& jAnimations = jRoot["animations"];
 			parseAnimations(jAnimations);
+		}
+
+		if (jRoot.contains("images"))
+		{
+			json& jImages = jRoot["images"];
+			parseImages(jImages);
+		}
+
+		if (jRoot.contains("samplers"))
+		{
+			json& jSamplers = jRoot["samplers"];
+			parseTexSamplers(jSamplers);
+		}
+
+		if (jRoot.contains("textures"))
+		{
+			json& jTextures = jRoot["textures"];
+			parseTextures(jTextures);
 		}
 
 		if (jRoot.contains("materials")) {
@@ -510,7 +607,7 @@ namespace Audace
 				GltfAccessor& indAccessor = accessors[prim.indAccessorId];
 				GltfBufferView& bv = bufferViews[indAccessor.bufferViewId];
 				vector<unsigned short> data = getDataUShort(indAccessor.id);
-				indexBuffer = new DataBuffer(data.data(), bv.byteLength, bv.target, GL_STATIC_DRAW);
+				indexBuffer = new DataBuffer(data.data(), bv.byteLength, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
 				indexBuffer->create();
 				mesh = new Mesh(va, indexBuffer, 0, indAccessor.count, prim.mode, indAccessor.componentType, nullptr);
 			}
@@ -568,7 +665,7 @@ namespace Audace
 				if (channel.targetPath == "rotation")
 				{
 					RotationAnimation* anim = new RotationAnimation();
-					GltfSampler& sampler = a.samplers[channel.samplerId];
+					GltfAnimSampler& sampler = a.samplers[channel.samplerId];
 					std::vector<float> times = getDataFloat(sampler.inputAccessorId);
 					vector<glm::quat> states = getDataQuat(sampler.outputAccessorId);
 					anim->setFrameTimes(times);

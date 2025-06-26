@@ -9,6 +9,8 @@ namespace Audace
 		normalMap = AssetStore::getBlueTexture();
 		metallicMap = AssetStore::getWhiteTexture();
 		roughnessMap = AssetStore::getWhiteTexture();
+		occlusionMap = AssetStore::getWhiteTexture();
+		emissiveMap = AssetStore::getBlackTexture();
 	}
 	void PbrMetalRoughMat::setBaseColorFactor(glm::vec4 f)
 	{
@@ -23,6 +25,11 @@ namespace Audace
 	void PbrMetalRoughMat::setRoughnessFactor(float f)
 	{
 		roughnessFactor = f;
+	}
+
+	void PbrMetalRoughMat::setEmissiveFactor(glm::vec3 f)
+	{
+		emissiveFactor = f;
 	}
 
 	void PbrMetalRoughMat::setBaseColorMap(Texture2d* t)
@@ -43,6 +50,16 @@ namespace Audace
 	void PbrMetalRoughMat::setRoughnessMap(Texture2d* t)
 	{
 		roughnessMap = t;
+	}
+
+	void PbrMetalRoughMat::setOcclusionMap(Texture2d* t)
+	{
+		occlusionMap = t;
+	}
+
+	void PbrMetalRoughMat::setEmissiveMap(Texture2d* t)
+	{
+		emissiveMap = t;
 	}
 
 	std::string	PbrMetalRoughMat::getName()
@@ -66,11 +83,12 @@ namespace Audace
 		shaderProgram->setUniformVec4("material.baseColorFactor", baseColorFactor);
 		shaderProgram->setUniformFloat("material.metallicFactor", metallicFactor);
 		shaderProgram->setUniformFloat("material.roughnessFactor", roughnessFactor);
+		shaderProgram->setUniformVec3("material.emissiveFactor", emissiveFactor);
 
 		if (baseColorMap != nullptr)
 		{
-			baseColorMap->bind(0);
 			shaderProgram->setUniformInt("material.baseColorMap", 0);
+			baseColorMap->bind(0);
 		}
 		if (roughnessMap != nullptr)
 		{
@@ -86,6 +104,16 @@ namespace Audace
 		{
 			shaderProgram->setUniformInt("material.normalMap", 3);
 			normalMap->bind(3);
+		}
+		if (occlusionMap != nullptr)
+		{
+			shaderProgram->setUniformInt("material.occlusionMap", 4);
+			occlusionMap->bind(4);
+		}
+		if (emissiveMap != nullptr)
+		{
+			shaderProgram->setUniformInt("material.emissiveMap", 5);
+			emissiveMap->bind(5);
 		}
 	}
 }

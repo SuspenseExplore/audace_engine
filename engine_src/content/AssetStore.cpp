@@ -7,6 +7,7 @@ namespace Audace
 {
 	unsigned char WHITE_TEX[] = { 255, 255, 255, 255 };
 	unsigned char BLUE_TEX[] = { 0, 0, 255, 255 };
+	unsigned char BLACK_TEX[] = { 0, 0, 0, 255 };
 	IFileAccess* AssetStore::fileLoader;
 	Mesh* AssetStore::squareMesh;
 	std::map<std::string, ShaderProgram*> AssetStore::shaders;
@@ -37,6 +38,12 @@ namespace Audace
 			Texture2d* blueTex = new Texture2d(data);
 			blueTex->create();
 			textures["AU_blue_texture"] = blueTex;
+		}
+		{
+			ImageData data(&BLACK_TEX[0], 1, 1, GL_RGBA);
+			Texture2d* blackTex = new Texture2d(data);
+			blackTex->create();
+			textures["AU_black_texture"] = blackTex;
 		}
 	}
 

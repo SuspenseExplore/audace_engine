@@ -7,6 +7,7 @@
 #include "content/IFileAccess.h"
 #include "content/ByteBuffer.h"
 #include "renderer/Sprite.h"
+#include "renderer/Texture2d.h"
 #include "scene/graph/SceneGraph.h"
 #include "scene/graph/SceneGraphNode.h"
 #include "scene/graph/INodeAnimation.h"
@@ -28,7 +29,7 @@ namespace Audace
 	{
 		int id;
 		int bufferId;
-		int byteOffset;
+		int byteOffset = 0;
 		int byteLength;
 		int byteStride = 0;
 		int target = GL_ARRAY_BUFFER;
@@ -52,6 +53,17 @@ namespace Audace
 		int mode = GL_TRIANGLES;
 		int materialId = -1;
 	};
+	struct GltfImage
+	{
+		ImageData* imgData;
+	};
+	struct GltfTexSampler
+	{
+		int minFilter;
+		int magFilter;
+		int wrapS;
+		int wrapT;
+	};
 	struct GltfMesh
 	{
 		vector<GltfPrimitive> primitives;
@@ -66,7 +78,7 @@ namespace Audace
 		glm::mat4 localTransform = glm::mat4(1.0);
 		vector<int> animationIds;
 	};
-	struct GltfSampler
+	struct GltfAnimSampler
 	{
 		int inputAccessorId;
 		int outputAccessorId;
@@ -81,7 +93,7 @@ namespace Audace
 	struct GltfAnimation
 	{
 		int id;
-		vector<GltfSampler> samplers;
+		vector<GltfAnimSampler> samplers;
 		vector<GltfChannel> channels;
 	};
 	struct GltfScene
@@ -103,6 +115,9 @@ namespace Audace
 		vector<GltfScene> scenes;
 		vector<GltfNode> nodes;
 		vector<GltfAnimation> animations;
+		vector<GltfImage> images;
+		vector<GltfTexSampler> texSamplers;
+		vector<Texture2d*> textures;
 		vector<GltfMesh> meshes;
 		vector<GltfBuffer> buffers;
 		vector<GltfBufferView> bufferViews;
@@ -118,6 +133,9 @@ namespace Audace
 		void parseNodes(json& jNodes);
 		void parseAnimations(json& jAnimations);
 		void parseScenes(json& jScenes);
+		void parseImages(json& jImages);
+		void parseTexSamplers(json& jTexSamplers);
+		void parseTextures(json& jTextures);
 		void parseMaterials(json& jMaterials);
 
 		char* getDataChunk(int bufferViewId, int startByte);

@@ -7,10 +7,10 @@ namespace Audace
 	{
 		if (lastUpdateTime < 0)
 		{
-			lastUpdateTime = TimeUtil::currentTimeMillis() / 1000.0;
+			lastUpdateTime = TimeUtil::currentTimeMillis() / 1000.0 * timeFactor;
 			return;
 		}
-		double currentTime = TimeUtil::currentTimeMillis() / 1000.0;
+		double currentTime = TimeUtil::currentTimeMillis() / 1000.0 * timeFactor;
 		double elapsedTime = currentTime - lastUpdateTime;
 		int nextIndex = nextFrameIndex();
 		if (frameTimes[lastUpdateFrame] + elapsedTime > frameTimes[nextIndex])
