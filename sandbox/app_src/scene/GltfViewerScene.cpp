@@ -13,8 +13,10 @@ void GltfViewerScene::loadAssets(Audace::IFileAccess* fileLoader)
 	Audace::GltfLoader loader;
 	// std::string path = "models/quaternius/medieval_village/";
 	// std::string filename = "Overhang_RoofIncline_UnevenBricks.gltf";
+	// loader.setImageLoadPath("images/quaternius/");
 	std::string path = "models/_test/";
 	std::string filename = "WaterBottle.gltf";
+	loader.setImageLoadPath("images/_test/");
 	loader.loadFile(fileLoader, path, filename);
 	sceneGraph = loader.getSceneGraph(this);
 
@@ -35,8 +37,8 @@ void GltfViewerScene::loadAssets(Audace::IFileAccess* fileLoader)
 
 	ptLight = new Audace::PointLight();
 	ptLight->setColor({ 1, 1, 1 });
-	ptLight->setIntensity(1);
-	ptLight->setPosition({ 5, 0.5, 3 });
+	ptLight->setIntensity(10);
+	ptLight->setPosition({ 2, 0.5, 1 });
 }
 
 void GltfViewerScene::render()

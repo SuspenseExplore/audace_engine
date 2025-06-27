@@ -111,6 +111,8 @@ namespace Audace
 	{
 		IFileAccess* fileLoader;
 		GltfFile fileData;
+		string imageLoadPath;
+
 		int defaultSceneId = 0;
 		vector<GltfScene> scenes;
 		vector<GltfNode> nodes;
@@ -151,6 +153,7 @@ namespace Audace
 
 	public:
 		void loadFile(IFileAccess* fileLoader, std::string path, std::string filename);
+		void setImageLoadPath(string p);
 		SceneGraph* getSceneGraph(Scene* scene);
 	};
 }

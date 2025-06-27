@@ -254,7 +254,7 @@ namespace Audace
 			json& jImg = jImages[i];
 
 			string uri = jser::getString(jImg, "uri");
-			ImageData t = fileLoader->readImageFile("images/_test/" + uri);
+			ImageData t = fileLoader->readImageFile(imageLoadPath + uri);
 			ImageData* data = new ImageData(t.bytes, t.width, t.height, t.format);
 			images[i].imgData = data;
 		}
@@ -266,10 +266,22 @@ namespace Audace
 		for (int i = 0; i < jTexSamplers.size(); i++)
 		{
 			json& jSampler = jTexSamplers[i];
-			texSamplers[i].minFilter = jser::getInt(jSampler, "minFilter");
-			texSamplers[i].magFilter = jser::getInt(jSampler, "magFilter");
-			texSamplers[i].wrapS = jser::getInt(jSampler, "wrapS");
-			texSamplers[i].wrapT = jser::getInt(jSampler, "wrapT");
+			if (jSampler.contains("minFilter"))
+			{
+				texSamplers[i].minFilter = jser::getInt(jSampler, "minFilter");
+			}
+			if (jSampler.contains("magFilter"))
+			{
+				texSamplers[i].magFilter = jser::getInt(jSampler, "magFilter");
+			}
+			if (jSampler.contains("wrapS"))
+			{
+				texSamplers[i].wrapS = jser::getInt(jSampler, "wrapS");
+			}
+			if (jSampler.contains("wrapT"))
+			{
+				texSamplers[i].wrapT = jser::getInt(jSampler, "wrapT");
+			}
 		}
 	}
 
@@ -364,6 +376,11 @@ namespace Audace
 				scenes[i].nodeIds[j] = jNodes[j];
 			}
 		}
+	}
+
+	void GltfLoader::setImageLoadPath(string p)
+	{
+		imageLoadPath = p;
 	}
 
 	void GltfLoader::loadFile(IFileAccess* fileLoader, std::string path, std::string filename)
