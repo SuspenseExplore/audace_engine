@@ -97,8 +97,8 @@ bool AppController::createXrSession()
 			{
 				if (teleportTool->isTeleportReady() && e.state)
 				{
-					teleportTool->reset();
 					scene->teleport(teleportTool->getPosition());
+					teleportTool->reset();
 				}
 			});
 		addFloatEventHandler(Audace::OculusTouchController::RIGHT_SQUEEZE_VALUE,
