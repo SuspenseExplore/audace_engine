@@ -88,9 +88,12 @@ namespace Audace
 
 	void ShaderProgram::setUniformInt(std::string name, int value)
 	{
-		glUniform1i(uniforms[name], value);
-		AU_CHECK_GL_ERRORS();
-		AU_RENDERER_LOG_TRACE("Set int uniform in shader {} at location {} to value {}", glid, uniforms[name], value);
+		if (uniforms.find(name) != uniforms.end())
+		{
+			glUniform1i(uniforms[name], value);
+			AU_CHECK_GL_ERRORS();
+			AU_RENDERER_LOG_TRACE("Set int uniform in shader {} at location {} to value {}", glid, uniforms[name], value);
+		}
 	}
 
 	void ShaderProgram::setUniformFloat(std::string name, float value)
@@ -163,9 +166,12 @@ namespace Audace
 
 	void ShaderProgram::setUniformVec4(std::string name, glm::vec4 value)
 	{
-		glUniform4f(uniforms[name], value.x, value.y, value.z, value.w);
-		AU_CHECK_GL_ERRORS();
-		AU_RENDERER_LOG_TRACE("Set vec4 uniform in shader {} at location {} to value [{},{},{},{}]", glid, uniforms[name], value.x, value.y, value.z, value.w);
+		if (uniforms.find(name) != uniforms.end())
+		{
+			glUniform4f(uniforms[name], value.x, value.y, value.z, value.w);
+			AU_CHECK_GL_ERRORS();
+			AU_RENDERER_LOG_TRACE("Set vec4 uniform in shader {} at location {} to value [{},{},{},{}]", glid, uniforms[name], value.x, value.y, value.z, value.w);
+		}
 	}
 
 	void ShaderProgram::setUniformVec4(std::string name, float* value)

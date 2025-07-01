@@ -22,7 +22,8 @@ namespace Audace
 		glm::mat4 localTransform = glm::mat4(1.0);
 
 	public:
-		SceneGraphNode(SceneGraphNode* parent = nullptr) : parent(parent) {}
+		SceneGraphNode() : parent(nullptr) {}
+		SceneGraphNode(SceneGraphNode* parent) : parent(parent) { parent->addChild(this); }
 		void setSprite(Sprite* s) { sprite = s; }
 		Sprite* getSprite() { return sprite; }
 		void addChild(SceneGraphNode* c) { children.emplace_back(c); }
@@ -36,6 +37,7 @@ namespace Audace
 		void setTranslation(glm::vec3 v) { translation = v; }
 		void setScale(glm::vec3 v) { scale = v; }
 		void setRotation(glm::quat q) { rotation = q; }
+		glm::vec3 getPosition() { return glm::vec3(localTransform[3][0], localTransform[3][1], localTransform[3][2]); }
 		void update(glm::mat4 parentTransform);
 	};
 }

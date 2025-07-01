@@ -7,7 +7,6 @@ namespace Audace
 		for (INodeAnimation* a : animations)
 		{
 			a->update();
-			AU_ENGINE_LOG_DEBUG("{},{},{},{}", rotation.x, rotation.y, rotation.z, rotation.w);
 		}
 		glm::mat4 T = glm::translate(glm::mat4(1.0), translation);
 		glm::mat4 R = glm::mat4_cast(rotation);

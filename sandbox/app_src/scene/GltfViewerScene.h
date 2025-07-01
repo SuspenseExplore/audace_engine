@@ -4,6 +4,7 @@
 #include "scene/Scene.h"
 #include "scene/graph/SceneGraph.h"
 #include "renderer/light/PointLight.h"
+#include "scene/graph/RotationAnimation.h"
 
 class GltfViewerScene : public Audace::Scene {
 	glm::vec4 clearColor = glm::vec4(0.25, 0.25, 0.25, 1);
@@ -12,7 +13,8 @@ class GltfViewerScene : public Audace::Scene {
 
 	Audace::SceneGraph* sceneGraph;
 	Audace::PointLight* ptLight;
-
+	Audace::RotationAnimation* anim;
+	Audace::SceneGraphNode* lightNode;
 public:
 	GltfViewerScene(Audace::BaseAppController* controller) : Scene(controller) {}
 

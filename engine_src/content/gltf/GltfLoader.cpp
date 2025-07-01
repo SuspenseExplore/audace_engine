@@ -646,7 +646,7 @@ namespace Audace
 	SceneGraphNode* GltfLoader::getNode(int id)
 	{
 		GltfNode& gltfNode = nodes[id];
-		SceneGraphNode* node = new SceneGraphNode(nullptr);
+		SceneGraphNode* node = new SceneGraphNode();
 		node->setTranslation(gltfNode.translation);
 		node->setScale(gltfNode.scale);
 		node->setRotation(gltfNode.rotation);
