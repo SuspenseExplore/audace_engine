@@ -1,5 +1,4 @@
 #include <fstream>
-#include "glfw3.h"
 #include "au_renderer.h"
 #include "AppController.h"
 #include "content/AssetStore.h"

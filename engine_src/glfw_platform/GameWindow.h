@@ -2,6 +2,7 @@
 #define AU_GAMEWINDOW_H
 
 #include <functional>
+#include "au_renderer.h"
 #include "glfw3.h"
 #include "KeyboardManager.h"
 #include "MouseManager.h"
@@ -12,7 +13,7 @@ namespace Audace
 {
 	class GameWindow
 	{
-		GLFWwindow *window;
+		GLFWwindow* window;
 		int width;
 		int height;
 		std::string title;

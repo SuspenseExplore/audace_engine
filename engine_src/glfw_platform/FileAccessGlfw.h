@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 #include "content/IFileAccess.h"
-#include "ImageData.h"
+#include "content/ImageData.h"
 #include "content/Model.h"
 #include "content/ByteBuffer.h"
 #include <nlohmann/json.hpp>

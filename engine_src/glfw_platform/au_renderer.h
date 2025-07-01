@@ -1,5 +1,5 @@
 #ifndef AU_RENDERER_H
-#define AI_RENDERER_H
+#define AU_RENDERER_H
 
 #include "glad.h"
 #include "AuLogger.h"

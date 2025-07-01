@@ -1,7 +1,7 @@
 #include <sstream>
 #include "au_renderer.h"
 #include "DragDropScene.h"
-#include "ImageData.h"
+#include "content/ImageData.h"
 #include "content/AssetStore.h"
 #include "renderer/Shapes.h"
 #include "glm/glm.hpp"

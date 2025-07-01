@@ -17,4 +17,4 @@ namespace Audace {
 	};
 }
 
-#endif 
+#endif

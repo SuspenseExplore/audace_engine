@@ -1,6 +1,4 @@
 #include <string>
-#include "au_renderer.h"
-#include "AuLogger.h"
 #include "GameWindow.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
@@ -37,7 +35,7 @@ namespace Audace
 
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
-		ImGuiIO &io = ImGui::GetIO();
+		ImGuiIO& io = ImGui::GetIO();
 		io.FontGlobalScale = 2;
 		// io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		// io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
@@ -56,7 +54,7 @@ namespace Audace
 		MouseManager::setMouseWheelEventHandler(
 			[=](Vec2InputEvent e)
 			{
-				ImGuiIO &io = ImGui::GetIO();
+				ImGuiIO& io = ImGui::GetIO();
 				io.AddMouseWheelEvent(e.state.x, e.state.y);
 			});
 		return true;
@@ -76,7 +74,7 @@ namespace Audace
 		double x, y;
 		glfwGetCursorPos(window, &x, &y);
 		int pressed = glfwGetMouseButton(window, 0);
-		ImGuiIO &io = ImGui::GetIO();
+		ImGuiIO& io = ImGui::GetIO();
 		io.AddMousePosEvent(x, y);
 		io.AddMouseButtonEvent(0, pressed == GLFW_PRESS);
 	}
