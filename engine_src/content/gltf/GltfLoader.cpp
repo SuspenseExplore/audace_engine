@@ -3,7 +3,9 @@
 #include "b64/decode.h"
 #include <sstream>
 #include "au_renderer.h"
+#include "content/AssetStore.h"
 #include "scene/graph/RotationAnimation.h"
+#include "renderer/material/PbrMetalRoughMat.h"
 
 namespace Audace
 {
@@ -33,6 +35,15 @@ namespace Audace
 				ByteBuffer* byteBuf = new ByteBuffer(bytes, gltfBuffer.byteLength);
 				gltfBuffer.buffer = byteBuf;
 			}
+			else
+			{
+				ind = uri.find(".bin");
+				if (ind > -1)
+				{
+					ByteBuffer* b = fileLoader->readFileToBuffer(fileData.filepath + uri);
+					gltfBuffer.buffer = b;
+				}
+			}
 		}
 	}
 
@@ -45,7 +56,10 @@ namespace Audace
 			GltfBufferView& gltfView = bufferViews[i];
 			gltfView.id = i;
 			gltfView.bufferId = jser::getInt(jView, "buffer");
-			gltfView.byteOffset = jser::getInt(jView, "byteOffset");
+			if (jView.contains("byteOffset"))
+			{
+				gltfView.byteOffset = jser::getInt(jView, "byteOffset");
+			}
 			gltfView.byteLength = jser::getInt(jView, "byteLength");
 			if (jView.contains("byteStride"))
 			{
@@ -67,7 +81,10 @@ namespace Audace
 			GltfAccessor& gltfAccessor = accessors[i];
 			gltfAccessor.id = i;
 			gltfAccessor.bufferViewId = jser::getInt(jAccessor, "bufferView");
-			gltfAccessor.byteOffset = jser::getInt(jAccessor, "byteOffset");
+			if (jAccessor.contains("byteOffset"))
+			{
+				gltfAccessor.byteOffset = jser::getInt(jAccessor, "byteOffset");
+			}
 			gltfAccessor.componentType = jser::getInt(jAccessor, "componentType");
 			gltfAccessor.count = jser::getInt(jAccessor, "count");
 			gltfAccessor.type = jser::getString(jAccessor, "type");
@@ -80,6 +97,11 @@ namespace Audace
 			{
 				gltfAccessor.min.resize(3);
 				gltfAccessor.max.resize(3);
+			}
+			else if (gltfAccessor.type == "VEC2")
+			{
+				gltfAccessor.min.resize(2);
+				gltfAccessor.max.resize(2);
 			}
 			else if (gltfAccessor.type == "SCALAR")
 			{
@@ -149,6 +171,10 @@ namespace Audace
 				{
 					gltfPrim.isIndexed = false;
 				}
+				if (jPrim.contains("material"))
+				{
+					gltfPrim.materialId = jser::getInt(jPrim, "material");
+				}
 			}
 		}
 	}
@@ -200,7 +226,7 @@ namespace Audace
 			for (int j = 0; j < jSamplers.size(); j++)
 			{
 				json& jSampler = jSamplers[j];
-				GltfSampler& sampler = animation.samplers[j];
+				GltfAnimSampler& sampler = animation.samplers[j];
 				sampler.inputAccessorId = jser::getInt(jSampler, "input");
 				sampler.outputAccessorId = jser::getInt(jSampler, "output");
 				sampler.interpolation = jser::getString(jSampler, "interpolation");
@@ -220,6 +246,123 @@ namespace Audace
 		}
 	}
 
+	void GltfLoader::parseImages(json& jImages)
+	{
+		images.resize(jImages.size());
+		for (int i = 0; i < jImages.size(); i++)
+		{
+			json& jImg = jImages[i];
+
+			string uri = jser::getString(jImg, "uri");
+			ImageData t = fileLoader->readImageFile(imageLoadPath + uri);
+			ImageData* data = new ImageData(t.bytes, t.width, t.height, t.format);
+			images[i].imgData = data;
+		}
+	}
+
+	void GltfLoader::parseTexSamplers(json& jTexSamplers)
+	{
+		texSamplers.resize(jTexSamplers.size());
+		for (int i = 0; i < jTexSamplers.size(); i++)
+		{
+			json& jSampler = jTexSamplers[i];
+			if (jSampler.contains("minFilter"))
+			{
+				texSamplers[i].minFilter = jser::getInt(jSampler, "minFilter");
+			}
+			if (jSampler.contains("magFilter"))
+			{
+				texSamplers[i].magFilter = jser::getInt(jSampler, "magFilter");
+			}
+			if (jSampler.contains("wrapS"))
+			{
+				texSamplers[i].wrapS = jser::getInt(jSampler, "wrapS");
+			}
+			if (jSampler.contains("wrapT"))
+			{
+				texSamplers[i].wrapT = jser::getInt(jSampler, "wrapT");
+			}
+		}
+	}
+
+	void GltfLoader::parseTextures(json& jTextures)
+	{
+		textures.reserve(jTextures.size());
+		for (int i = 0; i < jTextures.size(); i++)
+		{
+			json& jTex = jTextures[i];
+			int source = jser::getInt(jTex, "source");
+			if (jTex.contains("sampler"))
+			{
+				int sampler = jser::getInt(jTex, "sampler");
+			}
+			Texture2d* tex = new Texture2d(*(images[source].imgData));
+			tex->create();
+			textures.emplace_back(tex);
+		}
+	}
+
+	void GltfLoader::parseMaterials(json& jMaterials)
+	{
+		materials.reserve(jMaterials.size());
+		for (json& jMat : jMaterials)
+		{
+			BaseMaterial* mat = nullptr;
+			if (jMat.contains("pbrMetallicRoughness"))
+			{
+				json& jpbr = jMat["pbrMetallicRoughness"];
+				PbrMetalRoughMat* pbrMat = new PbrMetalRoughMat();
+				pbrMat->setShader(AssetStore::getShader("pbr"));
+				mat = pbrMat;
+				if (jpbr.contains("baseColorFactor"))
+				{
+					pbrMat->setBaseColorFactor(jser::getVec4(jpbr, "baseColorFactor"));
+				}
+				if (jpbr.contains("metallicFactor"))
+				{
+					pbrMat->setMetallicFactor(jser::getFloat(jpbr, "metallicFactor"));
+				}
+				if (jpbr.contains("roughnessFactor"))
+				{
+					pbrMat->setRoughnessFactor(jser::getFloat(jpbr, "roughnessFactor"));
+				}
+				if (jpbr.contains("baseColorTexture"))
+				{
+					int ind = jser::getInt(jpbr["baseColorTexture"], "index");
+					pbrMat->setBaseColorMap(textures[ind]);
+				}
+				if (jpbr.contains("metallicRoughnessTexture"))
+				{
+					int ind = jser::getInt(jpbr["metallicRoughnessTexture"], "index");
+					pbrMat->setMetallicMap(textures[ind]);
+					pbrMat->setRoughnessMap(textures[ind]);
+				}
+
+				// these aren't actually part of the PBR GLTF object.  they're here temporarily
+				if (jMat.contains("emissiveFactor"))
+				{
+					pbrMat->setEmissiveFactor(jser::getVec3(jMat, "emissiveFactor"));
+				}
+				if (jMat.contains("normalTexture"))
+				{
+					int ind = jser::getInt(jMat["normalTexture"], "index");
+					pbrMat->setNormalMap(textures[ind]);
+				}
+				if (jMat.contains("occlusionTexture"))
+				{
+					int ind = jser::getInt(jMat["occlusionTexture"], "index");
+					pbrMat->setOcclusionMap(textures[ind]);
+				}
+				if (jMat.contains("emissiveTexture"))
+				{
+					int ind = jser::getInt(jMat["emissiveTexture"], "index");
+					pbrMat->setEmissiveMap(textures[ind]);
+				}
+			}
+			materials.emplace_back(mat);
+		}
+	}
+
 	void GltfLoader::parseScenes(json& jScenes)
 	{
 		scenes.resize(jScenes.size());
@@ -235,9 +378,16 @@ namespace Audace
 		}
 	}
 
+	void GltfLoader::setImageLoadPath(string p)
+	{
+		imageLoadPath = p;
+	}
+
 	void GltfLoader::loadFile(IFileAccess* fileLoader, std::string path, std::string filename)
 	{
-		fileData.filename = path + filename;
+		this->fileLoader = fileLoader;
+		fileData.filename = filename;
+		fileData.filepath = path;
 		json jRoot = fileLoader->textFileToJson(path + filename);
 		{
 			json& jAsset = jRoot["asset"];
@@ -279,6 +429,29 @@ namespace Audace
 			parseAnimations(jAnimations);
 		}
 
+		if (jRoot.contains("images"))
+		{
+			json& jImages = jRoot["images"];
+			parseImages(jImages);
+		}
+
+		if (jRoot.contains("samplers"))
+		{
+			json& jSamplers = jRoot["samplers"];
+			parseTexSamplers(jSamplers);
+		}
+
+		if (jRoot.contains("textures"))
+		{
+			json& jTextures = jRoot["textures"];
+			parseTextures(jTextures);
+		}
+
+		if (jRoot.contains("materials")) {
+			json& jMaterials = jRoot["materials"];
+			parseMaterials(jMaterials);
+		}
+
 		{
 			json& jMeshes = jRoot["meshes"];
 			parseMeshes(jMeshes);
@@ -315,6 +488,22 @@ namespace Audace
 		for (int i = 0; i < acc.count; i++)
 		{
 			ret.emplace_back(data[i]);
+		}
+
+		return ret;
+	}
+
+	vector<glm::vec2> GltfLoader::getDataVec2(int accessorId)
+	{
+		vector<glm::vec2> ret;
+		GltfAccessor& acc = accessors[accessorId];
+		GltfBufferView& bv = bufferViews[acc.bufferViewId];
+		float* data = (float*)getDataChunk(acc.bufferViewId, acc.byteOffset);
+		for (int i = 0; i < acc.count; i++)
+		{
+			float x = data[i * 2 + 0];
+			float y = data[i * 2 + 1];
+			ret.emplace_back(glm::vec2(x, y));
 		}
 
 		return ret;
@@ -376,11 +565,11 @@ namespace Audace
 	Sprite* GltfLoader::getSprite(int meshId)
 	{
 		GltfMesh& gltfMesh = meshes[meshId];
-		vector<VertexAttribute*> attrs;
 		vector<Mesh*> meshes;
 
 		for (GltfPrimitive& prim : gltfMesh.primitives)
 		{
+			vector<VertexAttribute*> attrs;
 			DataBuffer* indexBuffer = nullptr;
 			int indexType;
 			int count = -1;
@@ -392,32 +581,62 @@ namespace Audace
 				GltfAccessor& accessor = accessors[accId];
 				GltfBufferView& bv = bufferViews[accessor.bufferViewId];
 				count = max(count, accessor.count);
+
 				VertexAttribute* attr = new VertexAttribute(name, accessor.type, accessor.componentType, false, bv.byteStride, accessor.byteOffset);
 				attrs.emplace_back(attr);
 
-				vector<glm::vec3> verts = getDataVec3(accId);
-				DataBuffer* vertexBuffer = new DataBuffer(verts.data(), bv.byteLength, bv.target, GL_STATIC_DRAW);
-				vertexBuffer->create();
+				if (accessor.type == "VEC4")
+				{
+					vector<glm::vec4> verts = getDataVec4(accId);
+					DataBuffer* vertexBuffer = new DataBuffer(verts.data(), verts.size() * 16, bv.target, GL_STATIC_DRAW);
+					vertexBuffer->create();
+					attr->setBuffer(vertexBuffer);
+				}
+				if (accessor.type == "VEC3")
+				{
+					vector<glm::vec3> verts = getDataVec3(accId);
+					DataBuffer* vertexBuffer = new DataBuffer(verts.data(), verts.size() * 12, bv.target, GL_STATIC_DRAW);
+					vertexBuffer->create();
+					attr->setBuffer(vertexBuffer);
+				}
+				if (accessor.type == "VEC2")
+				{
+					vector<glm::vec2> verts = getDataVec2(accId);
+					DataBuffer* vertexBuffer = new DataBuffer(verts.data(), verts.size() * 8, bv.target, GL_STATIC_DRAW);
+					vertexBuffer->create();
+					attr->setBuffer(vertexBuffer);
+				}
+				if (accessor.type == "SCALAR")
+				{
+					vector<float> verts = getDataFloat(accId);
+					DataBuffer* vertexBuffer = new DataBuffer(verts.data(), verts.size() * 4, bv.target, GL_STATIC_DRAW);
+					vertexBuffer->create();
+					attr->setBuffer(vertexBuffer);
+				}
 			}
 
 			VertexArray* va = new VertexArray(attrs);
 			va->create();
 
+			Mesh* mesh = nullptr;
 			if (prim.isIndexed)
 			{
 				GltfAccessor& indAccessor = accessors[prim.indAccessorId];
 				GltfBufferView& bv = bufferViews[indAccessor.bufferViewId];
 				vector<unsigned short> data = getDataUShort(indAccessor.id);
-				indexBuffer = new DataBuffer(data.data(), bv.byteLength, bv.target, GL_STATIC_DRAW);
+				indexBuffer = new DataBuffer(data.data(), bv.byteLength, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
 				indexBuffer->create();
-				Mesh* mesh = new Mesh(va, indexBuffer, 0, indAccessor.count, prim.mode, indAccessor.componentType, nullptr);
-				meshes.emplace_back(mesh);
+				mesh = new Mesh(va, indexBuffer, 0, indAccessor.count, prim.mode, indAccessor.componentType, nullptr);
 			}
 			else
 			{
-				Mesh* mesh = new Mesh(va, 0, count, prim.mode, nullptr);
-				meshes.emplace_back(mesh);
+				mesh = new Mesh(va, 0, count, prim.mode, nullptr);
 			}
+			if (prim.materialId > -1)
+			{
+				mesh->setMaterial(materials[prim.materialId]);
+			}
+			meshes.emplace_back(mesh);
 		}
 
 		Sprite* sprite = new Sprite(meshes);
@@ -427,7 +646,7 @@ namespace Audace
 	SceneGraphNode* GltfLoader::getNode(int id)
 	{
 		GltfNode& gltfNode = nodes[id];
-		SceneGraphNode* node = new SceneGraphNode(nullptr);
+		SceneGraphNode* node = new SceneGraphNode();
 		node->setTranslation(gltfNode.translation);
 		node->setScale(gltfNode.scale);
 		node->setRotation(gltfNode.rotation);
@@ -463,7 +682,7 @@ namespace Audace
 				if (channel.targetPath == "rotation")
 				{
 					RotationAnimation* anim = new RotationAnimation();
-					GltfSampler& sampler = a.samplers[channel.samplerId];
+					GltfAnimSampler& sampler = a.samplers[channel.samplerId];
 					std::vector<float> times = getDataFloat(sampler.inputAccessorId);
 					vector<glm::quat> states = getDataQuat(sampler.outputAccessorId);
 					anim->setFrameTimes(times);

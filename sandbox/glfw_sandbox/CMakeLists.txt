@@ -44,6 +44,7 @@ add_executable(
 	${ENGINE_DIR}/renderer/Sprite.cpp
 	${ENGINE_DIR}/renderer/Shapes.cpp
 	${ENGINE_DIR}/renderer/material/Material.cpp
+	${ENGINE_DIR}/renderer/material/PbrMetalRoughMat.cpp
 	${ENGINE_DIR}/renderer/light/PointLight.h
 	${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 	${ENGINE_DIR}/renderer/text/TextLabel.cpp

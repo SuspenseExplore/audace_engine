@@ -7,6 +7,7 @@
 #include "content/IFileAccess.h"
 #include "content/ByteBuffer.h"
 #include "renderer/Sprite.h"
+#include "renderer/Texture2d.h"
 #include "scene/graph/SceneGraph.h"
 #include "scene/graph/SceneGraphNode.h"
 #include "scene/graph/INodeAnimation.h"
@@ -28,7 +29,7 @@ namespace Audace
 	{
 		int id;
 		int bufferId;
-		int byteOffset;
+		int byteOffset = 0;
 		int byteLength;
 		int byteStride = 0;
 		int target = GL_ARRAY_BUFFER;
@@ -50,6 +51,18 @@ namespace Audace
 		int indAccessorId;
 		bool isIndexed;
 		int mode = GL_TRIANGLES;
+		int materialId = -1;
+	};
+	struct GltfImage
+	{
+		ImageData* imgData;
+	};
+	struct GltfTexSampler
+	{
+		int minFilter;
+		int magFilter;
+		int wrapS;
+		int wrapT;
 	};
 	struct GltfMesh
 	{
@@ -65,7 +78,7 @@ namespace Audace
 		glm::mat4 localTransform = glm::mat4(1.0);
 		vector<int> animationIds;
 	};
-	struct GltfSampler
+	struct GltfAnimSampler
 	{
 		int inputAccessorId;
 		int outputAccessorId;
@@ -80,7 +93,7 @@ namespace Audace
 	struct GltfAnimation
 	{
 		int id;
-		vector<GltfSampler> samplers;
+		vector<GltfAnimSampler> samplers;
 		vector<GltfChannel> channels;
 	};
 	struct GltfScene
@@ -90,21 +103,29 @@ namespace Audace
 	struct GltfFile
 	{
 		string filename;
+		string filepath;
 		string version;
 	};
 
 	class GltfLoader
 	{
+		IFileAccess* fileLoader;
 		GltfFile fileData;
+		string imageLoadPath;
+
 		int defaultSceneId = 0;
 		vector<GltfScene> scenes;
 		vector<GltfNode> nodes;
 		vector<GltfAnimation> animations;
+		vector<GltfImage> images;
+		vector<GltfTexSampler> texSamplers;
+		vector<Texture2d*> textures;
 		vector<GltfMesh> meshes;
 		vector<GltfBuffer> buffers;
 		vector<GltfBufferView> bufferViews;
 		vector<GltfAccessor> accessors;
 
+		vector<BaseMaterial*> materials;
 		vector<Sprite*> sprites;
 
 		void parseBuffers(json& jBuffers);
@@ -114,10 +135,15 @@ namespace Audace
 		void parseNodes(json& jNodes);
 		void parseAnimations(json& jAnimations);
 		void parseScenes(json& jScenes);
+		void parseImages(json& jImages);
+		void parseTexSamplers(json& jTexSamplers);
+		void parseTextures(json& jTextures);
+		void parseMaterials(json& jMaterials);
 
 		char* getDataChunk(int bufferViewId, int startByte);
 		vector<unsigned short> getDataUShort(int accessorId);
 		vector<float> getDataFloat(int accessorId);
+		vector<glm::vec2> getDataVec2(int accessorId);
 		vector<glm::vec3> getDataVec3(int accessorId);
 		vector<glm::vec4> getDataVec4(int accessorId);
 		vector<glm::quat> getDataQuat(int accessorId);
@@ -127,6 +153,7 @@ namespace Audace
 
 	public:
 		void loadFile(IFileAccess* fileLoader, std::string path, std::string filename);
+		void setImageLoadPath(string p);
 		SceneGraph* getSceneGraph(Scene* scene);
 	};
 }

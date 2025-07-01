@@ -56,6 +56,7 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/renderer/Mesh.cpp
 		${ENGINE_DIR}/renderer/Sprite.cpp
 		${ENGINE_DIR}/renderer/Shapes.cpp
+		${ENGINE_DIR}/renderer/material/PbrMetalRoughMat.cpp
 		${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 		${ENGINE_DIR}/geom/VoxelTerrainGen.cpp
 		${ENGINE_DIR}/editor/SpriteData.cpp

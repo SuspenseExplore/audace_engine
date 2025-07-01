@@ -6,6 +6,8 @@
 namespace Audace
 {
 	unsigned char WHITE_TEX[] = { 255, 255, 255, 255 };
+	unsigned char BLUE_TEX[] = { 0, 0, 255, 255 };
+	unsigned char BLACK_TEX[] = { 0, 0, 0, 255 };
 	IFileAccess* AssetStore::fileLoader;
 	Mesh* AssetStore::squareMesh;
 	std::map<std::string, ShaderProgram*> AssetStore::shaders;
@@ -24,11 +26,25 @@ namespace Audace
 		billboardMat->setShader(simpleBillboardShader());
 		billboardMat->setColor(glm::vec4(1, 1, 1, 1));
 
-		ImageData data(&WHITE_TEX[0], 1, 1, GL_RGBA);
-		Texture2d* whiteTex = new Texture2d(data);
-		whiteTex->create();
-		textures["AU_white_texture"] = whiteTex;
-		billboardMat->setTexture(whiteTex);
+		{
+			ImageData data(&WHITE_TEX[0], 1, 1, GL_RGBA);
+			Texture2d* whiteTex = new Texture2d(data);
+			whiteTex->create();
+			textures["AU_white_texture"] = whiteTex;
+			billboardMat->setTexture(whiteTex);
+		}
+		{
+			ImageData data(&BLUE_TEX[0], 1, 1, GL_RGBA);
+			Texture2d* blueTex = new Texture2d(data);
+			blueTex->create();
+			textures["AU_blue_texture"] = blueTex;
+		}
+		{
+			ImageData data(&BLACK_TEX[0], 1, 1, GL_RGBA);
+			Texture2d* blackTex = new Texture2d(data);
+			blackTex->create();
+			textures["AU_black_texture"] = blackTex;
+		}
 	}
 
 	ShaderProgram* AssetStore::getShader(const std::string& name)

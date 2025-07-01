@@ -17,6 +17,7 @@ namespace Audace
 	public:
 		SceneGraph(Scene* scene) : scene(scene) {}
 		void addRootNode(SceneGraphNode* node) { rootNodes.emplace_back(node); }
+		SceneGraphNode* getRootNode() { return rootNodes[0]; }
 
 		void update(Scene* scene);
 	};

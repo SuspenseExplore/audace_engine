@@ -14,11 +14,13 @@ namespace Audace
 		std::vector<glm::quat> frameStates;
 		float lastUpdateTime = -1;
 		int lastUpdateFrame = 0;
+		float timeFactor = 1;
 
 	public:
 		RotationAnimation() {}
 		void setFrameTimes(std::vector<float>& times) { frameTimes = times; }
 		void setFrameStates(std::vector<glm::quat>& states) { frameStates = states; }
+		void setTimeFactor(float f) { timeFactor = f; }
 
 		void start() override
 		{
