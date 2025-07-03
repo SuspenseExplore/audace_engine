@@ -6,6 +6,7 @@
 #include "renderer/material/PbrMetalRoughMat.h"
 #include "renderer/light/PointLight.h"
 #include "scene/BaseCamera.h"
+#include "scene/ForwardCamera.h"
 #include "scene/graph/SceneGraph.h"
 #include "scene/graph/SceneGraphNode.h"
 #include "scene/graph/RotationAnimation.h"
@@ -27,15 +28,21 @@ void GltfViewerScene::loadAssets(Audace::IFileAccess* fileLoader)
 	// std::string filename = "Overhang_RoofIncline_UnevenBricks.gltf";
 	// loader.setImageLoadPath("images/quaternius/");
 
-	// std::string path = "models/quat_builds/";
-	// std::string filename = "house_orig.gltf";
-	// loader.setImageLoadPath("images/quaternius/");
-
 	std::string path = "models/_test/";
 	std::string filename = "Lantern.gltf";
 	loader.setImageLoadPath("images/_test/");
+
+	// std::string path = "models/quat_builds/";
+	// std::string filename = "house_orig.gltf";
+	// loader.setImageLoadPath("images/quaternius/");
 	loader.loadFile(fileLoader, path, filename);
-	sceneGraph = loader.getSceneGraph(this);
+	Audace::SceneGraphNode* root = new Audace::SceneGraphNode();
+	sceneGraph = loader.getSceneGraph(this, root);
+
+	// root->setTranslation({-4, 9, -2});
+
+	// camera->setOriginPos({2, 0, 0});
+	// reinterpret_cast<Audace::ForwardCamera*>(camera)->setPosition({ 2, 2, 0 });
 
 	anim = new Audace::RotationAnimation();
 	vector<float> times = { 0.0, 0.25, 0.5, 0.75, 1.0 };
@@ -61,8 +68,6 @@ void GltfViewerScene::loadAssets(Audace::IFileAccess* fileLoader)
 	lightNode->setSprite(ptLight);
 	sceneGraph->addRootNode(n1);
 	addSprite(ptLight);
-
-	camera->setOriginPos({ 4, 6, 1 });
 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_CW);

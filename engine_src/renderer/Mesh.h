@@ -17,22 +17,22 @@ namespace Audace
 	{
 		VertexArray *vertexArray;
 		DataBuffer *indexBuffer = nullptr;
-		int startIndex;
+		int byteOffset;
 		int vertexCount;
 		GLenum renderMode;
 		GLenum indexType;
 		BaseMaterial *material;
 
 	public:
-		Mesh(VertexArray *vertexArray, DataBuffer *indexBuffer, int startIndex, int vertexCount, GLenum renderMode, GLenum indexType, BaseMaterial *material)
-			: vertexArray(vertexArray), indexBuffer(indexBuffer), startIndex(startIndex), vertexCount(vertexCount), renderMode(renderMode), indexType(indexType), material(material) {}
-		Mesh(VertexArray *vertexArray, int startIndex, int vertexCount, GLenum renderMode, BaseMaterial *material)
-			: vertexArray(vertexArray), startIndex(startIndex), vertexCount(vertexCount), renderMode(renderMode), material(material) {}
+		Mesh(VertexArray *vertexArray, DataBuffer *indexBuffer, int byteOffset, int vertexCount, GLenum renderMode, GLenum indexType, BaseMaterial *material)
+			: vertexArray(vertexArray), indexBuffer(indexBuffer), byteOffset(byteOffset), vertexCount(vertexCount), renderMode(renderMode), indexType(indexType), material(material) {}
+		Mesh(VertexArray *vertexArray, int byteOffset, int vertexCount, GLenum renderMode, BaseMaterial *material)
+			: vertexArray(vertexArray), byteOffset(byteOffset), vertexCount(vertexCount), renderMode(renderMode), material(material) {}
 
 		void render(glm::mat4 worldMat = glm::mat4(1.0f));
 		Mesh *clone()
 		{
-			return new Mesh(vertexArray, indexBuffer, startIndex, vertexCount, renderMode, indexType, material);
+			return new Mesh(vertexArray, indexBuffer, byteOffset, vertexCount, renderMode, indexType, material);
 		}
 
 		VertexArray* getVertexArray() {return vertexArray;}

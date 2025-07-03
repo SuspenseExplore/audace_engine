@@ -27,6 +27,7 @@ namespace Audace
 	void SceneGraphNode::addChild(SceneGraphNode* c)
 	{
 		children.emplace_back(c);
+		c->parent = this;
 	}
 
 	std::vector<SceneGraphNode*>& SceneGraphNode::getChildren()

@@ -18,6 +18,7 @@ namespace Audace
 	class ByteBuffer;
 	class IFileAccess;
 	class ImageData;
+	class DataBuffer;
 	class Sprite;
 	class BaseMaterial;
 	class Texture2d;
@@ -29,8 +30,10 @@ namespace Audace
 	struct GltfBuffer
 	{
 		int id;
-		ByteBuffer* buffer;
+		ByteBuffer* byteBuf;
 		int byteLength;
+
+		DataBuffer* glBuffer;
 	};
 	struct GltfBufferView
 	{
@@ -162,6 +165,7 @@ namespace Audace
 		void loadFile(IFileAccess* fileLoader, std::string path, std::string filename);
 		void setImageLoadPath(string p);
 		SceneGraph* getSceneGraph(Scene* scene);
+		SceneGraph* getSceneGraph(Scene* scene, SceneGraphNode* parentNode);
 	};
 }
 

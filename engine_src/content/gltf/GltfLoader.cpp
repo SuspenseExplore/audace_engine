@@ -44,7 +44,7 @@ namespace Audace
 				memset(bytes, 0, gltfBuffer.byteLength);
 				memcpy(bytes, sout.str().c_str(), gltfBuffer.byteLength);
 				ByteBuffer* byteBuf = new ByteBuffer(bytes, gltfBuffer.byteLength);
-				gltfBuffer.buffer = byteBuf;
+				gltfBuffer.byteBuf = byteBuf;
 			}
 			else
 			{
@@ -52,9 +52,11 @@ namespace Audace
 				if (ind > -1)
 				{
 					ByteBuffer* b = fileLoader->readFileToBuffer(fileData.filepath + uri);
-					gltfBuffer.buffer = b;
+					gltfBuffer.byteBuf = b;
 				}
 			}
+			gltfBuffer.glBuffer = new DataBuffer(gltfBuffer.byteBuf->getBuffer(), gltfBuffer.byteLength, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+			gltfBuffer.glBuffer->create();
 		}
 	}
 
@@ -473,7 +475,7 @@ namespace Audace
 	{
 		GltfBufferView& bv = bufferViews[bufferViewId];
 		GltfBuffer& buffer = buffers[bv.bufferId];
-		return buffer.buffer->getBuffer() + bv.byteOffset + startByte;
+		return buffer.byteBuf->getBuffer() + bv.byteOffset + startByte;
 	}
 
 	vector<unsigned short> GltfLoader::getDataUShort(int accessorId)
@@ -593,37 +595,11 @@ namespace Audace
 				GltfBufferView& bv = bufferViews[accessor.bufferViewId];
 				count = max(count, accessor.count);
 
-				VertexAttribute* attr = new VertexAttribute(name, accessor.type, accessor.componentType, false, bv.byteStride, accessor.byteOffset);
+				VertexAttribute* attr = new VertexAttribute(name, accessor.type, accessor.componentType, false, bv.byteStride, accessor.byteOffset + bv.byteOffset);
 				attrs.emplace_back(attr);
 
-				if (accessor.type == "VEC4")
-				{
-					vector<glm::vec4> verts = getDataVec4(accId);
-					DataBuffer* vertexBuffer = new DataBuffer(verts.data(), verts.size() * 16, bv.target, GL_STATIC_DRAW);
-					vertexBuffer->create();
-					attr->setBuffer(vertexBuffer);
-				}
-				if (accessor.type == "VEC3")
-				{
-					vector<glm::vec3> verts = getDataVec3(accId);
-					DataBuffer* vertexBuffer = new DataBuffer(verts.data(), verts.size() * 12, bv.target, GL_STATIC_DRAW);
-					vertexBuffer->create();
-					attr->setBuffer(vertexBuffer);
-				}
-				if (accessor.type == "VEC2")
-				{
-					vector<glm::vec2> verts = getDataVec2(accId);
-					DataBuffer* vertexBuffer = new DataBuffer(verts.data(), verts.size() * 8, bv.target, GL_STATIC_DRAW);
-					vertexBuffer->create();
-					attr->setBuffer(vertexBuffer);
-				}
-				if (accessor.type == "SCALAR")
-				{
-					vector<float> verts = getDataFloat(accId);
-					DataBuffer* vertexBuffer = new DataBuffer(verts.data(), verts.size() * 4, bv.target, GL_STATIC_DRAW);
-					vertexBuffer->create();
-					attr->setBuffer(vertexBuffer);
-				}
+				DataBuffer* dataBuf = buffers[bv.bufferId].glBuffer;
+				attr->setBuffer(dataBuf);
 			}
 
 			VertexArray* va = new VertexArray(attrs);
@@ -634,15 +610,13 @@ namespace Audace
 			{
 				GltfAccessor& indAccessor = accessors[prim.indAccessorId];
 				GltfBufferView& bv = bufferViews[indAccessor.bufferViewId];
-				vector<unsigned short> data = getDataUShort(indAccessor.id);
-				indexBuffer = new DataBuffer(data.data(), bv.byteLength, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
-				indexBuffer->create();
-				mesh = new Mesh(va, indexBuffer, 0, indAccessor.count, prim.mode, indAccessor.componentType, nullptr);
+				mesh = new Mesh(va, buffers[bv.bufferId].glBuffer, indAccessor.byteOffset + bv.byteOffset, indAccessor.count, prim.mode, indAccessor.componentType, nullptr);
 			}
-			else
-			{
-				mesh = new Mesh(va, 0, count, prim.mode, nullptr);
-			}
+			// don't know if unindexed rendering will ever come up in gltf
+			// else
+			// {
+			// 	mesh = new Mesh(va, bv.byteOffset, count, prim.mode, nullptr);
+			// }
 			if (prim.materialId > -1)
 			{
 				mesh->setMaterial(materials[prim.materialId]);
@@ -714,6 +688,27 @@ namespace Audace
 		{
 			SceneGraphNode* node = getNode(id);
 			graph->addRootNode(node);
+		}
+		// guarding this temporarily for testing because I'm not mocking scenes right now
+		if (scene != nullptr)
+		{
+			for (int id = 0; id < sprites.size(); id++)
+			{
+				scene->addSprite(sprites[id]);
+			}
+		}
+		return graph;
+	}
+
+	SceneGraph* GltfLoader::getSceneGraph(Scene* scene, SceneGraphNode* parentNode)
+	{
+		GltfScene s = scenes[defaultSceneId];
+		SceneGraph* graph = new SceneGraph(scene);
+		graph->addRootNode(parentNode);
+		for (int id : s.nodeIds)
+		{
+			SceneGraphNode* node = getNode(id);
+			parentNode->addChild(node);
 		}
 		// guarding this temporarily for testing because I'm not mocking scenes right now
 		if (scene != nullptr)

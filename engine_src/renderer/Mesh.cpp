@@ -16,12 +16,12 @@ namespace Audace
 		}
 		if (indexBuffer == nullptr)
 		{
-			glDrawArrays(renderMode, startIndex, vertexCount);
+			glDrawArrays(renderMode, byteOffset, vertexCount);
 		}
 		else
 		{
-			indexBuffer->bind();
-			glDrawElements(renderMode, vertexCount, indexType, (void *)startIndex);
+			indexBuffer->bind(GL_ELEMENT_ARRAY_BUFFER);
+			glDrawElements(renderMode, vertexCount, indexType, (void *)byteOffset);
 		}
 	}
 }
