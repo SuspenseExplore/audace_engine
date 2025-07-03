@@ -3,11 +3,12 @@
 
 #include <string>
 #include <map>
-#include "content/Model.h"
-#include "IFileAccess.h"
-#include "renderer/material/Material.h"
 
 namespace Audace {
+	class IFileAccess;
+	struct Model;
+	class Material;
+
 	class ModelLoader {
 	public:
 		static Model* loadObj(IFileAccess* fileLoader, std::string path, std::string filename);

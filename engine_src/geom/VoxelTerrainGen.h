@@ -1,13 +1,17 @@
 #ifndef AU_VOXELTERRAINGEN_H
 #define AU_VOXELTERRAINGEN_H
 
-#include "renderer/Mesh.h"
 #include "FastNoiseLite.h"
+#include <string>
+#include <vector>
 #include <future>
 #include <chrono>
+#include "glm/glm.hpp"
 
 namespace Audace
 {
+	class Mesh;
+
 	class VoxelTerrainGen
 	{
 		FastNoiseLite noise;

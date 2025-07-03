@@ -3,22 +3,18 @@
 
 #include <vector>
 #include <map>
-#include "application/BaseAppController.h"
-#include "content/IFileAccess.h"
 #include "scene/Scene.h"
-#include "glm/glm.hpp"
-#include "renderer/Sprite.h"
-#include "renderer/material/Material.h"
-#include "renderer/light/PointLight.h"
-#include "scene/ForwardCamera.h"
-#include "scene/BasicCameraController.h"
-#include "content/Model.h"
-#include "renderer/light/PointLight.h"
-#include "editor/SceneEditor.h"
-#include "editor/SpriteEditWindow.h"
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
+
+namespace Audace
+{
+	class SceneEditor;
+	class ShaderProgram;
+	class PointLight;
+	class IFileAccess;
+}
 
 class SceneBuilder : public Audace::Scene
 {
@@ -44,28 +40,12 @@ class SceneBuilder : public Audace::Scene
 	int renderType = 0;
 
 public:
-	SceneBuilder(Audace::BaseAppController* controller)
-		: Scene(controller)
-	{
-		strcpy(sceneWritePath, "D:/audace_engine/sandbox/assets/scenes/MainScene.json");
-	}
+	SceneBuilder(Audace::BaseAppController* controller);
 
-	void setClearColor(glm::vec4 color) override { clearColor = color; }
-	void setAmbientLight(glm::vec4 color) override { ambientColor = color; }
-	void setDirLight(glm::vec3 dir, glm::vec4 color) override
-	{
-		dirLightDirection = dir;
-		dirLightColor = color;
-	}
-	void setPointLight(int i, glm::vec3 pos, glm::vec4 color) override
-	{
-		if (i > -1 && i < ptLights.size())
-		{
-			ptLights[i]->setPosition(pos);
-			ptLights[i]->setColor(glm::vec3(color));
-			ptLights[i]->setIntensity(color.w);
-		}
-	}
+	void setClearColor(glm::vec4 color) override;
+	void setAmbientLight(glm::vec4 color) override;
+	void setDirLight(glm::vec3 dir, glm::vec4 color) override;
+	void setPointLight(int i, glm::vec3 pos, glm::vec4 color) override;
 
 	void loadModel(std::string path, std::string filename);
 	void traverseModelIndex(json index, int i);
@@ -74,9 +54,9 @@ public:
 	void render() override;
 	void renderUi() override;
 	void disposeAssets() override;
-	void setCamera(Audace::BaseCamera* camera) override { this->camera = camera; }
-	Audace::BaseCamera* getCamera() override { return camera; }
-	void teleport(glm::vec3 pos) override { camera->setOriginPos(pos); }
+	void setCamera(Audace::BaseCamera* camera) override;
+	Audace::BaseCamera* getCamera() override;
+	void teleport(glm::vec3 pos) override;
 };
 
 #endif

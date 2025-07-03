@@ -5,10 +5,6 @@
 #include <vector>
 #include <map>
 #include "au_renderer.h"
-#include "renderer/Sprite.h"
-#include "renderer/ShaderProgram.h"
-#include "Scene.h"
-#include "content/IFileAccess.h"
 #include "glm/glm.hpp"
 
 #include <nlohmann/json.hpp>
@@ -17,6 +13,11 @@ using json = nlohmann::json;
 
 namespace Audace
 {
+	class ShaderProgram;
+	class Sprite;
+	class IFileAccess;
+	class Scene;
+
 	class SceneDescriptor
 	{
 		std::string descriptorFilename;

@@ -1,5 +1,7 @@
 #include "BasicCameraController.h"
 #include "ForwardCamera.h"
+#include "input/BooleanInputEvent.h"
+#include "input/Vec2InputEvent.h"
 
 namespace Audace
 {

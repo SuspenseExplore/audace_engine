@@ -4,12 +4,13 @@
 #include <functional>
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
-#include "renderer/material/Material.h"
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
 namespace Audace
 {
+	class Material;
+	
 	class JsonSerializer
 	{
 	public:

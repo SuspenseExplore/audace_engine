@@ -1,10 +1,22 @@
 #include "GltfViewerScene.h"
 #include "content/AssetStore.h"
 #include "content/gltf/GltfLoader.h"
+#include "renderer/ShaderProgram.h"
+#include "renderer/Sprite.h"
 #include "renderer/material/PbrMetalRoughMat.h"
+#include "renderer/light/PointLight.h"
+#include "scene/BaseCamera.h"
+#include "scene/graph/SceneGraph.h"
+#include "scene/graph/SceneGraphNode.h"
 #include "scene/graph/RotationAnimation.h"
 #include <vector>
 using std::vector;
+
+GltfViewerScene::GltfViewerScene(Audace::BaseAppController* controller)
+	: Scene(controller)
+{
+
+}
 
 void GltfViewerScene::loadAssets(Audace::IFileAccess* fileLoader)
 {
@@ -18,7 +30,7 @@ void GltfViewerScene::loadAssets(Audace::IFileAccess* fileLoader)
 	// std::string path = "models/quat_builds/";
 	// std::string filename = "house_orig.gltf";
 	// loader.setImageLoadPath("images/quaternius/");
-	
+
 	std::string path = "models/_test/";
 	std::string filename = "Lantern.gltf";
 	loader.setImageLoadPath("images/_test/");
@@ -84,4 +96,19 @@ void GltfViewerScene::renderUi()
 	{
 		s->renderViewSpace(this);
 	}
+}
+
+Audace::BaseCamera* GltfViewerScene::getCamera()
+{
+	return camera;
+}
+
+void GltfViewerScene::setCamera(Audace::BaseCamera* camera)
+{
+	this->camera = camera;
+}
+
+void GltfViewerScene::teleport(glm::vec3 pos)
+{
+	camera->setOriginPos(pos);
 }

@@ -2,10 +2,15 @@
 #define AU_TEXTSCENE_H
 
 #include "scene/Scene.h"
-#include "scene/ForwardCamera.h"
-#include "renderer/text/TextLabel.h"
-#include "math/Pose.h"
 #include "glm/glm.hpp"
+
+namespace Audace
+{
+	class BaseAppController;
+	class ForwardCamera;
+	class BitmapFont;
+	class TextLabel;
+}
 
 class TextScene : public Audace::Scene {
 	Audace::IFileAccess* fileLoader;
@@ -15,17 +20,13 @@ class TextScene : public Audace::Scene {
 	Audace::TextLabel* label;
 
 public:
-	TextScene(Audace::BaseAppController* controller, Audace::IFileAccess* fileLoader)
-		: Scene(controller), fileLoader(fileLoader),
-		camera(Audace::ForwardCamera::standard2d(glm::vec3(0, 0, -2), appController->getWidth(), appController->getHeight()))
-	{
-	}
+	TextScene(Audace::BaseAppController* controller, Audace::IFileAccess* fileLoader);
 
 	void loadAssets(Audace::IFileAccess* fileLoader) override;
 	void render() override;
 	void disposeAssets() override;
-	Audace::BaseCamera* getCamera() override { return camera; }
-	void setCamera(Audace::BaseCamera* camera) override {}
+	Audace::BaseCamera* getCamera() override;
+	void setCamera(Audace::BaseCamera* camera) override;
 };
 
 #endif

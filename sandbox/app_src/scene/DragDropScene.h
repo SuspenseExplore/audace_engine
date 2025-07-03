@@ -4,16 +4,15 @@
 #include <vector>
 #include "glm/glm.hpp"
 #include "scene/Scene.h"
-#include "content/IFileAccess.h"
-#include "renderer/Mesh.h"
-#include "renderer/Sprite.h"
-#include "renderer/ShaderProgram.h"
-#include "renderer/Texture2d.h"
-#include "renderer/material/SimpleBillboardMaterial.h"
 #include "util/RandomUniformFloats.h"
-#include "math/Pose.h"
-#include "scene/ForwardCamera.h"
-#include "application/BaseAppController.h"
+
+namespace Audace
+{
+	class ShaderProgram;
+	class SimpleBillboardMaterial;
+	class Texture2d;
+	class ForwardCamera;
+}
 
 class DragDropScene : public Audace::Scene
 {
@@ -30,13 +29,12 @@ class DragDropScene : public Audace::Scene
 	bool dragging = false;
 
 	glm::vec3 cameraVel = glm::vec3(0, 0, 0);
-	Audace::ForwardCamera* camera = Audace::ForwardCamera::standard2d(glm::vec3(0, 0, -1), 1280, 720);
+	Audace::ForwardCamera* camera;
 
-	Audace::RandomUniformFloats rand = Audace::RandomUniformFloats::normalizedRange();
+	Audace::RandomUniformFloats rand;
 
 public:
-	DragDropScene(Audace::BaseAppController* controller, Audace::IFileAccess* fileLoader)
-		: Audace::Scene(controller), fileLoader(fileLoader) {}
+	DragDropScene(Audace::BaseAppController* controller, Audace::IFileAccess* fileLoader);
 	Audace::Sprite* loadSprite(std::string filename);
 	void loadAssets(Audace::IFileAccess* fileLoader) override;
 	void render() override;
@@ -56,8 +54,8 @@ public:
 
 	bool isMouseOverCard(float x, float y);
 
-	Audace::BaseCamera* getCamera() override { return camera; }
-	void setCamera(Audace::BaseCamera* camera) override {}
+	Audace::BaseCamera* getCamera() override;
+	void setCamera(Audace::BaseCamera* camera) override;
 };
 
 #endif

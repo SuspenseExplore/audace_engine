@@ -2,9 +2,20 @@
 #include "content/JsonSerializer.h"
 #include "b64/decode.h"
 #include <sstream>
-#include "au_renderer.h"
+#include "content/IFileAccess.h"
 #include "content/AssetStore.h"
+#include "content/ByteBuffer.h"
+#include "content/ImageData.h"
+#include "scene/Scene.h"
+#include "scene/graph/SceneGraph.h"
+#include "scene/graph/SceneGraphNode.h"
 #include "scene/graph/RotationAnimation.h"
+#include "renderer/DataBuffer.h"
+#include "renderer/VertexAttribute.h"
+#include "renderer/VertexArray.h"
+#include "renderer/Mesh.h"
+#include "renderer/Texture2d.h"
+#include "renderer/Sprite.h"
 #include "renderer/material/PbrMetalRoughMat.h"
 
 namespace Audace

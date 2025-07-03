@@ -3,11 +3,12 @@
 
 #include "BaseMaterial.h"
 #include "glm/glm.hpp"
-#include "renderer/Texture2d.h"
-#include "renderer/ShaderProgram.h"
 
 namespace Audace
 {
+	class Texture2d;
+	class ShaderProgram;
+
 	class PbrMetalRoughMat : public BaseMaterial
 	{
 		ShaderProgram* shaderProgram;

@@ -3,12 +3,13 @@
 
 #include "au_renderer.h"
 #include "glm/glm.hpp"
-#include "renderer/VertexArray.h"
-#include "renderer/DataBuffer.h"
-#include "renderer/material/BaseMaterial.h"
 
 namespace Audace
 {
+	class VertexArray;
+	class DataBuffer;
+	class BaseMaterial;
+
 	/**
 	 * Encapsulates the vertex array and meta data for rendering a single object
 	 */

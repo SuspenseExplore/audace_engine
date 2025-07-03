@@ -3,6 +3,9 @@
 #include <map>
 #include "AuLogger.h"
 #include "ModelLoader.h"
+#include "content/Model.h"
+#include "IFileAccess.h"
+#include "renderer/material/Material.h"
 #include "util/StringUtil.h"
 #include "glm/glm.hpp"
 

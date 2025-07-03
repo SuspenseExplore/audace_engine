@@ -1,12 +1,22 @@
 #include "SceneEditor.h"
 #include <fstream>
 #include "content/AssetStore.h"
+#include "content/JsonSerializer.h"
+#include "editor/SpriteData.h"
+#include "renderer/Mesh.h"
 #include "renderer/ShaderProgram.h"
+#include "renderer/light/PointLight.h"
 #include "content/IFileAccess.h"
+#include "scene/Scene.h"
 #include "imgui.h"
 
 namespace Audace
 {
+	SceneEditor::SceneEditor(IFileAccess* fileLoader) : fileLoader(fileLoader)
+	{
+		modelIndex = fileLoader->textFileToJson("models/_index.json");
+	}
+
 	void SceneEditor::load(std::string path, std::string filename)
 	{
 		if (scene == nullptr)
@@ -114,6 +124,11 @@ namespace Audace
 		std::ofstream fout(path + filename);
 		fout << j.dump(4);
 		fout.close();
+	}
+
+	void SceneEditor::attachToScene(Scene* scene)
+	{
+		this->scene = scene;
 	}
 
 	void SceneEditor::syncToScene()

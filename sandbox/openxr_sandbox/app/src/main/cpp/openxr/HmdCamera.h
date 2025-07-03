@@ -5,6 +5,7 @@
 #ifndef AU_HMDCAMERA_H
 #define AU_HMDCAMERA_H
 
+#include <vector>
 #include "scene/BaseCamera.h"
 #include "OpenxrView.h"
 #include "glm/glm.hpp"
@@ -25,32 +26,16 @@ protected:
 	glm::vec3 velocity = glm::vec3(0);
 
 public:
-	HmdCamera(std::vector<OpenxrView> &views) : views(views) {}
+	HmdCamera(std::vector<OpenxrView> &views);
 
 	void setActiveView(int i) { activeView = i; }
 
 	const glm::vec3 getPosition() override;
 	void setVelocityX(float v) { velocity.x = v; }
 	void setVelocityY(float v) { velocity.y = v; }
-	void update() override
-	{
-		Audace::BaseCamera::update();
-		if (glm::length(velocity) != 0.0) {
-			glm::vec4 fwd = glm::vec4(velocity.x, 0.0, -velocity.y, 0);
-			glm::vec4 right = glm::vec4(1, 0, 0, 0);
-			XrQuaternionf orientation = views[activeView].getViewData().pose.orientation;
-			glm::mat4 camMat = glm::mat4_cast(
-					glm::quat(orientation.w, orientation.x, orientation.y, orientation.z));
-			fwd = camMat * fwd;
-			fwd *= velFactor;
-			originPos += glm::vec3(fwd.x, fwd.y, fwd.z);
-		}
-	}
+	void update() override;
 
-	const glm::vec2 getViewSize() override
-	{
-		return glm::vec2(views[activeView].getWidth(), views[activeView].getHeight());
-	}
+	const glm::vec2 getViewSize() override;
 	const glm::mat4 getViewProjMatrix() override;
 };
 

@@ -3,9 +3,10 @@
 
 #include <vector>
 #include "au_renderer.h"
-#include "VertexAttribute.h"
 
 namespace Audace {
+	class VertexAttribute;
+	
 	class VertexArray {
 		GLuint glid;
 		std::vector<VertexAttribute*> attrs;

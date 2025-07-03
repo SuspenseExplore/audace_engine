@@ -1,13 +1,18 @@
 #ifndef AU_SCENEEDITOR_H
 #define AU_SCENEEDITOR_H
 
-#include "content/IFileAccess.h"
-#include "scene/Scene.h"
-#include "SceneData.h"
-#include "SpriteEditWindow.h"
+#include "editor/SceneData.h"
+#include "editor/SpriteEditWindow.h"
+
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 namespace Audace
 {
+	class IFileAccess;
+	class Scene;
+	class SpriteEditWindow;
+
 	class SceneEditor
 	{
 		IFileAccess* fileLoader;
@@ -21,14 +26,11 @@ namespace Audace
 		std::vector<std::string> modelIndexPath; // the currently selected path in modelIndex
 
 	public:
-		SceneEditor(IFileAccess* fileLoader) : fileLoader(fileLoader)
-		{
-			modelIndex = fileLoader->textFileToJson("models/_index.json");
-		}
+		SceneEditor(IFileAccess* fileLoader);
 		void load(std::string path, std::string filename);
 		void save(std::string path, std::string filename);
 
-		void attachToScene(Scene* scene) { this->scene = scene; }
+		void attachToScene(Scene* scene);
 		void syncToScene();
 
 		void loadSprite(std::string name);

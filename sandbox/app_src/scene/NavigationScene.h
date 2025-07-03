@@ -1,21 +1,24 @@
 #ifndef AU_NAVIGATIONSCENE_H
 #define AU_NAVIGATIONSCENE_H
 
-#include "application/BaseAppController.h"
 #include "scene/Scene.h"
-#include "scene/BaseCamera.h"
+
+namespace Audace
+{
+	class BaseAppController;
+}
 
 class NavigationScene : public Audace::Scene
 {
 
 public:
-	NavigationScene(Audace::BaseAppController* controller) : Audace::Scene(controller) {}
-	void loadAssets(Audace::IFileAccess* fileLoader) override {}
+	NavigationScene(Audace::BaseAppController* controller);
+	void loadAssets(Audace::IFileAccess* fileLoader);
 	void render() override;
-	void disposeAssets() override {}
+	void disposeAssets() override;
 
-	Audace::BaseCamera* getCamera() override { return nullptr; }
-	void setCamera(Audace::BaseCamera* camera) override {}
+	Audace::BaseCamera* getCamera() override;
+	void setCamera(Audace::BaseCamera* camera) override;
 };
 
 #endif

@@ -3,6 +3,8 @@
 //
 
 #include "PoseCameraController.h"
+#include "input/PoseInputEvent.h"
+#include "ForwardCamera.h"
 
 namespace Audace {
 	PoseCameraController::PoseCameraController(ForwardCamera *camera)

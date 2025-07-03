@@ -2,14 +2,14 @@
 #define AU_SCENE_H
 
 #include <vector>
-#include "application/BaseAppController.h"
-#include "content/IFileAccess.h"
-#include "scene/BaseCamera.h"
-#include "renderer/Sprite.h"
+#include "glm/glm.hpp"
 
 namespace Audace
 {
 	class Sprite;
+	class BaseAppController;
+	class IFileAccess;
+	class BaseCamera;
 
 	class Scene
 	{
@@ -29,21 +29,8 @@ namespace Audace
 		virtual void setCamera(BaseCamera* camera) = 0;
 		virtual void teleport(glm::vec3 pos) {}
 
-		virtual void addSprite(Sprite* s) {
-			sprites.push_back(s);
-		}
-
-		virtual void removeSprite(Sprite* s)
-		{
-			for (auto iter = sprites.begin(); iter != sprites.end(); iter++)
-			{
-				if (*iter == s)
-				{
-					sprites.erase(iter);
-					return;
-				}
-			}
-		}
+		virtual void addSprite(Sprite* s);
+		virtual void removeSprite(Sprite* s);
 
 		virtual void setClearColor(glm::vec4 color) {}
 		virtual void setAmbientLight(glm::vec4 color) {}

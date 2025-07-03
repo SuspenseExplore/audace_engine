@@ -1,18 +1,31 @@
 #include <sstream>
 #include "au_renderer.h"
 #include "DragDropScene.h"
+#include "application/BaseAppController.h"
+#include "content/IFileAccess.h"
 #include "content/ImageData.h"
 #include "content/AssetStore.h"
+#include "content/Model.h"
 #include "renderer/Shapes.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include "renderer/DataBuffer.h"
+#include "renderer/Texture2d.h"
+#include "renderer/ShaderProgram.h"
 #include "renderer/VertexAttribute.h"
 #include "renderer/VertexArray.h"
+#include "renderer/Mesh.h"
 #include "renderer/Sprite.h"
+#include "scene/ForwardCamera.h"
 #include "imgui.h"
 #include "SceneEnum.h"
+
+DragDropScene::DragDropScene(Audace::BaseAppController* controller, Audace::IFileAccess* fileLoader)
+	: Audace::Scene(controller), fileLoader(fileLoader), rand(Audace::RandomUniformFloats::normalizedRange())
+{
+	camera = Audace::ForwardCamera::standard2d(glm::vec3(0, 0, -1), 1280, 720);
+}
 
 void DragDropScene::loadAssets(Audace::IFileAccess* fileLoader)
 {
@@ -117,6 +130,15 @@ void DragDropScene::render()
 		appController->setScene(SandboxScene::NAVIGATION);
 	}
 	ImGui::End();
+}
+
+Audace::BaseCamera* DragDropScene::getCamera()
+{
+	return camera;
+}
+void DragDropScene::setCamera(Audace::BaseCamera* camera)
+{
+
 }
 
 void DragDropScene::disposeAssets()

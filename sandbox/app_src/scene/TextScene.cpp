@@ -1,6 +1,18 @@
 #include "TextScene.h"
+#include "au_renderer.h"
 #include "SceneEnum.h"
+#include "application/BaseAppController.h"
+#include "content/IFileAccess.h"
+#include "renderer/text/BitmapFont.h"
+#include "renderer/text/TextLabel.h"
+#include "scene/ForwardCamera.h"
 #include "imgui.h"
+
+TextScene::TextScene(Audace::BaseAppController* controller, Audace::IFileAccess* fileLoader)
+	: Scene(controller), fileLoader(fileLoader),
+	camera(Audace::ForwardCamera::standard2d(glm::vec3(0, 0, -2), appController->getWidth(), appController->getHeight()))
+{
+}
 
 void TextScene::loadAssets(Audace::IFileAccess* fileLoader)
 {
@@ -42,6 +54,16 @@ void TextScene::render() {
 	ImGui::DragFloat3("Scale", glm::value_ptr(label->getScale()));
 	ImGui::ColorPicker4("Color", glm::value_ptr(label->getColor()));
 	ImGui::End();
+}
+
+Audace::BaseCamera* TextScene::getCamera()
+{
+	return camera;
+}
+
+void TextScene::setCamera(Audace::BaseCamera* camera)
+{
+
 }
 
 void TextScene::disposeAssets() {

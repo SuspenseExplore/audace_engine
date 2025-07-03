@@ -4,13 +4,9 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "content/IFileAccess.h"
-#include "content/ByteBuffer.h"
-#include "renderer/Sprite.h"
-#include "renderer/Texture2d.h"
-#include "scene/graph/SceneGraph.h"
-#include "scene/graph/SceneGraphNode.h"
-#include "scene/graph/INodeAnimation.h"
+#include "au_renderer.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/quaternion.hpp"
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -19,6 +15,17 @@ using namespace std;
 
 namespace Audace
 {
+	class ByteBuffer;
+	class IFileAccess;
+	class ImageData;
+	class Sprite;
+	class BaseMaterial;
+	class Texture2d;
+	class Scene;
+	class SceneGraph;
+	class SceneGraphNode;
+	class INodeAnimation;
+
 	struct GltfBuffer
 	{
 		int id;

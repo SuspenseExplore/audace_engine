@@ -4,12 +4,32 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 #include "Sprite.h"
+#include "content/Model.h"
 #include "DataBuffer.h"
 #include "VertexAttribute.h"
 #include "VertexArray.h"
+#include "renderer/Mesh.h"
+#include "renderer/material/BaseMaterial.h"
+#include "ShaderProgram.h"
+#include "Mesh.h"
+#include "scene/Scene.h"
+#include "scene/BaseCamera.h"
 
 namespace Audace
 {
+	Sprite::Sprite(Sprite* sprite)
+	{
+		for (Mesh* mesh : sprite->meshes)
+		{
+			meshes.push_back(mesh);
+		}
+		name = sprite->name;
+		modelMatrix = glm::mat4(sprite->modelMatrix);
+		pose.position = glm::vec3(sprite->pose.position);
+		pose.orientation = glm::quat(sprite->pose.orientation);
+		scale = glm::vec3(sprite->scale);
+	}
+
 	Sprite::Sprite(Model* model)
 	{
 		modelMatrix = glm::mat4(1.0f);
@@ -51,6 +71,16 @@ namespace Audace
 		pose.orientation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 		scale = glm::vec3(1.0f);
 		this->meshes = meshes;
+	}
+
+	BaseMaterial* Sprite::getMaterial(int i)
+	{
+		return getMesh(i)->getMaterial();
+	}
+
+	Mesh* Sprite::getMesh(int i)
+	{
+		return meshes[i];
 	}
 
 	void Sprite::renderWorldSpace(Scene* scene)

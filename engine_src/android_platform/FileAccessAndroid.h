@@ -10,15 +10,15 @@
 #include <android_native_app_glue.h>
 #include <string>
 #include <map>
-#include "content/ImageData.h"
-#include "content/Model.h"
-#include "content/ByteBuffer.h"
-#include "renderer/ShaderProgram.h"
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
 namespace Audace
 {
+	class ByteBuffer;
+	class ImageData;
+	class Model;
+
 	class FileAccessAndroid : public IFileAccess
 	{
 		std::string externalFilePath;

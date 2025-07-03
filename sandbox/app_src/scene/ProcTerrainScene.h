@@ -2,14 +2,20 @@
 #define AU_PROCTERRAINSCENE_H
 
 #include "scene/Scene.h"
-#include "renderer/material/Material.h"
-#include "renderer/material/SimpleBillboardMaterial.h"
-#include "renderer/Sprite.h"
+#include "math/Pose.h"
 #include "geom/VoxelTerrainGen.h"
 #include "glm/glm.hpp"
 #include <map>
 #include <string>
 #include <vector>
+
+namespace Audace
+{
+	class BaseCamera;
+	class Material;
+	class  SimpleBillboardMaterial;
+	class ShaderProgram;
+}
 
 class ProcTerrainScene : public Audace::Scene
 {
@@ -33,10 +39,7 @@ class ProcTerrainScene : public Audace::Scene
 	void addToBuffer(std::vector<float>& buf, glm::vec3 vec);
 
 public:
-	ProcTerrainScene(Audace::BaseAppController* controller) : Scene(controller)
-	{
-
-	}
+	ProcTerrainScene(Audace::BaseAppController* controller);
 
 	void loadAssets(Audace::IFileAccess* fileLoader) override;
 	void render() override;
@@ -44,11 +47,11 @@ public:
 	void renderChunkData(std::string chunkId);
 	void disposeAssets() override;
 
-	void setCamera(Audace::BaseCamera* camera) override { this->camera = camera; }
-	Audace::BaseCamera* getCamera() override { return camera; }
+	void setCamera(Audace::BaseCamera* camera) override;
+	Audace::BaseCamera* getCamera() override;
 
-	void setLightPos(glm::vec3 pos) { lightPos = pos + camera->getOriginPos(); }
-	void teleport(glm::vec3 pos) override { camera->setOriginPos(pos); }
+	void setLightPos(glm::vec3 pos);
+	void teleport(glm::vec3 pos) override;
 };
 
 

@@ -5,18 +5,30 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
+#include "application/BaseAppController.h"
+#include "content/IFileAccess.h"
 #include "content/AssetStore.h"
 #include "content/JsonSerializer.h"
 #include "renderer/DataBuffer.h"
 #include "renderer/VertexAttribute.h"
 #include "renderer/VertexArray.h"
+#include "renderer/Mesh.h"
 #include "renderer/Sprite.h"
+#include "renderer/ShaderProgram.h"
 #include "renderer/material/Material.h"
+#include "renderer/light/PointLight.h"
 #include "util/StringUtil.h"
+#include "scene/BaseCamera.h"
 #include "imgui.h"
 #include "SceneEnum.h"
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
+
+MainScene::MainScene(Audace::BaseAppController* controller)
+	: Scene(controller)
+{
+
+}
 
 void MainScene::loadAssets(Audace::IFileAccess* fileLoader)
 {
@@ -122,6 +134,28 @@ void MainScene::render()
 		appController->setScene(SandboxScene::NAVIGATION);
 	}
 	ImGui::End();
+}
+
+void MainScene::setLightPos(int index, glm::vec3 position) {
+	pointLights[index].setPosition(camera->getOriginPos() + position);
+}
+
+void MainScene::teleport() {
+	// light pos includes origin already
+	// offset = light - camera - origin
+	// new origin = origin + offset
+	// new origin = origin + (light - camera - origin)
+	// new origin = light - camera
+	camera->setOriginPos(pointLights[0].getPosition() - camera->getPosition());
+}
+Audace::BaseCamera* MainScene::getCamera()
+{
+	return camera;
+}
+
+void MainScene::setCamera(Audace::BaseCamera* camera)
+{
+	this->camera = camera;
 }
 
 void MainScene::disposeAssets()

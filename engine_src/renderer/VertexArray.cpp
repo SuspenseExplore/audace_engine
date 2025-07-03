@@ -1,4 +1,5 @@
 #include "VertexArray.h"
+#include "VertexAttribute.h"
 
 namespace Audace {
 	void VertexArray::create() {

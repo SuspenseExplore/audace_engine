@@ -1,5 +1,6 @@
 #include "JsonSerializer.h"
 #include "content/AssetStore.h"
+#include "renderer/material/Material.h"
 #include "glm/gtc/matrix_transform.hpp"
 
 namespace Audace

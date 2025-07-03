@@ -1,7 +1,13 @@
 #include "au_renderer.h"
 #include "SpriteEditWindow.h"
 #include "content/AssetStore.h"
+#include "content/Model.h"
+#include "editor/SpriteData.h"
+#include "renderer/Mesh.h"
 #include "renderer/Shapes.h"
+#include "renderer/Sprite.h"
+#include "scene/Scene.h"
+#include "scene/BaseCamera.h"
 #include "imgui.h"
 #include "glm/gtx/string_cast.hpp"
 

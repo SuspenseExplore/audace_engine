@@ -6,6 +6,8 @@
 #include "FileAccessAndroid.h"
 #include "stb_image.h"
 #include "au_renderer.h"
+#include "content/ByteBuffer.h"
+#include "content/ImageData.h"
 #include "content/ModelLoader.h"
 
 namespace Audace {

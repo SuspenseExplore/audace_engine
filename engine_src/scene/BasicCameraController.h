@@ -3,13 +3,14 @@
 
 #include <functional>
 #include "ICameraController.h"
-#include "ForwardCamera.h"
-#include "input/BooleanInputEvent.h"
-#include "input/Vec2InputEvent.h"
 #include "glm/glm.hpp"
 
 namespace Audace
 {
+	class ForwardCamera;
+	class BooleanInputEvent;
+	class Vec2InputEvent;
+	
 	/**
 	 * Provides simple camera controls: right-drag to aim; standard WASD movement; plus Q and Z for moving up and down
 	 */

@@ -4,11 +4,12 @@
 #include <string>
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
-#include "renderer/ShaderProgram.h"
-#include "renderer/Texture2d.h"
 #include "BaseMaterial.h"
 
 namespace Audace {
+	class ShaderProgram;
+	class Texture2d;
+
 	class SimpleBillboardMaterial : public BaseMaterial {
 		std::string name;
 		ShaderProgram *shaderProgram;
@@ -16,21 +17,16 @@ namespace Audace {
 		glm::vec4 color;
 
 		public:
-		void setName(std::string name) {this->name = name;}
-		std::string getName() override {return name;}
-		ShaderProgram* getShader() override {return shaderProgram;}
-		void setShader(ShaderProgram *shaderProgram) override {this->shaderProgram = shaderProgram;}
-		Texture2d *getTexture() {return texture;}
-		void setTexture(Texture2d *texture) {this->texture = texture;}
-		glm::vec4 getColor() {return color;}
-		void setColor(glm::vec4 color) {this->color = color;}
+		void setName(std::string name);
+		std::string getName() override;
+		ShaderProgram* getShader() override;
+		void setShader(ShaderProgram *shaderProgram) override;
+		Texture2d *getTexture();
+		void setTexture(Texture2d *texture);
+		glm::vec4 getColor();
+		void setColor(glm::vec4 color);
 
-		void apply() override {
-			texture->bind(0);
-			shaderProgram->bind();
-			shaderProgram->setUniformInt("tex1", 0);
-			shaderProgram->setUniformVec4("color", glm::value_ptr(color));
-		}
+		void apply() override;
 	};
 }
 

@@ -4,7 +4,6 @@
 #include <vector>
 #include "INodeAnimation.h"
 #include "glm/gtc/quaternion.hpp"
-#include "util/TimeUtil.h"
 
 namespace Audace
 {

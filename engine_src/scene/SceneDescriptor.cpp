@@ -1,6 +1,11 @@
 #include "SceneDescriptor.h"
+#include "content/IFileAccess.h"
 #include "content/JsonSerializer.h"
 #include "content/AssetStore.h"
+#include "renderer/Mesh.h"
+#include "renderer/Sprite.h"
+#include "renderer/ShaderProgram.h"
+#include "Scene.h"
 
 namespace Audace
 {

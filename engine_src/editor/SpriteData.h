@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 #include "math/Pose.h"
-#include "content/JsonSerializer.h"
-#include "renderer/Sprite.h"
 
 #include <nlohmann/json.hpp>
 
@@ -13,6 +11,8 @@ using json = nlohmann::json;
 
 namespace Audace
 {
+	class Sprite;
+
 	struct SpriteData
 	{
 		std::string filename;

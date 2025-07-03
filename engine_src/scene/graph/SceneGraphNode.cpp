@@ -1,7 +1,54 @@
 #include "SceneGraphNode.h"
+#include "renderer/Sprite.h"
+#include "INodeAnimation.h"
 
 namespace Audace
 {
+	SceneGraphNode::SceneGraphNode() : parent(nullptr)
+	{
+	}
+
+	SceneGraphNode::SceneGraphNode(SceneGraphNode* parent)
+		: parent(parent)
+	{
+		parent->addChild(this);
+	}
+
+	void SceneGraphNode::setSprite(Sprite* s)
+	{
+		sprite = s;
+	}
+
+	Sprite* SceneGraphNode::getSprite()
+	{
+		return sprite;
+	}
+
+	void SceneGraphNode::addChild(SceneGraphNode* c)
+	{
+		children.emplace_back(c);
+	}
+
+	std::vector<SceneGraphNode*>& SceneGraphNode::getChildren()
+	{
+		return children;
+	}
+
+	void SceneGraphNode::addAnimation(INodeAnimation* a)
+	{
+		a->setNode(this);
+		animations.emplace_back(a);
+	}
+
+	void SceneGraphNode::setTranslation(glm::vec3 v) { translation = v; }
+	void SceneGraphNode::setScale(glm::vec3 v) { scale = v; }
+	void SceneGraphNode::setRotation(glm::quat q) { rotation = q; }
+
+	glm::vec3 SceneGraphNode::getPosition()
+	{
+		return glm::vec3(localTransform[3][0], localTransform[3][1], localTransform[3][2]);
+	}
+
 	void SceneGraphNode::update(glm::mat4 parentTransform)
 	{
 		for (INodeAnimation* a : animations)

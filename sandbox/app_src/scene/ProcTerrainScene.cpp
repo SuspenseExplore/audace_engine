@@ -7,6 +7,9 @@
 #include "renderer/VertexAttribute.h"
 #include "renderer/VertexArray.h"
 #include "renderer/Mesh.h"
+#include "renderer/Sprite.h"
+#include "renderer/material/Material.h"
+#include "scene/BaseCamera.h"
 #include "FastNoiseLite.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -16,6 +19,12 @@
 #include "KeyboardManager.h"
 #include "MouseManager.h"
 #endif
+
+ProcTerrainScene::ProcTerrainScene(Audace::BaseAppController* controller)
+	: Scene(controller)
+{
+
+}
 
 void ProcTerrainScene::loadAssets(Audace::IFileAccess* fileLoader)
 {
@@ -133,6 +142,26 @@ void ProcTerrainScene::renderUi()
 	//	ImGui::SetWindowSize(ImVec2(500, 600));
 	//	ImGui::ColorPicker4("Color", glm::value_ptr(clearColor));
 	//	ImGui::End();
+}
+
+void ProcTerrainScene::setCamera(Audace::BaseCamera* camera)
+{
+	this->camera = camera;
+}
+
+Audace::BaseCamera* ProcTerrainScene::getCamera()
+{
+	return camera;
+}
+
+void ProcTerrainScene::setLightPos(glm::vec3 pos)
+{
+	lightPos = pos + camera->getOriginPos();
+}
+
+void ProcTerrainScene::teleport(glm::vec3 pos)
+{
+	camera->setOriginPos(pos);
 }
 
 void ProcTerrainScene::disposeAssets()

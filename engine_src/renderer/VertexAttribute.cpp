@@ -1,4 +1,5 @@
 #include "VertexAttribute.h"
+#include "renderer/DataBuffer.h"
 
 namespace Audace {
 	VertexAttribute::VertexAttribute(std::string attrName, std::string typeName, GLenum type, bool normalized, GLuint stride, GLuint offset) :

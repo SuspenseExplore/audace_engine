@@ -44,8 +44,9 @@ add_executable(
 	${ENGINE_DIR}/renderer/Sprite.cpp
 	${ENGINE_DIR}/renderer/Shapes.cpp
 	${ENGINE_DIR}/renderer/material/Material.cpp
+	${ENGINE_DIR}/renderer/material/SimpleBillboardMaterial.cpp
 	${ENGINE_DIR}/renderer/material/PbrMetalRoughMat.cpp
-	${ENGINE_DIR}/renderer/light/PointLight.h
+	${ENGINE_DIR}/renderer/light/PointLight.cpp
 	${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 	${ENGINE_DIR}/renderer/text/TextLabel.cpp
 	${ENGINE_DIR}/content/gltf/GltfLoader.cpp
@@ -60,7 +61,7 @@ add_executable(
 	${ENGINE_DIR}/geom/VoxelTerrainGen.cpp
 	${ENGINE_DIR}/scene/Scene.cpp
 	${ENGINE_DIR}/scene/SceneDescriptor.cpp
-	${ENGINE_DIR}/scene/BaseCamera.h
+	${ENGINE_DIR}/scene/BaseCamera.cpp
 	${ENGINE_DIR}/scene/ForwardCamera.cpp
 	${ENGINE_DIR}/scene/BasicCameraController.cpp
 	${ENGINE_DIR}/scene/graph/SceneGraph.cpp

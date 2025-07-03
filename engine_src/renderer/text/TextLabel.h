@@ -2,12 +2,13 @@
 #define AU_TEXTLABEL_H
 
 #include <string>
-#include "BitmapFont.h"
 #include "math/Pose.h"
-#include "scene/Scene.h"
 #include "glm/glm.hpp"
 
 namespace Audace {
+	class BitmapFont;
+	class Scene;
+
 	class TextLabel {
 	protected:
 		std::string text;

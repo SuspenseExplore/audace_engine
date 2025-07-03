@@ -4,8 +4,11 @@
 
 #include <vector>
 #include "au_renderer.h"
-#include "renderer/VertexAttribute.h"
 #include "renderer/Shapes.h"
+#include "renderer/DataBuffer.h"
+#include "renderer/VertexAttribute.h"
+#include "renderer/VertexArray.h"
+#include "renderer/Mesh.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 

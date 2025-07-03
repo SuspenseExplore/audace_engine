@@ -3,15 +3,19 @@
 
 #include <functional>
 #include <string>
-#include "GameWindow.h"
 #include "EngineEventListener.h"
 #include "application/BaseAppController.h"
-#include "FileAccessGlfw.h"
-#include "scene/Scene.h"
 #include "SceneEnum.h"
+#include "glm/glm.hpp"
 
 namespace Audace
 {
+	class GameWindow;
+	class FileAccessGlfw;
+	class Scene;
+	class Vec2InputEvent;
+	class ButtonInputEvent;
+
 	class AppController : public EngineEventListener, BaseAppController
 	{
 		void startNextScene();
@@ -31,19 +35,12 @@ namespace Audace
 		void renderFrame();
 		void shutdown();
 
-		int getWidth() override { return window->getWidth(); }
-		int getHeight() override { return window->getHeight(); }
+		int getWidth() override;
+		int getHeight() override;
 		void setScene(int newScene) override;
 
-		void setMousePosListener(std::function<void(Vec2InputEvent)> listener)
-		{
-			window->setMouseMoveEventHandler(listener);
-		}
-		void setMouseButtonListener(int button, std::function<void(ButtonInputEvent)> listener)
-		{
-			window->addMouseButtonEventHandler(button, listener);
-		}
-
+		void setMousePosListener(std::function<void(Vec2InputEvent)> listener);
+		void setMouseButtonListener(int button, std::function<void(ButtonInputEvent)> listener);
 		void windowInitialized() override;
 	};
 }

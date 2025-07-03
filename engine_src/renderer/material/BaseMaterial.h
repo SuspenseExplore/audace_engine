@@ -1,9 +1,11 @@
 #ifndef AU_BASEMATERIAL_H
 #define AU_BASEMATERIAL_H
 
-#include "renderer/ShaderProgram.h"
+#include <string>
 
 namespace Audace {
+	class ShaderProgram;
+	
 	class BaseMaterial {
 		public:
 		virtual std::string getName() = 0;

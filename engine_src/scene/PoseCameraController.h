@@ -6,11 +6,12 @@
 #define AU_POSECAMERACONTROLLER_H
 
 #include <functional>
-#include "input/PoseInputEvent.h"
 #include "ICameraController.h"
-#include "ForwardCamera.h"
 
 namespace Audace {
+	class ForwardCamera;
+	class PoseInputEvent;
+	
 	class PoseCameraController : public ICameraController {
 		ForwardCamera *camera;
 		Pose pose;

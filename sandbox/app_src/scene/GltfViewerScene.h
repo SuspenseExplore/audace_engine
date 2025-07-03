@@ -2,9 +2,16 @@
 #define AU_GLTFVIEWERSCENE_H
 
 #include "scene/Scene.h"
-#include "scene/graph/SceneGraph.h"
-#include "renderer/light/PointLight.h"
-#include "scene/graph/RotationAnimation.h"
+
+namespace Audace
+{
+	class BaseAppController;
+	class BaseCamera;
+	class SceneGraph;
+	class SceneGraphNode;
+	class RotationAnimation;
+	class PointLight;
+}
 
 class GltfViewerScene : public Audace::Scene {
 	glm::vec4 clearColor = glm::vec4(0.25, 0.25, 0.25, 1);
@@ -16,7 +23,7 @@ class GltfViewerScene : public Audace::Scene {
 	Audace::RotationAnimation* anim;
 	Audace::SceneGraphNode* lightNode;
 public:
-	GltfViewerScene(Audace::BaseAppController* controller) : Scene(controller) {}
+	GltfViewerScene(Audace::BaseAppController* controller);
 
 	void loadAssets(Audace::IFileAccess* fileLoader) override;
 
@@ -26,10 +33,10 @@ public:
 
 	void disposeAssets() override {}
 
-	Audace::BaseCamera* getCamera() override { return camera; }
+	Audace::BaseCamera* getCamera() override;
 
-	void setCamera(Audace::BaseCamera* camera) override { this->camera = camera; }
+	void setCamera(Audace::BaseCamera* camera) override;
 
-	void teleport(glm::vec3 pos) override { camera->setOriginPos(pos); }
+	void teleport(glm::vec3 pos) override;
 };
 #endif

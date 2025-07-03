@@ -5,11 +5,12 @@
 #include <vector>
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
-#include "SpriteData.h"
-#include "renderer/light/PointLight.h"
 
 namespace Audace
 {
+	struct SpriteData;
+	class PointLight;
+
 	struct SceneData
 	{
 		std::string filename;

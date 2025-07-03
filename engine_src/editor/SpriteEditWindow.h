@@ -1,12 +1,14 @@
 #ifndef AU_SPRITEEDITWINDOW_H
 #define AU_SPRITEEDITWINDOW_H
 
-#include "renderer/Sprite.h"
-#include "SpriteData.h"
-#include "scene/Scene.h"
+#include "glm/glm.hpp"
 
 namespace Audace
 {
+	class Sprite;
+	class SpriteData;
+	class Scene;
+
 	class SpriteEditWindow
 	{
 		SpriteData* spriteData;

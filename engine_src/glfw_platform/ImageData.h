@@ -1,0 +1,23 @@
+#ifndef AU_IMAGEDATA_H
+#define AU_IMAGEDATA_H
+
+#include "glad.h"
+#include "au_renderer.h"
+
+namespace Audace
+{
+	class ImageData
+	{
+	public:
+		unsigned char *bytes;
+		int width;
+		int height;
+		GLenum format;
+
+		ImageData(unsigned char *bytes, int width, int height, GLenum format)
+			: bytes(bytes), width(width), height(height), format(format) {}
+		void release();
+	};
+}
+
+#endif

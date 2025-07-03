@@ -17,6 +17,7 @@
 #include <GLES3/gl3.h>
 #include <GLES3/gl31.h>
 
+#include "au_renderer.h"
 #include "AuLogger.h"
 #include "AppController.h"
 #include "EglWindow.h"

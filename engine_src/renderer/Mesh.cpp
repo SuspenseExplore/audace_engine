@@ -1,4 +1,8 @@
 #include "Mesh.h"
+#include "renderer/DataBuffer.h"
+#include "renderer/VertexArray.h"
+#include "renderer/ShaderProgram.h"
+#include "renderer/material/BaseMaterial.h"
 
 namespace Audace
 {

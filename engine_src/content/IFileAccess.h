@@ -2,9 +2,6 @@
 #define AU_IFILELOADER_H
 
 #include <string>
-#include "ByteBuffer.h"
-#include "ImageData.h"
-#include "Model.h"
 
 #include <nlohmann/json.hpp>
 
@@ -12,6 +9,10 @@ using json = nlohmann::json;
 
 namespace Audace
 {
+	class ByteBuffer;
+	class ImageData;
+	class Model;
+
 	class IFileAccess
 	{
 	public:

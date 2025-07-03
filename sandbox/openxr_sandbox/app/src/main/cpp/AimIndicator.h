@@ -7,10 +7,14 @@
 
 #include "input/PoseInputEvent.h"
 #include "renderer/Sprite.h"
-#include "scene/Scene.h"
-#include "renderer/Shapes.h"
 #include "imgui.h"
 #include "glm/gtc/type_ptr.hpp"
+
+namespace Audace
+{
+	class ShaderProgram;
+	class Scene;
+}
 
 class AimIndicator : public Audace::Sprite {
 	Audace::Pose pose;
@@ -18,28 +22,10 @@ class AimIndicator : public Audace::Sprite {
 	glm::vec3 offset = {-0.5, -0.5, -1.0};
 
 public:
-	AimIndicator() : Audace::Sprite({Audace::Shapes::cubePosNormTan()}) {
+	AimIndicator();
 
-	}
-	void handlePoseEvent(Audace::PoseInputEvent e)
-	{
-		if (e.changed)
-		{
-			Audace::Pose p = e.state;
-			pose = p;
-		}
-	}
-
-	void renderWorldSpace(Audace::Scene *scene) override
-	{
-		getMesh()->getMaterial()->getShader()->bind();
-		getMesh()->getMaterial()->getShader()->setUniformVec4("offset", {offset, 0.0});
-		setPosition(pose.position + scene->getCamera()->getOriginPos());
-		setOrientation(pose.orientation);
-		setScale(scale);
-		Audace::Sprite::renderWorldSpace(scene);
-		getMesh()->getMaterial()->getShader()->setUniformVec4("offset", {0.0, 0.0, 0.0, 0.0});
-	}
+	void handlePoseEvent(Audace::PoseInputEvent e);
+	void renderWorldSpace(Audace::Scene *scene);
 
 	void renderViewSpace(Audace::Scene *scene) override
 	{

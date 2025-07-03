@@ -1,5 +1,6 @@
 #include "RotationAnimation.h"
 #include "scene/graph/SceneGraphNode.h"
+#include "util/TimeUtil.h"
 
 namespace Audace
 {

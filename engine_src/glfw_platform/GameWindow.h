@@ -3,14 +3,17 @@
 
 #include <functional>
 #include "au_renderer.h"
-#include "glfw3.h"
 #include "KeyboardManager.h"
 #include "MouseManager.h"
-#include "input/ButtonInputEvent.h"
-#include "input/Vec2InputEvent.h"
+#include "glm/glm.hpp"
+
+class GLFWWindow;
 
 namespace Audace
 {
+	class ButtonInputEvent;
+	class Vec2InputEvent;
+
 	class GameWindow
 	{
 		GLFWwindow* window;
@@ -24,38 +27,21 @@ namespace Audace
 	public:
 		GameWindow(int width, int height, std::string title);
 		bool open();
-		bool shouldClose() { return glfwWindowShouldClose(window); }
+		bool shouldClose();
 		void close();
 
 		void processEvents();
 		void beginFrame();
 		void endFrame();
 
-		void addKeyEventHandler(int button, std::function<void(ButtonInputEvent)> handler)
-		{
-			keyboardManager.addButtonEventHandler(button, handler);
-		}
+		void addKeyEventHandler(int button, std::function<void(ButtonInputEvent)> handler);
+		void addMouseButtonEventHandler(int button, std::function<void(ButtonInputEvent)> handler);
+		void setMouseMoveEventHandler(std::function<void(Vec2InputEvent)> handler);
+		bool isMouseButtonDown(int button);
 
-		void addMouseButtonEventHandler(int button, std::function<void(ButtonInputEvent)> handler)
-		{
-			mouseManager.addButtonEventHandler(button, handler);
-		}
-
-		void setMouseMoveEventHandler(std::function<void(Vec2InputEvent)> handler)
-		{
-			mouseManager.setMouseMoveEventHandler(handler);
-		}
-
-		bool isMouseButtonDown(int button) { return glfwGetMouseButton(window, button) == GLFW_PRESS; };
-
-		glm::vec2 getMousePos() {
-			double x, y;
-			glfwGetCursorPos(window, &x, &y);
-			return glm::vec2(x, y);
-		}
-
-		int getWidth() { return width; }
-		int getHeight() { return height; }
+		glm::vec2 getMousePos();
+		int getWidth();
+		int getHeight();
 	};
 }
 

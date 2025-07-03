@@ -2,12 +2,14 @@
 #define AU_SCENEGRAPH_H
 
 #include <vector>
-#include "scene/Scene.h"
-#include "scene/graph/SceneGraphNode.h"
+#include "glm/glm.hpp"
 
 using std::vector;
 namespace Audace
 {
+	class Scene;
+	class SceneGraphNode;
+
 	class SceneGraph
 	{
 		Scene* scene;
@@ -15,9 +17,9 @@ namespace Audace
 		glm::mat4 IDENTITY = glm::mat4(1.0);
 
 	public:
-		SceneGraph(Scene* scene) : scene(scene) {}
-		void addRootNode(SceneGraphNode* node) { rootNodes.emplace_back(node); }
-		SceneGraphNode* getRootNode() { return rootNodes[0]; }
+		SceneGraph(Scene* scene);
+		void addRootNode(SceneGraphNode* node);
+		SceneGraphNode* getRootNode();
 
 		void update(Scene* scene);
 	};

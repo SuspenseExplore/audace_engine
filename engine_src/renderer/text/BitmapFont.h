@@ -2,16 +2,17 @@
 #define AU_BITMAPFONT_H
 
 #include <map>
-#include "content/IFileAccess.h"
-#include "renderer/ShaderProgram.h"
-#include "renderer/Texture2d.h"
-#include "renderer/Shapes.h"
-#include "renderer/Mesh.h"
+#include "glm/glm.hpp"
 #include "ft2build.h"
 #include FT_FREETYPE_H
 
 namespace Audace
 {
+	class IFileAccess;
+	class Texture2d;
+	class ShaderProgram;
+	class Mesh;
+
 	struct Character {
 		Texture2d* texture;
 		glm::vec2 size;

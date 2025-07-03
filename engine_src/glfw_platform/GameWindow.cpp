@@ -3,6 +3,9 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+#include "glfw3.h"
+#include "input/ButtonInputEvent.h"
+#include "input/Vec2InputEvent.h"
 
 namespace Audace
 {
@@ -60,6 +63,11 @@ namespace Audace
 		return true;
 	}
 
+	bool GameWindow::shouldClose()
+	{
+		return glfwWindowShouldClose(window);
+	}
+
 	void GameWindow::close()
 	{
 		ImGui_ImplOpenGL3_Shutdown();
@@ -99,4 +107,30 @@ namespace Audace
 		}
 		glfwSwapBuffers(window);
 	}
+
+	void GameWindow::addKeyEventHandler(int button, std::function<void(ButtonInputEvent)> handler)
+	{
+		keyboardManager.addButtonEventHandler(button, handler);
+	}
+
+	void GameWindow::addMouseButtonEventHandler(int button, std::function<void(ButtonInputEvent)> handler)
+	{
+		mouseManager.addButtonEventHandler(button, handler);
+	}
+
+	void GameWindow::setMouseMoveEventHandler(std::function<void(Vec2InputEvent)> handler)
+	{
+		mouseManager.setMouseMoveEventHandler(handler);
+	}
+
+	bool GameWindow::isMouseButtonDown(int button) { return glfwGetMouseButton(window, button) == GLFW_PRESS; };
+
+	glm::vec2 GameWindow::getMousePos() {
+		double x, y;
+		glfwGetCursorPos(window, &x, &y);
+		return glm::vec2(x, y);
+	}
+
+	int GameWindow::getWidth() { return width; }
+	int GameWindow::getHeight() { return height; }
 }

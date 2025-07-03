@@ -1,4 +1,5 @@
 #include "SpriteData.h"
+#include "renderer/Sprite.h"
 
 namespace Audace
 {

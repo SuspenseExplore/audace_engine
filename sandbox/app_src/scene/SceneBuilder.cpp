@@ -4,11 +4,16 @@
 #include "SceneBuilder.h"
 #include "imgui.h"
 #include "SceneEnum.h"
+#include "content/IFileAccess.h"
 #include "content/JsonSerializer.h"
 #include "content/AssetStore.h"
+#include "renderer/Texture2d.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/Shapes.h"
+#include "renderer/Sprite.h"
+#include "renderer/light/PointLight.h"
 #include "renderer/material/Material.h"
+#include "scene/BaseCamera.h"
 #include "scene/SceneDescriptor.h"
 #include "util/StringUtil.h"
 #include "glm/gtc/quaternion.hpp"
@@ -35,6 +40,12 @@ enum RenderType
 	DIR_LIGHT,
 	FULL
 };
+
+SceneBuilder::SceneBuilder(Audace::BaseAppController* controller)
+	: Scene(controller)
+{
+	strcpy(sceneWritePath, "D:/audace_engine/sandbox/assets/scenes/MainScene.json");
+}
 
 void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 {
@@ -64,6 +75,47 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 
 void SceneBuilder::loadModel(std::string path, std::string filename)
 {
+}
+
+void SceneBuilder::setClearColor(glm::vec4 color)
+{
+	clearColor = color;
+}
+
+void SceneBuilder::setAmbientLight(glm::vec4 color)
+{
+	ambientColor = color;
+}
+
+void SceneBuilder::setDirLight(glm::vec3 dir, glm::vec4 color)
+{
+	dirLightDirection = dir;
+	dirLightColor = color;
+}
+
+void SceneBuilder::setPointLight(int i, glm::vec3 pos, glm::vec4 color)
+{
+	if (i > -1 && i < ptLights.size())
+	{
+		ptLights[i]->setPosition(pos);
+		ptLights[i]->setColor(glm::vec3(color));
+		ptLights[i]->setIntensity(color.w);
+	}
+}
+
+void SceneBuilder::setCamera(Audace::BaseCamera* camera)
+{
+	this->camera = camera;
+}
+
+Audace::BaseCamera* SceneBuilder::getCamera()
+{
+	return camera;
+}
+
+void SceneBuilder::teleport(glm::vec3 pos)
+{
+	camera->setOriginPos(pos);
 }
 
 void SceneBuilder::render()

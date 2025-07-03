@@ -3,9 +3,10 @@
 
 #include <string>
 #include "au_renderer.h"
-#include "renderer/DataBuffer.h"
 
 namespace Audace {
+	class DataBuffer;
+
 	class VertexAttribute {
 		GLuint index;
 		GLuint size;

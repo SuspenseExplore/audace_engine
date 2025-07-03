@@ -1,7 +1,14 @@
 #include <fstream>
 #include "au_renderer.h"
 #include "AppController.h"
+#include "GameWindow.h"
+#include "input/ButtonInputEvent.h"
+#include "input/BooleanInputEvent.h"
+#include "input/Vec2InputEvent.h"
+#include "KeyboardManager.h"
+#include "FileAccessGlfw.h"
 #include "content/AssetStore.h"
+#include "content/Model.h"
 #include "scene/MainScene.h"
 #include "scene/NavigationScene.h"
 #include "scene/SceneBuilder.h"
@@ -222,6 +229,25 @@ namespace Audace
 	{
 		scene->render();
 		((ProcTerrainScene*)scene)->renderUi();
+	}
+
+	int AppController::getWidth()
+	{
+		return window->getWidth();
+	}
+
+	int AppController::getHeight()
+	{
+		return window->getHeight();
+	}
+
+	void AppController::setMousePosListener(std::function<void(Vec2InputEvent)> listener)
+	{
+		window->setMouseMoveEventHandler(listener);
+	}
+	void AppController::setMouseButtonListener(int button, std::function<void(ButtonInputEvent)> listener)
+	{
+		window->addMouseButtonEventHandler(button, listener);
 	}
 
 	void AppController::shutdown()

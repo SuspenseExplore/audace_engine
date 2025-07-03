@@ -11,13 +11,12 @@
 #include "au_renderer.h"
 #include "glm/glm.hpp"
 #include "math/Pose.h"
-#include "content/Model.h"
-#include "renderer/Mesh.h"
-#include "renderer/material/BaseMaterial.h"
-#include "scene/Scene.h"
 
 namespace Audace
 {
+	class Model;
+	class Mesh;
+	class BaseMaterial;
 	class Scene;
 
 	/**
@@ -32,18 +31,7 @@ namespace Audace
 		Pose pose;
 		glm::vec3 scale{ 1.0, 1.0, 1.0 };
 
-		Sprite(Sprite* sprite)
-		{
-			for (Mesh* mesh : sprite->meshes)
-			{
-				meshes.push_back(mesh);
-			}
-			name = sprite->name;
-			modelMatrix = glm::mat4(sprite->modelMatrix);
-			pose.position = glm::vec3(sprite->pose.position);
-			pose.orientation = glm::quat(sprite->pose.orientation);
-			scale = glm::vec3(sprite->scale);
-		}
+		Sprite(Sprite* sprite);
 
 	public:
 		Sprite(Model* model);
@@ -83,8 +71,8 @@ namespace Audace
 		glm::quat getOrientation() { return pose.orientation; }
 		glm::vec3 getScale() { return scale; }
 
-		Mesh* getMesh(int i = 0) { return meshes[i]; }
-		BaseMaterial* getMaterial(int i = 0) { return getMesh(i)->getMaterial(); }
+		Mesh* getMesh(int i = 0);
+		BaseMaterial* getMaterial(int i = 0);
 
 		void forEachMesh(std::function<void(Mesh*)> fn)
 		{

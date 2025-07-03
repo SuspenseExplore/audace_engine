@@ -2,6 +2,12 @@
 #include <vector>
 #include "AssetStore.h"
 #include "renderer/Shapes.h"
+#include "content/IFileAccess.h"
+#include "content/Model.h"
+#include "renderer/Mesh.h"
+#include "renderer/Texture2d.h"
+#include "renderer/Sprite.h"
+#include "renderer/ShaderProgram.h"
 
 namespace Audace
 {

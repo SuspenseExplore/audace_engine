@@ -3,16 +3,17 @@
 
 #include <string>
 #include <map>
-#include "IFileAccess.h"
-#include "renderer/Mesh.h"
-#include "renderer/ShaderProgram.h"
-#include "renderer/material/BaseMaterial.h"
 #include "renderer/material/SimpleBillboardMaterial.h"
-#include "renderer/Texture2d.h"
-#include "renderer/Sprite.h"
 
 namespace Audace
 {
+	class IFileAccess;
+	class Mesh;
+	class ShaderProgram;
+	class Texture2d;
+	class Sprite;
+	class Model;
+
 	class AssetStore
 	{
 		static IFileAccess* fileLoader;

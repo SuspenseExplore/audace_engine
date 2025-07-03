@@ -1,7 +1,12 @@
 #include <algorithm>
 #include "TextLabel.h"
+#include "BitmapFont.h"
+#include "scene/Scene.h"
 #include "renderer/Shapes.h"
 #include "renderer/Mesh.h"
+#include "renderer/ShaderProgram.h"
+#include "renderer/Texture2d.h"
+#include "scene/BaseCamera.h"
 #include "glm/gtc/type_ptr.hpp"
 
 namespace Audace

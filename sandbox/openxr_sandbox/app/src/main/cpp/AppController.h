@@ -10,15 +10,15 @@
 #include "audace_common.h"
 #include "EglWindow.h"
 #include "application/BaseAppController.h"
-#include "android_platform/FileAccessAndroid.h"
-#include "openxr/OpenxrContext.h"
-#include "scene/Scene.h"
-#include "openxr/HmdCamera.h"
 #include "input/InputDevices.h"
-#include "scene/ProcTerrainScene.h"
-#include "scene/SceneBuilder.h"
-#include "scene/GltfViewerScene.h"
+#include "openxr/OpenxrContext.h"
 #include "SceneEnum.h"
+
+class HmdCamera;
+namespace Audace {
+	class FileAccessAndroid;
+	class Scene;
+}
 
 class AppController : public Audace::BaseAppController {
 	android_app* androidApp;
@@ -36,7 +36,7 @@ class AppController : public Audace::BaseAppController {
 	void startNextScene();
 
 public:
-	AppController() : scene(new GltfViewerScene(this)) {}
+	AppController();
 	OpenxrContext xrContext;
 
 	bool init(android_app* app);
@@ -60,33 +60,19 @@ public:
 	void renderView(OpenxrView view);
 	void renderUi();
 
-	android_app* getAndroidApp() { return androidApp; }
-
-	OpenxrContext getXrContext() { return xrContext; }
-
-	EglWindow getWindow() { return window; }
+	android_app* getAndroidApp();
+	OpenxrContext getXrContext();
+	EglWindow getWindow();
 
 	void setScene(int nextScene) override;
 
 	// all the swapchains should have the same dimensions
-	int getWidth() override { return xrContext.uiSwapchain.getSize().x; }
-	int getHeight() override { return xrContext.uiSwapchain.getSize().y; }
+	int getWidth();
+	int getHeight();
 
-
-	void addPoseHandler(Audace::OculusTouchController::InputName name, std::function<void(Audace::PoseInputEvent)> handler)
-	{
-		xrContext.addPoseInputHandler(name, handler);
-	}
-
-	void addFloatEventHandler(Audace::OculusTouchController::InputName name, std::function<void(Audace::FloatInputEvent)> handler)
-	{
-		xrContext.addFloatInputHandler(name, handler);
-	}
-
-	void addBooleanEventHandler(Audace::OculusTouchController::InputName name, std::function<void(Audace::BooleanInputEvent)> handler)
-	{
-		xrContext.addBooleanInputHandler(name, handler);
-	}
+	void addPoseHandler(Audace::OculusTouchController::InputName name, std::function<void(Audace::PoseInputEvent)> handler);
+	void addFloatEventHandler(Audace::OculusTouchController::InputName name, std::function<void(Audace::FloatInputEvent)> handler);
+	void addBooleanEventHandler(Audace::OculusTouchController::InputName name, std::function<void(Audace::BooleanInputEvent)> handler);
 };
 
 

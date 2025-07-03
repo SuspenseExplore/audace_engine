@@ -4,9 +4,10 @@
 #include <string>
 #include <vector>
 #include "glm/glm.hpp"
-#include "renderer/material/BaseMaterial.h"
 
 namespace Audace {
+	class BaseMaterial;
+
 	struct Vertex {
 		glm::vec3 position = {0, 0, 0};
 		glm::vec3 texCoord = {0, 0, 0};

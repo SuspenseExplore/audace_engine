@@ -1,5 +1,7 @@
 #include "PbrMetalRoughMat.h"
 #include "content/AssetStore.h"
+#include "renderer/Texture2d.h"
+#include "renderer/ShaderProgram.h"
 
 namespace Audace
 {

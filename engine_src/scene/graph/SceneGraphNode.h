@@ -2,13 +2,14 @@
 #define AU_SCENEGRAPHNODE_H
 
 #include <vector>
-#include "renderer/Sprite.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
-#include "INodeAnimation.h"
 
 namespace Audace
 {
+	class INodeAnimation;
+	class Sprite;
+
 	class SceneGraphNode
 	{
 		SceneGraphNode* parent;
@@ -22,22 +23,18 @@ namespace Audace
 		glm::mat4 localTransform = glm::mat4(1.0);
 
 	public:
-		SceneGraphNode() : parent(nullptr) {}
-		SceneGraphNode(SceneGraphNode* parent) : parent(parent) { parent->addChild(this); }
-		void setSprite(Sprite* s) { sprite = s; }
-		Sprite* getSprite() { return sprite; }
-		void addChild(SceneGraphNode* c) { children.emplace_back(c); }
-		std::vector<SceneGraphNode*>& getChildren() { return children; }
-		void addAnimation(INodeAnimation* a)
-		{
-			a->setNode(this);
-			animations.emplace_back(a);
-		}
+		SceneGraphNode();
+		SceneGraphNode(SceneGraphNode* parent);
+		void setSprite(Sprite* s);
+		Sprite* getSprite();
+		void addChild(SceneGraphNode* c);
+		std::vector<SceneGraphNode*>& getChildren();
+		void addAnimation(INodeAnimation* a);
 
-		void setTranslation(glm::vec3 v) { translation = v; }
-		void setScale(glm::vec3 v) { scale = v; }
-		void setRotation(glm::quat q) { rotation = q; }
-		glm::vec3 getPosition() { return glm::vec3(localTransform[3][0], localTransform[3][1], localTransform[3][2]); }
+		void setTranslation(glm::vec3 v);
+		void setScale(glm::vec3 v);
+		void setRotation(glm::quat q);
+		glm::vec3 getPosition();
 		void update(glm::mat4 parentTransform);
 	};
 }

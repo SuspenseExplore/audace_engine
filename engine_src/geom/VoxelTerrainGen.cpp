@@ -1,4 +1,9 @@
 #include "VoxelTerrainGen.h"
+#include "au_renderer.h"
+#include "renderer/DataBuffer.h"
+#include "renderer/VertexAttribute.h"
+#include "renderer/VertexArray.h"
+#include "renderer/Mesh.h"
 
 Audace::VoxelTerrainGen::VoxelTerrainGen()
 {

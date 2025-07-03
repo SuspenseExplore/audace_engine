@@ -5,10 +5,10 @@
 #ifndef AU_SHAPES_H
 #define AU_SHAPES_H
 
-#include "renderer/Mesh.h"
-#include "renderer/DataBuffer.h"
-
 namespace Audace {
+	class Mesh;
+	class DataBuffer;
+
 	class Shapes {
 	public:
 		static Mesh* squarePositions();

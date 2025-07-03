@@ -1,7 +1,19 @@
 #include "au_renderer.h"
+#include "application/BaseAppController.h"
 #include "NavigationScene.h"
 #include "imgui.h"
 #include "SceneEnum.h"
+
+NavigationScene::NavigationScene(Audace::BaseAppController* controller)
+	: Audace::Scene(controller)
+{
+
+}
+
+void NavigationScene::loadAssets(Audace::IFileAccess* fileLoader)
+{
+
+}
 
 void NavigationScene::render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -19,4 +31,19 @@ void NavigationScene::render() {
 		appController->setScene(SandboxScene::TEXT);
 	}
 	ImGui::End();
+}
+
+Audace::BaseCamera* NavigationScene::getCamera()
+{
+	return nullptr;
+}
+
+void NavigationScene::setCamera(Audace::BaseCamera* camera)
+{
+
+}
+
+void NavigationScene::disposeAssets()
+{
+
 }
