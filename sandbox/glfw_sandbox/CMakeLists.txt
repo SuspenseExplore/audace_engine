@@ -33,6 +33,7 @@ add_executable(
 	${ENGINE_DIR}/include/b64/cencode.c
 	${ENGINE_DIR}/include/b64/cdecode.c
 	${ENGINE_DIR}/util/TimeUtil.h
+	${ENGINE_DIR}/util/GlUtil.cpp
 	${ENGINE_DIR}/glfw_platform/imgui/imgui_impl_glfw.cpp
 	${ENGINE_DIR}/glfw_platform/imgui/imgui_impl_opengl3.cpp
 	${ENGINE_DIR}/renderer/DataBuffer.cpp

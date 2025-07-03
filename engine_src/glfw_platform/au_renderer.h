@@ -3,6 +3,7 @@
 
 #include "glad.h"
 #include "AuLogger.h"
+#include "util/GlUtil.h"
 
 #define AU_RENDERER_LOG_CRITICAL(...) Audace::AuLogger::getRendererLogger()->getLogger()->critical(__VA_ARGS__)
 #define AU_RENDERER_LOG_ERROR(...)    Audace::AuLogger::getRendererLogger()->getLogger()->error(__VA_ARGS__)
@@ -16,7 +17,7 @@
     GLenum _ERR = GL_NO_ERROR;\
     while ((_ERR = glGetError()) != GL_NO_ERROR)\
     {\
-        AU_RENDERER_LOG_ERROR("GL error 0x{:x} at line {} in {}", _ERR, __LINE__, __FILE__);\
+        AU_RENDERER_LOG_ERROR("GL error {} at line {} in {}", getGlErrorString(_ERR), __LINE__, __FILE__);\
     }\
 }
 
