@@ -48,7 +48,7 @@ namespace Audace
 		std::vector<std::string> files = fileLoader->listFilesInDir("models", true);
 		for (std::string s : files)
 		{
-			if (s.find(".obj") == s.npos) {
+			if (s.find(".gltf") == s.npos) {
 				continue;
 			}
 			// file entries all start with "models/" and we want to skip that part

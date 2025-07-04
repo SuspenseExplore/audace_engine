@@ -28,6 +28,14 @@ namespace Audace
 		static bool startsWith(string s, string comp) {
 			return !s.substr(0, comp.length()).compare(comp);
 		}
+
+		static vector<string> splitFilePath(string filepath)
+		{
+			int i = filepath.find_last_of("/") + 1;
+			string s1 = filepath.substr(0, i);
+			string s2 = filepath.substr(i);
+			return {s1, s2};
+		}
 	};
 }
 

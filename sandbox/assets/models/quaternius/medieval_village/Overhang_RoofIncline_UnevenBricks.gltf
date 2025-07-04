@@ -1,6 +1,6 @@
 {
 	"asset":{
-		"generator":"Khronos glTF Blender I/O v4.0.44",
+		"generator":"Khronos glTF Blender I/O v3.6.28",
 		"version":"2.0"
 	},
 	"scene":0,
@@ -21,7 +21,7 @@
 	"materials":[
 		{
 			"doubleSided":true,
-			"name":"MI_WoodTrim",
+			"name":"MI_WoodTrim.001",
 			"normalTexture":{
 				"index":0
 			},
@@ -37,7 +37,7 @@
 		},
 		{
 			"doubleSided":true,
-			"name":"MI_UnevenBrick",
+			"name":"MI_UnevenBrick.001",
 			"normalTexture":{
 				"index":3
 			},
@@ -54,24 +54,26 @@
 	],
 	"meshes":[
 		{
-			"name":"Cube.136",
+			"name":"Cube.001",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":0,
 						"NORMAL":1,
-						"TEXCOORD_0":2
+						"TEXCOORD_0":2,
+						"TANGENT":3
 					},
-					"indices":3,
+					"indices":4,
 					"material":0
 				},
 				{
 					"attributes":{
-						"POSITION":4,
-						"NORMAL":5,
-						"TEXCOORD_0":6
+						"POSITION":5,
+						"NORMAL":6,
+						"TEXCOORD_0":7,
+						"TANGENT":8
 					},
-					"indices":7,
+					"indices":9,
 					"material":1
 				}
 			]
@@ -139,67 +141,79 @@
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":68,
+			"count":90,
 			"max":[
 				1,
-				-0.0585668720304966,
-				0.4079211950302124
+				1.0216120481491089,
+				-0.0585668720304966
 			],
 			"min":[
 				-1,
-				-0.3244321346282959,
-				-1.0216120481491089
+				-0.4079211950302124,
+				-0.3244321346282959
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":68,
+			"count":90,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":68,
+			"count":90,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
+			"componentType":5126,
+			"count":90,
+			"type":"VEC4"
+		},
+		{
+			"bufferView":4,
 			"componentType":5123,
 			"count":102,
 			"type":"SCALAR"
 		},
 		{
-			"bufferView":4,
+			"bufferView":5,
 			"componentType":5126,
-			"count":4,
+			"count":6,
 			"max":[
 				1,
-				-0.07546736299991608,
-				0.21131420135498047
+				1,
+				-0.07546736299991608
 			],
 			"min":[
 				-1,
-				-0.07546810060739517,
-				-1
+				-0.21131420135498047,
+				-0.07546810060739517
 			],
-			"type":"VEC3"
-		},
-		{
-			"bufferView":5,
-			"componentType":5126,
-			"count":4,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":6,
 			"componentType":5126,
-			"count":4,
-			"type":"VEC2"
+			"count":6,
+			"type":"VEC3"
 		},
 		{
 			"bufferView":7,
+			"componentType":5126,
+			"count":6,
+			"type":"VEC2"
+		},
+		{
+			"bufferView":8,
+			"componentType":5126,
+			"count":6,
+			"type":"VEC4"
+		},
+		{
+			"bufferView":9,
 			"componentType":5123,
 			"count":6,
 			"type":"SCALAR"
@@ -208,50 +222,62 @@
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":816,
+			"byteLength":1080,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":816,
-			"byteOffset":816,
+			"byteLength":1080,
+			"byteOffset":1080,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":544,
-			"byteOffset":1632,
+			"byteLength":720,
+			"byteOffset":2160,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":1440,
+			"byteOffset":2880,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":204,
-			"byteOffset":2176,
+			"byteOffset":4320,
 			"target":34963
 		},
 		{
 			"buffer":0,
-			"byteLength":48,
-			"byteOffset":2380,
+			"byteLength":72,
+			"byteOffset":4524,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":72,
+			"byteOffset":4596,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":48,
-			"byteOffset":2428,
+			"byteOffset":4668,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":32,
-			"byteOffset":2476,
+			"byteLength":96,
+			"byteOffset":4716,
 			"target":34962
 		},
 		{
 			"buffer":0,
 			"byteLength":12,
-			"byteOffset":2508,
+			"byteOffset":4812,
 			"target":34963
 		}
 	],
@@ -263,7 +289,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":2520,
+			"byteLength":4824,
 			"uri":"Overhang_RoofIncline_UnevenBricks.bin"
 		}
 	]

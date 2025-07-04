@@ -144,15 +144,10 @@ namespace Audace
 
 	void SceneEditor::loadSprite(std::string name)
 	{
-		ShaderProgram* shader = AssetStore::getShader("obj_mtl");
 		SpriteData sd;
 		sd.filename = name;
 		sd.sprite = AssetStore::cloneSprite(name);
 		sd.sprite->setName(name);
-		sd.sprite->forEachMesh([=](Mesh* mesh)
-			{
-				mesh->getMaterial()->setShader(shader);
-			});
 		scene->addSprite(sd.sprite);
 		sceneData.spriteData.emplace_back(sd);
 	}

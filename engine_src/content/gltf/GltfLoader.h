@@ -157,13 +157,13 @@ namespace Audace
 		vector<glm::vec3> getDataVec3(int accessorId);
 		vector<glm::vec4> getDataVec4(int accessorId);
 		vector<glm::quat> getDataQuat(int accessorId);
-		Sprite* getSprite(int meshId);
 		SceneGraphNode* getNode(int id);
 		vector<INodeAnimation*> getAnimations(int nodeId);
 
 	public:
 		void loadFile(IFileAccess* fileLoader, std::string path, std::string filename);
 		void setImageLoadPath(string p);
+		Sprite* getSprite(int meshId);
 		SceneGraph* getSceneGraph(Scene* scene);
 		SceneGraph* getSceneGraph(Scene* scene, SceneGraphNode* parentNode);
 	};

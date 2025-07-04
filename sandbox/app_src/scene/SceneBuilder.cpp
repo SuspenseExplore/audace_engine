@@ -54,7 +54,7 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 	modelMat = glm::rotate(glm::mat4(1.0), glm::half_pi<float>(), glm::vec3(1.0, 0.0, 0.0));
 
 	modelIndex = fileLoader->textFileToJson("models/_index.json");
-	shader = Audace::AssetStore::getShader("obj_mtl");
+	shader = Audace::AssetStore::getShader("pbr");
 
 	Audace::PointLight* pointLight = new Audace::PointLight();
 	pointLight->setPosition({ 0, 0, 10 });
@@ -63,14 +63,11 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 	addSprite(pointLight);
 	ptLights.emplace_back(pointLight);
 
-	Audace::AssetStore::getWhiteTexture()->bind(0);
-	shader->setUniformInt("material.diffuseMap", 0);
-
 	// loadModel("kenney/nature/cliffs/", "cliff_scene.obj");
 
 	editor = new Audace::SceneEditor(fileLoader);
 	editor->attachToScene(this);
-	editor->load("scenes/", "cliffs.json");
+	editor->loadSprite("models/quaternius/medieval_village/Overhang_RoofIncline_UnevenBricks.gltf");
 }
 
 void SceneBuilder::loadModel(std::string path, std::string filename)
@@ -129,18 +126,18 @@ void SceneBuilder::render()
 
 	shader->bind();
 	shader->setUniformVec4("ambientLight", ambientColor);
-	shader->setUniformVec4("dirLightColor", dirLightColor);
-	shader->setUniformVec3("dirLightDirection", dirLightDirection);
-	shader->setUniformVec3("light[0].position", ptLights[0]->getPosition());
-	shader->setUniformVec3("light[0].color", ptLights[0]->getColor());
-	shader->setUniformFloat("light[0].intensity", ptLights[0]->getIntensity());
+	// shader->setUniformVec4("dirLightColor", dirLightColor);
+	// shader->setUniformVec3("dirLightDirection", dirLightDirection);
+	shader->setUniformVec3("ptLight[0].position", ptLights[0]->getPosition());
+	shader->setUniformVec3("ptLight[0].color", ptLights[0]->getColor());
+	shader->setUniformFloat("ptLight[0].intensity", ptLights[0]->getIntensity());
 
-	shader->setUniformFloat("outPosition", renderType == RenderType::POSITION ? 1.0 : 0.0);
-	shader->setUniformFloat("outMtlColor", renderType == RenderType::MTL_COLOR ? 1.0 : 0.0);
-	shader->setUniformFloat("outNormal", renderType == RenderType::NORMAL ? 1.0 : 0.0);
-	shader->setUniformFloat("outAmbient", renderType == RenderType::AMBIENT ? 1.0 : 0.0);
-	shader->setUniformFloat("outDirLight", renderType == RenderType::DIR_LIGHT ? 1.0 : 0.0);
-	shader->setUniformFloat("outFull", renderType == RenderType::FULL ? 1.0 : 0.0);
+	// shader->setUniformFloat("outPosition", renderType == RenderType::POSITION ? 1.0 : 0.0);
+	// shader->setUniformFloat("outMtlColor", renderType == RenderType::MTL_COLOR ? 1.0 : 0.0);
+	// shader->setUniformFloat("outNormal", renderType == RenderType::NORMAL ? 1.0 : 0.0);
+	// shader->setUniformFloat("outAmbient", renderType == RenderType::AMBIENT ? 1.0 : 0.0);
+	// shader->setUniformFloat("outDirLight", renderType == RenderType::DIR_LIGHT ? 1.0 : 0.0);
+	// shader->setUniformFloat("outFull", renderType == RenderType::FULL ? 1.0 : 0.0);
 
 	for (Audace::Sprite* s : sprites)
 	{

@@ -4,10 +4,12 @@
 #include "renderer/Shapes.h"
 #include "content/IFileAccess.h"
 #include "content/Model.h"
+#include "content/gltf/GltfLoader.h"
 #include "renderer/Mesh.h"
 #include "renderer/Texture2d.h"
 #include "renderer/Sprite.h"
 #include "renderer/ShaderProgram.h"
+#include "util/StringUtil.h"
 
 namespace Audace
 {
@@ -106,14 +108,33 @@ namespace Audace
 
 	Sprite* AssetStore::cloneSprite(const std::string& name)
 	{
-		if (sprites.find(name) == sprites.end())
+		if (sprites.find(name) != sprites.end())
+		{
+			return sprites[name]->clone();
+		}
+
+		if (name.find(".obj") > -1)
 		{
 			Model* model = getModel(name);
 			Sprite* sprite = new Sprite(model);
 			sprite->setName(name);
 			sprites[name] = sprite;
+			return sprite;
 		}
-		return sprites[name]->clone();
+
+		int i = name.find(".gltf");
+		if (i > -1)
+		{
+			std::vector<std::string> v = StringUtil::splitFilePath(name);
+			GltfLoader loader;
+			loader.setImageLoadPath("images/quaternius/");
+			loader.loadFile(fileLoader, v[0], v[1]);
+			Sprite* sprite = loader.getSprite(0);
+			sprites[name] = sprite;
+			return sprite;
+		}
+
+		return nullptr;
 	}
 
 	Sprite* AssetStore::getCubeSprite()
