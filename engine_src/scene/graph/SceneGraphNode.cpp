@@ -1,17 +1,30 @@
 #include "SceneGraphNode.h"
+#include "content/AssetStore.h"
+#include "renderer/Mesh.h"
 #include "renderer/Sprite.h"
+#include "renderer/material/SimpleBillboardMaterial.h"
+#include "scene/Scene.h"
 #include "INodeAnimation.h"
 
 namespace Audace
 {
+	Sprite* SceneGraphNode::debugAxes = nullptr;
 	SceneGraphNode::SceneGraphNode() : parent(nullptr)
 	{
+		if (debugAxes == nullptr)
+		{
+			debugAxes = AssetStore::getColoredAxes();
+		}
 	}
 
 	SceneGraphNode::SceneGraphNode(SceneGraphNode* parent)
 		: parent(parent)
 	{
 		parent->addChild(this);
+		if (debugAxes == nullptr)
+		{
+			debugAxes = AssetStore::getColoredAxes();
+		}
 	}
 
 	void SceneGraphNode::setSprite(Sprite* s)
@@ -73,6 +86,16 @@ namespace Audace
 		for (SceneGraphNode* child : children)
 		{
 			child->update(localTransform);
+		}
+	}
+
+	void SceneGraphNode::debugRender(Scene* scene)
+	{
+		debugAxes->setModelMatrix(localTransform);
+		debugAxes->renderWorldSpace(scene);
+		for (SceneGraphNode* c : children)
+		{
+			c->debugRender(scene);
 		}
 	}
 }

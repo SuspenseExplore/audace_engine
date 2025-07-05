@@ -17,6 +17,7 @@ namespace Audace {
 		static Mesh* cubePosNormTan();
 		static DataBuffer* cubeBuffer();
 		static Mesh* spherePositions(int xResolution, int yResolution);
+		static Mesh* coloredAxes();
 	};
 }
 

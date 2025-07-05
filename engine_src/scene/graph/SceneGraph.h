@@ -25,6 +25,7 @@ namespace Audace
 		void addPointLight(PointLight* p);
 
 		void update(Scene* scene);
+		void debugRender(Scene* scene);
 	};
 }
 

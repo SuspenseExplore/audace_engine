@@ -35,6 +35,16 @@ namespace Audace
 		billboardMat->setColor(glm::vec4(1, 1, 1, 1));
 
 		{
+			ShaderProgram* shader = getShader("AU_axes");
+			BaseMaterial* mat = new SimpleBillboardMaterial();
+			mat->setShader(shader);
+			Mesh* mesh = Shapes::coloredAxes();
+			Sprite* sprite = new Sprite({ mesh });
+			mesh->setMaterial(mat);
+			sprites["AU_axes"] = sprite;
+		}
+
+		{
 			ImageData data(&WHITE_TEX[0], 1, 1, GL_RGBA);
 			Texture2d* whiteTex = new Texture2d(data);
 			whiteTex->create();
@@ -147,5 +157,10 @@ namespace Audace
 			sprites[name] = s;
 		}
 		return sprites[name]->clone();
+	}
+
+	Sprite* AssetStore::getColoredAxes()
+	{
+		return sprites["AU_axes"];
 	}
 }

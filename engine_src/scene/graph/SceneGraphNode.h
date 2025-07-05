@@ -9,6 +9,7 @@ namespace Audace
 {
 	class INodeAnimation;
 	class Sprite;
+	class Scene;
 
 	class SceneGraphNode
 	{
@@ -21,6 +22,8 @@ namespace Audace
 		glm::vec3 scale{ 1.0, 1.0, 1.0 };
 		glm::quat rotation{ 1.0, 0.0, 0.0, 0.0 };
 		glm::mat4 localTransform = glm::mat4(1.0);
+
+		static Sprite* debugAxes;
 
 	public:
 		SceneGraphNode();
@@ -36,6 +39,8 @@ namespace Audace
 		void setRotation(glm::quat q);
 		glm::vec3 getPosition();
 		void update(glm::mat4 parentTransform);
+
+		void debugRender(Scene* scene);
 	};
 }
 

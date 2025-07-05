@@ -72,6 +72,39 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 	editor->setSceneGraph(sceneGraph);
 }
 
+void SceneBuilder::render()
+{
+	editor->syncToScene();
+
+	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	camera->update();
+	sceneGraph->update(this);
+
+	shader->bind();
+	shader->setUniformVec4("ambientLight", ambientColor);
+	// shader->setUniformVec4("dirLightColor", dirLightColor);
+	// shader->setUniformVec3("dirLightDirection", dirLightDirection);
+	shader->setUniformVec3("ptLight[0].position", ptLights[0]->getPosition());
+	shader->setUniformVec3("ptLight[0].color", ptLights[0]->getColor());
+	shader->setUniformFloat("ptLight[0].intensity", ptLights[0]->getIntensity());
+
+	// shader->setUniformFloat("outPosition", renderType == RenderType::POSITION ? 1.0 : 0.0);
+	// shader->setUniformFloat("outMtlColor", renderType == RenderType::MTL_COLOR ? 1.0 : 0.0);
+	// shader->setUniformFloat("outNormal", renderType == RenderType::NORMAL ? 1.0 : 0.0);
+	// shader->setUniformFloat("outAmbient", renderType == RenderType::AMBIENT ? 1.0 : 0.0);
+	// shader->setUniformFloat("outDirLight", renderType == RenderType::DIR_LIGHT ? 1.0 : 0.0);
+	// shader->setUniformFloat("outFull", renderType == RenderType::FULL ? 1.0 : 0.0);
+
+	for (Audace::Sprite* s : sprites)
+	{
+		s->renderWorldSpace(this);
+	}
+	editor->renderWorldSpace(this);
+	sceneGraph->debugRender(this);
+}
+
 void SceneBuilder::loadModel(std::string path, std::string filename)
 {
 }
@@ -123,38 +156,6 @@ Audace::BaseCamera* SceneBuilder::getCamera()
 void SceneBuilder::teleport(glm::vec3 pos)
 {
 	camera->setOriginPos(pos);
-}
-
-void SceneBuilder::render()
-{
-	editor->syncToScene();
-
-	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	camera->update();
-	sceneGraph->update(this);
-
-	shader->bind();
-	shader->setUniformVec4("ambientLight", ambientColor);
-	// shader->setUniformVec4("dirLightColor", dirLightColor);
-	// shader->setUniformVec3("dirLightDirection", dirLightDirection);
-	shader->setUniformVec3("ptLight[0].position", ptLights[0]->getPosition());
-	shader->setUniformVec3("ptLight[0].color", ptLights[0]->getColor());
-	shader->setUniformFloat("ptLight[0].intensity", ptLights[0]->getIntensity());
-
-	// shader->setUniformFloat("outPosition", renderType == RenderType::POSITION ? 1.0 : 0.0);
-	// shader->setUniformFloat("outMtlColor", renderType == RenderType::MTL_COLOR ? 1.0 : 0.0);
-	// shader->setUniformFloat("outNormal", renderType == RenderType::NORMAL ? 1.0 : 0.0);
-	// shader->setUniformFloat("outAmbient", renderType == RenderType::AMBIENT ? 1.0 : 0.0);
-	// shader->setUniformFloat("outDirLight", renderType == RenderType::DIR_LIGHT ? 1.0 : 0.0);
-	// shader->setUniformFloat("outFull", renderType == RenderType::FULL ? 1.0 : 0.0);
-
-	for (Audace::Sprite* s : sprites)
-	{
-		s->renderWorldSpace(this);
-	}
-	editor->renderWorldSpace(this);
 }
 
 void SceneBuilder::renderUi()

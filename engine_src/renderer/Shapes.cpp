@@ -251,4 +251,31 @@ namespace Audace {
 									GL_UNSIGNED_SHORT, nullptr);
 		return mesh;
 	}
+
+	Mesh* Shapes::coloredAxes()
+	{
+		float *verts = new float[]{
+				0.0, 0.0, 0.0,		1.0, 0.0, 0.0,
+				1.0, 0.0, 0.0,		1.0, 0.0, 0.0,
+				0.0, 0.0, 0.0,		0.0, 1.0, 0.0,
+				0.0, 1.0, 0.0,		0.0, 1.0, 0.0,
+				0.0, 0.0, 0.0,		0.0, 0.0, 1.0,
+				0.0, 0.0, 1.0,		0.0, 0.0, 1.0
+			};
+		DataBuffer *vertexBuffer = new DataBuffer(verts, 4 * 6 * 6, GL_ARRAY_BUFFER,
+												  GL_STATIC_DRAW);
+		vertexBuffer->create();
+		vertexBuffer->bind();
+
+		VertexAttribute *attrPos = new VertexAttribute(0, 3, GL_FLOAT, false, 4 * 6, 0);
+		VertexAttribute *attrColor = new VertexAttribute(1, 3, GL_FLOAT, false, 4 * 6, 4 * 3);
+		std::vector<VertexAttribute *> attrs;
+		attrs.push_back(attrPos);
+		attrs.push_back(attrColor);
+		VertexArray *vertexArray = new VertexArray(attrs);
+		vertexArray->create();
+
+		Mesh *mesh = new Mesh(vertexArray, 0, 6, GL_LINES, nullptr);
+		return mesh;
+	}
 }

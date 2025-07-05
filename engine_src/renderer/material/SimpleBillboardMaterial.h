@@ -12,17 +12,17 @@ namespace Audace {
 
 	class SimpleBillboardMaterial : public BaseMaterial {
 		std::string name;
-		ShaderProgram *shaderProgram;
-		Texture2d *texture;
-		glm::vec4 color;
+		ShaderProgram* shaderProgram;
+		Texture2d* texture = nullptr;
+		glm::vec4 color = { 1, 1, 1, 1 };
 
-		public:
+	public:
 		void setName(std::string name);
 		std::string getName() override;
 		ShaderProgram* getShader() override;
-		void setShader(ShaderProgram *shaderProgram) override;
-		Texture2d *getTexture();
-		void setTexture(Texture2d *texture);
+		void setShader(ShaderProgram* shaderProgram) override;
+		Texture2d* getTexture();
+		void setTexture(Texture2d* texture);
 		glm::vec4 getColor();
 		void setColor(glm::vec4 color);
 

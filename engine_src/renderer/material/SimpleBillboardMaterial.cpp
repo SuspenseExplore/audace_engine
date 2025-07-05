@@ -45,7 +45,10 @@ namespace Audace {
 
 	void SimpleBillboardMaterial::apply()
 	{
-		texture->bind(0);
+		if (texture != nullptr)
+		{
+			texture->bind(0);
+		}
 		shaderProgram->bind();
 		shaderProgram->setUniformInt("tex1", 0);
 		shaderProgram->setUniformVec4("color", glm::value_ptr(color));

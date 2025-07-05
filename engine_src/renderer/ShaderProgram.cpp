@@ -176,9 +176,12 @@ namespace Audace
 
 	void ShaderProgram::setUniformVec4(std::string name, float* value)
 	{
-		glUniform4f(uniforms[name], value[0], value[1], value[2], value[3]);
-		AU_CHECK_GL_ERRORS();
-		AU_RENDERER_LOG_TRACE("Set vec4 uniform in shader {} at location {} to value [{},{},{},{}]", glid, uniforms[name], value[0], value[1], value[2], value[3]);
+		if (uniforms.find(name) != uniforms.end())
+		{
+			glUniform4f(uniforms[name], value[0], value[1], value[2], value[3]);
+			AU_CHECK_GL_ERRORS();
+			AU_RENDERER_LOG_TRACE("Set vec4 uniform in shader {} at location {} to value [{},{},{},{}]", glid, uniforms[name], value[0], value[1], value[2], value[3]);
+		}
 	}
 
 	void ShaderProgram::setUniformMat4(std::string name, glm::mat4 value)

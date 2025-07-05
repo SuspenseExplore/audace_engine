@@ -2,6 +2,7 @@
 #include "scene/Scene.h"
 #include "scene/graph/SceneGraphNode.h"
 #include "renderer/light/PointLight.h"
+#include "au_renderer.h"
 
 namespace Audace
 {
@@ -35,5 +36,15 @@ namespace Audace
 			PointLight* p = ptLights[i];
 			scene->setPointLight(i, p->getPosition(), glm::vec4(p->getColor(), p->getIntensity()));
 		}
+	}
+
+	void SceneGraph::debugRender(Scene* scene)
+	{
+		glDisable(GL_DEPTH_TEST);
+		for (SceneGraphNode* n : rootNodes)
+		{
+			n->debugRender(scene);
+		}
+		glEnable(GL_DEPTH_TEST);
 	}
 }

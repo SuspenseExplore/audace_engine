@@ -29,6 +29,7 @@ namespace Audace
 		static ShaderProgram* getShader(const std::string& name);
 		static Mesh* getSquareMesh() { return squareMesh; }
 		static Sprite* getCubeSprite();
+		static Sprite* getColoredAxes();
 		static ShaderProgram* simpleTextShader() { return shaders["AU_simple_text"]; }
 		static ShaderProgram* simpleBillboardShader() { return shaders["AU_simple_billboard"]; }
 		static SimpleBillboardMaterial* simpleBillboardMaterial() { return billboardMat; }
