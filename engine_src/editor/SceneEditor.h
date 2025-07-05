@@ -1,6 +1,7 @@
 #ifndef AU_SCENEEDITOR_H
 #define AU_SCENEEDITOR_H
 
+#include <string>
 #include "editor/SceneData.h"
 #include "editor/SpriteEditWindow.h"
 
@@ -12,12 +13,14 @@ namespace Audace
 	class IFileAccess;
 	class Scene;
 	class SpriteEditWindow;
+	class SceneGraph;
 
 	class SceneEditor
 	{
+		std::string imagePath = "images/";
 		IFileAccess* fileLoader;
 		Scene* scene;
-		SceneData sceneData;
+		SceneGraph* sceneGraph;
 
 		int selectedSprite = -1;
 		SpriteEditWindow editWin;
@@ -31,6 +34,7 @@ namespace Audace
 		void save(std::string path, std::string filename);
 
 		void attachToScene(Scene* scene);
+		void setSceneGraph(SceneGraph* graph);
 		void syncToScene();
 
 		void loadSprite(std::string name);

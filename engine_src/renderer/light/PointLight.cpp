@@ -11,7 +11,7 @@ namespace Audace
 		Audace::SimpleBillboardMaterial* material = AssetStore::simpleBillboardMaterial();
 		material->setTexture(AssetStore::getWhiteTexture());
 		meshes[0]->setMaterial(material);
-		setScale({ 0.02f, 0.02f, 0.02f });
+		setScale({ 0.2f, 0.2f, 0.2f });
 		name = "PointLight";
 	}
 
@@ -19,5 +19,11 @@ namespace Audace
 	{
 		reinterpret_cast<Audace::SimpleBillboardMaterial*>(meshes[0]->getMaterial())->setColor({ color, 1 });
 		Sprite::renderWorldSpace(scene);
+	}
+
+	glm::vec3 PointLight::getPosition()
+	{
+		glm::vec3 p = glm::vec3(modelMatrix[3][0], modelMatrix[3][1], modelMatrix[3][2]);
+		return p;
 	}
 }

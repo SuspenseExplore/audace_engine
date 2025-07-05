@@ -17,6 +17,7 @@
 #include "renderer/Texture2d.h"
 #include "renderer/Sprite.h"
 #include "renderer/material/PbrMetalRoughMat.h"
+#include "renderer/light/PointLight.h"
 
 namespace Audace
 {
@@ -222,6 +223,10 @@ namespace Audace
 			{
 				node.rotation = jser::getQuat(jNode, "rotation");
 			}
+			if (jNode.contains("extensions"))
+			{
+				node.extensions = &jNode["extensions"];
+			}
 		}
 	}
 
@@ -376,6 +381,21 @@ namespace Audace
 		}
 	}
 
+	void GltfLoader::parseLights(json& jLights)
+	{
+		for (int i = 0; i < jLights.size(); i++)
+		{
+			json& jLight = jLights[i];
+			if (jser::getString(jLight, "type") == "point")
+			{
+				PointLight* ptLight = new PointLight;
+				ptLight->setColor(jser::getVec3(jLight, "color"));
+				ptLight->setIntensity(jser::getFloat(jLight, "intensity"));
+				pointLights.emplace_back(ptLight);
+			}
+		}
+	}
+
 	void GltfLoader::parseScenes(json& jScenes)
 	{
 		scenes.resize(jScenes.size());
@@ -401,7 +421,7 @@ namespace Audace
 		this->fileLoader = fileLoader;
 		fileData.filename = filename;
 		fileData.filepath = path;
-		json jRoot = fileLoader->textFileToJson(path + filename);
+		jRoot = fileLoader->textFileToJson(path + filename);
 		{
 			json& jAsset = jRoot["asset"];
 			fileData.version = jAsset["version"];
@@ -463,6 +483,16 @@ namespace Audace
 		if (jRoot.contains("materials")) {
 			json& jMaterials = jRoot["materials"];
 			parseMaterials(jMaterials);
+		}
+
+		if (jRoot.contains("extensions"))
+		{
+			json& jExt = jRoot["extensions"];
+			if (jExt.contains("KHR_lights_punctual"))
+			{
+				json& jLights = jExt["KHR_lights_punctual"]["lights"];
+				parseLights(jLights);
+			}
 		}
 
 		{
@@ -646,6 +676,14 @@ namespace Audace
 				node->addAnimation(a);
 			}
 		}
+		if (gltfNode.extensions != nullptr)
+		{
+			if (gltfNode.extensions->contains("KHR_lights_punctual"))
+			{
+				int lightId = jser::getInt((*gltfNode.extensions)["KHR_lights_punctual"], "light");
+				node->setSprite(pointLights[lightId]);
+			}
+		}
 		for (int i : gltfNode.childNodeIds)
 		{
 			SceneGraphNode* child = getNode(i);
@@ -696,6 +734,13 @@ namespace Audace
 			{
 				scene->addSprite(sprites[id]);
 			}
+			for (int id = 0; id < pointLights.size(); id++)
+			{
+				PointLight* p = pointLights[id];
+				graph->addPointLight(p);
+				scene->addSprite(p);
+				scene->setPointLight(id, p);
+			}
 		}
 		return graph;
 	}
@@ -716,6 +761,13 @@ namespace Audace
 			for (int id = 0; id < sprites.size(); id++)
 			{
 				scene->addSprite(sprites[id]);
+			}
+			for (int id = 0; id < pointLights.size(); id++)
+			{
+				PointLight* p = pointLights[id];
+				graph->addPointLight(p);
+				scene->addSprite(p);
+				scene->setPointLight(id, p);
 			}
 		}
 		return graph;

@@ -11,6 +11,7 @@ using json = nlohmann::json;
 namespace Audace
 {
 	class SceneEditor;
+	class SceneGraph;
 	class ShaderProgram;
 	class PointLight;
 	class IFileAccess;
@@ -21,6 +22,7 @@ class SceneBuilder : public Audace::Scene
 	glm::vec4 clearColor = glm::vec4(0, 0, 1, 1);
 	Audace::IFileAccess* fileLoader;
 	Audace::SceneEditor* editor;
+	Audace::SceneGraph* sceneGraph;
 
 	static const int scenePathLength = 64;
 	char sceneWritePath[scenePathLength];
@@ -46,6 +48,7 @@ public:
 	void setAmbientLight(glm::vec4 color) override;
 	void setDirLight(glm::vec3 dir, glm::vec4 color) override;
 	void setPointLight(int i, glm::vec3 pos, glm::vec4 color) override;
+	void setPointLight(int i, Audace::PointLight* p) override;
 
 	void loadModel(std::string path, std::string filename);
 	void traverseModelIndex(json index, int i);

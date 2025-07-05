@@ -7,6 +7,7 @@
 #include "content/IFileAccess.h"
 #include "content/JsonSerializer.h"
 #include "content/AssetStore.h"
+#include "content/gltf/GltfLoader.h"
 #include "renderer/Texture2d.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/Shapes.h"
@@ -15,6 +16,7 @@
 #include "renderer/material/Material.h"
 #include "scene/BaseCamera.h"
 #include "scene/SceneDescriptor.h"
+#include "scene/graph/SceneGraph.h"
 #include "util/StringUtil.h"
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -57,17 +59,17 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 	shader = Audace::AssetStore::getShader("pbr");
 
 	Audace::PointLight* pointLight = new Audace::PointLight();
-	pointLight->setPosition({ 0, 0, 10 });
-	pointLight->setColor({ 1, 1, 1 });
-	pointLight->setIntensity(1);
-	addSprite(pointLight);
 	ptLights.emplace_back(pointLight);
 
 	// loadModel("kenney/nature/cliffs/", "cliff_scene.obj");
 
+	Audace::GltfLoader loader;
+	loader.setImageLoadPath("images/quaternius/");
+	loader.loadFile(fileLoader, "models/quat_builds/", "house_orig.gltf");
+	sceneGraph = loader.getSceneGraph(this);
 	editor = new Audace::SceneEditor(fileLoader);
 	editor->attachToScene(this);
-	editor->loadSprite("models/quaternius/medieval_village/Overhang_RoofIncline_UnevenBricks.gltf");
+	editor->setSceneGraph(sceneGraph);
 }
 
 void SceneBuilder::loadModel(std::string path, std::string filename)
@@ -100,6 +102,14 @@ void SceneBuilder::setPointLight(int i, glm::vec3 pos, glm::vec4 color)
 	}
 }
 
+void SceneBuilder::setPointLight(int i, Audace::PointLight* p)
+{
+	if (i > -1 && i < ptLights.size())
+	{
+		ptLights[i] = p;
+	}
+}
+
 void SceneBuilder::setCamera(Audace::BaseCamera* camera)
 {
 	this->camera = camera;
@@ -123,6 +133,7 @@ void SceneBuilder::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera->update();
+	sceneGraph->update(this);
 
 	shader->bind();
 	shader->setUniformVec4("ambientLight", ambientColor);

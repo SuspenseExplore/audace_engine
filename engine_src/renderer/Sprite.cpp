@@ -85,15 +85,15 @@ namespace Audace
 
 	void Sprite::renderWorldSpace(Scene* scene)
 	{
-		glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), pose.position);
-		worldMat *= glm::mat4_cast(pose.orientation);
-		worldMat = glm::scale(worldMat, scale);
-		worldMat *= modelMatrix;
+		// glm::mat4 worldMat = glm::translate(glm::mat4(1.0f), pose.position);
+		// worldMat *= glm::mat4_cast(pose.orientation);
+		// worldMat = glm::scale(worldMat, scale);
+		// worldMat *= modelMatrix;
 		for (Mesh* mesh : meshes)
 		{
 			mesh->getMaterial()->getShader()->bind();
 			mesh->getMaterial()->getShader()->setUniformMat4("vpMat", scene->getCamera()->getViewProjMatrix());
-			mesh->render(worldMat);
+			mesh->render(modelMatrix);
 		}
 	}
 

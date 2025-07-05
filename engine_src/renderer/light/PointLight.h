@@ -20,6 +20,7 @@ namespace Audace
 
 		void renderWorldSpace(Scene* scene) override;
 		void renderViewSpace(Scene* scene) override {}
+		glm::vec3 getPosition() override;
 		void setColor(glm::vec3 color) { this->color = color; }
 		glm::vec3 getColor() { return color; }
 		void setIntensity(float i) { intensity = i; }

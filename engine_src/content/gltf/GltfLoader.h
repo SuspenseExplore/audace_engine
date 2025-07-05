@@ -22,6 +22,7 @@ namespace Audace
 	class Sprite;
 	class BaseMaterial;
 	class Texture2d;
+	class PointLight;
 	class Scene;
 	class SceneGraph;
 	class SceneGraphNode;
@@ -87,6 +88,7 @@ namespace Audace
 		glm::quat rotation{ 1, 0, 0, 0 };
 		glm::mat4 localTransform = glm::mat4(1.0);
 		vector<int> animationIds;
+		json* extensions = nullptr;
 	};
 	struct GltfAnimSampler
 	{
@@ -122,6 +124,7 @@ namespace Audace
 		IFileAccess* fileLoader;
 		GltfFile fileData;
 		string imageLoadPath;
+		json jRoot;
 
 		int defaultSceneId = 0;
 		vector<GltfScene> scenes;
@@ -130,6 +133,7 @@ namespace Audace
 		vector<GltfImage> images;
 		vector<GltfTexSampler> texSamplers;
 		vector<Texture2d*> textures;
+		vector<PointLight*> pointLights;
 		vector<GltfMesh> meshes;
 		vector<GltfBuffer> buffers;
 		vector<GltfBufferView> bufferViews;
@@ -149,6 +153,7 @@ namespace Audace
 		void parseTexSamplers(json& jTexSamplers);
 		void parseTextures(json& jTextures);
 		void parseMaterials(json& jMaterials);
+		void parseLights(json& jLights);
 
 		char* getDataChunk(int bufferViewId, int startByte);
 		vector<unsigned short> getDataUShort(int accessorId);

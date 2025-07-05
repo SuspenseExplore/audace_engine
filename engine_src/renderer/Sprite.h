@@ -67,7 +67,7 @@ namespace Audace
 			this->scale = glm::vec3(scale);
 		}
 
-		glm::vec3 getPosition() { return pose.position; }
+		virtual glm::vec3 getPosition() { return pose.position; }
 		glm::quat getOrientation() { return pose.orientation; }
 		glm::vec3 getScale() { return scale; }
 

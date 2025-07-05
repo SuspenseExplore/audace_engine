@@ -67,6 +67,7 @@ namespace Audace
 		if (sprite != nullptr)
 		{
 			sprite->setModelMatrix(localTransform);
+			sprite->setPosition(getPosition());
 		}
 
 		for (SceneGraphNode* child : children)
