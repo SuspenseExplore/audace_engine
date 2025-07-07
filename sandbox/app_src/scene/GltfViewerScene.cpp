@@ -66,7 +66,7 @@ void GltfViewerScene::loadAssets(Audace::IFileAccess* fileLoader)
 	lightNode = new Audace::SceneGraphNode(n1);
 	lightNode->setTranslation({ 0, 3, 0 });
 	lightNode->setSprite(ptLight);
-	sceneGraph->addRootNode(n1);
+	sceneGraph->getRootNode()->addChild(n1);
 	addSprite(ptLight);
 
 	glEnable(GL_CULL_FACE);

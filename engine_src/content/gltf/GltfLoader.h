@@ -81,6 +81,7 @@ namespace Audace
 	};
 	struct GltfNode
 	{
+		string name;
 		vector<int> childNodeIds;
 		int meshId = -1;
 		glm::vec3 translation{ 0, 0, 0 };
@@ -170,7 +171,7 @@ namespace Audace
 		void setImageLoadPath(string p);
 		Sprite* getSprite(int meshId);
 		SceneGraph* getSceneGraph(Scene* scene);
-		SceneGraph* getSceneGraph(Scene* scene, SceneGraphNode* parentNode);
+		SceneGraph* getSceneGraph(Scene* scene, SceneGraphNode* root);
 	};
 }
 

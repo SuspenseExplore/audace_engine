@@ -8,16 +8,18 @@ namespace Audace
 {
 	SceneGraph::SceneGraph(Scene* scene) : scene(scene)
 	{
+		rootNode = new SceneGraphNode();
+		rootNode->setName("root");
 	}
 
-	void SceneGraph::addRootNode(SceneGraphNode* node)
+	void SceneGraph::setRootNode(SceneGraphNode* node)
 	{
-		rootNodes.emplace_back(node);
+		rootNode = node;
 	}
 
 	SceneGraphNode* SceneGraph::getRootNode()
 	{
-		return rootNodes[0];
+		return rootNode;
 	}
 
 	void SceneGraph::addPointLight(PointLight* p)
@@ -27,10 +29,7 @@ namespace Audace
 
 	void SceneGraph::update(Scene* scene)
 	{
-		for (SceneGraphNode* n : rootNodes)
-		{
-			n->update(IDENTITY);
-		}
+		rootNode->update(IDENTITY);
 		for (int i = 0; i < ptLights.size(); i++)
 		{
 			PointLight* p = ptLights[i];
@@ -40,11 +39,6 @@ namespace Audace
 
 	void SceneGraph::debugRender(Scene* scene)
 	{
-		glDisable(GL_DEPTH_TEST);
-		for (SceneGraphNode* n : rootNodes)
-		{
-			n->debugRender(scene);
-		}
-		glEnable(GL_DEPTH_TEST);
+		rootNode->debugRender(scene, true);
 	}
 }

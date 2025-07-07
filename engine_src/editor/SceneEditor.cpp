@@ -27,148 +27,14 @@ namespace Audace
 
 	}
 
-	void SceneEditor::load(std::string path, std::string filename)
-	{
-		if (scene == nullptr)
-		{
-			AU_ENGINE_LOG_ERROR("Editor can't load; scene is null");
-			return;
-		}
-
-		// json j = fileLoader->textFileToJson(path + filename);
-		// sceneData.filepath = path;
-		// sceneData.filename = j["filename"];
-		// JsonSerializer::ifContains(j, "clearColor", [=](json& el)
-		// 	{
-		// 		sceneData.clearColor = JsonSerializer::getVec4(el);
-		// 	});
-		// JsonSerializer::ifContains(j, "ambLightColor", [=](json& el)
-		// 	{
-		// 		sceneData.ambLightColor = JsonSerializer::getVec4(el);
-		// 	});
-		// JsonSerializer::ifContains(j, "dirLight", [=](json& el)
-		// 	{
-		// 		sceneData.dirLightDir = JsonSerializer::getVec3(el, "dir");
-		// 		sceneData.dirLightColor = JsonSerializer::getVec4(el, "color");
-		// 	});
-
-		// JsonSerializer::ifContains(j, "ptLights", [=](json& el)
-		// 	{
-		// 		JsonSerializer::forEach(el, [=](json& jPtLt)
-		// 			{
-		// 				PointLight* ptLight = new PointLight();
-		// 				ptLight->setPosition(JsonSerializer::getVec3(jPtLt, "position"));
-		// 				glm::vec4 c = JsonSerializer::getVec4(jPtLt, "color");
-		// 				ptLight->setColor(glm::vec3(c));
-		// 				ptLight->setIntensity(c.a);
-		// 				sceneData.ptLights.emplace_back(ptLight);
-		// 			});
-		// 	});
-
-		// sceneData.spriteData.clear();
-
-		// JsonSerializer::forEach(j, "sprites", [=](std::string name, json& val)
-		// 	{
-		// 		// name is filename, val is array of objects
-
-		// 		JsonSerializer::forEach(val, [=](json& el1)
-		// 			{
-		// 				// el1 is a sprite object that contains a pose
-
-		// 				JsonSerializer::ifContains(el1, "pose", [=](json& el2)
-		// 					{
-		// 						Pose p;
-		// 						SpriteData sd;
-
-		// 						p.position = JsonSerializer::getVec3(el2[0]);
-		// 						p.orientation = JsonSerializer::getQuat(el2[1]);
-		// 						if (el1.contains("scale"))
-		// 						{
-		// 							sd.scale = JsonSerializer::getVec3(el1["scale"]);
-		// 						}
-		// 						else
-		// 						{
-		// 							sd.scale = glm::vec3(1.0, 1.0, 1.0);
-		// 						}
-
-		// 						sd.filename = name;
-		// 						sd.pose = p;
-
-		// 						ShaderProgram* shader = AssetStore::getShader("obj_mtl");
-		// 						sd.sprite = AssetStore::cloneSprite(name);
-		// 						sd.sprite->setName(name);
-		// 						sd.sprite->setPosition(p.position);
-		// 						sd.sprite->setOrientation(p.orientation);
-		// 						sd.sprite->setScale(sd.scale);
-		// 						sd.sprite->forEachMesh([=](Mesh* mesh)
-		// 							{
-		// 								mesh->getMaterial()->setShader(shader);
-		// 							});
-		// 						scene->addSprite(sd.sprite);
-		// 						sceneData.spriteData.emplace_back(sd);
-		// 					});
-		// 			});
-
-		// 	});
-	}
-
-	void SceneEditor::save(std::string path, std::string filename)
-	{
-		// json j = {};
-		// j["filename"] = filename;
-		// j["clearColor"] = { sceneData.clearColor.r, sceneData.clearColor.g, sceneData.clearColor.b, sceneData.clearColor.a };
-
-		// json jSprites = {};
-		// for (SpriteData sd : sceneData.spriteData)
-		// {
-		// 	json jPose = {
-		// 		{sd.pose.position.x, sd.pose.position.y, sd.pose.position.z},
-		// 		{sd.pose.orientation.w, sd.pose.orientation.x, sd.pose.orientation.y, sd.pose.orientation.z} };
-		// 	json jobj = {};
-		// 	jobj["pose"] = jPose;
-		// 	jobj["scale"] = { sd.scale.x, sd.scale.y, sd.scale.z };
-		// 	jSprites[sd.filename].emplace_back(jobj);
-		// }
-		// j["sprites"] = jSprites;
-
-		// std::ofstream fout(path + filename);
-		// fout << j.dump(4);
-		// fout.close();
-	}
-
-	void SceneEditor::attachToScene(Scene* scene)
-	{
-		this->scene = scene;
-	}
-
-	void SceneEditor::setSceneGraph(SceneGraph* graph)
-	{
-		sceneGraph = graph;
-	}
-
-	void SceneEditor::syncToScene()
-	{
-		// scene->setClearColor(sceneData.clearColor);
-		// scene->setAmbientLight(sceneData.ambLightColor);
-		// scene->setDirLight(sceneData.dirLightDir, sceneData.dirLightColor);
-		// for (int i = 0; i < sceneData.ptLights.size(); i++)
-		// {
-		// 	scene->setPointLight(i, sceneData.ptLights[i]->getPosition(), glm::vec4(sceneData.ptLights[i]->getColor(), sceneData.ptLights[i]->getIntensity()));
-		// }
-	}
-
-	void SceneEditor::loadSprite(std::string name)
-	{
-		// SpriteData sd;
-		// sd.filename = name;
-		// sd.sprite = AssetStore::cloneSprite(name);
-		// sd.sprite->setName(name);
-		// scene->addSprite(sd.sprite);
-		// sceneData.spriteData.emplace_back(sd);
-	}
-
 	void SceneEditor::renderWorldSpace(Scene* scene)
 	{
+		if (selectedNode != nullptr)
+		{
+			glDisable(GL_DEPTH_TEST);
+			selectedNode->debugRender(scene, false);
+			glEnable(GL_DEPTH_TEST);
+		}
 		// if (selectedSprite != -1 && selectedSprite < sceneData.spriteData.size())
 		// {
 		// 	editWin.renderWorldSpace(scene);
@@ -182,25 +48,32 @@ namespace Audace
 		// 		editWin.renderViewSpace(scene);
 		// 	}
 
-		// 	ImGui::Begin("Scene Editor");
+		ImGui::Begin("Scene Editor");
 		// 	ImGui::SetWindowPos(ImVec2(600, 800), ImGuiCond_Once);
 		// 	ImGui::SetWindowSize(ImVec2(800, 600), ImGuiCond_Once);
 
-		// 	if (ImGui::BeginTabBar("SceneTabs"))
-		// 	{
-		// 		if (ImGui::BeginTabItem("Scene"))
-		// 		{
-		// 			ImGui::Text("Name: %s", sceneData.filename.c_str());
-		// 			ImGui::DragFloat4("Clear color", glm::value_ptr(sceneData.clearColor), 0.01, 0.0, 1.0);
-		// 			if (ImGui::Button("Save"))
-		// 			{
-		// 				// TODO: be able to save to a better place than the build folder
-		// 				int i = sceneData.filename.find_last_of("/");
-		// 				save(fileLoader->fileWriteBasePath() + "scenes/", sceneData.filename.substr(i + 1));
-		// 			}
-		// 			ImGui::EndTabItem();
-		// 		}
+		if (ImGui::BeginTabBar("SceneTabs"))
+		{
+			if (ImGui::BeginTabItem("Scene"))
+			{
+				sceneEditPane();
+				// if (ImGui::Button("Save"))
+				// {
+				// 	int i = sceneData.filename.find_last_of("/");
+				// 	save(fileLoader->fileWriteBasePath() + "scenes/", sceneData.filename.substr(i + 1));
+				// }
+				ImGui::EndTabItem();
+			}
 
+			if (ImGui::BeginTabItem("Graph"))
+			{
+				sceneGraphPane();
+				ImGui::EndTabItem();
+			}
+
+			ImGui::EndTabBar();
+		}
+		ImGui::End();
 		// 		if (ImGui::BeginTabItem("Models"))
 		// 		{
 		// 			fileListingPane(modelIndex);
@@ -276,10 +149,66 @@ namespace Audace
 		// 			ImGui::EndTabItem();
 		// 		}
 
-		// 		ImGui::EndTabBar();
-		// 	}
+	}
 
-		// 	ImGui::End();
+	void SceneEditor::sceneEditPane()
+	{
+		static glm::vec4 clearColor = { 0.5, 0.5, 0.5, 0.5 };
+		ImGui::DragFloat4("Clear color", glm::value_ptr(clearColor), 0.01, 0.0, 1.0);
+		scene->setClearColor(clearColor);
+	}
+
+	void SceneEditor::sceneGraphPane()
+	{
+		sceneGraphTreeEntry(sceneGraph->getRootNode(), "0");
+	}
+
+	void SceneEditor::sceneGraphTreeEntry(SceneGraphNode* node, const std::string& path)
+	{
+		int x = 500;
+		std::string n = (node->getName().length() > 0) ? node->getName() : path;
+		ImGui::PushID(path.c_str());
+		bool s = ImGui::TreeNode(n.c_str());
+		ImGui::SameLine(x);
+		if (ImGui::Button("Select"))
+		{
+			selectedNode = node;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Add child"))
+		{
+
+		}
+		if (s)
+		{
+			std::vector<SceneGraphNode*> children = node->getChildren();
+			for (int i = 0; i < children.size(); i++)
+			{
+				sceneGraphTreeEntry(children[i], path + "/" + std::to_string(i));
+			}
+			ImGui::TreePop();
+		}
+		ImGui::PopID();
+	}
+
+	void SceneEditor::attachToScene(Scene* scene)
+	{
+		this->scene = scene;
+	}
+
+	void SceneEditor::setSceneGraph(SceneGraph* graph)
+	{
+		sceneGraph = graph;
+	}
+
+	void SceneEditor::loadSprite(std::string name)
+	{
+		// SpriteData sd;
+		// sd.filename = name;
+		// sd.sprite = AssetStore::cloneSprite(name);
+		// sd.sprite->setName(name);
+		// scene->addSprite(sd.sprite);
+		// sceneData.spriteData.emplace_back(sd);
 	}
 
 	void SceneEditor::fileListingPane(json fileIndex, std::string currPath)

@@ -200,6 +200,10 @@ namespace Audace
 		{
 			json& jNode = jNodes[i];
 			GltfNode& node = nodes[i];
+			if (jNode.contains("name"))
+			{
+				node.name = jser::getString(jNode, "name");
+			}
 			if (jNode.contains("children"))
 			{
 				for (int j = 0; j < jNode["children"].size(); j++)
@@ -662,6 +666,7 @@ namespace Audace
 	{
 		GltfNode& gltfNode = nodes[id];
 		SceneGraphNode* node = new SceneGraphNode();
+		node->setName(gltfNode.name);
 		node->setTranslation(gltfNode.translation);
 		node->setScale(gltfNode.scale);
 		node->setRotation(gltfNode.rotation);
@@ -722,10 +727,11 @@ namespace Audace
 	{
 		GltfScene s = scenes[defaultSceneId];
 		SceneGraph* graph = new SceneGraph(scene);
+		SceneGraphNode* root = graph->getRootNode();
 		for (int id : s.nodeIds)
 		{
 			SceneGraphNode* node = getNode(id);
-			graph->addRootNode(node);
+			root->addChild(node);
 		}
 		// guarding this temporarily for testing because I'm not mocking scenes right now
 		if (scene != nullptr)
@@ -745,15 +751,14 @@ namespace Audace
 		return graph;
 	}
 
-	SceneGraph* GltfLoader::getSceneGraph(Scene* scene, SceneGraphNode* parentNode)
+	SceneGraph* GltfLoader::getSceneGraph(Scene* scene, SceneGraphNode* root)
 	{
 		GltfScene s = scenes[defaultSceneId];
 		SceneGraph* graph = new SceneGraph(scene);
-		graph->addRootNode(parentNode);
 		for (int id : s.nodeIds)
 		{
 			SceneGraphNode* node = getNode(id);
-			parentNode->addChild(node);
+			root->addChild(node);
 		}
 		// guarding this temporarily for testing because I'm not mocking scenes right now
 		if (scene != nullptr)

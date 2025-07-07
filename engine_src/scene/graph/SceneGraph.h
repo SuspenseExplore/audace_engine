@@ -14,13 +14,13 @@ namespace Audace
 	class SceneGraph
 	{
 		Scene* scene;
-		vector<SceneGraphNode*> rootNodes;
+		SceneGraphNode* rootNode;
 		vector<PointLight*> ptLights;
 		glm::mat4 IDENTITY = glm::mat4(1.0);
 
 	public:
 		SceneGraph(Scene* scene);
-		void addRootNode(SceneGraphNode* node);
+		void setRootNode(SceneGraphNode* node);
 		SceneGraphNode* getRootNode();
 		void addPointLight(PointLight* p);
 

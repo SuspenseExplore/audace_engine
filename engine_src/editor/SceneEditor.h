@@ -14,6 +14,7 @@ namespace Audace
 	class Scene;
 	class SpriteEditWindow;
 	class SceneGraph;
+	class SceneGraphNode;
 
 	class SceneEditor
 	{
@@ -22,7 +23,7 @@ namespace Audace
 		Scene* scene;
 		SceneGraph* sceneGraph;
 
-		int selectedSprite = -1;
+		SceneGraphNode* selectedNode = nullptr;
 		SpriteEditWindow editWin;
 
 		json modelIndex; // lists content of the assets/models/ folder
@@ -30,17 +31,17 @@ namespace Audace
 
 	public:
 		SceneEditor(IFileAccess* fileLoader);
-		void load(std::string path, std::string filename);
-		void save(std::string path, std::string filename);
 
 		void attachToScene(Scene* scene);
 		void setSceneGraph(SceneGraph* graph);
-		void syncToScene();
 
 		void loadSprite(std::string name);
 
 		void renderWorldSpace(Scene* scene);
 		void sceneEditWindow();
+		void sceneEditPane();
+		void sceneGraphPane();
+		void sceneGraphTreeEntry(SceneGraphNode* node, const std::string& path);
 		void fileListingPane(json fileIndex, std::string currPath = "");
 	};
 }

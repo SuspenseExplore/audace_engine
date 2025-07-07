@@ -53,7 +53,6 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 {
 	renderType = RenderType::FULL;
 	this->fileLoader = fileLoader;
-	modelMat = glm::rotate(glm::mat4(1.0), glm::half_pi<float>(), glm::vec3(1.0, 0.0, 0.0));
 
 	modelIndex = fileLoader->textFileToJson("models/_index.json");
 	shader = Audace::AssetStore::getShader("pbr");
@@ -64,9 +63,10 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 	// loadModel("kenney/nature/cliffs/", "cliff_scene.obj");
 
 	Audace::GltfLoader loader;
-	loader.setImageLoadPath("images/quaternius/");
-	loader.loadFile(fileLoader, "models/quat_builds/", "house_orig.gltf");
+	loader.setImageLoadPath("images/_test/");
+	loader.loadFile(fileLoader, "models/_test/", "Lantern.gltf");
 	sceneGraph = loader.getSceneGraph(this);
+	// sceneGraph = new Audace::SceneGraph(this);
 	editor = new Audace::SceneEditor(fileLoader);
 	editor->attachToScene(this);
 	editor->setSceneGraph(sceneGraph);
@@ -74,7 +74,7 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 
 void SceneBuilder::render()
 {
-	editor->syncToScene();
+	// editor->syncToScene();
 
 	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -102,7 +102,6 @@ void SceneBuilder::render()
 		s->renderWorldSpace(this);
 	}
 	editor->renderWorldSpace(this);
-	sceneGraph->debugRender(this);
 }
 
 void SceneBuilder::loadModel(std::string path, std::string filename)

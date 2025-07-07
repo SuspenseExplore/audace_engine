@@ -27,6 +27,16 @@ namespace Audace
 		}
 	}
 
+	void SceneGraphNode::setName(std::string name)
+	{
+		this->name = name;
+	}
+
+	const std::string& SceneGraphNode::getName()
+	{
+		return name;
+	}
+
 	void SceneGraphNode::setSprite(Sprite* s)
 	{
 		sprite = s;
@@ -89,13 +99,16 @@ namespace Audace
 		}
 	}
 
-	void SceneGraphNode::debugRender(Scene* scene)
+	void SceneGraphNode::debugRender(Scene* scene, bool recursive)
 	{
 		debugAxes->setModelMatrix(localTransform);
 		debugAxes->renderWorldSpace(scene);
-		for (SceneGraphNode* c : children)
+		if (recursive)
 		{
-			c->debugRender(scene);
+			for (SceneGraphNode* c : children)
+			{
+				c->debugRender(scene, recursive);
+			}
 		}
 	}
 }

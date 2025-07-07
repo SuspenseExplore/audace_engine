@@ -1,6 +1,7 @@
 #ifndef AU_SCENEGRAPHNODE_H
 #define AU_SCENEGRAPHNODE_H
 
+#include <string>
 #include <vector>
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
@@ -13,6 +14,7 @@ namespace Audace
 
 	class SceneGraphNode
 	{
+		std::string name;
 		SceneGraphNode* parent;
 		std::vector<SceneGraphNode*> children;
 		std::vector<INodeAnimation*> animations;
@@ -28,6 +30,8 @@ namespace Audace
 	public:
 		SceneGraphNode();
 		SceneGraphNode(SceneGraphNode* parent);
+		void setName(std::string name);
+		const std::string& getName();
 		void setSprite(Sprite* s);
 		Sprite* getSprite();
 		void addChild(SceneGraphNode* c);
@@ -40,7 +44,7 @@ namespace Audace
 		glm::vec3 getPosition();
 		void update(glm::mat4 parentTransform);
 
-		void debugRender(Scene* scene);
+		void debugRender(Scene* scene, bool recursive);
 	};
 }
 
