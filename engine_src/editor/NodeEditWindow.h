@@ -1,5 +1,5 @@
-#ifndef AU_SPRITEEDITWINDOW_H
-#define AU_SPRITEEDITWINDOW_H
+#ifndef AU_NODEEDITWINDOW_H
+#define AU_NODEEDITWINDOW_H
 
 #include "glm/glm.hpp"
 
@@ -8,18 +8,21 @@ namespace Audace
 	class Sprite;
 	class SpriteData;
 	class Scene;
+	class SceneGraphNode;
 
-	class SpriteEditWindow
+	class NodeEditWindow
 	{
-		SpriteData* spriteData;
+		SceneGraphNode* node;
 		Sprite* positionMark;
 
+		glm::vec3 translation;
+		glm::vec3 scale;
 		glm::vec3 angles;
 
 	public:
-		SpriteEditWindow();
+		NodeEditWindow();
 
-		void setSprite(SpriteData* sd);
+		void setNode(SceneGraphNode* node);
 		void renderWorldSpace(Scene* scene);
 		void renderViewSpace(Scene* scene);
 

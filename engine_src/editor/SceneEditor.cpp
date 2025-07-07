@@ -35,18 +35,18 @@ namespace Audace
 			selectedNode->debugRender(scene, false);
 			glEnable(GL_DEPTH_TEST);
 		}
-		// if (selectedSprite != -1 && selectedSprite < sceneData.spriteData.size())
-		// {
-		// 	editWin.renderWorldSpace(scene);
-		// }
+		if (selectedNode != nullptr)
+		{
+			editWin.renderWorldSpace(scene);
+		}
 	}
 
 	void SceneEditor::sceneEditWindow()
 	{
-		// 	if (selectedSprite != -1 && selectedSprite < sceneData.spriteData.size())
-		// 	{
-		// 		editWin.renderViewSpace(scene);
-		// 	}
+		if (selectedNode != nullptr)
+		{
+			editWin.renderViewSpace(scene);
+		}
 
 		ImGui::Begin("Scene Editor");
 		// 	ImGui::SetWindowPos(ImVec2(600, 800), ImGuiCond_Once);
@@ -173,6 +173,7 @@ namespace Audace
 		if (ImGui::Button("Select"))
 		{
 			selectedNode = node;
+			editWin.setNode(selectedNode);
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Add child"))

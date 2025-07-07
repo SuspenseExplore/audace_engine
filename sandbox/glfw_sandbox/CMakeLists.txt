@@ -58,7 +58,7 @@ add_executable(
 	${ENGINE_DIR}/editor/SpriteData.cpp
 	${ENGINE_DIR}/editor/SceneData.cpp
 	${ENGINE_DIR}/editor/SceneEditor.cpp
-	${ENGINE_DIR}/editor/SpriteEditWindow.cpp
+	${ENGINE_DIR}/editor/NodeEditWindow.cpp
 	${ENGINE_DIR}/geom/VoxelTerrainGen.cpp
 	${ENGINE_DIR}/scene/Scene.cpp
 	${ENGINE_DIR}/scene/SceneDescriptor.cpp

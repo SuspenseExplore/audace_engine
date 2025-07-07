@@ -3,7 +3,7 @@
 
 #include <string>
 #include "editor/SceneData.h"
-#include "editor/SpriteEditWindow.h"
+#include "editor/NodeEditWindow.h"
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -12,7 +12,6 @@ namespace Audace
 {
 	class IFileAccess;
 	class Scene;
-	class SpriteEditWindow;
 	class SceneGraph;
 	class SceneGraphNode;
 
@@ -24,7 +23,7 @@ namespace Audace
 		SceneGraph* sceneGraph;
 
 		SceneGraphNode* selectedNode = nullptr;
-		SpriteEditWindow editWin;
+		NodeEditWindow editWin;
 
 		json modelIndex; // lists content of the assets/models/ folder
 		std::vector<std::string> modelIndexPath; // the currently selected path in modelIndex

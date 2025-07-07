@@ -41,6 +41,10 @@ namespace Audace
 		void setTranslation(glm::vec3 v);
 		void setScale(glm::vec3 v);
 		void setRotation(glm::quat q);
+		glm::vec3 getTranslation() { return translation; }
+		glm::vec3 getScale() { return scale; }
+		glm::quat getRotation() { return rotation; }
+		glm::mat4 getLocalTransform() { return localTransform; }
 		glm::vec3 getPosition();
 		void update(glm::mat4 parentTransform);
 

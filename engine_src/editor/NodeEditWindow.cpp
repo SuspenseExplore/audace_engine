@@ -1,5 +1,5 @@
 #include "au_renderer.h"
-#include "SpriteEditWindow.h"
+#include "NodeEditWindow.h"
 #include "content/AssetStore.h"
 #include "content/Model.h"
 #include "editor/SpriteData.h"
@@ -8,33 +8,36 @@
 #include "renderer/Sprite.h"
 #include "scene/Scene.h"
 #include "scene/BaseCamera.h"
+#include "scene/graph/SceneGraphNode.h"
 #include "imgui.h"
 #include "glm/gtx/string_cast.hpp"
 
 namespace Audace
 {
-	SpriteEditWindow::SpriteEditWindow()
+	NodeEditWindow::NodeEditWindow()
 	{
 		positionMark = new Sprite({ Shapes::spherePositions(8, 8) });
 		positionMark->getMesh()->setMaterial(AssetStore::simpleBillboardMaterial());
 		positionMark->setScale({ 0.05, 0.05, 0.05 });
 	}
 
-	void SpriteEditWindow::setSprite(SpriteData* sd)
+	void NodeEditWindow::setNode(SceneGraphNode* node)
 	{
-		spriteData = sd;
-		angles = glm::degrees(glm::eulerAngles(sd->sprite->getOrientation()));
+		this->node = node;
+		translation = node->getTranslation();
+		scale = node->getScale();
+		angles = glm::degrees(glm::eulerAngles(node->getRotation()));
 	}
 
-	void SpriteEditWindow::renderWorldSpace(Scene* scene)
+	void NodeEditWindow::renderWorldSpace(Scene* scene)
 	{
-		positionMark->setPosition(spriteData->pose.position);
-		glDisable(GL_DEPTH_TEST);
-		positionMark->renderWorldSpace(scene);
-		glEnable(GL_DEPTH_TEST);
+		// positionMark->setPosition(node->getPosition());
+		// glDisable(GL_DEPTH_TEST);
+		// positionMark->renderWorldSpace(scene);
+		// glEnable(GL_DEPTH_TEST);
 	}
 
-	void SpriteEditWindow::renderViewSpace(Scene* scene)
+	void NodeEditWindow::renderViewSpace(Scene* scene)
 	{
 		std::vector<float> intervals = { 0.01, 0.1, 1, 5, 10, 15 };
 		std::vector<float> angleIntervals = { 0.01, 0.1, 1, 5, 15, 45, 90 };
@@ -60,11 +63,11 @@ namespace Audace
 
 					ImGui::TableNextRow();
 					ImGui::TableNextColumn();
-					editorCellFloat("##Xpos", &spriteData->pose.position.x, intervals[intervalIndex]);
+					editorCellFloat("##Xpos", &translation.x, intervals[intervalIndex]);
 					ImGui::TableNextColumn();
-					editorCellFloat("##Ypos", &spriteData->pose.position.y, intervals[intervalIndex]);
+					editorCellFloat("##Ypos", &translation.y, intervals[intervalIndex]);
 					ImGui::TableNextColumn();
-					editorCellFloat("##Zpos", &spriteData->pose.position.z, intervals[intervalIndex]);
+					editorCellFloat("##Zpos", &translation.z, intervals[intervalIndex]);
 
 					ImGui::EndTable();
 				}
@@ -111,11 +114,11 @@ namespace Audace
 
 					ImGui::TableNextRow();
 					ImGui::TableNextColumn();
-					editorCellFloat("##Xscale", &spriteData->scale.x, intervals[intervalIndex]);
+					editorCellFloat("##Xscale", &scale.x, intervals[intervalIndex]);
 					ImGui::TableNextColumn();
-					editorCellFloat("##Yscale", &spriteData->scale.y, intervals[intervalIndex]);
+					editorCellFloat("##Yscale", &scale.y, intervals[intervalIndex]);
 					ImGui::TableNextColumn();
-					editorCellFloat("##Zscale", &spriteData->scale.z, intervals[intervalIndex]);
+					editorCellFloat("##Zscale", &scale.z, intervals[intervalIndex]);
 
 					ImGui::EndTable();
 				}
@@ -162,11 +165,11 @@ namespace Audace
 
 					ImGui::TableNextRow();
 					ImGui::TableNextColumn();
-					editorCellFloat("##Xangle", &angles.x, angleIntervals[angleIntervalIndex]);
+					editorCellAngle("##Xangle", &angles.x, angleIntervals[angleIntervalIndex]);
 					ImGui::TableNextColumn();
-					editorCellFloat("##Yangle", &angles.y, angleIntervals[angleIntervalIndex]);
+					editorCellAngle("##Yangle", &angles.y, angleIntervals[angleIntervalIndex]);
 					ImGui::TableNextColumn();
-					editorCellFloat("##Zangle", &angles.z, angleIntervals[angleIntervalIndex]);
+					editorCellAngle("##Zangle", &angles.z, angleIntervals[angleIntervalIndex]);
 
 					ImGui::EndTable();
 				}
@@ -204,16 +207,16 @@ namespace Audace
 		}
 
 		ImGui::End();
-		spriteData->pose.orientation = glm::quat(glm::radians(glm::vec3(angles.x, angles.y, angles.z)));
-		spriteData->syncToSprite();
+		node->setTranslation(translation);
+		node->setScale(scale);
+		node->setRotation(glm::quat(glm::radians(angles)));
 	}
 
-	void SpriteEditWindow::txWidgets(Scene* scene)
+	void NodeEditWindow::txWidgets(Scene* scene)
 	{
-		glm::ivec2 p = scene->getCamera()->projectScreenSpace(spriteData->pose.position);
 		ImGui::PushID("tx_widgets");
 		translateButton(scene, glm::vec3(-1, 0, 0), "-X");
-		translateButton(scene, glm::vec3(1, 0, 0), "+x");
+		translateButton(scene, glm::vec3(1, 0, 0), "+X");
 		translateButton(scene, glm::vec3(0, -1, 0), "-Y");
 		translateButton(scene, glm::vec3(0, 1, 0), "+Y");
 		translateButton(scene, glm::vec3(0, 0, -1), "-Z");
@@ -221,23 +224,25 @@ namespace Audace
 		ImGui::PopID();
 	}
 
-	void SpriteEditWindow::translateButton(Scene* scene, glm::vec3 diff, std::string label)
+	void NodeEditWindow::translateButton(Scene* scene, glm::vec3 diff, std::string label)
 	{
-		glm::vec3 pos = spriteData->pose.position + diff;
-		glm::ivec2 p = scene->getCamera()->projectScreenSpace(pos);
+		glm::mat4 tx = node->getLocalTransform();
+		glm::vec3 worldPos = glm::vec3(tx * glm::vec4(diff, 1.0));
+		glm::ivec2 p = scene->getCamera()->projectScreenSpace(worldPos);
 		ImGui::SetNextWindowPos(ImVec2(p.x, p.y));
 		ImGui::SetNextWindowSize(ImVec2(50, 50));
 		if (ImGui::Begin(glm::to_string(diff).c_str(), nullptr, ImGuiWindowFlags_NoDecoration))
 		{
 			if (ImGui::Button(label.c_str()))
 			{
-				spriteData->pose.position += diff;
+				glm::mat4 m = glm::mat4_cast(node->getRotation()) * glm::scale(glm::mat4(1.0), node->getScale());
+				translation += glm::vec3(m * glm::vec4(diff, 0.0));
 			}
 		}
 		ImGui::End();
 	}
 
-	void SpriteEditWindow::editorCellFloat(std::string label, float* val, float interval)
+	void NodeEditWindow::editorCellFloat(std::string label, float* val, float interval)
 	{
 		char c[5];
 		std::snprintf(c, 5, "%.2f", interval);
@@ -263,7 +268,7 @@ namespace Audace
 		}
 	}
 
-	void SpriteEditWindow::editorCellAngle(std::string label, float* val, float interval)
+	void NodeEditWindow::editorCellAngle(std::string label, float* val, float interval)
 	{
 		char c[5];
 		std::snprintf(c, 5, "%.2f", interval);

@@ -65,7 +65,7 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/editor/SpriteData.cpp
 		${ENGINE_DIR}/editor/SceneData.cpp
 		${ENGINE_DIR}/editor/SceneEditor.cpp
-		${ENGINE_DIR}/editor/SpriteEditWindow.cpp
+		${ENGINE_DIR}/editor/NodeEditWindow.cpp
 		${ENGINE_DIR}/scene/BaseCamera.cpp
 		${ENGINE_DIR}/scene/Scene.cpp
 		${ENGINE_DIR}/scene/graph/SceneGraph.cpp
