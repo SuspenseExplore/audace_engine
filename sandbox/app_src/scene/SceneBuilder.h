@@ -33,7 +33,7 @@ class SceneBuilder : public Audace::Scene
 	Audace::BaseCamera* camera;
 
 	Audace::ShaderProgram* shader;
-	glm::vec4 ambientColor = { 0.5, 0.5, 0.5, 1.0 };
+	glm::vec4 ambientColor = { 1.0, 1.0, 1.0, 0.3 };
 	glm::vec3 dirLightDirection = { 0, 0, -1 };
 	glm::vec4 dirLightColor = { 1, 1, 0.8, 0.7 };
 	std::vector<Audace::PointLight*> ptLights;

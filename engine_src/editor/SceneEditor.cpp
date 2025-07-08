@@ -71,6 +71,41 @@ namespace Audace
 				ImGui::EndTabItem();
 			}
 
+			if (ImGui::BeginTabItem("Lighting"))
+			{
+				if (ImGui::BeginTabBar("LightingTabs"))
+				{
+ 					if (ImGui::BeginTabItem("Ambient light"))
+					{
+						ImGui::ColorPicker4("Ambient color", glm::value_ptr(ambientLight));
+						scene->setAmbientLight(ambientLight);
+						ImGui::EndTabItem();
+					}
+					// if (ImGui::BeginTabItem("Directional Light"))
+					// {
+					// 	static glm::vec3 angles = sceneData.dirLightDir;
+					// 	ImGui::DragFloat3("Direction", glm::value_ptr(angles));
+					// 	ImGui::ColorPicker4("Color", glm::value_ptr(sceneData.dirLightColor));
+					// 	sceneData.dirLightDir = glm::normalize(angles);
+					// 	ImGui::EndTabItem();
+					// }
+					// if (ImGui::BeginTabItem("Point light"))
+					// {
+					// 	PointLight* pointLight = sceneData.ptLights[0];
+					// 	static glm::vec4 pointLightColor = glm::vec4(pointLight->getColor(), pointLight->getIntensity());
+					// 	static glm::vec3 lightPos = pointLight->getPosition();
+					// 	ImGui::DragFloat3("Position", glm::value_ptr(lightPos), 0.01);
+					// 	ImGui::ColorPicker4("Color", glm::value_ptr(pointLightColor));
+					// 	pointLight->setPosition(lightPos);
+					// 	pointLight->setColor(glm::vec3(pointLightColor));
+					// 	pointLight->setIntensity(pointLightColor.a);
+					// 	ImGui::EndTabItem();
+					// }
+					ImGui::EndTabBar();
+				}
+				ImGui::EndTabItem();
+			}
+
 			ImGui::EndTabBar();
 		}
 		ImGui::End();
@@ -78,74 +113,6 @@ namespace Audace
 		// 		{
 		// 			fileListingPane(modelIndex);
 
-		// 			ImGui::EndTabItem();
-		// 		}
-
-		// 		if (ImGui::BeginTabItem("Sprites"))
-		// 		{
-		// 			if (ImGui::BeginListBox("SpriteList"))
-		// 			{
-		// 				for (int i = 0; i < sceneData.spriteData.size(); i++)
-		// 				{
-		// 					ImGui::PushID(i);
-		// 					Audace::Sprite* s = sceneData.spriteData[i].sprite;
-		// 					bool selected = (i == selectedSprite);
-		// 					if (ImGui::Selectable(s->getName().c_str(), selected))
-		// 					{
-		// 						selected = true;
-		// 						selectedSprite = i;
-		// 						editWin.setSprite(&sceneData.spriteData[i]);
-		// 					}
-		// 					if (selected)
-		// 					{
-		// 						ImGui::SetItemDefaultFocus();
-		// 					}
-		// 					ImGui::PopID();
-		// 				}
-
-		// 				ImGui::EndListBox();
-		// 			}
-		// 			if (ImGui::Button("Remove") && selectedSprite > -1 && selectedSprite < sceneData.spriteData.size())
-		// 			{
-		// 				scene->removeSprite(sceneData.spriteData[selectedSprite].sprite);
-		// 				sceneData.spriteData.erase(sceneData.spriteData.begin() + selectedSprite);
-		// 				selectedSprite = -1;
-		// 			}
-
-		// 			ImGui::EndTabItem();
-		// 		}
-
-		// 		if (ImGui::BeginTabItem("Lighting"))
-		// 		{
-		// 			if (ImGui::BeginTabBar("Lighting"))
-		// 			{
-		// 				if (ImGui::BeginTabItem("Ambient light"))
-		// 				{
-		// 					ImGui::ColorPicker4("Ambient color", glm::value_ptr(sceneData.ambLightColor));
-		// 					ImGui::EndTabItem();
-		// 				}
-		// 				if (ImGui::BeginTabItem("Directional Light"))
-		// 				{
-		// 					static glm::vec3 angles = sceneData.dirLightDir;
-		// 					ImGui::DragFloat3("Direction", glm::value_ptr(angles));
-		// 					ImGui::ColorPicker4("Color", glm::value_ptr(sceneData.dirLightColor));
-		// 					sceneData.dirLightDir = glm::normalize(angles);
-		// 					ImGui::EndTabItem();
-		// 				}
-		// 				if (ImGui::BeginTabItem("Point light"))
-		// 				{
-		// 					PointLight* pointLight = sceneData.ptLights[0];
-		// 					static glm::vec4 pointLightColor = glm::vec4(pointLight->getColor(), pointLight->getIntensity());
-		// 					static glm::vec3 lightPos = pointLight->getPosition();
-		// 					ImGui::DragFloat3("Position", glm::value_ptr(lightPos), 0.01);
-		// 					ImGui::ColorPicker4("Color", glm::value_ptr(pointLightColor));
-		// 					pointLight->setPosition(lightPos);
-		// 					pointLight->setColor(glm::vec3(pointLightColor));
-		// 					pointLight->setIntensity(pointLightColor.a);
-		// 					ImGui::EndTabItem();
-		// 				}
-		// 				ImGui::EndTabBar();
-		// 			}
 		// 			ImGui::EndTabItem();
 		// 		}
 

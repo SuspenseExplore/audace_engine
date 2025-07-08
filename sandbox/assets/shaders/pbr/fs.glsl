@@ -132,7 +132,7 @@ void main() {
 	float n_dot_l = max(0.0, dot(normal, l));
 	lo = (kd * baseColor / PI + specular) * radiance * n_dot_l;
 
-	vec3 ambient = vec3(0.03) * baseColor * occlusion;
+	vec3 ambient = ambientLight.rgb * ambientLight.a * baseColor * occlusion;
 	vec3 color = clamp(ambient + lo + emissive, ZERO.xyz, ONE.xyz);
 
 	color = color / (color + ONE.xyz);
