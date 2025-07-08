@@ -89,8 +89,10 @@ namespace Audace
 		// and the model matrix is used to apply the scene graph transform.
 		if (sprite != nullptr)
 		{
-			sprite->setModelMatrix(localTransform);
-			sprite->setPosition(getPosition());
+			sprite->setModelMatrix(parentTransform);
+			sprite->setPosition(translation);
+			sprite->setScale(scale);
+			sprite->setOrientation(rotation);
 		}
 
 		for (SceneGraphNode* child : children)
