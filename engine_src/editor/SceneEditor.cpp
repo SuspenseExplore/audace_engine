@@ -75,7 +75,7 @@ namespace Audace
 			{
 				if (ImGui::BeginTabBar("LightingTabs"))
 				{
- 					if (ImGui::BeginTabItem("Ambient light"))
+					if (ImGui::BeginTabItem("Ambient light"))
 					{
 						ImGui::ColorPicker4("Ambient color", glm::value_ptr(ambientLight));
 						scene->setAmbientLight(ambientLight);
@@ -89,18 +89,18 @@ namespace Audace
 					// 	sceneData.dirLightDir = glm::normalize(angles);
 					// 	ImGui::EndTabItem();
 					// }
-					// if (ImGui::BeginTabItem("Point light"))
-					// {
-					// 	PointLight* pointLight = sceneData.ptLights[0];
-					// 	static glm::vec4 pointLightColor = glm::vec4(pointLight->getColor(), pointLight->getIntensity());
-					// 	static glm::vec3 lightPos = pointLight->getPosition();
-					// 	ImGui::DragFloat3("Position", glm::value_ptr(lightPos), 0.01);
-					// 	ImGui::ColorPicker4("Color", glm::value_ptr(pointLightColor));
-					// 	pointLight->setPosition(lightPos);
-					// 	pointLight->setColor(glm::vec3(pointLightColor));
-					// 	pointLight->setIntensity(pointLightColor.a);
-					// 	ImGui::EndTabItem();
-					// }
+					if (ImGui::BeginTabItem("Point light"))
+					{
+						PointLight* pointLight = scene->getPointLight(0);
+						static glm::vec4 pointLightColor = glm::vec4(pointLight->getColor(), pointLight->getIntensity());
+						static glm::vec3 lightPos = pointLight->getPosition();
+						ImGui::DragFloat3("Position", glm::value_ptr(lightPos), 0.01);
+						ImGui::ColorPicker4("Color", glm::value_ptr(pointLightColor));
+						pointLight->setPosition(lightPos);
+						pointLight->setColor(glm::vec3(pointLightColor));
+						pointLight->setIntensity(pointLightColor.a);
+						ImGui::EndTabItem();
+					}
 					ImGui::EndTabBar();
 				}
 				ImGui::EndTabItem();

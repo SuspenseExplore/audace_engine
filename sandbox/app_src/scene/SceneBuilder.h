@@ -49,6 +49,7 @@ public:
 	void setDirLight(glm::vec3 dir, glm::vec4 color) override;
 	void setPointLight(int i, glm::vec3 pos, glm::vec4 color) override;
 	void setPointLight(int i, Audace::PointLight* p) override;
+	Audace::PointLight* getPointLight(int i) override;
 
 	void loadModel(std::string path, std::string filename);
 	void traverseModelIndex(json index, int i);

@@ -142,6 +142,11 @@ void SceneBuilder::setPointLight(int i, Audace::PointLight* p)
 	}
 }
 
+Audace::PointLight* SceneBuilder::getPointLight(int i)
+{
+	return ptLights[i];
+}
+
 void SceneBuilder::setCamera(Audace::BaseCamera* camera)
 {
 	this->camera = camera;
