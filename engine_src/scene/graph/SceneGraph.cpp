@@ -33,7 +33,7 @@ namespace Audace
 		for (int i = 0; i < ptLights.size(); i++)
 		{
 			PointLight* p = ptLights[i];
-			scene->setPointLight(i, p->getPosition(), glm::vec4(p->getColor(), p->getIntensity()));
+			scene->setPointLight(i, p);
 		}
 	}
 

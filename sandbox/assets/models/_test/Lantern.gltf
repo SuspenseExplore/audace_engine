@@ -318,7 +318,8 @@
         18.0091515,
         0.0
       ],
-      "name": "LanternPole_Lantern"
+      "name": "LanternPole_Lantern",
+	  "children": [ 4 ]
     },
     {
       "children": [
@@ -335,7 +336,21 @@
       ],
 	  "scale": [ 0.2, 0.2, 0.2 ],
       "name": "Lantern"
-    }
+    },
+	{
+		"extensions":{
+			"KHR_lights_punctual":{
+				"light":0
+			}
+		},
+		"name":"Lantern_light",
+		"translation":[
+			0,
+			0,
+			0
+		],
+		"scale": [ 0.2, 0.2, 0.2 ]
+	}
   ],
   "scene": 0,
   "scenes": [
@@ -358,5 +373,21 @@
     {
       "source": 3
     }
-  ]
+  ],
+	"extensions":{
+		"KHR_lights_punctual":{
+			"lights":[
+				{
+					"color":[
+						1,
+						0,
+						1
+					],
+					"intensity":10,
+					"type":"point",
+					"name":"Point"
+				}
+			]
+		}
+	}
 }

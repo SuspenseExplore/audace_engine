@@ -101,4 +101,19 @@ namespace Audace
 	{
 
 	}
+	glm::vec3 Sprite::getPosition()
+	{
+		return glm::vec3(modelMatrix * glm::vec4(pose.position, 1.0));
+	}
+
+	glm::quat Sprite::getOrientation()
+	{
+		return pose.orientation;
+	}
+
+	glm::vec3 Sprite::getScale()
+	{
+		return scale;
+	}
+
 } // Audace

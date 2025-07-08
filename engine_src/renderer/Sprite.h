@@ -67,9 +67,9 @@ namespace Audace
 			this->scale = glm::vec3(scale);
 		}
 
-		virtual glm::vec3 getPosition() { return pose.position; }
-		glm::quat getOrientation() { return pose.orientation; }
-		glm::vec3 getScale() { return scale; }
+		virtual glm::vec3 getPosition();
+		glm::quat getOrientation();
+		glm::vec3 getScale();
 
 		Mesh* getMesh(int i = 0);
 		BaseMaterial* getMaterial(int i = 0);

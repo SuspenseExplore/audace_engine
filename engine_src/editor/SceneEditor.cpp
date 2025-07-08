@@ -49,8 +49,8 @@ namespace Audace
 		}
 
 		ImGui::Begin("Scene Editor");
-		// 	ImGui::SetWindowPos(ImVec2(600, 800), ImGuiCond_Once);
-		// 	ImGui::SetWindowSize(ImVec2(800, 600), ImGuiCond_Once);
+		ImGui::SetWindowPos(ImVec2(600, 800), ImGuiCond_Once);
+		ImGui::SetWindowSize(ImVec2(800, 600), ImGuiCond_Once);
 
 		if (ImGui::BeginTabBar("SceneTabs"))
 		{

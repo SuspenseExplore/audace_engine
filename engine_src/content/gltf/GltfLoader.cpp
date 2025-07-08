@@ -744,7 +744,6 @@ namespace Audace
 			{
 				PointLight* p = pointLights[id];
 				graph->addPointLight(p);
-				scene->addSprite(p);
 				scene->setPointLight(id, p);
 			}
 		}

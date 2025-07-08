@@ -13,6 +13,7 @@
 #include "renderer/Shapes.h"
 #include "renderer/Mesh.h"
 #include "scene/Scene.h"
+#include "scene/SceneBuilder.h"
 #include "scene/GltfViewerScene.h"
 #include "AimIndicator.h"
 #include "TeleportTool.h"
@@ -20,7 +21,7 @@
 #include "glm/glm.hpp"
 
 AppController::AppController()
-		: scene(new GltfViewerScene(this))
+		: scene(new SceneBuilder(this))
 {
 }
 
@@ -383,7 +384,7 @@ void AppController::renderUi() {
 	AU_CHECK_GL_ERRORS();
 	ImGuiIO &io = ImGui::GetIO();
 	io.MouseDrawCursor = true;
-	//((ProcTerrainScene *) scene)->renderUi();
+	((SceneBuilder *) scene)->renderUi();
 
 	glClearColor(0, 0, 1, 1);
 	glBindVertexArray(0);
