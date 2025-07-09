@@ -6,7 +6,6 @@
 
 namespace Audace
 {
-	class SimpleBillboardMaterial;
 	class Scene;
 
 	class PointLight : public Sprite

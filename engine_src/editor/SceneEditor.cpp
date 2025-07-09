@@ -7,11 +7,13 @@
 #include "renderer/Mesh.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/light/PointLight.h"
+#include "renderer/light/DirLight.h"
 #include "content/IFileAccess.h"
 #include "scene/Scene.h"
 #include "scene/graph/SceneGraph.h"
 #include "scene/graph/SceneGraphNode.h"
 #include "imgui.h"
+#include "glm/gtc/quaternion.hpp"
 
 namespace Audace
 {
@@ -77,21 +79,25 @@ namespace Audace
 				{
 					if (ImGui::BeginTabItem("Ambient light"))
 					{
-						ImGui::ColorPicker4("Ambient color", glm::value_ptr(ambientLight));
-						scene->setAmbientLight(ambientLight);
+						glm::vec4 light = scene->getAmbientLight();
+						ImGui::ColorPicker4("Ambient color", glm::value_ptr(light));
+						scene->setAmbientLight(light);
 						ImGui::EndTabItem();
 					}
-					// if (ImGui::BeginTabItem("Directional Light"))
-					// {
-					// 	static glm::vec3 angles = sceneData.dirLightDir;
-					// 	ImGui::DragFloat3("Direction", glm::value_ptr(angles));
-					// 	ImGui::ColorPicker4("Color", glm::value_ptr(sceneData.dirLightColor));
-					// 	sceneData.dirLightDir = glm::normalize(angles);
-					// 	ImGui::EndTabItem();
-					// }
+					if (ImGui::BeginTabItem("Directional Light"))
+					{
+						static DirLight* light = reinterpret_cast<DirLight*>(scene->getLight(1));
+						glm::vec4 color = light->getColor();
+						glm::vec3 angles = glm::degrees(glm::eulerAngles(light->getOrientation()));
+						ImGui::DragFloat3("Direction", glm::value_ptr(angles));
+						ImGui::ColorPicker4("Color", glm::value_ptr(color));
+						light->setOrientation(glm::quat(glm::radians(angles)));
+						light->setColor(color);
+						ImGui::EndTabItem();
+					}
 					if (ImGui::BeginTabItem("Point light"))
 					{
-						PointLight* pointLight = scene->getPointLight(0);
+						PointLight* pointLight = reinterpret_cast<PointLight*>(scene->getLight(0));
 						static glm::vec4 pointLightColor = glm::vec4(pointLight->getColor(), pointLight->getIntensity());
 						static glm::vec3 lightPos = pointLight->getPosition();
 						ImGui::DragFloat3("Position", glm::value_ptr(lightPos), 0.01);

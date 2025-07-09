@@ -23,6 +23,7 @@ namespace Audace
 	class BaseMaterial;
 	class Texture2d;
 	class PointLight;
+	class DirLight;
 	class Scene;
 	class SceneGraph;
 	class SceneGraphNode;
@@ -134,7 +135,8 @@ namespace Audace
 		vector<GltfImage> images;
 		vector<GltfTexSampler> texSamplers;
 		vector<Texture2d*> textures;
-		vector<PointLight*> pointLights;
+		map<int, Sprite*> lights;
+		map<int, string> lightTypes;
 		vector<GltfMesh> meshes;
 		vector<GltfBuffer> buffers;
 		vector<GltfBufferView> bufferViews;

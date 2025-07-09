@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <map>
+#include <string>
 #include "scene/Scene.h"
 
 #include <nlohmann/json.hpp>
@@ -13,7 +14,9 @@ namespace Audace
 	class SceneEditor;
 	class SceneGraph;
 	class ShaderProgram;
+	class Sprite;
 	class PointLight;
+	class DirLight;
 	class IFileAccess;
 }
 
@@ -33,10 +36,9 @@ class SceneBuilder : public Audace::Scene
 	Audace::BaseCamera* camera;
 
 	Audace::ShaderProgram* shader;
-	glm::vec4 ambientColor = { 1.0, 1.0, 1.0, 0.3 };
-	glm::vec3 dirLightDirection = { 0, 0, -1 };
-	glm::vec4 dirLightColor = { 1, 1, 0.8, 0.7 };
-	std::vector<Audace::PointLight*> ptLights;
+	glm::vec4 ambientColor = { 1.0, 1.0, 1.0, 0.03 };
+	std::map<int, Audace::Sprite*> lights;
+	std::map<int, std::string> lightTypes;
 	glm::mat4 modelMat;
 
 	int renderType = 0;
@@ -46,10 +48,9 @@ public:
 
 	void setClearColor(glm::vec4 color) override;
 	void setAmbientLight(glm::vec4 color) override;
-	void setDirLight(glm::vec3 dir, glm::vec4 color) override;
-	void setPointLight(int i, glm::vec3 pos, glm::vec4 color) override;
-	void setPointLight(int i, Audace::PointLight* p) override;
-	Audace::PointLight* getPointLight(int i) override;
+	glm::vec4 getAmbientLight() override { return ambientColor; }
+	void setLight(int id, Audace::Sprite* light, std::string type) override;
+	Audace::Sprite* getLight(int id) override;
 
 	void loadModel(std::string path, std::string filename);
 	void traverseModelIndex(json index, int i);

@@ -1,7 +1,6 @@
 #include "SceneGraph.h"
 #include "scene/Scene.h"
 #include "scene/graph/SceneGraphNode.h"
-#include "renderer/light/PointLight.h"
 #include "au_renderer.h"
 
 namespace Audace
@@ -22,18 +21,18 @@ namespace Audace
 		return rootNode;
 	}
 
-	void SceneGraph::addPointLight(PointLight* p)
+	void SceneGraph::addLight(int id, Sprite* light, string type)
 	{
-		ptLights.emplace_back(p);
+		lights[id] = light;
+		lightTypes[id] = type;
 	}
 
 	void SceneGraph::update(Scene* scene)
 	{
 		rootNode->update(IDENTITY);
-		for (int i = 0; i < ptLights.size(); i++)
+		for (int i = 0; i < lights.size(); i++)
 		{
-			PointLight* p = ptLights[i];
-			scene->setPointLight(i, p);
+			scene->setLight(i, lights[i], lightTypes[i]);
 		}
 	}
 

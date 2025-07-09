@@ -23,11 +23,13 @@ struct PointLight {
 };
 
 uniform vec4 ambientLight;
+in PointLight tLight;
+in vec3 tDirLightDir;
+uniform vec4 dirLightColor;
 
 in vec3 texCoord;
 in vec3 fragPos;
 in vec3 tViewPos;
-in PointLight tLight;
 
 out vec4 fragColor;
 
@@ -94,6 +96,31 @@ vec3 getEmissive()
 	return material.emissiveFactor * texture(material.emissiveMap, texCoord.xy).rgb;
 }
 
+vec3 calcLighting(vec4 lightColor, vec3 lightDir, vec3 normal, vec3 v, float atnFactor, float roughness, vec3 f0, float metallic, vec3 baseColor)
+{
+	vec3 h = normalize(v + lightDir);
+	float dist = length(tLight.position - fragPos);
+	float attenuation = 1.0 / (dist * dist);
+	attenuation = mix(1.0, attenuation, atnFactor);
+	vec3 radiance = lightColor.rgb * lightColor.a * attenuation;
+
+	//cook-torrance brdf
+	float ndf = distributionGGX(normal, h, roughness);
+	float g = geomSmith(normal, v, lightDir, roughness);
+	vec3 f = fresnelSchlick(max(0.0, dot(h, v)), f0);
+
+	vec3 ks = f;
+	vec3 kd = ONE.xyz - ks;
+	kd *= 1.0 - metallic;
+
+	vec3 num = ndf * g * f;
+	float denom = 4.0 * max(0.0, dot(normal, v)) * max(0.0, dot(normal, lightDir)) + 0.0001;
+	vec3 specular = num / denom;
+
+	float n_dot_l = max(0.0, dot(normal, lightDir));
+	return (kd * baseColor / PI + specular) * radiance * n_dot_l;
+}
+
 void main() {
 	vec3 normal = texture(material.normalMap, texCoord.xy).xyz;
 	normal = normalize(normal * 2.0 - 1.0);
@@ -110,27 +137,10 @@ void main() {
 
 	//reflectance
 	vec3 lo = vec3(0.0);
-	vec3 l = normalize(tLight.position - fragPos);
-	vec3 h = normalize(v + l);
-	float dist = length(tLight.position - fragPos);
-	float attenuation = 1.0 / (dist * dist);
-	vec3 radiance = tLight.color * tLight.intensity * attenuation;
+	vec3 lightDir = normalize(tLight.position - fragPos);
+	lo += calcLighting(vec4(tLight.color, tLight.intensity), lightDir, normal, v, 1.0, roughness, f0, metallic, baseColor);
 
-	//cook-torrance brdf
-	float ndf = distributionGGX(normal, h, roughness);
-	float g = geomSmith(normal, v, l, roughness);
-	vec3 f = fresnelSchlick(max(0.0, dot(h, v)), f0);
-
-	vec3 ks = f;
-	vec3 kd = ONE.xyz - ks;
-	kd *= 1.0 - metallic;
-
-	vec3 num = ndf * g * f;
-	float denom = 4.0 * max(0.0, dot(normal, v)) * max(0.0, dot(normal, l)) + 0.0001;
-	vec3 specular = num / denom;
-
-	float n_dot_l = max(0.0, dot(normal, l));
-	lo = (kd * baseColor / PI + specular) * radiance * n_dot_l;
+	lo += calcLighting(dirLightColor, tDirLightDir, normal, v, 0.0, roughness, f0, metallic, baseColor);
 
 	vec3 ambient = ambientLight.rgb * ambientLight.a * baseColor * occlusion;
 	vec3 color = clamp(ambient + lo + emissive, ZERO.xyz, ONE.xyz);

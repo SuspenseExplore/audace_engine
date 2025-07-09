@@ -17,11 +17,13 @@ uniform mat4 vpMat;
 uniform vec3 textureScale;
 uniform vec3 viewPos;
 uniform PointLight ptLight[4];
+uniform vec3 dirLightDirection;
 
 out vec3 texCoord;
 out vec3 fragPos;
 out vec3 tViewPos;
 out PointLight tLight;
+out vec3 tDirLightDir;
 
 void main() {
 	gl_Position = vpMat * worldMat * position;
@@ -39,4 +41,5 @@ void main() {
 	tLight.position = tbnMat * ptLight[0].position;
 	tLight.color = ptLight[0].color;
 	tLight.intensity = ptLight[0].intensity;
+	tDirLightDir = tbnMat * dirLightDirection;
 }

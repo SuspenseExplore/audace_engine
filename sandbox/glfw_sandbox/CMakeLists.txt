@@ -48,6 +48,7 @@ add_executable(
 	${ENGINE_DIR}/renderer/material/SimpleBillboardMaterial.cpp
 	${ENGINE_DIR}/renderer/material/PbrMetalRoughMat.cpp
 	${ENGINE_DIR}/renderer/light/PointLight.cpp
+	${ENGINE_DIR}/renderer/light/DirLight.cpp
 	${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 	${ENGINE_DIR}/renderer/text/TextLabel.cpp
 	${ENGINE_DIR}/content/gltf/GltfLoader.cpp

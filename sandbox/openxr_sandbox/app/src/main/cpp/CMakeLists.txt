@@ -60,6 +60,7 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/renderer/material/SimpleBillboardMaterial.cpp
 		${ENGINE_DIR}/renderer/material/PbrMetalRoughMat.cpp
 		${ENGINE_DIR}/renderer/light/PointLight.cpp
+		${ENGINE_DIR}/renderer/light/DirLight.cpp
 		${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 		${ENGINE_DIR}/geom/VoxelTerrainGen.cpp
 		${ENGINE_DIR}/editor/SpriteData.cpp

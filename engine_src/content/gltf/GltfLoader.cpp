@@ -18,6 +18,7 @@
 #include "renderer/Sprite.h"
 #include "renderer/material/PbrMetalRoughMat.h"
 #include "renderer/light/PointLight.h"
+#include "renderer/light/DirLight.h"
 
 namespace Audace
 {
@@ -395,7 +396,16 @@ namespace Audace
 				PointLight* ptLight = new PointLight;
 				ptLight->setColor(jser::getVec3(jLight, "color"));
 				ptLight->setIntensity(jser::getFloat(jLight, "intensity"));
-				pointLights.emplace_back(ptLight);
+				lights[i] = ptLight;
+				lightTypes[i] = "point";
+			}
+			else if (jser::getString(jLight, "type") == "directional")
+			{
+				DirLight* light = new DirLight;
+				glm::vec3 color = jser::getVec3(jLight, "color");
+				light->setColor(color);
+				lights[i] = light;
+				lightTypes[i] = "directional";
 			}
 		}
 	}
@@ -686,7 +696,16 @@ namespace Audace
 			if (gltfNode.extensions->contains("KHR_lights_punctual"))
 			{
 				int lightId = jser::getInt((*gltfNode.extensions)["KHR_lights_punctual"], "light");
-				node->setSprite(pointLights[lightId]);
+				json& jLight = jRoot["extensions"]["KHR_lights_punctual"]["lights"][lightId];
+				string type = jser::getString(jLight, "type");
+				if (type == "point")
+				{
+					node->setSprite(lights[lightId]);
+				}
+				else if (type == "directional")
+				{
+					node->setSprite(lights[lightId]);
+				}
 			}
 		}
 		for (int i : gltfNode.childNodeIds)
@@ -733,18 +752,18 @@ namespace Audace
 			SceneGraphNode* node = getNode(id);
 			root->addChild(node);
 		}
-		// guarding this temporarily for testing because I'm not mocking scenes right now
+
 		if (scene != nullptr)
 		{
 			for (int id = 0; id < sprites.size(); id++)
 			{
 				scene->addSprite(sprites[id]);
 			}
-			for (int id = 0; id < pointLights.size(); id++)
+
+			for (auto& item : lights)
 			{
-				PointLight* p = pointLights[id];
-				graph->addPointLight(p);
-				scene->setPointLight(id, p);
+				int id = item.first;
+				graph->addLight(id, item.second, lightTypes[id]);
 			}
 		}
 		return graph;
@@ -759,19 +778,17 @@ namespace Audace
 			SceneGraphNode* node = getNode(id);
 			root->addChild(node);
 		}
-		// guarding this temporarily for testing because I'm not mocking scenes right now
+
 		if (scene != nullptr)
 		{
 			for (int id = 0; id < sprites.size(); id++)
 			{
 				scene->addSprite(sprites[id]);
 			}
-			for (int id = 0; id < pointLights.size(); id++)
+			for (auto& item : lights)
 			{
-				PointLight* p = pointLights[id];
-				graph->addPointLight(p);
-				scene->addSprite(p);
-				scene->setPointLight(id, p);
+				int id = item.first;
+				graph->addLight(id, item.second, lightTypes[id]);
 			}
 		}
 		return graph;

@@ -29,8 +29,6 @@ namespace Audace
 		json modelIndex; // lists content of the assets/models/ folder
 		std::vector<std::string> modelIndexPath; // the currently selected path in modelIndex
 
-		glm::vec4 ambientLight = {1.0, 1.0, 1.0, 0.3};
-
 	public:
 		SceneEditor(IFileAccess* fileLoader);
 

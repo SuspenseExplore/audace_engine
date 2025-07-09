@@ -13,6 +13,7 @@
 #include "renderer/Shapes.h"
 #include "renderer/Sprite.h"
 #include "renderer/light/PointLight.h"
+#include "renderer/light/DirLight.h"
 #include "renderer/material/Material.h"
 #include "scene/BaseCamera.h"
 #include "scene/SceneDescriptor.h"
@@ -57,8 +58,8 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 	modelIndex = fileLoader->textFileToJson("models/_index.json");
 	shader = Audace::AssetStore::getShader("pbr");
 
-	Audace::PointLight* pointLight = new Audace::PointLight();
-	ptLights.emplace_back(pointLight);
+	lights[0] = new Audace::PointLight;
+	lights[1] = new Audace::DirLight;
 
 	// loadModel("kenney/nature/cliffs/", "cliff_scene.obj");
 
@@ -84,12 +85,18 @@ void SceneBuilder::render()
 
 	shader->bind();
 	shader->setUniformVec4("ambientLight", ambientColor);
-	// shader->setUniformVec4("dirLightColor", dirLightColor);
-	// shader->setUniformVec3("dirLightDirection", dirLightDirection);
-	shader->setUniformVec3("ptLight[0].position", ptLights[0]->getPosition());
-	shader->setUniformVec3("ptLight[0].color", ptLights[0]->getColor());
-	shader->setUniformFloat("ptLight[0].intensity", ptLights[0]->getIntensity());
+	{
+		Audace::DirLight* light = reinterpret_cast<Audace::DirLight*>(lights[1]);
+		shader->setUniformVec4("dirLightColor", light->getColor());
+		shader->setUniformVec3("dirLightDirection", glm::mat3_cast(light->getOrientation()) * glm::vec3(0, 0, -1));
+	}
 
+	{
+		Audace::PointLight* light = reinterpret_cast<Audace::PointLight*>(lights[0]);
+		shader->setUniformVec3("ptLight[0].position", light->getPosition());
+		shader->setUniformVec3("ptLight[0].color", light->getColor());
+		shader->setUniformFloat("ptLight[0].intensity", light->getIntensity());
+	}
 	// shader->setUniformFloat("outPosition", renderType == RenderType::POSITION ? 1.0 : 0.0);
 	// shader->setUniformFloat("outMtlColor", renderType == RenderType::MTL_COLOR ? 1.0 : 0.0);
 	// shader->setUniformFloat("outNormal", renderType == RenderType::NORMAL ? 1.0 : 0.0);
@@ -118,33 +125,15 @@ void SceneBuilder::setAmbientLight(glm::vec4 color)
 	ambientColor = color;
 }
 
-void SceneBuilder::setDirLight(glm::vec3 dir, glm::vec4 color)
+void SceneBuilder::setLight(int id, Audace::Sprite* light, std::string type)
 {
-	dirLightDirection = dir;
-	dirLightColor = color;
+	lights[id] = light;
+	lightTypes[id] = type;
 }
 
-void SceneBuilder::setPointLight(int i, glm::vec3 pos, glm::vec4 color)
+Audace::Sprite* SceneBuilder::getLight(int id)
 {
-	if (i > -1 && i < ptLights.size())
-	{
-		ptLights[i]->setPosition(pos);
-		ptLights[i]->setColor(glm::vec3(color));
-		ptLights[i]->setIntensity(color.w);
-	}
-}
-
-void SceneBuilder::setPointLight(int i, Audace::PointLight* p)
-{
-	if (i > -1 && i < ptLights.size())
-	{
-		ptLights[i] = p;
-	}
-}
-
-Audace::PointLight* SceneBuilder::getPointLight(int i)
-{
-	return ptLights[i];
+	return lights[id];
 }
 
 void SceneBuilder::setCamera(Audace::BaseCamera* camera)
