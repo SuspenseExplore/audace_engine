@@ -11,7 +11,6 @@ namespace Audace
 {
 	class Scene;
 	class SceneGraphNode;
-	class PointLight;
 	class Sprite;
 
 	class SceneGraph

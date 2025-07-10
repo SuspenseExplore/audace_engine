@@ -21,11 +21,19 @@ struct PointLight {
 	vec3 color;
 	float intensity;
 };
+struct SpotLight {
+	vec3 position;
+	vec3 direction;
+	vec4 color;
+	float innerAngle;
+	float outerAngle;
+};
 
 uniform vec4 ambientLight;
 in PointLight tLight;
 in vec3 tDirLightDir;
 uniform vec4 dirLightColor;
+in SpotLight tSpotLight;
 
 in vec3 texCoord;
 in vec3 fragPos;
@@ -96,6 +104,14 @@ vec3 getEmissive()
 	return material.emissiveFactor * texture(material.emissiveMap, texCoord.xy).rgb;
 }
 
+float spotlightIntensity(vec3 dir, float innerAngle, float outerAngle, vec3 lightDir)
+{
+	float theta = dot(lightDir, normalize(-dir));
+	float epsilon = innerAngle - outerAngle;
+	float i = clamp((theta - outerAngle) / epsilon, 0.0, 1.0);
+	return i;
+}
+
 vec3 calcLighting(vec4 lightColor, vec3 lightDir, vec3 normal, vec3 v, float atnFactor, float roughness, vec3 f0, float metallic, vec3 baseColor)
 {
 	vec3 h = normalize(v + lightDir);
@@ -138,10 +154,14 @@ void main() {
 	//reflectance
 	vec3 lo = vec3(0.0);
 	vec3 lightDir = normalize(tLight.position - fragPos);
-	lo += calcLighting(vec4(tLight.color, tLight.intensity), lightDir, normal, v, 1.0, roughness, f0, metallic, baseColor);
+//	lo += calcLighting(vec4(tLight.color, tLight.intensity), lightDir, normal, v, 1.0, roughness, f0, metallic, baseColor);
 
-	lo += calcLighting(dirLightColor, tDirLightDir, normal, v, 0.0, roughness, f0, metallic, baseColor);
+//	lo += calcLighting(dirLightColor, tDirLightDir, normal, v, 0.0, roughness, f0, metallic, baseColor);
 
+	lightDir = normalize(tSpotLight.position - fragPos);
+	float i = spotlightIntensity(tSpotLight.direction, tSpotLight.innerAngle, tSpotLight.outerAngle, lightDir);
+	lo += calcLighting(vec4(tSpotLight.color.rgb, i), lightDir, normal, v, 0.0, roughness, f0, metallic, baseColor);
+	
 	vec3 ambient = ambientLight.rgb * ambientLight.a * baseColor * occlusion;
 	vec3 color = clamp(ambient + lo + emissive, ZERO.xyz, ONE.xyz);
 
@@ -149,4 +169,5 @@ void main() {
 	color = pow(color, vec3(1.0 / 2.2));
 
 	fragColor = vec4(color, 1.0);
+//	fragColor = vec4(theta, epsilon, i, 1.0);
 }

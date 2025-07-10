@@ -19,6 +19,7 @@
 #include "renderer/material/PbrMetalRoughMat.h"
 #include "renderer/light/PointLight.h"
 #include "renderer/light/DirLight.h"
+#include "renderer/light/SpotLight.h"
 
 namespace Audace
 {
@@ -407,6 +408,29 @@ namespace Audace
 				lights[i] = light;
 				lightTypes[i] = "directional";
 			}
+			else if (jser::getString(jLight, "type") == "spot")
+			{
+				SpotLight* light = new SpotLight;
+				lights[i] = light;
+				lightTypes[i] = "spot";
+				light->setColor(jser::getVec3(jLight, "color"));
+				if (jLight.contains("intensity"))
+				{
+					light->setIntensity(jser::getFloat(jLight, "intensity"));
+				}
+				if (jLight.contains("innerConeAngle"))
+				{
+					light->setInnerAngle(jser::getFloat(jLight, "innerConeAngle"));
+				}
+				if (jLight.contains("outerConeAngle"))
+				{
+					light->setOuterAngle(jser::getFloat(jLight, "outerConeAngle"));
+				}
+				if (jLight.contains("name"))
+				{
+					light->setName(jser::getString(jLight, "name"));
+				}
+			}
 		}
 	}
 
@@ -698,14 +722,7 @@ namespace Audace
 				int lightId = jser::getInt((*gltfNode.extensions)["KHR_lights_punctual"], "light");
 				json& jLight = jRoot["extensions"]["KHR_lights_punctual"]["lights"][lightId];
 				string type = jser::getString(jLight, "type");
-				if (type == "point")
-				{
-					node->setSprite(lights[lightId]);
-				}
-				else if (type == "directional")
-				{
-					node->setSprite(lights[lightId]);
-				}
+				node->setSprite(lights[lightId]);
 			}
 		}
 		for (int i : gltfNode.childNodeIds)

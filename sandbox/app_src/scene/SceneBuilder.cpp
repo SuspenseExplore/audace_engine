@@ -14,6 +14,7 @@
 #include "renderer/Sprite.h"
 #include "renderer/light/PointLight.h"
 #include "renderer/light/DirLight.h"
+#include "renderer/light/SpotLight.h"
 #include "renderer/material/Material.h"
 #include "scene/BaseCamera.h"
 #include "scene/SceneDescriptor.h"
@@ -54,18 +55,16 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 {
 	renderType = RenderType::FULL;
 	this->fileLoader = fileLoader;
+	teleport({ 0, -20, 0 });
 
 	modelIndex = fileLoader->textFileToJson("models/_index.json");
 	shader = Audace::AssetStore::getShader("pbr");
-
-	lights[0] = new Audace::PointLight;
-	lights[1] = new Audace::DirLight;
 
 	// loadModel("kenney/nature/cliffs/", "cliff_scene.obj");
 
 	Audace::GltfLoader loader;
 	loader.setImageLoadPath("images/_test/");
-	loader.loadFile(fileLoader, "models/_test/", "Lantern.gltf");
+	loader.loadFile(fileLoader, "models/_test/", "Corset.gltf");
 	sceneGraph = loader.getSceneGraph(this);
 	// sceneGraph = new Audace::SceneGraph(this);
 	editor = new Audace::SceneEditor(fileLoader);
@@ -85,17 +84,24 @@ void SceneBuilder::render()
 
 	shader->bind();
 	shader->setUniformVec4("ambientLight", ambientColor);
+	// {
+	// 	Audace::DirLight* light = reinterpret_cast<Audace::DirLight*>(lights[1]);
+	// 	shader->setUniformVec4("dirLightColor", light->getColor());
+	// 	shader->setUniformVec3("dirLightDirection", glm::mat3_cast(light->getOrientation()) * glm::vec3(0, 0, -1));
+	// }
+	// {
+	// 	Audace::PointLight* light = reinterpret_cast<Audace::PointLight*>(lights[0]);
+	// 	shader->setUniformVec3("ptLight[0].position", light->getPosition());
+	// 	shader->setUniformVec3("ptLight[0].color", light->getColor());
+	// 	shader->setUniformFloat("ptLight[0].intensity", light->getIntensity());
+	// }
 	{
-		Audace::DirLight* light = reinterpret_cast<Audace::DirLight*>(lights[1]);
-		shader->setUniformVec4("dirLightColor", light->getColor());
-		shader->setUniformVec3("dirLightDirection", glm::mat3_cast(light->getOrientation()) * glm::vec3(0, 0, -1));
-	}
-
-	{
-		Audace::PointLight* light = reinterpret_cast<Audace::PointLight*>(lights[0]);
-		shader->setUniformVec3("ptLight[0].position", light->getPosition());
-		shader->setUniformVec3("ptLight[0].color", light->getColor());
-		shader->setUniformFloat("ptLight[0].intensity", light->getIntensity());
+		Audace::SpotLight* light = reinterpret_cast<Audace::SpotLight*>(lights[0]);
+		shader->setUniformVec3("spotLight.position", light->getPosition());
+		shader->setUniformVec3("spotLight.direction", glm::mat3_cast(light->getOrientation()) * glm::vec3(0, 0, -1));
+		shader->setUniformVec4("spotLight.color", glm::vec4(light->getColor(), light->getIntensity()));
+		shader->setUniformFloat("spotLight.innerAngle", glm::cos(light->getInnerAngle()));
+		shader->setUniformFloat("spotLight.outerAngle", glm::cos(light->getOuterAngle()));
 	}
 	// shader->setUniformFloat("outPosition", renderType == RenderType::POSITION ? 1.0 : 0.0);
 	// shader->setUniformFloat("outMtlColor", renderType == RenderType::MTL_COLOR ? 1.0 : 0.0);

@@ -8,6 +8,7 @@
 #include "renderer/ShaderProgram.h"
 #include "renderer/light/PointLight.h"
 #include "renderer/light/DirLight.h"
+#include "renderer/light/SpotLight.h"
 #include "content/IFileAccess.h"
 #include "scene/Scene.h"
 #include "scene/graph/SceneGraph.h"
@@ -105,6 +106,21 @@ namespace Audace
 						pointLight->setPosition(lightPos);
 						pointLight->setColor(glm::vec3(pointLightColor));
 						pointLight->setIntensity(pointLightColor.a);
+						ImGui::EndTabItem();
+					}
+					if (ImGui::BeginTabItem("Spotlight"))
+					{
+						static SpotLight* light = reinterpret_cast<SpotLight*>(scene->getLight(0));
+						static glm::vec4 color = glm::vec4(light->getColor(), light->getIntensity());
+						static float innerAngle = light->getInnerAngle();
+						static float outerAngle = light->getOuterAngle();
+						ImGui::ColorPicker4("Color", glm::value_ptr(color));
+						ImGui::DragFloat("Inner Angle", &innerAngle, 0.001);
+						ImGui::DragFloat("Outer Angle", &outerAngle, 0.001);
+						light->setColor(glm::vec3(color));
+						light->setIntensity(color.a);
+						light->setInnerAngle(innerAngle);
+						light->setOuterAngle(outerAngle);
 						ImGui::EndTabItem();
 					}
 					ImGui::EndTabBar();

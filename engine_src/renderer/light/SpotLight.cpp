@@ -1,4 +1,4 @@
-#include "renderer/light/PointLight.h"
+#include "SpotLight.h"
 #include "content/AssetStore.h"
 #include "renderer/Mesh.h"
 #include "renderer/Shapes.h"
@@ -6,18 +6,18 @@
 
 namespace Audace
 {
-	PointLight::PointLight() : Sprite({ Shapes::spherePositions(16, 16) })
+	SpotLight::SpotLight() : Sprite({ Shapes::spherePositions(16, 16) })
 	{
 		Audace::SimpleBillboardMaterial* material = AssetStore::simpleBillboardMaterial();
 		material->setTexture(AssetStore::getWhiteTexture());
 		meshes[0]->setMaterial(material);
 		setScale({ 0.2f, 0.2f, 0.2f });
-		name = "PointLight";
+		name = "SpotLight";
 	}
 
-	void PointLight::renderWorldSpace(Scene* scene)
+	void SpotLight::renderWorldSpace(Scene* scene)
 	{
-		reinterpret_cast<Audace::SimpleBillboardMaterial*>(meshes[0]->getMaterial())->setColor({ color, 1 });
+		reinterpret_cast<Audace::SimpleBillboardMaterial*>(meshes[0]->getMaterial())->setColor(color);
 		Sprite::renderWorldSpace(scene);
 	}
 }

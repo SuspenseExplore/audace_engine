@@ -11,6 +11,13 @@ struct PointLight {
 	vec3 color;
 	float intensity;
 };
+struct SpotLight {
+	vec3 position;
+	vec3 direction;
+	vec4 color;
+	float innerAngle;
+	float outerAngle;
+};
 
 uniform mat4 worldMat;
 uniform mat4 vpMat;
@@ -18,12 +25,14 @@ uniform vec3 textureScale;
 uniform vec3 viewPos;
 uniform PointLight ptLight[4];
 uniform vec3 dirLightDirection;
+uniform SpotLight spotLight;
 
 out vec3 texCoord;
 out vec3 fragPos;
 out vec3 tViewPos;
 out PointLight tLight;
 out vec3 tDirLightDir;
+out SpotLight tSpotLight;
 
 void main() {
 	gl_Position = vpMat * worldMat * position;
@@ -42,4 +51,9 @@ void main() {
 	tLight.color = ptLight[0].color;
 	tLight.intensity = ptLight[0].intensity;
 	tDirLightDir = tbnMat * dirLightDirection;
+	tSpotLight.position = tbnMat * spotLight.position;
+	tSpotLight.direction = tbnMat * spotLight.direction;
+	tSpotLight.color = spotLight.color;
+	tSpotLight.innerAngle = spotLight.innerAngle;
+	tSpotLight.outerAngle = spotLight.outerAngle;
 }

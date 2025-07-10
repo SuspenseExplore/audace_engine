@@ -126,20 +126,29 @@
   ],
   "nodes": [
 	{
-		"children": [ 1 ]
+		"children": [ 1, 2 ]
 	},
     {
       "mesh": 0,
-	  "translation": [ 0, 0, -1 ],
-	  "scale": [ 30, 30, 30 ],
+	  "translation": [ 0, 0, -3 ],
+	  "scale": [ 100, 100, 100 ],
       "rotation": [
+        0.0,
         0.707,
-        0.0,
-        0.0,
-        0.707
+        0.707,
+        0.0
       ],
       "name": "Corset"
-    }
+    },
+	{
+		"name": "spotlight",
+		"translation": [ 0, 0, 5 ],
+		"extensions": {
+			"KHR_lights_punctual": {
+				"light": 0
+			}
+		}
+	}
   ],
   "scene": 0,
   "scenes": [
@@ -159,5 +168,19 @@
     {
       "source": 2
     }
-  ]
+  ],
+  "extensions": {
+	"KHR_lights_punctual": {
+		"lights": [
+			{
+				"name": "spotlight",
+				"color": [ 1.0, 1.0, 1.0 ],
+				"intensity": 2.0,
+				"innerConeAngle": 0.2,
+				"outerConeAngle": 0.375,
+				"type": "spot"
+			}
+		]
+	}
+  }
 }

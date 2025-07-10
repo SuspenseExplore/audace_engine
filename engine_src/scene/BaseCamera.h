@@ -25,6 +25,9 @@ namespace Audace {
 		void setOriginPos(glm::vec3 pos);
 		glm::vec3 getOriginPos();
 
+		virtual void teleport(glm::vec3 pos) {}
+		virtual glm::vec3 getFwdVec() { return { 0, 1, 0 }; }
+
 		virtual void update();
 
 		/*
