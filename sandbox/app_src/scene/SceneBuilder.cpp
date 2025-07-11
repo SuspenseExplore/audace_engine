@@ -55,7 +55,7 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 {
 	renderType = RenderType::FULL;
 	this->fileLoader = fileLoader;
-	teleport({ 0, -20, 0 });
+	// teleport({ 0, -10, 0 });
 
 	modelIndex = fileLoader->textFileToJson("models/_index.json");
 	shader = Audace::AssetStore::getShader("pbr");
@@ -84,25 +84,12 @@ void SceneBuilder::render()
 
 	shader->bind();
 	shader->setUniformVec4("ambientLight", ambientColor);
-	// {
-	// 	Audace::DirLight* light = reinterpret_cast<Audace::DirLight*>(lights[1]);
-	// 	shader->setUniformVec4("dirLightColor", light->getColor());
-	// 	shader->setUniformVec3("dirLightDirection", glm::mat3_cast(light->getOrientation()) * glm::vec3(0, 0, -1));
-	// }
-	// {
-	// 	Audace::PointLight* light = reinterpret_cast<Audace::PointLight*>(lights[0]);
-	// 	shader->setUniformVec3("ptLight[0].position", light->getPosition());
-	// 	shader->setUniformVec3("ptLight[0].color", light->getColor());
-	// 	shader->setUniformFloat("ptLight[0].intensity", light->getIntensity());
-	// }
+
+	for (auto& item : lights)
 	{
-		Audace::SpotLight* light = reinterpret_cast<Audace::SpotLight*>(lights[0]);
-		shader->setUniformVec3("spotLight.position", light->getPosition());
-		shader->setUniformVec3("spotLight.direction", glm::mat3_cast(light->getOrientation()) * glm::vec3(0, 0, -1));
-		shader->setUniformVec4("spotLight.color", glm::vec4(light->getColor(), light->getIntensity()));
-		shader->setUniformFloat("spotLight.innerAngle", glm::cos(light->getInnerAngle()));
-		shader->setUniformFloat("spotLight.outerAngle", glm::cos(light->getOuterAngle()));
+		shader->setUniformLight(lightTypes[item.first], item.second);
 	}
+
 	// shader->setUniformFloat("outPosition", renderType == RenderType::POSITION ? 1.0 : 0.0);
 	// shader->setUniformFloat("outMtlColor", renderType == RenderType::MTL_COLOR ? 1.0 : 0.0);
 	// shader->setUniformFloat("outNormal", renderType == RenderType::NORMAL ? 1.0 : 0.0);

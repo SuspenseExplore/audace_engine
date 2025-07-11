@@ -397,6 +397,10 @@ namespace Audace
 				PointLight* ptLight = new PointLight;
 				ptLight->setColor(jser::getVec3(jLight, "color"));
 				ptLight->setIntensity(jser::getFloat(jLight, "intensity"));
+				if (jLight.contains("name"))
+				{
+					ptLight->setName(jser::getString(jLight, "name"));
+				}
 				lights[i] = ptLight;
 				lightTypes[i] = "point";
 			}
@@ -404,6 +408,14 @@ namespace Audace
 			{
 				DirLight* light = new DirLight;
 				glm::vec3 color = jser::getVec3(jLight, "color");
+				if (jLight.contains("intensity"))
+				{
+					light->setIntensity(jser::getFloat(jLight, "intensity"));
+				}
+				if (jLight.contains("name"))
+				{
+					light->setName(jser::getString(jLight, "name"));
+				}
 				light->setColor(color);
 				lights[i] = light;
 				lightTypes[i] = "directional";

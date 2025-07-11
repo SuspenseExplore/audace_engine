@@ -21,6 +21,10 @@ struct PointLight {
 	vec3 color;
 	float intensity;
 };
+struct DirLight {
+	vec3 direction;
+	vec4 color;
+};
 struct SpotLight {
 	vec3 position;
 	vec3 direction;
@@ -31,8 +35,7 @@ struct SpotLight {
 
 uniform vec4 ambientLight;
 in PointLight tLight;
-in vec3 tDirLightDir;
-uniform vec4 dirLightColor;
+in DirLight tDirLight;
 in SpotLight tSpotLight;
 
 in vec3 texCoord;
@@ -154,9 +157,9 @@ void main() {
 	//reflectance
 	vec3 lo = vec3(0.0);
 	vec3 lightDir = normalize(tLight.position - fragPos);
-//	lo += calcLighting(vec4(tLight.color, tLight.intensity), lightDir, normal, v, 1.0, roughness, f0, metallic, baseColor);
+	lo += calcLighting(vec4(tLight.color, tLight.intensity), lightDir, normal, v, 1.0, roughness, f0, metallic, baseColor);
 
-//	lo += calcLighting(dirLightColor, tDirLightDir, normal, v, 0.0, roughness, f0, metallic, baseColor);
+	lo += calcLighting(tDirLight.color, tDirLight.direction, normal, v, 0.0, roughness, f0, metallic, baseColor);
 
 	lightDir = normalize(tSpotLight.position - fragPos);
 	float i = spotlightIntensity(tSpotLight.direction, tSpotLight.innerAngle, tSpotLight.outerAngle, lightDir);
@@ -169,5 +172,4 @@ void main() {
 	color = pow(color, vec3(1.0 / 2.2));
 
 	fragColor = vec4(color, 1.0);
-//	fragColor = vec4(theta, epsilon, i, 1.0);
 }

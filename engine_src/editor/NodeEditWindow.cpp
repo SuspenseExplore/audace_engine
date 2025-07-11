@@ -198,6 +198,8 @@ namespace Audace
 					ImGui::SameLine();
 					ImGui::PopID();
 				}
+				glm::quat q = glm::quat(glm::radians(angles));
+				ImGui::Text("quat: [%.5f %.5f %.5f %.5f]", q.w, q.x, q.y, q.z);
 				ImGui::PopID();
 
 				ImGui::EndTabItem();

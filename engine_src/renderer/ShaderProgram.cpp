@@ -1,5 +1,8 @@
 #include <iostream>
 #include "ShaderProgram.h"
+#include "renderer/light/PointLight.h"
+#include "renderer/light/DirLight.h"
+#include "renderer/light/SpotLight.h"
 #include "AuLogger.h"
 #include "glm/gtc/type_ptr.hpp"
 
@@ -194,6 +197,32 @@ namespace Audace
 	{
 		glUniformMatrix4fv(uniforms[name], 1, false, value);
 		AU_CHECK_GL_ERRORS();
+	}
+
+	void ShaderProgram::setUniformLight(std::string type, Sprite* light)
+	{
+		if (type == "point")
+		{
+			Audace::PointLight* lt = reinterpret_cast<Audace::PointLight*>(light);
+			setUniformVec3(lt->getName() + ".position", lt->getPosition());
+			setUniformVec3(lt->getName() + ".color", lt->getColor());
+			setUniformFloat(lt->getName() + ".intensity", lt->getIntensity());
+		}
+		else if (type == "directional")
+		{
+			Audace::DirLight* lt = reinterpret_cast<Audace::DirLight*>(light);
+			setUniformVec4(lt->getName() + ".color", lt->getColor());
+			setUniformVec3(lt->getName() + ".direction", glm::mat3_cast(lt->getOrientation()) * glm::vec3(0, 0, -1));
+		}
+		else if (type == "spot")
+		{
+			Audace::SpotLight* lt = reinterpret_cast<Audace::SpotLight*>(light);
+			setUniformVec3(lt->getName() + ".position", lt->getPosition());
+			setUniformVec3(lt->getName() + ".direction", glm::mat3_cast(lt->getOrientation()) * glm::vec3(0, 0, -1));
+			setUniformVec4(lt->getName() + ".color", glm::vec4(lt->getColor(), lt->getIntensity()));
+			setUniformFloat(lt->getName() + ".innerAngle", glm::cos(lt->getInnerAngle()));
+			setUniformFloat(lt->getName() + ".outerAngle", glm::cos(lt->getOuterAngle()));
+		}
 	}
 
 	GLuint ShaderProgram::loadShader(const char* src, GLenum shaderType)
