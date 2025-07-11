@@ -83,6 +83,7 @@ void SceneBuilder::render()
 	sceneGraph->update(this);
 
 	shader->bind();
+	shader->setUniformVec3("viewPos", camera->getPosition());
 	shader->setUniformVec4("ambientLight", ambientColor);
 
 	for (auto& item : lights)
