@@ -212,7 +212,7 @@ namespace Audace
 		{
 			Audace::DirLight* lt = reinterpret_cast<Audace::DirLight*>(light);
 			setUniformVec4(lt->getName() + ".color", lt->getColor());
-			setUniformVec3(lt->getName() + ".direction", glm::mat3_cast(lt->getOrientation()) * glm::vec3(0, 0, -1));
+			setUniformVec3(lt->getName() + ".direction", glm::mat3_cast(lt->getOrientation()) * glm::vec3(0, 0, 1));
 		}
 		else if (type == "spot")
 		{

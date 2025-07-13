@@ -63,8 +63,8 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 	// loadModel("kenney/nature/cliffs/", "cliff_scene.obj");
 
 	Audace::GltfLoader loader;
-	loader.setImageLoadPath("images/_test/");
-	loader.loadFile(fileLoader, "models/_test/", "Corset.gltf");
+	loader.setImageLoadPath("images/quaternius/");
+	loader.loadFile(fileLoader, "models/_test/", "lights.gltf");
 	sceneGraph = loader.getSceneGraph(this);
 	// sceneGraph = new Audace::SceneGraph(this);
 	editor = new Audace::SceneEditor(fileLoader);
