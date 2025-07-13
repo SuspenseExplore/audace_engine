@@ -26,8 +26,12 @@ namespace Audace
 		void renderWorldSpace(Scene* scene);
 		void renderViewSpace(Scene* scene);
 
+		void translatePane(float interval);
+		void scalePane(float interval);
+		void rotatePane(float interval);
+
 		void txWidgets(Scene* scene);
-		void translateButton(Scene* scene, glm::vec3 diff, std::string label);
+		void moveWidgetButton(Scene* scene, glm::vec3 diff, std::string label);
 
 		void editorCellFloat(std::string label, float* val, float interval);
 		void editorCellAngle(std::string label, float* val, float interval);

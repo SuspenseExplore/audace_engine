@@ -51,26 +51,8 @@ namespace Audace
 		{
 			if (ImGui::BeginTabItem("Translation"))
 			{
-				if (ImGui::BeginTable("Sprite Translation Controls", 3, ImGuiTableFlags_Borders))
-				{
-					ImGui::TableNextRow();
-					ImGui::TableNextColumn();
-					ImGui::Text("X");
-					ImGui::TableNextColumn();
-					ImGui::Text("Y");
-					ImGui::TableNextColumn();
-					ImGui::Text("Z");
+				translatePane(intervals[intervalIndex]);
 
-					ImGui::TableNextRow();
-					ImGui::TableNextColumn();
-					editorCellFloat("##Xpos", &translation.x, intervals[intervalIndex]);
-					ImGui::TableNextColumn();
-					editorCellFloat("##Ypos", &translation.y, intervals[intervalIndex]);
-					ImGui::TableNextColumn();
-					editorCellFloat("##Zpos", &translation.z, intervals[intervalIndex]);
-
-					ImGui::EndTable();
-				}
 				ImGui::PushID("intervals");
 				char c[5];
 				for (int i = 0; i < 3; i++)
@@ -97,31 +79,12 @@ namespace Audace
 					ImGui::PopID();
 				}
 				ImGui::PopID();
-
 				ImGui::EndTabItem();
 			}
 			if (ImGui::BeginTabItem("Scale"))
 			{
-				if (ImGui::BeginTable("Sprite Scale Controls", 3, ImGuiTableFlags_Borders))
-				{
-					ImGui::TableNextRow();
-					ImGui::TableNextColumn();
-					ImGui::Text("X");
-					ImGui::TableNextColumn();
-					ImGui::Text("Y");
-					ImGui::TableNextColumn();
-					ImGui::Text("Z");
+				scalePane(intervals[intervalIndex]);
 
-					ImGui::TableNextRow();
-					ImGui::TableNextColumn();
-					editorCellFloat("##Xscale", &scale.x, intervals[intervalIndex]);
-					ImGui::TableNextColumn();
-					editorCellFloat("##Yscale", &scale.y, intervals[intervalIndex]);
-					ImGui::TableNextColumn();
-					editorCellFloat("##Zscale", &scale.z, intervals[intervalIndex]);
-
-					ImGui::EndTable();
-				}
 				ImGui::PushID("intervals");
 				char c[5];
 				for (int i = 0; i < 3; i++)
@@ -153,26 +116,8 @@ namespace Audace
 			}
 			if (ImGui::BeginTabItem("Rotation"))
 			{
-				if (ImGui::BeginTable("Sprite Rotation Controls", 3, ImGuiTableFlags_Borders))
-				{
-					ImGui::TableNextRow();
-					ImGui::TableNextColumn();
-					ImGui::Text("X");
-					ImGui::TableNextColumn();
-					ImGui::Text("Y");
-					ImGui::TableNextColumn();
-					ImGui::Text("Z");
+				rotatePane(angleIntervals[angleIntervalIndex]);
 
-					ImGui::TableNextRow();
-					ImGui::TableNextColumn();
-					editorCellAngle("##Xangle", &angles.x, angleIntervals[angleIntervalIndex]);
-					ImGui::TableNextColumn();
-					editorCellAngle("##Yangle", &angles.y, angleIntervals[angleIntervalIndex]);
-					ImGui::TableNextColumn();
-					editorCellAngle("##Zangle", &angles.z, angleIntervals[angleIntervalIndex]);
-
-					ImGui::EndTable();
-				}
 				ImGui::PushID("angles");
 				char c[5];
 				for (int i = 0; i < 4; i++)
@@ -199,6 +144,7 @@ namespace Audace
 					ImGui::PopID();
 				}
 				glm::quat q = glm::quat(glm::radians(angles));
+				ImGui::NewLine();
 				ImGui::Text("quat: [%.5f %.5f %.5f %.5f]", q.w, q.x, q.y, q.z);
 				ImGui::PopID();
 
@@ -214,19 +160,91 @@ namespace Audace
 		node->setRotation(glm::quat(glm::radians(angles)));
 	}
 
+	void NodeEditWindow::translatePane(float interval)
+	{
+		if (ImGui::BeginTable("Sprite Translation Controls", 3, ImGuiTableFlags_Borders))
+		{
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("X");
+			ImGui::TableNextColumn();
+			ImGui::Text("Y");
+			ImGui::TableNextColumn();
+			ImGui::Text("Z");
+
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			editorCellFloat("##Xpos", &translation.x, interval);
+			ImGui::TableNextColumn();
+			editorCellFloat("##Ypos", &translation.y, interval);
+			ImGui::TableNextColumn();
+			editorCellFloat("##Zpos", &translation.z, interval);
+
+			ImGui::EndTable();
+		}
+	}
+
+	void NodeEditWindow::scalePane(float interval)
+	{
+		if (ImGui::BeginTable("Sprite Scale Controls", 3, ImGuiTableFlags_Borders))
+		{
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("X");
+			ImGui::TableNextColumn();
+			ImGui::Text("Y");
+			ImGui::TableNextColumn();
+			ImGui::Text("Z");
+
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			editorCellFloat("##Xscale", &scale.x, interval);
+			ImGui::TableNextColumn();
+			editorCellFloat("##Yscale", &scale.y, interval);
+			ImGui::TableNextColumn();
+			editorCellFloat("##Zscale", &scale.z, interval);
+
+			ImGui::EndTable();
+		}
+	}
+
+	void NodeEditWindow::rotatePane(float interval)
+	{
+		if (ImGui::BeginTable("Sprite Rotation Controls", 3, ImGuiTableFlags_Borders))
+		{
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text("X");
+			ImGui::TableNextColumn();
+			ImGui::Text("Y");
+			ImGui::TableNextColumn();
+			ImGui::Text("Z");
+
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			editorCellAngle("##Xangle", &angles.x, interval);
+			ImGui::TableNextColumn();
+			editorCellAngle("##Yangle", &angles.y, interval);
+			ImGui::TableNextColumn();
+			editorCellAngle("##Zangle", &angles.z, interval);
+
+			ImGui::EndTable();
+		}
+	}
+
 	void NodeEditWindow::txWidgets(Scene* scene)
 	{
 		ImGui::PushID("tx_widgets");
-		translateButton(scene, glm::vec3(-1, 0, 0), "-X");
-		translateButton(scene, glm::vec3(1, 0, 0), "+X");
-		translateButton(scene, glm::vec3(0, -1, 0), "-Y");
-		translateButton(scene, glm::vec3(0, 1, 0), "+Y");
-		translateButton(scene, glm::vec3(0, 0, -1), "-Z");
-		translateButton(scene, glm::vec3(0, 0, 1), "+Z");
+		moveWidgetButton(scene, glm::vec3(-1, 0, 0), "-X");
+		moveWidgetButton(scene, glm::vec3(1, 0, 0), "+X");
+		moveWidgetButton(scene, glm::vec3(0, -1, 0), "-Y");
+		moveWidgetButton(scene, glm::vec3(0, 1, 0), "+Y");
+		moveWidgetButton(scene, glm::vec3(0, 0, -1), "-Z");
+		moveWidgetButton(scene, glm::vec3(0, 0, 1), "+Z");
 		ImGui::PopID();
 	}
 
-	void NodeEditWindow::translateButton(Scene* scene, glm::vec3 diff, std::string label)
+	void NodeEditWindow::moveWidgetButton(Scene* scene, glm::vec3 diff, std::string label)
 	{
 		glm::mat4 tx = node->getLocalTransform();
 		glm::vec3 worldPos = glm::vec3(tx * glm::vec4(diff, 1.0));
