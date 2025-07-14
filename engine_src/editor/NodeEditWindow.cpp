@@ -6,6 +6,9 @@
 #include "renderer/Mesh.h"
 #include "renderer/Shapes.h"
 #include "renderer/Sprite.h"
+#include "renderer/light/PointLight.h"
+#include "renderer/light/DirLight.h"
+#include "renderer/light/SpotLight.h"
 #include "scene/Scene.h"
 #include "scene/BaseCamera.h"
 #include "scene/graph/SceneGraphNode.h"
@@ -148,6 +151,46 @@ namespace Audace
 				ImGui::Text("quat: [%.5f %.5f %.5f %.5f]", q.w, q.x, q.y, q.z);
 				ImGui::PopID();
 
+				ImGui::EndTabItem();
+			}
+			if (node->getNodeType() == PT_LIGHT && ImGui::BeginTabItem("Point Light"))
+			{
+				PointLight* pointLight = reinterpret_cast<PointLight*>(node->getSprite());
+				static glm::vec4 pointLightColor = glm::vec4(pointLight->getColor(), pointLight->getIntensity());
+				static glm::vec3 lightPos = pointLight->getPosition();
+				ImGui::DragFloat3("Position", glm::value_ptr(lightPos), 0.01);
+				ImGui::ColorPicker4("Color", glm::value_ptr(pointLightColor));
+				pointLight->setPosition(lightPos);
+				pointLight->setColor(glm::vec3(pointLightColor));
+				pointLight->setIntensity(pointLightColor.a);
+
+				ImGui::EndTabItem();
+			}
+			else if (node->getNodeType() == DIR_LIGHT && ImGui::BeginTabItem("Directional Light"))
+			{
+				static DirLight* light = reinterpret_cast<DirLight*>(node->getSprite());
+				glm::vec4 color = light->getColor();
+				glm::vec3 angles = glm::degrees(glm::eulerAngles(light->getOrientation()));
+				ImGui::DragFloat3("Direction", glm::value_ptr(angles));
+				ImGui::ColorPicker4("Color", glm::value_ptr(color));
+				light->setOrientation(glm::quat(glm::radians(angles)));
+				light->setColor(color);
+
+				ImGui::EndTabItem();
+			}
+			else if (node->getNodeType() == SPOTLIGHT && ImGui::BeginTabItem("Spotlight"))
+			{
+				static SpotLight* light = reinterpret_cast<SpotLight*>(node->getSprite());
+				static glm::vec4 color = glm::vec4(light->getColor(), light->getIntensity());
+				static float innerAngle = light->getInnerAngle();
+				static float outerAngle = light->getOuterAngle();
+				ImGui::ColorPicker4("Color", glm::value_ptr(color));
+				ImGui::DragFloat("Inner Angle", &innerAngle, 0.001);
+				ImGui::DragFloat("Outer Angle", &outerAngle, 0.001);
+				light->setColor(glm::vec3(color));
+				light->setIntensity(color.a);
+				light->setInnerAngle(innerAngle);
+				light->setOuterAngle(outerAngle);
 				ImGui::EndTabItem();
 			}
 

@@ -734,7 +734,18 @@ namespace Audace
 				int lightId = jser::getInt((*gltfNode.extensions)["KHR_lights_punctual"], "light");
 				json& jLight = jRoot["extensions"]["KHR_lights_punctual"]["lights"][lightId];
 				string type = jser::getString(jLight, "type");
-				node->setSprite(lights[lightId]);
+				if (type == "point")
+				{
+					node->setSprite(lights[lightId], PT_LIGHT);
+				}
+				else if (type == "directional")
+				{
+					node->setSprite(lights[lightId], DIR_LIGHT);
+				}
+				else if (type == "spot")
+				{
+					node->setSprite(lights[lightId], SPOTLIGHT);
+				}
 			}
 		}
 		for (int i : gltfNode.childNodeIds)

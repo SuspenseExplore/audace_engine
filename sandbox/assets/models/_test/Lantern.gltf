@@ -325,7 +325,8 @@
       "children": [
         0,
         1,
-        2
+        2,
+		5
       ],
 	  "translation": [ 0, 0, -4 ],
       "rotation": [
@@ -346,10 +347,19 @@
 		"name":"Lantern_light",
 		"translation":[
 			0,
-			0,
+			-0.75,
 			0
 		],
 		"scale": [ 0.2, 0.2, 0.2 ]
+	},
+	{
+		"extensions":{
+			"KHR_lights_punctual":{
+				"light":1
+			}
+		},
+		"name":"Sun_light",
+		"rotation":[ 1, 0, 0, 0 ]
 	}
   ],
   "scene": 0,
@@ -379,13 +389,19 @@
 			"lights":[
 				{
 					"color":[
-						1,
-						0,
-						1
+						0.9,
+						0.7,
+						0.5
 					],
 					"intensity":10,
 					"type":"point",
-					"name":"Point"
+					"name":"ptLight"
+				},
+				{
+					"color": [ 0.9, 0.8, 0.4 ],
+					"intensity": 1,
+					"type": "directional",
+					"name": "dirLight"
 				}
 			]
 		}

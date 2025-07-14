@@ -37,9 +37,10 @@ namespace Audace
 		return name;
 	}
 
-	void SceneGraphNode::setSprite(Sprite* s)
+	void SceneGraphNode::setSprite(Sprite* s, NodeType type)
 	{
 		sprite = s;
+		this->type = type;
 	}
 
 	Sprite* SceneGraphNode::getSprite()

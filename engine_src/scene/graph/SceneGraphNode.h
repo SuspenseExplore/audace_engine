@@ -12,8 +12,11 @@ namespace Audace
 	class Sprite;
 	class Scene;
 
+	enum NodeType { NORMAL, SPRITE, DIR_LIGHT, PT_LIGHT, SPOTLIGHT };
+
 	class SceneGraphNode
 	{
+		NodeType type = NORMAL;
 		std::string name;
 		SceneGraphNode* parent;
 		std::vector<SceneGraphNode*> children;
@@ -32,7 +35,7 @@ namespace Audace
 		SceneGraphNode(SceneGraphNode* parent);
 		void setName(std::string name);
 		const std::string& getName();
-		void setSprite(Sprite* s);
+		void setSprite(Sprite* s, NodeType type = SPRITE);
 		Sprite* getSprite();
 		void addChild(SceneGraphNode* c);
 		std::vector<SceneGraphNode*>& getChildren();
@@ -47,6 +50,8 @@ namespace Audace
 		glm::mat4 getLocalTransform() { return localTransform; }
 		glm::vec3 getPosition();
 		void update(glm::mat4 parentTransform);
+
+		NodeType getNodeType() { return type; }
 
 		void debugRender(Scene* scene, bool recursive);
 	};

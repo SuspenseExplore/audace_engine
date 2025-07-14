@@ -74,60 +74,6 @@ namespace Audace
 				ImGui::EndTabItem();
 			}
 
-			if (ImGui::BeginTabItem("Lighting"))
-			{
-				if (ImGui::BeginTabBar("LightingTabs"))
-				{
-					if (ImGui::BeginTabItem("Ambient light"))
-					{
-						glm::vec4 light = scene->getAmbientLight();
-						ImGui::ColorPicker4("Ambient color", glm::value_ptr(light));
-						scene->setAmbientLight(light);
-						ImGui::EndTabItem();
-					}
-					if (ImGui::BeginTabItem("Directional Light"))
-					{
-						static DirLight* light = reinterpret_cast<DirLight*>(scene->getLight(1));
-						glm::vec4 color = light->getColor();
-						glm::vec3 angles = glm::degrees(glm::eulerAngles(light->getOrientation()));
-						ImGui::DragFloat3("Direction", glm::value_ptr(angles));
-						ImGui::ColorPicker4("Color", glm::value_ptr(color));
-						light->setOrientation(glm::quat(glm::radians(angles)));
-						light->setColor(color);
-						ImGui::EndTabItem();
-					}
-					if (ImGui::BeginTabItem("Point light"))
-					{
-						PointLight* pointLight = reinterpret_cast<PointLight*>(scene->getLight(0));
-						static glm::vec4 pointLightColor = glm::vec4(pointLight->getColor(), pointLight->getIntensity());
-						static glm::vec3 lightPos = pointLight->getPosition();
-						ImGui::DragFloat3("Position", glm::value_ptr(lightPos), 0.01);
-						ImGui::ColorPicker4("Color", glm::value_ptr(pointLightColor));
-						pointLight->setPosition(lightPos);
-						pointLight->setColor(glm::vec3(pointLightColor));
-						pointLight->setIntensity(pointLightColor.a);
-						ImGui::EndTabItem();
-					}
-					if (ImGui::BeginTabItem("Spotlight"))
-					{
-						static SpotLight* light = reinterpret_cast<SpotLight*>(scene->getLight(0));
-						static glm::vec4 color = glm::vec4(light->getColor(), light->getIntensity());
-						static float innerAngle = light->getInnerAngle();
-						static float outerAngle = light->getOuterAngle();
-						ImGui::ColorPicker4("Color", glm::value_ptr(color));
-						ImGui::DragFloat("Inner Angle", &innerAngle, 0.001);
-						ImGui::DragFloat("Outer Angle", &outerAngle, 0.001);
-						light->setColor(glm::vec3(color));
-						light->setIntensity(color.a);
-						light->setInnerAngle(innerAngle);
-						light->setOuterAngle(outerAngle);
-						ImGui::EndTabItem();
-					}
-					ImGui::EndTabBar();
-				}
-				ImGui::EndTabItem();
-			}
-
 			ImGui::EndTabBar();
 		}
 		ImGui::End();
@@ -145,6 +91,10 @@ namespace Audace
 		static glm::vec4 clearColor = { 0.5, 0.5, 0.5, 0.5 };
 		ImGui::DragFloat4("Clear color", glm::value_ptr(clearColor), 0.01, 0.0, 1.0);
 		scene->setClearColor(clearColor);
+
+		glm::vec4 light = scene->getAmbientLight();
+		ImGui::ColorPicker4("Ambient color", glm::value_ptr(light));
+		scene->setAmbientLight(light);
 	}
 
 	void SceneEditor::sceneGraphPane()

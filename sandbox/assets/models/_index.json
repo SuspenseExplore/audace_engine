@@ -8,6 +8,7 @@
                 "DamagedHelmet.gltf",
                 "gold_triangle.gltf",
                 "Lantern.gltf",
+                "lights.gltf",
                 "peaks.gltf",
                 "SciFiHelmet.gltf",
                 "Suzanne.gltf",
@@ -22,20 +23,10 @@
         "quat_builds": {
             "files": [
                 "house_orig.gltf",
+                "house_test.gltf",
                 "inst_test.gltf"
             ],
             "folders": {}
-        },
-        "quaternius": {
-            "folders": {
-                "medieval_village": {
-                    "files": [
-                        "Overhang_Plaster_Long.gltf",
-                        "Overhang_RoofIncline_UnevenBricks.gltf"
-                    ],
-                    "folders": {}
-                }
-            }
         }
     }
 }
