@@ -3,12 +3,14 @@
 
 #include <string>
 #include <vector>
+#include "math/BoundingBox.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
 
 namespace Audace
 {
 	class INodeAnimation;
+	class ShaderProgram;
 	class Sprite;
 	class Scene;
 
@@ -29,6 +31,9 @@ namespace Audace
 		glm::mat4 localTransform = glm::mat4(1.0);
 
 		static Sprite* debugAxes;
+		static Sprite* bboxSprite;
+		static ShaderProgram* shader;
+		BoundingBox bbox;
 
 	public:
 		SceneGraphNode();
@@ -49,6 +54,12 @@ namespace Audace
 		glm::quat getRotation() { return rotation; }
 		glm::mat4 getLocalTransform() { return localTransform; }
 		glm::vec3 getPosition();
+		void setBoundingBox(BoundingBox bb)
+		{
+			bbox.min = bb.min;
+			bbox.max = bb.max;
+		}
+		BoundingBox getBoundingBox() { return bbox; }
 		void update(glm::mat4 parentTransform);
 
 		NodeType getNodeType() { return type; }

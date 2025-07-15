@@ -160,6 +160,44 @@ namespace Audace {
 		return mesh;
 	}
 
+	Mesh* Shapes::cubeWireframe()
+	{
+		float *verts = new float[]{
+				0.0f, 0.0f, 0.0f,
+				0.0f, 0.0f, 1.0f,
+				0.0f, 1.0f, 0.0f,
+				0.0f, 1.0f, 1.0f,
+				1.0f, 0.0f, 0.0f,
+				1.0f, 0.0f, 1.0f,
+				1.0f, 1.0f, 0.0f,
+				1.0f, 1.0f, 1.0f,
+		};
+
+		unsigned short *indices = new unsigned short[]{
+				0, 1, 1, 3, 3, 2, 2, 0,
+				4, 5, 5, 7, 7, 6, 6, 4,
+				0, 4, 1, 5, 2, 6, 3, 7
+		};
+		DataBuffer *vertexBuffer = new DataBuffer(verts, 4 * 3 * 8, GL_ARRAY_BUFFER,
+												  GL_STATIC_DRAW);
+		vertexBuffer->create();
+		vertexBuffer->bind();
+
+		DataBuffer *indexBuffer = new DataBuffer(indices, 2 * 24,
+												 GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
+		indexBuffer->create();
+
+		VertexAttribute *attr = new VertexAttribute(0, 3, GL_FLOAT, false, 4 * 3, 0);
+		std::vector<VertexAttribute *> attrs;
+		attrs.push_back(attr);
+		VertexArray *vertexArray = new VertexArray(attrs);
+		vertexArray->create();
+
+		Mesh *mesh = new Mesh(vertexArray, indexBuffer, 0, 24, GL_LINES,
+									GL_UNSIGNED_SHORT, nullptr);
+		return mesh;
+	}
+
 	DataBuffer* Shapes::cubeBuffer()
 	{
 		float *verts = new float[]{

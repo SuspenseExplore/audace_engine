@@ -32,7 +32,13 @@ namespace Audace
 
 	void SceneEditor::renderWorldSpace(Scene* scene)
 	{
-		if (selectedNode != nullptr)
+		if (visualize)
+		{
+			glDisable(GL_DEPTH_TEST);
+			sceneGraph->getRootNode()->debugRender(scene, true);
+			glEnable(GL_DEPTH_TEST);
+		}
+		else if (selectedNode != nullptr)
 		{
 			glDisable(GL_DEPTH_TEST);
 			selectedNode->debugRender(scene, false);
@@ -70,6 +76,8 @@ namespace Audace
 
 			if (ImGui::BeginTabItem("Graph"))
 			{
+				ImGui::Checkbox("Visualize", &visualize);
+				ImGui::Separator();
 				sceneGraphPane();
 				ImGui::EndTabItem();
 			}

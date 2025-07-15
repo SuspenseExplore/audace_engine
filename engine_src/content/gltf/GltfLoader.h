@@ -7,6 +7,7 @@
 #include "au_renderer.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
+#include "math/BoundingBox.h"
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -79,6 +80,7 @@ namespace Audace
 	struct GltfMesh
 	{
 		vector<GltfPrimitive> primitives;
+		BoundingBox bbox;
 	};
 	struct GltfNode
 	{

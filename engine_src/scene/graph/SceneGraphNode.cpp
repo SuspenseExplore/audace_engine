@@ -1,19 +1,31 @@
 #include "SceneGraphNode.h"
 #include "content/AssetStore.h"
 #include "renderer/Mesh.h"
+#include "renderer/Shapes.h"
 #include "renderer/Sprite.h"
+#include "renderer/ShaderProgram.h"
 #include "renderer/material/SimpleBillboardMaterial.h"
+#include "math/BoundingBox.h"
 #include "scene/Scene.h"
 #include "INodeAnimation.h"
 
 namespace Audace
 {
 	Sprite* SceneGraphNode::debugAxes = nullptr;
+	Sprite* SceneGraphNode::bboxSprite = nullptr;
+	ShaderProgram* SceneGraphNode::shader = nullptr;
+
 	SceneGraphNode::SceneGraphNode() : parent(nullptr)
 	{
 		if (debugAxes == nullptr)
 		{
 			debugAxes = AssetStore::getColoredAxes();
+			Mesh* m = Shapes::cubeWireframe();
+			SimpleBillboardMaterial* mat = AssetStore::simpleBillboardMaterial();
+			shader = AssetStore::getShader("AU_bbox");
+			mat->setShader(shader);
+			m->setMaterial(mat);
+			bboxSprite = new Sprite({ m });
 		}
 	}
 
@@ -24,6 +36,12 @@ namespace Audace
 		if (debugAxes == nullptr)
 		{
 			debugAxes = AssetStore::getColoredAxes();
+			Mesh* m = Shapes::cubeWireframe();
+			SimpleBillboardMaterial* mat = AssetStore::simpleBillboardMaterial();
+			shader = AssetStore::getShader("AU_bbox");
+			mat->setShader(shader);
+			m->setMaterial(mat);
+			bboxSprite = new Sprite({ m });
 		}
 	}
 
@@ -106,6 +124,14 @@ namespace Audace
 	{
 		debugAxes->setModelMatrix(localTransform);
 		debugAxes->renderWorldSpace(scene);
+
+		shader->bind();
+		shader->setUniformVec3("minCorner", bbox.min);
+		shader->setUniformVec3("maxCorner", bbox.max);
+		bboxSprite->setModelMatrix(localTransform);
+		glDisable(GL_DEPTH_TEST);
+		bboxSprite->renderWorldSpace(scene);
+		glEnable(GL_DEPTH_TEST);
 		if (recursive)
 		{
 			for (SceneGraphNode* c : children)

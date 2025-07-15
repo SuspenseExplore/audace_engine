@@ -64,7 +64,7 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 
 	Audace::GltfLoader loader;
 	loader.setImageLoadPath("images/quaternius/");
-	loader.loadFile(fileLoader, "models/_test/", "lights.gltf");
+	loader.loadFile(fileLoader, "models/quat_builds/", "house_orig.gltf");
 	sceneGraph = loader.getSceneGraph(this);
 	// sceneGraph = new Audace::SceneGraph(this);
 	editor = new Audace::SceneEditor(fileLoader);

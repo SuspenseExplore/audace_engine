@@ -15,6 +15,7 @@ namespace Audace {
 		static Mesh* circlePositions();
 		static Mesh* cubePositions();
 		static Mesh* cubePosNormTan();
+		static Mesh* cubeWireframe();
 		static DataBuffer* cubeBuffer();
 		static Mesh* spherePositions(int xResolution, int yResolution);
 		static Mesh* coloredAxes();

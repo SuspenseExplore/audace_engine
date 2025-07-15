@@ -172,6 +172,15 @@ namespace Audace
 				{
 					int ind = jAttr.value().template get<int>();
 					gltfPrim.attrAccessorIds[jAttr.key()] = ind;
+					if (jAttr.key() == "POSITION")
+					{
+						meshes[i].bbox.min.x = min(accessors[ind].min[0], meshes[i].bbox.min.x);
+						meshes[i].bbox.min.y = min(accessors[ind].min[1], meshes[i].bbox.min.y);
+						meshes[i].bbox.min.z = min(accessors[ind].min[2], meshes[i].bbox.min.z);
+						meshes[i].bbox.max.x = max(accessors[ind].max[0], meshes[i].bbox.max.x);
+						meshes[i].bbox.max.y = max(accessors[ind].max[1], meshes[i].bbox.max.y);
+						meshes[i].bbox.max.z = max(accessors[ind].max[2], meshes[i].bbox.max.z);
+					}
 				}
 				if (jPrim.contains("mode"))
 				{
@@ -665,7 +674,6 @@ namespace Audace
 			vector<VertexAttribute*> attrs;
 			DataBuffer* indexBuffer = nullptr;
 			int indexType;
-			int count = -1;
 
 			for (auto& el : prim.attrAccessorIds)
 			{
@@ -673,7 +681,6 @@ namespace Audace
 				int accId = el.second;
 				GltfAccessor& accessor = accessors[accId];
 				GltfBufferView& bv = bufferViews[accessor.bufferViewId];
-				count = max(count, accessor.count);
 
 				VertexAttribute* attr = new VertexAttribute(name, accessor.type, accessor.componentType, false, bv.byteStride, accessor.byteOffset + bv.byteOffset);
 				attrs.emplace_back(attr);
@@ -721,6 +728,9 @@ namespace Audace
 			Sprite* sprite = getSprite(gltfNode.meshId);
 			sprites.emplace_back(sprite);
 			node->setSprite(sprite);
+
+			node->setBoundingBox(meshes[gltfNode.meshId].bbox);
+
 			vector<INodeAnimation*> animations = getAnimations(id);
 			for (INodeAnimation* a : animations)
 			{

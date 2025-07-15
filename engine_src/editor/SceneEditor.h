@@ -25,6 +25,7 @@ namespace Audace
 
 		SceneGraphNode* selectedNode = nullptr;
 		NodeEditWindow editWin;
+		bool visualize = false;
 
 		json modelIndex; // lists content of the assets/models/ folder
 		std::vector<std::string> modelIndexPath; // the currently selected path in modelIndex
