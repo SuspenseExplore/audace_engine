@@ -1,0 +1,62 @@
+{
+	"name": "Scene Editor",
+	"type": "window",
+	"children": [
+		{
+			"name": "scene_tabs",
+			"type": "tab_bar",
+			"tab_items": [
+				{
+					"name": "Scene",
+					"children": [
+						{
+							"name": "Clear Color",
+							"type": "drag_float4",
+							"speed": 0.01,
+							"min": 0,
+							"max": 1
+						},
+						{
+							"name": "Ambient Color",
+							"type": "drag_float4",
+							"speed": 0.01,
+							"min": 0,
+							"max": 1
+						}
+					]
+				},
+				{
+					"name": "Graph",
+					"children": [
+						{
+							"name": "Visualize",
+							"type": "checkbox"
+						},
+						{
+							"type": "separator"
+						},
+						{
+							"name": "scene_graph",
+							"type": "tree",
+							"tree_node": {
+								"name": "scene_graph_node",
+								"type": "tree_node",
+								"children": [
+									{
+										"type": "same_line",
+										"x_offset": 500
+									},
+									{
+										"name": "Select Node",
+										"type": "button",
+										"param": "scene_graph_node"
+									}
+								]
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

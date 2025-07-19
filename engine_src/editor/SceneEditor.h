@@ -2,6 +2,7 @@
 #define AU_SCENEEDITOR_H
 
 #include <string>
+#include "content/JsonGui.h"
 #include "editor/SceneData.h"
 #include "editor/NodeEditWindow.h"
 #include "glm/glm.hpp"
@@ -22,9 +23,13 @@ namespace Audace
 		IFileAccess* fileLoader;
 		Scene* scene;
 		SceneGraph* sceneGraph;
+		JsonGui gui;
+		std::function<void(SceneGraphNode*)> selectNodeFn;
 
 		SceneGraphNode* selectedNode = nullptr;
 		NodeEditWindow editWin;
+		glm::vec4 clearColor = { 0.5, 0.5, 0.5, 0.5 };
+		glm::vec4 ambientColor = { 1.0, 1.0, 1.0, 0.03 };
 		bool visualize = false;
 
 		json modelIndex; // lists content of the assets/models/ folder
@@ -40,9 +45,6 @@ namespace Audace
 
 		void renderWorldSpace(Scene* scene);
 		void sceneEditWindow();
-		void sceneEditPane();
-		void sceneGraphPane();
-		void sceneGraphTreeEntry(SceneGraphNode* node, const std::string& path);
 		void fileListingPane(json fileIndex, std::string currPath = "");
 	};
 }

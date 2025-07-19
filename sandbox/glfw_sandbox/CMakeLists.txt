@@ -56,6 +56,7 @@ add_executable(
 	${ENGINE_DIR}/content/ImageData.cpp
 	${ENGINE_DIR}/content/ModelLoader.cpp
 	${ENGINE_DIR}/content/AssetStore.cpp
+	${ENGINE_DIR}/content/JsonGui.cpp
 	${ENGINE_DIR}/content/JsonSerializer.cpp
 	${ENGINE_DIR}/editor/SpriteData.cpp
 	${ENGINE_DIR}/editor/SceneData.cpp

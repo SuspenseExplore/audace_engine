@@ -13,6 +13,7 @@ namespace Audace
 {
 	class SceneEditor;
 	class SceneGraph;
+	class JsonGui;
 	class ShaderProgram;
 	class Sprite;
 	class PointLight;
@@ -26,6 +27,7 @@ class SceneBuilder : public Audace::Scene
 	Audace::IFileAccess* fileLoader;
 	Audace::SceneEditor* editor;
 	Audace::SceneGraph* sceneGraph;
+	Audace::JsonGui* jsonGui;
 
 	static const int scenePathLength = 64;
 	char sceneWritePath[scenePathLength];

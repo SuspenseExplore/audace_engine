@@ -43,6 +43,7 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/input/InputDevices.cpp
 		${ENGINE_DIR}/content/IFileAccess.h
 		${ENGINE_DIR}/content/AssetStore.cpp
+		${ENGINE_DIR}/content/JsonGui.cpp
 		${ENGINE_DIR}/content/ByteBuffer.cpp
 		${ENGINE_DIR}/content/ImageData.cpp
 		${ENGINE_DIR}/content/ModelLoader.cpp

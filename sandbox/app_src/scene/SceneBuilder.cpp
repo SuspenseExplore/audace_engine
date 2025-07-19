@@ -8,6 +8,7 @@
 #include "content/JsonSerializer.h"
 #include "content/AssetStore.h"
 #include "content/gltf/GltfLoader.h"
+#include "content/JsonGui.h"
 #include "renderer/Texture2d.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/Shapes.h"
@@ -45,6 +46,8 @@ enum RenderType
 	FULL
 };
 
+std::string guiPath = "ui/scene_editor.json";
+
 SceneBuilder::SceneBuilder(Audace::BaseAppController* controller)
 	: Scene(controller)
 {
@@ -55,16 +58,13 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 {
 	renderType = RenderType::FULL;
 	this->fileLoader = fileLoader;
-	// teleport({ 0, -10, 0 });
 
 	modelIndex = fileLoader->textFileToJson("models/_index.json");
 	shader = Audace::AssetStore::getShader("pbr");
 
-	// loadModel("kenney/nature/cliffs/", "cliff_scene.obj");
-
 	Audace::GltfLoader loader;
-	loader.setImageLoadPath("images/quaternius/");
-	loader.loadFile(fileLoader, "models/quat_builds/", "house_orig.gltf");
+	loader.setImageLoadPath("images/_test/");
+	loader.loadFile(fileLoader, "models/_test/", "Lantern.gltf");
 	sceneGraph = loader.getSceneGraph(this);
 	// sceneGraph = new Audace::SceneGraph(this);
 	editor = new Audace::SceneEditor(fileLoader);
@@ -74,10 +74,18 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 
 void SceneBuilder::render()
 {
-	// editor->syncToScene();
-
 	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// ImGui::Begin("Gui Loader", nullptr, ImGuiWindowFlags_NoDecoration);
+	// if (ImGui::Button("Reload GUI"))
+	// {
+	// 	delete jsonGui;
+	// 	json jgui = fileLoader->textFileToJson(guiPath);
+	// 	jsonGui = new Audace::JsonGui(jgui);
+	// }
+	// ImGui::End();
+	// jsonGui->render();
 
 	camera->update();
 	sceneGraph->update(this);

@@ -18,16 +18,19 @@
 
 namespace Audace
 {
-	SceneEditor::SceneEditor(IFileAccess* fileLoader) : fileLoader(fileLoader)
+	SceneEditor::SceneEditor(IFileAccess* fileLoader) : fileLoader(fileLoader), gui(fileLoader->textFileToJson("ui/scene_editor.json"))
 	{
 		modelIndex = fileLoader->textFileToJson("models/_index.json");
 
-		// Audace::PointLight* pointLight = new Audace::PointLight();
-		// pointLight->setPosition({ 0, -1, 1 });
-		// pointLight->setColor({ 1, 1, 1 });
-		// pointLight->setIntensity(1);
-		// sceneData.ptLights.emplace_back(pointLight);
-
+		gui.addBinding("Clear Color", &clearColor);
+		gui.addBinding("Ambient Color", &ambientColor);
+		gui.addBinding("Visualize", &visualize);
+		selectNodeFn = [=](Audace::SceneGraphNode* node)
+			{
+				selectedNode = node;
+				editWin.setNode(node);
+			};
+		gui.addBinding("Select Node", &selectNodeFn);
 	}
 
 	void SceneEditor::renderWorldSpace(Scene* scene)
@@ -56,87 +59,9 @@ namespace Audace
 		{
 			editWin.renderViewSpace(scene);
 		}
-
-		ImGui::Begin("Scene Editor");
-		ImGui::SetWindowPos(ImVec2(600, 800), ImGuiCond_Once);
-		ImGui::SetWindowSize(ImVec2(800, 600), ImGuiCond_Once);
-
-		if (ImGui::BeginTabBar("SceneTabs"))
-		{
-			if (ImGui::BeginTabItem("Scene"))
-			{
-				sceneEditPane();
-				// if (ImGui::Button("Save"))
-				// {
-				// 	int i = sceneData.filename.find_last_of("/");
-				// 	save(fileLoader->fileWriteBasePath() + "scenes/", sceneData.filename.substr(i + 1));
-				// }
-				ImGui::EndTabItem();
-			}
-
-			if (ImGui::BeginTabItem("Graph"))
-			{
-				ImGui::Checkbox("Visualize", &visualize);
-				ImGui::Separator();
-				sceneGraphPane();
-				ImGui::EndTabItem();
-			}
-
-			ImGui::EndTabBar();
-		}
-		ImGui::End();
-		// 		if (ImGui::BeginTabItem("Models"))
-		// 		{
-		// 			fileListingPane(modelIndex);
-
-		// 			ImGui::EndTabItem();
-		// 		}
-
-	}
-
-	void SceneEditor::sceneEditPane()
-	{
-		static glm::vec4 clearColor = { 0.5, 0.5, 0.5, 0.5 };
-		ImGui::DragFloat4("Clear color", glm::value_ptr(clearColor), 0.01, 0.0, 1.0);
+		gui.render();
 		scene->setClearColor(clearColor);
-
-		glm::vec4 light = scene->getAmbientLight();
-		ImGui::ColorPicker4("Ambient color", glm::value_ptr(light));
-		scene->setAmbientLight(light);
-	}
-
-	void SceneEditor::sceneGraphPane()
-	{
-		sceneGraphTreeEntry(sceneGraph->getRootNode(), "0");
-	}
-
-	void SceneEditor::sceneGraphTreeEntry(SceneGraphNode* node, const std::string& path)
-	{
-		int x = 500;
-		std::string n = (node->getName().length() > 0) ? node->getName() : path;
-		ImGui::PushID(path.c_str());
-		bool s = ImGui::TreeNode(n.c_str());
-		ImGui::SameLine(x);
-		if (ImGui::Button("Select"))
-		{
-			selectedNode = node;
-			editWin.setNode(selectedNode);
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Add child"))
-		{
-
-		}
-		if (s)
-		{
-			std::vector<SceneGraphNode*> children = node->getChildren();
-			for (int i = 0; i < children.size(); i++)
-			{
-				sceneGraphTreeEntry(children[i], path + "/" + std::to_string(i));
-			}
-			ImGui::TreePop();
-		}
-		ImGui::PopID();
+		scene->setAmbientLight(ambientColor);
 	}
 
 	void SceneEditor::attachToScene(Scene* scene)
@@ -147,6 +72,7 @@ namespace Audace
 	void SceneEditor::setSceneGraph(SceneGraph* graph)
 	{
 		sceneGraph = graph;
+		gui.addBinding("scene_graph", graph);
 	}
 
 	void SceneEditor::loadSprite(std::string name)
