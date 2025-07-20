@@ -10,7 +10,10 @@
 #define WINDOW "window"
 #define TAB_BAR "tab_bar"
 #define TAB_ITEMS "tab_items"
+#define DRAG_FLOAT "drag_float"
+#define DRAG_FLOAT3 "drag_float3"
 #define DRAG_FLOAT4 "drag_float4"
+#define LIGHT_COLOR "light_color"
 #define CHECKBOX "checkbox"
 #define SEPARATOR "separator"
 #define TREE "tree"
@@ -19,6 +22,7 @@
 #define SAME_LINE "same_line"
 #define NEW_LINE "new_line"
 #define X_OFFSET "x_offset"
+#define NODE_TYPE "node_type"
 
 #define SPEED "speed"
 #define MIN "min"
@@ -30,12 +34,30 @@ namespace Audace
 
 	JsonGui::JsonGui(json content) : jcontent(content)
 	{
-
+		emptyBindingFloats[0] = 0;
+		emptyBindingFloats[1] = 0;
+		emptyBindingFloats[2] = 0;
+		emptyBindingFloats[3] = 0;
 	}
 
 	void JsonGui::addBinding(std::string name, bool* b)
 	{
 		bindings[name].boolean = b;
+	}
+
+	void JsonGui::addBinding(std::string name, int* i)
+	{
+		bindings[name].integer = i;
+	}
+
+	void JsonGui::addBinding(std::string name, float* f)
+	{
+		bindings[name].float1 = f;
+	}
+
+	void JsonGui::addBinding(std::string name, glm::vec3* v)
+	{
+		bindings[name].float3 = v;
 	}
 
 	void JsonGui::addBinding(std::string name, glm::vec4* v)
@@ -69,9 +91,21 @@ namespace Audace
 		{
 			tabBar(j);
 		}
+		else if (type == DRAG_FLOAT)
+		{
+			dragFloat(j);
+		}
+		else if (type == DRAG_FLOAT3)
+		{
+			dragFloat3(j);
+		}
 		else if (type == DRAG_FLOAT4)
 		{
 			dragFloat4(j);
+		}
+		else if (type == LIGHT_COLOR)
+		{
+			lightColor(j);
 		}
 		else if (type == CHECKBOX)
 		{
@@ -122,24 +156,94 @@ namespace Audace
 
 	void JsonGui::tabItem(json& j)
 	{
-		if (ImGui::BeginTabItem(jser::getString(j, NAME).c_str()))
+		bool vis = true;
+		if (j.contains("visibility") && j["visibility"].contains("equals"))
 		{
-			for (json& c : j[CHILDREN])
-			{
-				render(c);
-			}
-
-			ImGui::EndTabItem();
+			int comp = jser::getInt(j["visibility"]["equals"], NODE_TYPE);
+			vis = comp == *bindings[NODE_TYPE].integer;
 		}
+		if (vis)
+		{
+			if (ImGui::BeginTabItem(jser::getString(j, NAME).c_str()))
+			{
+				for (json& c : j[CHILDREN])
+				{
+					render(c);
+				}
+
+				ImGui::EndTabItem();
+			}
+		}
+	}
+
+	void JsonGui::dragFloat(json& j)
+	{
+		std::string name = jser::getString(j, NAME);
+		float s = 1;
+		float min = -FLT_MAX;
+		float max = FLT_MAX;
+		if (j.contains(SPEED))
+		{
+			s = jser::getFloat(j, SPEED);
+		}
+		if (j.contains(MIN))
+		{
+			min = jser::getFloat(j, MIN);
+		}
+		if (j.contains(MAX))
+		{
+			max = jser::getFloat(j, MAX);
+		}
+		ImGui::DragFloat(name.c_str(), bindings[name].float1, s, min, max);
+	}
+
+	void JsonGui::dragFloat3(json& j)
+	{
+		std::string name = jser::getString(j, NAME);
+		float s = 1;
+		float min = -FLT_MAX;
+		float max = FLT_MAX;
+		if (j.contains(SPEED))
+		{
+			s = jser::getFloat(j, SPEED);
+		}
+		if (j.contains(MIN))
+		{
+			min = jser::getFloat(j, MIN);
+		}
+		if (j.contains(MAX))
+		{
+			max = jser::getFloat(j, MAX);
+		}
+		ImGui::DragFloat3(name.c_str(), glm::value_ptr(*bindings[name].float3), s, min, max);
 	}
 
 	void JsonGui::dragFloat4(json& j)
 	{
 		std::string name = jser::getString(j, NAME);
-		float s = jser::getFloat(j, SPEED);
-		float min = jser::getFloat(j, MIN);
-		float max = jser::getFloat(j, MAX);
-		ImGui::DragFloat4(name.c_str(), glm::value_ptr(*bindings[name].float4), s, min, max);
+		float s = 1;
+		float min = -FLT_MAX;
+		float max = FLT_MAX;
+		if (j.contains(SPEED))
+		{
+			s = jser::getFloat(j, SPEED);
+		}
+		if (j.contains(MIN))
+		{
+			min = jser::getFloat(j, MIN);
+		}
+		if (j.contains(MAX))
+		{
+			max = jser::getFloat(j, MAX);
+		}
+		ImGui::ColorEdit4(name.c_str(), glm::value_ptr(*bindings[name].float4));
+	}
+
+	void JsonGui::lightColor(json& j)
+	{
+		std::string name = jser::getString(j, NAME);
+		ImGui::ColorEdit3(name.c_str(), glm::value_ptr(*bindings[name].float4));
+		ImGui::DragFloat("Intensity", &(*bindings[name].float4).a, 0.01, 0, 1000);
 	}
 
 	void JsonGui::checkbox(json& j)

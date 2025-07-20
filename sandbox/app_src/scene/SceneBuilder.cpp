@@ -46,7 +46,7 @@ enum RenderType
 	FULL
 };
 
-std::string guiPath = "ui/scene_editor.json";
+std::string guiPath = "ui/node_editor.json";
 
 SceneBuilder::SceneBuilder(Audace::BaseAppController* controller)
 	: Scene(controller)
@@ -66,10 +66,11 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 	loader.setImageLoadPath("images/_test/");
 	loader.loadFile(fileLoader, "models/_test/", "Lantern.gltf");
 	sceneGraph = loader.getSceneGraph(this);
-	// sceneGraph = new Audace::SceneGraph(this);
 	editor = new Audace::SceneEditor(fileLoader);
 	editor->attachToScene(this);
 	editor->setSceneGraph(sceneGraph);
+
+	// jsonGui = new Audace::JsonGui(fileLoader->textFileToJson(guiPath));
 }
 
 void SceneBuilder::render()

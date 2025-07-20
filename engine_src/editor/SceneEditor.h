@@ -27,7 +27,7 @@ namespace Audace
 		std::function<void(SceneGraphNode*)> selectNodeFn;
 
 		SceneGraphNode* selectedNode = nullptr;
-		NodeEditWindow editWin;
+		NodeEditWindow* editWin;
 		glm::vec4 clearColor = { 0.5, 0.5, 0.5, 0.5 };
 		glm::vec4 ambientColor = { 1.0, 1.0, 1.0, 0.03 };
 		bool visualize = false;

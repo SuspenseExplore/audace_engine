@@ -1,5 +1,6 @@
 #include "au_renderer.h"
 #include "NodeEditWindow.h"
+#include "content/IFileAccess.h"
 #include "content/AssetStore.h"
 #include "content/Model.h"
 #include "editor/SpriteData.h"
@@ -17,19 +18,47 @@
 
 namespace Audace
 {
-	NodeEditWindow::NodeEditWindow()
+	NodeEditWindow::NodeEditWindow(IFileAccess* fileLoader)
 	{
 		positionMark = new Sprite({ Shapes::spherePositions(8, 8) });
 		positionMark->getMesh()->setMaterial(AssetStore::simpleBillboardMaterial());
 		positionMark->setScale({ 0.05, 0.05, 0.05 });
+		jsonGui = new JsonGui(fileLoader->textFileToJson("ui/node_editor.json"));
 	}
 
 	void NodeEditWindow::setNode(SceneGraphNode* node)
 	{
 		this->node = node;
+		nodeType = node->getNodeType();
 		translation = node->getTranslation();
 		scale = node->getScale();
 		angles = glm::degrees(glm::eulerAngles(node->getRotation()));
+		jsonGui->addBinding("Translate", &translation);
+		jsonGui->addBinding("Scale", &scale);
+		jsonGui->addBinding("Rotate", &angles);
+		jsonGui->addBinding("node_type", &nodeType);
+		if (nodeType == DIR_LIGHT)
+		{
+			DirLight* light = reinterpret_cast<DirLight*>(node->getSprite());
+			lightColor = light->getColor();
+			jsonGui->addBinding("Color", &lightColor);
+		}
+		else if (nodeType == PT_LIGHT)
+		{
+			PointLight* light = reinterpret_cast<PointLight*>(node->getSprite());
+			lightColor = glm::vec4(light->getColor(), light->getIntensity());
+			jsonGui->addBinding("Color", &lightColor);
+		}
+		else if (nodeType == SPOTLIGHT)
+		{
+			SpotLight* light = reinterpret_cast<SpotLight*>(node->getSprite());
+			lightColor = glm::vec4(light->getColor(), light->getIntensity());
+			spotlightInnerAngle = light->getInnerAngle();
+			spotlightOuterAngle = light->getOuterAngle();
+			jsonGui->addBinding("Color", &lightColor);
+			jsonGui->addBinding("innerAngle", &spotlightInnerAngle);
+			jsonGui->addBinding("outerAngle", &spotlightOuterAngle);
+		}
 	}
 
 	void NodeEditWindow::renderWorldSpace(Scene* scene)
@@ -49,229 +78,37 @@ namespace Audace
 
 		txWidgets(scene);
 
-		ImGui::Begin("Edit object");
-		if (ImGui::BeginTabBar("Sprite Tx Tabs"))
-		{
-			if (ImGui::BeginTabItem("Translation"))
-			{
-				translatePane(intervals[intervalIndex]);
+		jsonGui->render();
 
-				ImGui::PushID("intervals");
-				char c[5];
-				for (int i = 0; i < 3; i++)
-				{
-					ImGui::PushID(i);
-					std::snprintf(c, 5, "%.2f", intervals[i]);
-					if (ImGui::RadioButton(c, &intervalIndex, i))
-					{
-						intervalIndex = i;
-					}
-					ImGui::SameLine();
-					ImGui::PopID();
-				}
-				ImGui::NewLine();
-				for (int i = 3; i < intervals.size(); i++)
-				{
-					ImGui::PushID(i);
-					std::snprintf(c, 5, "%.2f", intervals[i]);
-					if (ImGui::RadioButton(c, &intervalIndex, i))
-					{
-						intervalIndex = i;
-					}
-					ImGui::SameLine();
-					ImGui::PopID();
-				}
-				ImGui::PopID();
-				ImGui::EndTabItem();
-			}
-			if (ImGui::BeginTabItem("Scale"))
-			{
-				scalePane(intervals[intervalIndex]);
-
-				ImGui::PushID("intervals");
-				char c[5];
-				for (int i = 0; i < 3; i++)
-				{
-					ImGui::PushID(i);
-					std::snprintf(c, 5, "%.2f", intervals[i]);
-					if (ImGui::RadioButton(c, &intervalIndex, i))
-					{
-						intervalIndex = i;
-					}
-					ImGui::SameLine();
-					ImGui::PopID();
-				}
-				ImGui::NewLine();
-				for (int i = 3; i < intervals.size(); i++)
-				{
-					ImGui::PushID(i);
-					std::snprintf(c, 5, "%.2f", intervals[i]);
-					if (ImGui::RadioButton(c, &intervalIndex, i))
-					{
-						intervalIndex = i;
-					}
-					ImGui::SameLine();
-					ImGui::PopID();
-				}
-				ImGui::PopID();
-
-				ImGui::EndTabItem();
-			}
-			if (ImGui::BeginTabItem("Rotation"))
-			{
-				rotatePane(angleIntervals[angleIntervalIndex]);
-
-				ImGui::PushID("angles");
-				char c[5];
-				for (int i = 0; i < 4; i++)
-				{
-					ImGui::PushID(i);
-					std::snprintf(c, 5, "%.2f", angleIntervals[i]);
-					if (ImGui::RadioButton(c, &angleIntervalIndex, i))
-					{
-						angleIntervalIndex = i;
-					}
-					ImGui::SameLine();
-					ImGui::PopID();
-				}
-				ImGui::NewLine();
-				for (int i = 4; i < angleIntervals.size(); i++)
-				{
-					ImGui::PushID(i);
-					std::snprintf(c, 5, "%.2f", angleIntervals[i]);
-					if (ImGui::RadioButton(c, &angleIntervalIndex, i))
-					{
-						angleIntervalIndex = i;
-					}
-					ImGui::SameLine();
-					ImGui::PopID();
-				}
-				glm::quat q = glm::quat(glm::radians(angles));
-				ImGui::NewLine();
-				ImGui::Text("quat: [%.5f %.5f %.5f %.5f]", q.w, q.x, q.y, q.z);
-				ImGui::PopID();
-
-				ImGui::EndTabItem();
-			}
-			if (node->getNodeType() == PT_LIGHT && ImGui::BeginTabItem("Point Light"))
-			{
-				PointLight* pointLight = reinterpret_cast<PointLight*>(node->getSprite());
-				static glm::vec4 pointLightColor = glm::vec4(pointLight->getColor(), pointLight->getIntensity());
-				static glm::vec3 lightPos = pointLight->getPosition();
-				ImGui::DragFloat3("Position", glm::value_ptr(lightPos), 0.01);
-				ImGui::ColorPicker4("Color", glm::value_ptr(pointLightColor));
-				pointLight->setPosition(lightPos);
-				pointLight->setColor(glm::vec3(pointLightColor));
-				pointLight->setIntensity(pointLightColor.a);
-
-				ImGui::EndTabItem();
-			}
-			else if (node->getNodeType() == DIR_LIGHT && ImGui::BeginTabItem("Directional Light"))
-			{
-				static DirLight* light = reinterpret_cast<DirLight*>(node->getSprite());
-				glm::vec4 color = light->getColor();
-				glm::vec3 angles = glm::degrees(glm::eulerAngles(light->getOrientation()));
-				ImGui::DragFloat3("Direction", glm::value_ptr(angles));
-				ImGui::ColorPicker4("Color", glm::value_ptr(color));
-				light->setOrientation(glm::quat(glm::radians(angles)));
-				light->setColor(color);
-
-				ImGui::EndTabItem();
-			}
-			else if (node->getNodeType() == SPOTLIGHT && ImGui::BeginTabItem("Spotlight"))
-			{
-				static SpotLight* light = reinterpret_cast<SpotLight*>(node->getSprite());
-				static glm::vec4 color = glm::vec4(light->getColor(), light->getIntensity());
-				static float innerAngle = light->getInnerAngle();
-				static float outerAngle = light->getOuterAngle();
-				ImGui::ColorPicker4("Color", glm::value_ptr(color));
-				ImGui::DragFloat("Inner Angle", &innerAngle, 0.001);
-				ImGui::DragFloat("Outer Angle", &outerAngle, 0.001);
-				light->setColor(glm::vec3(color));
-				light->setIntensity(color.a);
-				light->setInnerAngle(innerAngle);
-				light->setOuterAngle(outerAngle);
-				ImGui::EndTabItem();
-			}
-
-			ImGui::EndTabBar();
-		}
-
-		ImGui::End();
 		node->setTranslation(translation);
 		node->setScale(scale);
 		node->setRotation(glm::quat(glm::radians(angles)));
-	}
-
-	void NodeEditWindow::translatePane(float interval)
-	{
-		if (ImGui::BeginTable("Sprite Translation Controls", 3, ImGuiTableFlags_Borders))
+		switch (nodeType)
 		{
-			ImGui::TableNextRow();
-			ImGui::TableNextColumn();
-			ImGui::Text("X");
-			ImGui::TableNextColumn();
-			ImGui::Text("Y");
-			ImGui::TableNextColumn();
-			ImGui::Text("Z");
-
-			ImGui::TableNextRow();
-			ImGui::TableNextColumn();
-			editorCellFloat("##Xpos", &translation.x, interval);
-			ImGui::TableNextColumn();
-			editorCellFloat("##Ypos", &translation.y, interval);
-			ImGui::TableNextColumn();
-			editorCellFloat("##Zpos", &translation.z, interval);
-
-			ImGui::EndTable();
+		case DIR_LIGHT:
+		{
+			DirLight* light = reinterpret_cast<DirLight*>(node->getSprite());
+			light->setColor(lightColor);
+			break;
 		}
-	}
 
-	void NodeEditWindow::scalePane(float interval)
-	{
-		if (ImGui::BeginTable("Sprite Scale Controls", 3, ImGuiTableFlags_Borders))
+		case PT_LIGHT:
 		{
-			ImGui::TableNextRow();
-			ImGui::TableNextColumn();
-			ImGui::Text("X");
-			ImGui::TableNextColumn();
-			ImGui::Text("Y");
-			ImGui::TableNextColumn();
-			ImGui::Text("Z");
-
-			ImGui::TableNextRow();
-			ImGui::TableNextColumn();
-			editorCellFloat("##Xscale", &scale.x, interval);
-			ImGui::TableNextColumn();
-			editorCellFloat("##Yscale", &scale.y, interval);
-			ImGui::TableNextColumn();
-			editorCellFloat("##Zscale", &scale.z, interval);
-
-			ImGui::EndTable();
+			PointLight* light = reinterpret_cast<PointLight*>(node->getSprite());
+			light->setColor(glm::vec3(lightColor));
+			light->setIntensity(lightColor.a);
+			break;
 		}
-	}
 
-	void NodeEditWindow::rotatePane(float interval)
-	{
-		if (ImGui::BeginTable("Sprite Rotation Controls", 3, ImGuiTableFlags_Borders))
+		case SPOTLIGHT:
 		{
-			ImGui::TableNextRow();
-			ImGui::TableNextColumn();
-			ImGui::Text("X");
-			ImGui::TableNextColumn();
-			ImGui::Text("Y");
-			ImGui::TableNextColumn();
-			ImGui::Text("Z");
-
-			ImGui::TableNextRow();
-			ImGui::TableNextColumn();
-			editorCellAngle("##Xangle", &angles.x, interval);
-			ImGui::TableNextColumn();
-			editorCellAngle("##Yangle", &angles.y, interval);
-			ImGui::TableNextColumn();
-			editorCellAngle("##Zangle", &angles.z, interval);
-
-			ImGui::EndTable();
+			SpotLight* light = reinterpret_cast<SpotLight*>(node->getSprite());
+			light->setColor(glm::vec3(lightColor));
+			light->setIntensity(lightColor.a);
+			light->setInnerAngle(spotlightInnerAngle);
+			light->setOuterAngle(spotlightOuterAngle);
+			break;
+		}
 		}
 	}
 
@@ -304,57 +141,4 @@ namespace Audace
 		}
 		ImGui::End();
 	}
-
-	void NodeEditWindow::editorCellFloat(std::string label, float* val, float interval)
-	{
-		char c[5];
-		std::snprintf(c, 5, "%.2f", interval);
-		ImGui::DragFloat(label.c_str(), val, 0.01);
-		if (ImGui::Button((std::string("-") + c + label).c_str()))
-		{
-			*val -= interval;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button((std::string("+") + c + label).c_str()))
-		{
-			*val += interval;
-		}
-
-		if (ImGui::Button((std::string("|<-") + label).c_str()))
-		{
-			*val = std::floor(*val);
-		}
-		ImGui::SameLine();
-		if (ImGui::Button((std::string("->|") + label).c_str()))
-		{
-			*val = std::ceil(*val);
-		}
-	}
-
-	void NodeEditWindow::editorCellAngle(std::string label, float* val, float interval)
-	{
-		char c[5];
-		std::snprintf(c, 5, "%.2f", interval);
-		ImGui::DragFloat(label.c_str(), val, 0.1);
-		if (ImGui::Button((std::string("-") + c + label).c_str()))
-		{
-			*val -= interval;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button((std::string("+") + c + label).c_str()))
-		{
-			*val += interval;
-		}
-
-		if (ImGui::Button((std::string("|<-") + label).c_str()))
-		{
-			*val = std::floor(*val);
-		}
-		ImGui::SameLine();
-		if (ImGui::Button((std::string("->|") + label).c_str()))
-		{
-			*val = std::ceil(*val);
-		}
-	}
-
 }

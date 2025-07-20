@@ -21,6 +21,7 @@ namespace Audace
 	SceneEditor::SceneEditor(IFileAccess* fileLoader) : fileLoader(fileLoader), gui(fileLoader->textFileToJson("ui/scene_editor.json"))
 	{
 		modelIndex = fileLoader->textFileToJson("models/_index.json");
+		editWin = new NodeEditWindow(fileLoader);
 
 		gui.addBinding("Clear Color", &clearColor);
 		gui.addBinding("Ambient Color", &ambientColor);
@@ -28,7 +29,7 @@ namespace Audace
 		selectNodeFn = [=](Audace::SceneGraphNode* node)
 			{
 				selectedNode = node;
-				editWin.setNode(node);
+				editWin->setNode(node);
 			};
 		gui.addBinding("Select Node", &selectNodeFn);
 	}
@@ -49,7 +50,7 @@ namespace Audace
 		}
 		if (selectedNode != nullptr)
 		{
-			editWin.renderWorldSpace(scene);
+			editWin->renderWorldSpace(scene);
 		}
 	}
 
@@ -57,7 +58,7 @@ namespace Audace
 	{
 		if (selectedNode != nullptr)
 		{
-			editWin.renderViewSpace(scene);
+			editWin->renderViewSpace(scene);
 		}
 		gui.render();
 		scene->setClearColor(clearColor);

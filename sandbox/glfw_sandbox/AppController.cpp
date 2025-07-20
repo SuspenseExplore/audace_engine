@@ -228,7 +228,7 @@ namespace Audace
 	void AppController::renderFrame()
 	{
 		scene->render();
-		((ProcTerrainScene*)scene)->renderUi();
+		((SceneBuilder*)scene)->renderUi();
 	}
 
 	int AppController::getWidth()
