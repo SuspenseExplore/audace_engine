@@ -145,7 +145,7 @@ namespace Audace
 		vector<GltfAccessor> accessors;
 
 		vector<BaseMaterial*> materials;
-		vector<Sprite*> sprites;
+		map<int, Sprite*> sprites;
 
 		void parseBuffers(json& jBuffers);
 		void parseBufferViews(json& jBufViews);

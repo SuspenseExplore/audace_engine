@@ -199,6 +199,12 @@ namespace Audace
 		AU_CHECK_GL_ERRORS();
 	}
 
+	void ShaderProgram::setUniformMat4Array(std::string name, float* value, int count)
+	{
+		glUniformMatrix4fv(uniforms[name], count, false, value);
+		AU_CHECK_GL_ERRORS();
+	}
+
 	void ShaderProgram::setUniformLight(std::string type, Sprite* light)
 	{
 		if (type == "point")

@@ -666,6 +666,10 @@ namespace Audace
 
 	Sprite* GltfLoader::getSprite(int meshId)
 	{
+		if (sprites.find(meshId) != sprites.end())
+		{
+			return sprites[meshId];
+		}
 		GltfMesh& gltfMesh = meshes[meshId];
 		vector<Mesh*> meshes;
 
@@ -712,6 +716,7 @@ namespace Audace
 		}
 
 		Sprite* sprite = new Sprite(meshes);
+		sprites[meshId] = sprite;
 		return sprite;
 	}
 
@@ -726,8 +731,8 @@ namespace Audace
 		if (gltfNode.meshId > -1)
 		{
 			Sprite* sprite = getSprite(gltfNode.meshId);
-			sprites.emplace_back(sprite);
 			node->setSprite(sprite);
+			sprite->addInst(node);
 
 			node->setBoundingBox(meshes[gltfNode.meshId].bbox);
 

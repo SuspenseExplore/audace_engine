@@ -23,15 +23,32 @@ namespace Audace
 		modelIndex = fileLoader->textFileToJson("models/_index.json");
 		editWin = new NodeEditWindow(fileLoader);
 
+		cubeSprite = AssetStore::getCubeSprite();
+		reinterpret_cast<SimpleBillboardMaterial*>(cubeSprite->getMesh()->getMaterial())->setTexture(AssetStore::darkGridTexture());
+
 		gui.addBinding("Clear Color", &clearColor);
 		gui.addBinding("Ambient Color", &ambientColor);
 		gui.addBinding("Visualize", &visualize);
-		selectNodeFn = [=](Audace::SceneGraphNode* node)
+		selectNodeFn = [=](SceneGraphNode* node)
 			{
 				selectedNode = node;
 				editWin->setNode(node);
 			};
-		gui.addBinding("Select Node", &selectNodeFn);
+		newChildFn = [=](SceneGraphNode* node)
+			{
+				new SceneGraphNode(node);
+			};
+		addCubeFn = [=](SceneGraphNode* node)
+			{
+				if (node->getSprite() == nullptr)
+				{
+					node->setSprite(cubeSprite);
+					cubeSprite->addInst(node);
+				}
+			};
+		gui.addBinding("Select", &selectNodeFn);
+		gui.addBinding("New Child", &newChildFn);
+		gui.addBinding("Add Cube", &addCubeFn);
 	}
 
 	void SceneEditor::renderWorldSpace(Scene* scene)
@@ -68,6 +85,7 @@ namespace Audace
 	void SceneEditor::attachToScene(Scene* scene)
 	{
 		this->scene = scene;
+		scene->addSprite(cubeSprite);
 	}
 
 	void SceneEditor::setSceneGraph(SceneGraph* graph)

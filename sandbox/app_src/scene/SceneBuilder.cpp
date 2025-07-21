@@ -63,8 +63,8 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 	shader = Audace::AssetStore::getShader("pbr");
 
 	Audace::GltfLoader loader;
-	loader.setImageLoadPath("images/_test/");
-	loader.loadFile(fileLoader, "models/_test/", "Lantern.gltf");
+	loader.setImageLoadPath("images/quaternius/");
+	loader.loadFile(fileLoader, "models/quat_builds/", "house_orig.gltf");
 	sceneGraph = loader.getSceneGraph(this);
 	editor = new Audace::SceneEditor(fileLoader);
 	editor->attachToScene(this);
@@ -107,11 +107,11 @@ void SceneBuilder::render()
 	// shader->setUniformFloat("outDirLight", renderType == RenderType::DIR_LIGHT ? 1.0 : 0.0);
 	// shader->setUniformFloat("outFull", renderType == RenderType::FULL ? 1.0 : 0.0);
 
+	editor->renderWorldSpace(this);
 	for (Audace::Sprite* s : sprites)
 	{
 		s->renderWorldSpace(this);
 	}
-	editor->renderWorldSpace(this);
 }
 
 void SceneBuilder::loadModel(std::string path, std::string filename)

@@ -1,6 +1,7 @@
 #ifndef AU_SCENEEDITOR_H
 #define AU_SCENEEDITOR_H
 
+#include <map>
 #include <string>
 #include "content/JsonGui.h"
 #include "editor/SceneData.h"
@@ -16,6 +17,7 @@ namespace Audace
 	class Scene;
 	class SceneGraph;
 	class SceneGraphNode;
+	class Sprite;
 
 	class SceneEditor
 	{
@@ -25,6 +27,11 @@ namespace Audace
 		SceneGraph* sceneGraph;
 		JsonGui gui;
 		std::function<void(SceneGraphNode*)> selectNodeFn;
+		std::function<void(SceneGraphNode*)> newChildFn;
+		std::function<void(SceneGraphNode*)> addCubeFn;
+
+		Sprite* cubeSprite;
+		std::map<int, SceneGraphNode*> insts;
 
 		SceneGraphNode* selectedNode = nullptr;
 		NodeEditWindow* editWin;

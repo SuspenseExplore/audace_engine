@@ -18,6 +18,7 @@ namespace Audace
 	class Mesh;
 	class BaseMaterial;
 	class Scene;
+	class SceneGraphNode;
 
 	/**
 	 * Combines one or more Meshes with world transformation data to make a single coherent renderable object
@@ -31,6 +32,8 @@ namespace Audace
 		Pose pose;
 		glm::vec3 scale{ 1.0, 1.0, 1.0 };
 
+		std::vector<SceneGraphNode*> instances;
+
 		Sprite(Sprite* sprite);
 
 	public:
@@ -38,6 +41,11 @@ namespace Audace
 		Sprite(std::vector<Mesh*> meshes);
 		void setName(std::string name) { this->name = name; }
 		std::string getName() { return name; }
+
+		void addInst(SceneGraphNode* n)
+		{
+			instances.push_back(n);
+		}
 
 		virtual void renderWorldSpace(Scene* scene);
 		virtual void renderViewSpace(Scene* scene);

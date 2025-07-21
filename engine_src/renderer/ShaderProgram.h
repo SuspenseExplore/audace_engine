@@ -38,6 +38,7 @@ namespace Audace {
 		void setUniformVec4(std::string name, float* value);
 		void setUniformMat4(std::string name, glm::mat4 mat);
 		void setUniformMat4(std::string name, float* value);
+		void setUniformMat4Array(std::string name, float* value, int count);
 
 		void setUniformLight(std::string type, Sprite* light);
 

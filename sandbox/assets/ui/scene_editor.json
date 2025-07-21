@@ -47,7 +47,23 @@
 										"x_offset": 500
 									},
 									{
-										"name": "Select Node",
+										"name": "Select",
+										"type": "button",
+										"param": "scene_graph_node"
+									},
+									{
+										"type": "same_line"
+									},
+									{
+										"name": "New Child",
+										"type": "button",
+										"param": "scene_graph_node"
+									},
+									{
+										"type": "same_line"
+									},
+									{
+										"name": "Add Cube",
 										"type": "button",
 										"param": "scene_graph_node"
 									}

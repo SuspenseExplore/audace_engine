@@ -23,7 +23,7 @@ struct SpotLight {
 	float outerAngle;
 };
 
-uniform mat4 worldMat;
+uniform mat4 worldMat[50];
 uniform mat4 vpMat;
 uniform vec3 textureScale;
 uniform vec3 viewPos;
@@ -39,17 +39,17 @@ out DirLight tDirLight;
 out SpotLight tSpotLight;
 
 void main() {
-	gl_Position = vpMat * worldMat * position;
+	gl_Position = vpMat * worldMat[gl_InstanceID] * position;
 //	texCoord = inTexCoord0 / textureScale;
 	texCoord = inTexCoord0;
 
-	vec3 n = normalize(mat3(worldMat) * normal);
-	vec3 t = normalize(mat3(worldMat) * tangent);
+	vec3 n = normalize(mat3(worldMat[gl_InstanceID]) * normal);
+	vec3 t = normalize(mat3(worldMat[gl_InstanceID]) * tangent);
 	t = normalize(t - dot(t, n) * n);
 	vec3 binormal = cross(n, t);
 	mat3 tbnMat = transpose(mat3(t, binormal, n));
 
-	fragPos = tbnMat * (worldMat * position).xyz;
+	fragPos = tbnMat * (worldMat[gl_InstanceID] * position).xyz;
 	tViewPos = tbnMat * viewPos;
 
 	tLight.position = tbnMat * ptLight.position;

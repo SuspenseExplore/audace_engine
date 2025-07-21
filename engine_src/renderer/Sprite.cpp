@@ -14,6 +14,7 @@
 #include "Mesh.h"
 #include "scene/Scene.h"
 #include "scene/BaseCamera.h"
+#include "scene/graph/SceneGraphNode.h"
 
 namespace Audace
 {
@@ -93,7 +94,19 @@ namespace Audace
 		{
 			mesh->getMaterial()->getShader()->bind();
 			mesh->getMaterial()->getShader()->setUniformMat4("vpMat", scene->getCamera()->getViewProjMatrix());
-			mesh->render(worldMat);
+			if (instances.size() > 0)
+			{
+				std::vector<glm::mat4> mats;
+				for (SceneGraphNode* n : instances)
+				{
+					mats.push_back(n->getLocalTransform());
+				}
+				mesh->renderInstanced(mats);
+			}
+			else
+			{
+				mesh->render(worldMat);
+			}
 		}
 	}
 

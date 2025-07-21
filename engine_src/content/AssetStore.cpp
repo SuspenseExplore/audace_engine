@@ -102,6 +102,11 @@ namespace Audace
 		}
 	}
 
+	Texture2d* AssetStore::darkGridTexture()
+	{
+		return getTexture("images/dark_grid.png");
+	}
+
 	Model* AssetStore::getModel(const std::string& name)
 	{
 		if (models.find(name) == models.end())
@@ -153,6 +158,9 @@ namespace Audace
 		if (sprites.find(name) == sprites.end())
 		{
 			std::vector<Audace::Mesh*> v = { Audace::Shapes::cubePosNormTan() };
+			SimpleBillboardMaterial* mat = new SimpleBillboardMaterial();
+			mat->setShader(simpleBillboardShader());
+			v[0]->setMaterial(mat);
 			Sprite* s = new Sprite(v);
 			sprites[name] = s;
 		}

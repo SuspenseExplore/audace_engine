@@ -21,7 +21,7 @@ namespace Audace
 		{
 			debugAxes = AssetStore::getColoredAxes();
 			Mesh* m = Shapes::cubeWireframe();
-			SimpleBillboardMaterial* mat = AssetStore::simpleBillboardMaterial();
+			SimpleBillboardMaterial* mat = new SimpleBillboardMaterial();
 			shader = AssetStore::getShader("AU_bbox");
 			mat->setShader(shader);
 			m->setMaterial(mat);
@@ -37,7 +37,7 @@ namespace Audace
 		{
 			debugAxes = AssetStore::getColoredAxes();
 			Mesh* m = Shapes::cubeWireframe();
-			SimpleBillboardMaterial* mat = AssetStore::simpleBillboardMaterial();
+			SimpleBillboardMaterial* mat = new SimpleBillboardMaterial();
 			shader = AssetStore::getShader("AU_bbox");
 			mat->setShader(shader);
 			m->setMaterial(mat);

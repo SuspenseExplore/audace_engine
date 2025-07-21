@@ -36,6 +36,7 @@ namespace Audace
 		static Texture2d* getWhiteTexture() { return textures["AU_white_texture"]; }
 		static Texture2d* getBlueTexture() { return textures["AU_blue_texture"]; }
 		static Texture2d* getBlackTexture() { return textures["AU_black_texture"]; }
+		static Texture2d* darkGridTexture();
 
 		static Texture2d* getTexture(const std::string& name);
 		static Model* getModel(const std::string& name);
