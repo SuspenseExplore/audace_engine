@@ -8,6 +8,7 @@
 #include "content/JsonSerializer.h"
 #include "content/AssetStore.h"
 #include "content/gltf/GltfLoader.h"
+#include "content/gltf/GltfxReader.h"
 #include "content/JsonGui.h"
 #include "renderer/Texture2d.h"
 #include "renderer/ShaderProgram.h"
@@ -20,6 +21,7 @@
 #include "scene/BaseCamera.h"
 #include "scene/SceneDescriptor.h"
 #include "scene/graph/SceneGraph.h"
+#include "scene/graph/SceneGraphNode.h"
 #include "util/StringUtil.h"
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -62,10 +64,18 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 	modelIndex = fileLoader->textFileToJson("models/_index.json");
 	shader = Audace::AssetStore::getShader("pbr");
 
-	Audace::GltfLoader loader;
-	loader.setImageLoadPath("images/quaternius/");
-	loader.loadFile(fileLoader, "models/quat_builds/", "house_orig.gltf");
-	sceneGraph = loader.getSceneGraph(this);
+	// Audace::GltfLoader loader;
+	// loader.setImageLoadPath("images/quaternius/");
+	// loader.loadFile(fileLoader, "models/quat_builds/", "house_orig.gltf");
+	// sceneGraph = new Audace::SceneGraph();
+	// Audace::Sprite* s = loader.getSprite(0);
+	// addSprite(s);
+	// s->addInst(sceneGraph->getRootNode());
+
+	Audace::GltfxReader reader(fileLoader);
+	sceneGraph = new Audace::SceneGraph;
+	sceneGraph->setRootNode(reader.readDefaultScene("scenes/default.gltfx"));
+
 	editor = new Audace::SceneEditor(fileLoader);
 	editor->attachToScene(this);
 	editor->setSceneGraph(sceneGraph);

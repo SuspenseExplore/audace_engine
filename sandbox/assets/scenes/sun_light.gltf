@@ -1,0 +1,43 @@
+{
+	"asset":{
+		"generator":"Khronos glTF Blender I/O v3.6.28",
+		"version":"2.0"
+	},
+	"extensionsUsed":[
+		"KHR_lights_punctual"
+	],
+	"extensionsRequired":[
+		"KHR_lights_punctual"
+	],
+	"extensions":{
+		"KHR_lights_punctual":{
+			"lights":[
+				{
+					"color": [1.0, 1.0, 0.8, 1.0],
+					"intensity": 1.0,
+					"type": "directional",
+					"name": "dirLight"
+				}
+			]
+		}
+	},
+	"scene":0,
+	"scenes":[
+		{
+			"name":"Scene",
+			"nodes":[
+				0
+			]
+		}
+	],
+	"nodes":[
+		{
+			"name": "dir_light_sun",
+			"extensions": {
+				"KHR_lights_punctual": {
+					"light": 0
+				}
+			}
+		}
+	]
+}

@@ -28,6 +28,20 @@
                 "inst_test.gltf"
             ],
             "folders": {}
+        },
+        "quaternius": {
+            "folders": {
+                "medieval_village": {
+                    "files": [
+                        "Corner_ExteriorWide_Brick.gltf",
+                        "Doorframe_Round_Brick.gltf",
+                        "Door_2_Round.gltf",
+                        "Wall_Plaster_Door_Round.gltf",
+                        "Wall_Plaster_Straight_Base.gltf"
+                    ],
+                    "folders": {}
+                }
+            }
         }
     }
 }

@@ -5,7 +5,7 @@
 
 namespace Audace
 {
-	SceneGraph::SceneGraph(Scene* scene) : scene(scene)
+	SceneGraph::SceneGraph()
 	{
 		rootNode = new SceneGraphNode();
 		rootNode->setName("root");
@@ -29,7 +29,7 @@ namespace Audace
 
 	void SceneGraph::update(Scene* scene)
 	{
-		rootNode->update(IDENTITY);
+		rootNode->update(scene, IDENTITY);
 		for (int i = 0; i < lights.size(); i++)
 		{
 			scene->setLight(i, lights[i], lightTypes[i]);

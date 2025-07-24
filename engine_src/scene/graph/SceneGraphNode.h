@@ -60,7 +60,7 @@ namespace Audace
 			bbox.max = bb.max;
 		}
 		BoundingBox getBoundingBox() { return bbox; }
-		void update(glm::mat4 parentTransform);
+		void update(Scene* scene, glm::mat4 parentTransform);
 
 		NodeType getNodeType() { return type; }
 

@@ -53,6 +53,7 @@ add_executable(
 	${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 	${ENGINE_DIR}/renderer/text/TextLabel.cpp
 	${ENGINE_DIR}/content/gltf/GltfLoader.cpp
+	${ENGINE_DIR}/content/gltf/GltfxReader.cpp
 	${ENGINE_DIR}/content/ImageData.cpp
 	${ENGINE_DIR}/content/ModelLoader.cpp
 	${ENGINE_DIR}/content/AssetStore.cpp

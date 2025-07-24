@@ -1,0 +1,58 @@
+{
+	"asset": {
+		"version": "2.0",
+		"experience": true
+	},
+	"assets": [
+		{
+			"uri": "models/quaternius/medieval_village/Door_2_Round.gltf"
+		},
+		{
+			"uri": "models/quaternius/medieval_village/DoorFrame_Round_Brick.gltf"
+		},
+		{
+			"uri": "models/quaternius/medieval_village/Wall_Plaster_Door_Round.gltf"
+		},
+		{
+			"uri": "models/quaternius/medieval_village/Corner_ExteriorWide_Brick.gltf"
+		},
+		{
+			"uri": "models/quaternius/medieval_village/Wall_Plaster_Straight_Base.gltf"
+		}
+	],
+	"nodes": [
+		{
+			"name": "doorway_round",
+			"children": [ 1, 2, 3, 4, 5 ]
+		},
+		{
+			"translation": [-0.5, 0, 0],
+			"asset": 0
+		},
+		{
+			"translation": [0, 0, 0],
+			"asset": 1
+		},
+		{
+			"translation": [0, 0, 0],
+			"asset": 2
+		},
+		{
+			"translation": [3, 0, 3],
+			"rotation": [1, 0, 0, 0],
+			"asset": 3
+		},
+		{
+			"translation": [2, 0, 0],
+			"asset": 4
+		}
+	],
+	"scene": 0,
+	"scenes": [
+		{
+			"nodes": [
+				0
+			]
+		}
+	]
+}

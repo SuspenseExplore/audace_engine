@@ -176,6 +176,7 @@ namespace Audace
 		Sprite* getSprite(int meshId);
 		SceneGraph* getSceneGraph(Scene* scene);
 		SceneGraph* getSceneGraph(Scene* scene, SceneGraphNode* root);
+		SceneGraphNode* getSceneRootNode(int sceneId);
 	};
 }
 

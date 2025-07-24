@@ -800,7 +800,7 @@ namespace Audace
 	SceneGraph* GltfLoader::getSceneGraph(Scene* scene)
 	{
 		GltfScene s = scenes[defaultSceneId];
-		SceneGraph* graph = new SceneGraph(scene);
+		SceneGraph* graph = new SceneGraph();
 		SceneGraphNode* root = graph->getRootNode();
 		for (int id : s.nodeIds)
 		{
@@ -827,7 +827,7 @@ namespace Audace
 	SceneGraph* GltfLoader::getSceneGraph(Scene* scene, SceneGraphNode* root)
 	{
 		GltfScene s = scenes[defaultSceneId];
-		SceneGraph* graph = new SceneGraph(scene);
+		SceneGraph* graph = new SceneGraph();
 		for (int id : s.nodeIds)
 		{
 			SceneGraphNode* node = getNode(id);
@@ -847,5 +847,10 @@ namespace Audace
 			}
 		}
 		return graph;
+	}
+
+	SceneGraphNode* GltfLoader::getSceneRootNode(int sceneId)
+	{
+		return getNode(scenes[sceneId].nodeIds[0]);
 	}
 }

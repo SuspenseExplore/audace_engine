@@ -85,7 +85,7 @@ namespace Audace
 	void SceneEditor::attachToScene(Scene* scene)
 	{
 		this->scene = scene;
-		scene->addSprite(cubeSprite);
+		// scene->addSprite(cubeSprite);
 	}
 
 	void SceneEditor::setSceneGraph(SceneGraph* graph)

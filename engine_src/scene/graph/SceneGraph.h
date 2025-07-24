@@ -22,7 +22,7 @@ namespace Audace
 		glm::mat4 IDENTITY = glm::mat4(1.0);
 
 	public:
-		SceneGraph(Scene* scene);
+		SceneGraph();
 		void setRootNode(SceneGraphNode* node);
 		SceneGraphNode* getRootNode();
 		void addLight(int id, Sprite* light, string type);

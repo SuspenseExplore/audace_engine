@@ -1,0 +1,35 @@
+{
+	"asset": {
+		"version": "2.0",
+		"experience": true
+	},
+	"assets": [
+		{
+			"uri": "scenes/quat_wall_doorway.gltfx"
+		},
+		{
+			"uri": "scenes/sun_light.gltf"
+		}
+	],
+	"nodes": [
+		{
+			"name": "house",
+			"children": [ 1, 2 ]
+		},
+		{
+			"translation": [0, 0, 0],
+			"asset": 0
+		},
+		{
+			"asset": 1
+		}
+	],
+	"scene": 0,
+	"scenes": [
+		{
+			"nodes": [
+				0
+			]
+		}
+	]
+}

@@ -7,6 +7,13 @@ namespace Audace {
 		appController = controller;
 	}
 	void Scene::addSprite(Sprite* s) {
+		for (Sprite* sprite : sprites)
+		{
+			if (s == sprite)
+			{
+				return;
+			}
+		}
 		sprites.push_back(s);
 	}
 

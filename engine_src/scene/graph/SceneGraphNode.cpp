@@ -92,7 +92,7 @@ namespace Audace
 		return glm::vec3(localTransform[3][0], localTransform[3][1], localTransform[3][2]);
 	}
 
-	void SceneGraphNode::update(glm::mat4 parentTransform)
+	void SceneGraphNode::update(Scene* scene, glm::mat4 parentTransform)
 	{
 		for (INodeAnimation* a : animations)
 		{
@@ -112,11 +112,12 @@ namespace Audace
 			sprite->setPosition(translation);
 			sprite->setScale(scale);
 			sprite->setOrientation(rotation);
+			scene->addSprite(sprite);
 		}
 
 		for (SceneGraphNode* child : children)
 		{
-			child->update(localTransform);
+			child->update(scene, localTransform);
 		}
 	}
 
