@@ -14,11 +14,11 @@ namespace Audace
 	class Sprite;
 	class Scene;
 
-	enum NodeType { NORMAL, SPRITE, DIR_LIGHT, PT_LIGHT, SPOTLIGHT };
+	enum NodeType { NORMAL_NODE, SPRITE_NODE, DIRLIGHT_NODE, PTLIGHT_NODE, SPOTLIGHT_NODE };
 
 	class SceneGraphNode
 	{
-		NodeType type = NORMAL;
+		NodeType type = NORMAL_NODE;
 		std::string name;
 		SceneGraphNode* parent;
 		std::vector<SceneGraphNode*> children;
@@ -40,7 +40,7 @@ namespace Audace
 		SceneGraphNode(SceneGraphNode* parent);
 		void setName(std::string name);
 		const std::string& getName();
-		void setSprite(Sprite* s, NodeType type = SPRITE);
+		void setSprite(Sprite* s, NodeType type = SPRITE_NODE);
 		Sprite* getSprite();
 		void addChild(SceneGraphNode* c);
 		std::vector<SceneGraphNode*>& getChildren();

@@ -8,6 +8,7 @@
 
 namespace Audace {
 	class Sprite;
+	struct TypedLight;
 
 	class ShaderProgram {
 		GLuint glid = -1;
@@ -40,7 +41,7 @@ namespace Audace {
 		void setUniformMat4(std::string name, float* value);
 		void setUniformMat4Array(std::string name, float* value, int count);
 
-		void setUniformLight(std::string type, Sprite* light);
+		void setUniformLight(TypedLight* light);
 
 		static GLuint loadShader(const char* src, GLenum shaderType);
 	};

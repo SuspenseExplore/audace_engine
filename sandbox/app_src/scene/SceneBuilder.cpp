@@ -17,6 +17,7 @@
 #include "renderer/light/PointLight.h"
 #include "renderer/light/DirLight.h"
 #include "renderer/light/SpotLight.h"
+#include "renderer/light/TypedLight.h"
 #include "renderer/material/Material.h"
 #include "scene/BaseCamera.h"
 #include "scene/SceneDescriptor.h"
@@ -107,7 +108,7 @@ void SceneBuilder::render()
 
 	for (auto& item : lights)
 	{
-		shader->setUniformLight(lightTypes[item.first], item.second);
+		shader->setUniformLight(item.second);
 	}
 
 	// shader->setUniformFloat("outPosition", renderType == RenderType::POSITION ? 1.0 : 0.0);
@@ -138,15 +139,69 @@ void SceneBuilder::setAmbientLight(glm::vec4 color)
 	ambientColor = color;
 }
 
-void SceneBuilder::setLight(int id, Audace::Sprite* light, std::string type)
+void SceneBuilder::setLight(Audace::LightType type, Audace::Sprite* sprite)
 {
-	lights[id] = light;
-	lightTypes[id] = type;
+	const std::string& name = sprite->getName();
+	switch (type)
+	{
+	case Audace::LightType::POINT_LIGHT:
+	{
+		Audace::PointLight* ptLight = reinterpret_cast<Audace::PointLight*>(sprite);
+		if (lights.find(name) == lights.end())
+		{
+			// the light entry doesn't exist yet
+			Audace::TypedLight* light = new Audace::TypedLight(name, ptLight);
+			lights[name] = light;
+		}
+		else
+		{
+			lights[name]->ptLight->setColor(ptLight->getColor());
+			lights[name]->ptLight->setIntensity(ptLight->getIntensity());
+		}
+	}
+	break;
+
+	case Audace::LightType::DIRECTIONAL_LIGHT:
+	{
+		Audace::DirLight* dirLight = reinterpret_cast<Audace::DirLight*>(sprite);
+		if (lights.find(name) == lights.end())
+		{
+			// the light entry doesn't exist yet
+			Audace::TypedLight* light = new Audace::TypedLight(name, dirLight);
+			lights[name] = light;
+		}
+		else
+		{
+			lights[name]->dirLight->setColor(dirLight->getColor());
+			lights[name]->dirLight->setIntensity(dirLight->getIntensity());
+		}
+	}
+	break;
+
+	case Audace::LightType::SPOTLIGHT:
+	{
+		Audace::SpotLight* spotLight = reinterpret_cast<Audace::SpotLight*>(sprite);
+		if (lights.find(name) == lights.end())
+		{
+			// the light entry doesn't exist yet
+			Audace::TypedLight* light = new Audace::TypedLight(name, spotLight);
+			lights[name] = light;
+		}
+		else
+		{
+			lights[name]->spotLight->setColor(spotLight->getColor());
+			lights[name]->spotLight->setIntensity(spotLight->getIntensity());
+			lights[name]->spotLight->setInnerAngle(spotLight->getInnerAngle());
+			lights[name]->spotLight->setOuterAngle(spotLight->getOuterAngle());
+		}
+	}
+	break;
+	}
 }
 
-Audace::Sprite* SceneBuilder::getLight(int id)
+Audace::TypedLight* SceneBuilder::getLight(const std::string& name)
 {
-	return lights[id];
+	return lights[name];
 }
 
 void SceneBuilder::setCamera(Audace::BaseCamera* camera)

@@ -21,19 +21,9 @@ namespace Audace
 		return rootNode;
 	}
 
-	void SceneGraph::addLight(int id, Sprite* light, string type)
-	{
-		lights[id] = light;
-		lightTypes[id] = type;
-	}
-
 	void SceneGraph::update(Scene* scene)
 	{
 		rootNode->update(scene, IDENTITY);
-		for (int i = 0; i < lights.size(); i++)
-		{
-			scene->setLight(i, lights[i], lightTypes[i]);
-		}
 	}
 
 	void SceneGraph::debugRender(Scene* scene)

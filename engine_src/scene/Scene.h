@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include "renderer/light/TypedLight.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
 
@@ -12,8 +13,6 @@ namespace Audace
 	class BaseAppController;
 	class IFileAccess;
 	class BaseCamera;
-	class PointLight;
-	class DirLight;
 
 	class Scene
 	{
@@ -39,8 +38,8 @@ namespace Audace
 		virtual void setClearColor(glm::vec4 color) {}
 		virtual void setAmbientLight(glm::vec4 color) {}
 		virtual glm::vec4 getAmbientLight() { return { 1, 0, 1, 1 }; }
-		virtual void setLight(int id, Sprite* light, std::string type) {}
-		virtual Sprite* getLight(int id) { return nullptr; }
+		virtual void setLight(LightType type, Sprite* sprite) {}
+		virtual TypedLight* getLight(const std::string& name) { return nullptr; }
 	};
 }
 

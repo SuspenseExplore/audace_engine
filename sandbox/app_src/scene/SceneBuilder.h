@@ -16,8 +16,7 @@ namespace Audace
 	class JsonGui;
 	class ShaderProgram;
 	class Sprite;
-	class PointLight;
-	class DirLight;
+	struct TypedLight;
 	class IFileAccess;
 }
 
@@ -39,8 +38,7 @@ class SceneBuilder : public Audace::Scene
 
 	Audace::ShaderProgram* shader;
 	glm::vec4 ambientColor = { 1.0, 1.0, 1.0, 0.03 };
-	std::map<int, Audace::Sprite*> lights;
-	std::map<int, std::string> lightTypes;
+	std::map<std::string, Audace::TypedLight*> lights;
 	glm::mat4 modelMat;
 
 	int renderType = 0;
@@ -51,8 +49,8 @@ public:
 	void setClearColor(glm::vec4 color) override;
 	void setAmbientLight(glm::vec4 color) override;
 	glm::vec4 getAmbientLight() override { return ambientColor; }
-	void setLight(int id, Audace::Sprite* light, std::string type) override;
-	Audace::Sprite* getLight(int id) override;
+	void setLight(Audace::LightType type, Audace::Sprite* sprite) override;
+	Audace::TypedLight* getLight(const std::string& name) override;
 
 	void loadModel(std::string path, std::string filename);
 	void traverseModelIndex(json index, int i);

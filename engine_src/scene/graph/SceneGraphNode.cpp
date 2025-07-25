@@ -5,6 +5,7 @@
 #include "renderer/Sprite.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/material/SimpleBillboardMaterial.h"
+#include "renderer/light/TypedLight.h"
 #include "math/BoundingBox.h"
 #include "scene/Scene.h"
 #include "INodeAnimation.h"
@@ -103,9 +104,6 @@ namespace Audace
 		glm::mat4 S = glm::scale(glm::mat4(1.0), scale);
 		localTransform = parentTransform * T * R * S;
 
-		// this is abusing some stuff to make my Sprite class work in this scene graph.
-		// the Sprite's stored transformation data is left as identities,
-		// and the model matrix is used to apply the scene graph transform.
 		if (sprite != nullptr)
 		{
 			sprite->setModelMatrix(parentTransform);
@@ -113,6 +111,10 @@ namespace Audace
 			sprite->setScale(scale);
 			sprite->setOrientation(rotation);
 			scene->addSprite(sprite);
+			if (type == PTLIGHT_NODE || type == DIRLIGHT_NODE || type == SPOTLIGHT_NODE)
+			{
+				scene->setLight(type == PTLIGHT_NODE ? POINT_LIGHT : type == DIRLIGHT_NODE ? DIRECTIONAL_LIGHT : SPOTLIGHT, sprite);
+			}
 		}
 
 		for (SceneGraphNode* child : children)

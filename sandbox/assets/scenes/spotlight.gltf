@@ -1,0 +1,47 @@
+{
+	"asset":{
+		"generator":"Khronos glTF Blender I/O v3.6.28",
+		"version":"2.0"
+	},
+	"extensionsUsed":[
+		"KHR_lights_punctual"
+	],
+	"extensionsRequired":[
+		"KHR_lights_punctual"
+	],
+	"extensions":{
+		"KHR_lights_punctual":{
+			"lights":[
+				{
+					"color": [1.0, 1.0, 1.0, 1.0],
+					"intensity": 1.0,
+					"spot":{
+						"innerConeAngle":0.32225510122526657,
+						"outerConeAngle":0.36390113830566406
+					},
+					"type": "spot",
+					"name": "spotLight"
+				}
+			]
+		}
+	},
+	"scene":0,
+	"scenes":[
+		{
+			"name":"Scene",
+			"nodes":[
+				0
+			]
+		}
+	],
+	"nodes":[
+		{
+			"name": "spot_light",
+			"extensions": {
+				"KHR_lights_punctual": {
+					"light": 0
+				}
+			}
+		}
+	]
+}

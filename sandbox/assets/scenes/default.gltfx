@@ -9,12 +9,18 @@
 		},
 		{
 			"uri": "scenes/sun_light.gltf"
+		},
+		{
+			"uri": "scenes/point_light.gltf"
+		},
+		{
+			"uri": "scenes/spotlight.gltf"
 		}
 	],
 	"nodes": [
 		{
 			"name": "house",
-			"children": [ 1, 2 ]
+			"children": [ 1, 2, 3, 4 ]
 		},
 		{
 			"translation": [0, 0, 0],
@@ -22,6 +28,14 @@
 		},
 		{
 			"asset": 1
+		},
+		{
+			"translation": [ 0, 0, 5 ],
+			"asset": 2
+		},
+		{
+			"translation": [ 0, -1, 5 ],
+			"asset": 3
 		}
 	],
 	"scene": 0,

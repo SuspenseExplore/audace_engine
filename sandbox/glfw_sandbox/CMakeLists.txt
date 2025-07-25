@@ -50,6 +50,7 @@ add_executable(
 	${ENGINE_DIR}/renderer/light/PointLight.cpp
 	${ENGINE_DIR}/renderer/light/DirLight.cpp
 	${ENGINE_DIR}/renderer/light/SpotLight.cpp
+	${ENGINE_DIR}/renderer/light/TypedLight.cpp
 	${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 	${ENGINE_DIR}/renderer/text/TextLabel.cpp
 	${ENGINE_DIR}/content/gltf/GltfLoader.cpp

@@ -64,6 +64,7 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/renderer/light/PointLight.cpp
 		${ENGINE_DIR}/renderer/light/DirLight.cpp
 		${ENGINE_DIR}/renderer/light/SpotLight.cpp
+		${ENGINE_DIR}/renderer/light/TypedLight.cpp
 		${ENGINE_DIR}/renderer/text/BitmapFont.cpp
 		${ENGINE_DIR}/geom/VoxelTerrainGen.cpp
 		${ENGINE_DIR}/editor/SpriteData.cpp

@@ -37,27 +37,27 @@ namespace Audace
 		jsonGui->addBinding("Scale", &scale);
 		jsonGui->addBinding("Rotate", &angles);
 		jsonGui->addBinding("node_type", &nodeType);
-		if (nodeType == DIR_LIGHT)
+		if (nodeType == DIRLIGHT_NODE)
 		{
 			DirLight* light = reinterpret_cast<DirLight*>(node->getSprite());
 			lightColor = light->getColor();
 			jsonGui->addBinding("Color", &lightColor);
 		}
-		else if (nodeType == PT_LIGHT)
+		else if (nodeType == PTLIGHT_NODE)
 		{
 			PointLight* light = reinterpret_cast<PointLight*>(node->getSprite());
 			lightColor = glm::vec4(light->getColor(), light->getIntensity());
 			jsonGui->addBinding("Color", &lightColor);
 		}
-		else if (nodeType == SPOTLIGHT)
+		else if (nodeType == SPOTLIGHT_NODE)
 		{
 			SpotLight* light = reinterpret_cast<SpotLight*>(node->getSprite());
 			lightColor = glm::vec4(light->getColor(), light->getIntensity());
 			spotlightInnerAngle = light->getInnerAngle();
 			spotlightOuterAngle = light->getOuterAngle();
 			jsonGui->addBinding("Color", &lightColor);
-			jsonGui->addBinding("innerAngle", &spotlightInnerAngle);
-			jsonGui->addBinding("outerAngle", &spotlightOuterAngle);
+			jsonGui->addBinding("Inner Angle", &spotlightInnerAngle);
+			jsonGui->addBinding("Outer Angle", &spotlightOuterAngle);
 		}
 	}
 
@@ -85,14 +85,14 @@ namespace Audace
 		node->setRotation(glm::quat(glm::radians(angles)));
 		switch (nodeType)
 		{
-		case DIR_LIGHT:
+		case DIRLIGHT_NODE:
 		{
 			DirLight* light = reinterpret_cast<DirLight*>(node->getSprite());
 			light->setColor(lightColor);
 			break;
 		}
 
-		case PT_LIGHT:
+		case PTLIGHT_NODE:
 		{
 			PointLight* light = reinterpret_cast<PointLight*>(node->getSprite());
 			light->setColor(glm::vec3(lightColor));
@@ -100,7 +100,7 @@ namespace Audace
 			break;
 		}
 
-		case SPOTLIGHT:
+		case SPOTLIGHT_NODE:
 		{
 			SpotLight* light = reinterpret_cast<SpotLight*>(node->getSprite());
 			light->setColor(glm::vec3(lightColor));

@@ -3,6 +3,7 @@
 #include "renderer/light/PointLight.h"
 #include "renderer/light/DirLight.h"
 #include "renderer/light/SpotLight.h"
+#include "renderer/light/TypedLight.h"
 #include "AuLogger.h"
 #include "glm/gtc/type_ptr.hpp"
 
@@ -205,24 +206,24 @@ namespace Audace
 		AU_CHECK_GL_ERRORS();
 	}
 
-	void ShaderProgram::setUniformLight(std::string type, Sprite* light)
+	void ShaderProgram::setUniformLight(TypedLight* light)
 	{
-		if (type == "point")
+		if (light->type == POINT_LIGHT)
 		{
-			Audace::PointLight* lt = reinterpret_cast<Audace::PointLight*>(light);
+			Audace::PointLight* lt = light->ptLight;
 			setUniformVec3(lt->getName() + ".position", lt->getPosition());
 			setUniformVec3(lt->getName() + ".color", lt->getColor());
 			setUniformFloat(lt->getName() + ".intensity", lt->getIntensity());
 		}
-		else if (type == "directional")
+		else if (light->type == DIRECTIONAL_LIGHT)
 		{
-			Audace::DirLight* lt = reinterpret_cast<Audace::DirLight*>(light);
+			Audace::DirLight* lt = light->dirLight;
 			setUniformVec4(lt->getName() + ".color", lt->getColor());
 			setUniformVec3(lt->getName() + ".direction", glm::mat3_cast(lt->getOrientation()) * glm::vec3(0, 0, 1));
 		}
-		else if (type == "spot")
+		else if (light->type == SPOTLIGHT)
 		{
-			Audace::SpotLight* lt = reinterpret_cast<Audace::SpotLight*>(light);
+			Audace::SpotLight* lt = light->spotLight;
 			setUniformVec3(lt->getName() + ".position", lt->getPosition());
 			setUniformVec3(lt->getName() + ".direction", glm::mat3_cast(lt->getOrientation()) * glm::vec3(0, 0, -1));
 			setUniformVec4(lt->getName() + ".color", glm::vec4(lt->getColor(), lt->getIntensity()));

@@ -751,15 +751,15 @@ namespace Audace
 				string type = jser::getString(jLight, "type");
 				if (type == "point")
 				{
-					node->setSprite(lights[lightId], PT_LIGHT);
+					node->setSprite(lights[lightId], PTLIGHT_NODE);
 				}
 				else if (type == "directional")
 				{
-					node->setSprite(lights[lightId], DIR_LIGHT);
+					node->setSprite(lights[lightId], DIRLIGHT_NODE);
 				}
 				else if (type == "spot")
 				{
-					node->setSprite(lights[lightId], SPOTLIGHT);
+					node->setSprite(lights[lightId], SPOTLIGHT_NODE);
 				}
 			}
 		}
@@ -814,12 +814,6 @@ namespace Audace
 			{
 				scene->addSprite(sprites[id]);
 			}
-
-			for (auto& item : lights)
-			{
-				int id = item.first;
-				graph->addLight(id, item.second, lightTypes[id]);
-			}
 		}
 		return graph;
 	}
@@ -839,11 +833,6 @@ namespace Audace
 			for (int id = 0; id < sprites.size(); id++)
 			{
 				scene->addSprite(sprites[id]);
-			}
-			for (auto& item : lights)
-			{
-				int id = item.first;
-				graph->addLight(id, item.second, lightTypes[id]);
 			}
 		}
 		return graph;

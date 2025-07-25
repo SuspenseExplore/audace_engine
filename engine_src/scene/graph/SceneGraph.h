@@ -17,15 +17,12 @@ namespace Audace
 	{
 		Scene* scene;
 		SceneGraphNode* rootNode;
-		map<int, Sprite*> lights;
-		map<int, string> lightTypes;
 		glm::mat4 IDENTITY = glm::mat4(1.0);
 
 	public:
 		SceneGraph();
 		void setRootNode(SceneGraphNode* node);
 		SceneGraphNode* getRootNode();
-		void addLight(int id, Sprite* light, string type);
 
 		void update(Scene* scene);
 		void debugRender(Scene* scene);
