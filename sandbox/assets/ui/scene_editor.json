@@ -1,6 +1,16 @@
 {
 	"name": "Scene Editor",
 	"type": "window",
+	"platform_props": {
+		"glfw": {
+			"position": [100, 100],
+			"size": [900, 300]
+		},
+		"oxr": {
+			"position": [400, 400],
+			"size": [800, 500]
+		}
+	},
 	"children": [
 		{
 			"name": "scene_tabs",

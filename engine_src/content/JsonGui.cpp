@@ -131,6 +131,30 @@ namespace Audace
 
 	void JsonGui::window(json& j)
 	{
+		if (j.contains("platform_props"))
+		{
+			std::string platName = "none";
+#ifdef AU_PLATFORM_GLFW
+			platName = "glfw";
+#endif
+#ifdef AU_PLATFORM_OXR;
+			platName = "oxr";
+#endif
+			if (j["platform_props"].contains(platName))
+			{
+				json& jprops = j["platform_props"][platName];
+				if (jprops.contains("position"))
+				{
+					glm::vec2 p = jser::getVec2(jprops, "position");
+					ImGui::SetNextWindowPos(ImVec2{ p.x, p.y }, ImGuiCond_Once);
+				}
+				if (jprops.contains("size"))
+				{
+					glm::vec2 s = jser::getVec2(jprops, "size");
+					ImGui::SetNextWindowSize(ImVec2{ s.x, s.y }, ImGuiCond_Once);
+				}
+			}
+		}
 		ImGui::Begin(jser::getString(j, NAME).c_str());
 
 		for (json& c : j[CHILDREN])

@@ -1,6 +1,12 @@
 {
 	"name": "Node Editor",
 	"type": "window",
+	"platform_props": {
+		"oxr": {
+			"position": [400, 400],
+			"size": [700, 500]
+		}
+	},
 	"children": [
 		{
 			"name": "edit_tabs",
