@@ -33,6 +33,7 @@
 	"nodes":[
 		{
 			"name": "point_light",
+			"scale": [0.1, 0.1, 0.1],
 			"extensions": {
 				"KHR_lights_punctual": {
 					"light": 0
