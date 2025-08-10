@@ -3,7 +3,8 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 36
+    namespace "com.explore.audace"
 
     defaultConfig {
         applicationId "com.explore.audace"

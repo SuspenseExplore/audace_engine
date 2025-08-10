@@ -154,7 +154,7 @@ void android_main(struct android_app *app) {
 		int events;
 		struct android_poll_source *source;
 
-		while ((id = ALooper_pollAll(0, nullptr, &events, (void **) &source)) >= 0) {
+		while ((id = ALooper_pollOnce(0, nullptr, &events, (void **) &source)) >= 0) {
 			if (source != nullptr) {
 				source->process(app, source);
 			}

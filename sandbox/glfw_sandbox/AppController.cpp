@@ -37,7 +37,7 @@ namespace Audace
 		AU_RENDERER_LOG_TRACE("Renderer initialized");
 
 		fileLoader = new FileAccessGlfw();
-		fileLoader->setExternalFilePath("../../../assets/");
+		fileLoader->setExternalFilePath("../../sandbox/assets/");
 
 		// build an index file for models in assets/models/
 		json index = json::object();
