@@ -1,5 +1,6 @@
 #include "JsonGui.h"
 #include "JsonSerializer.h"
+#include "content/IFileAccess.h"
 #include "scene/graph/SceneGraph.h"
 #include "scene/graph/SceneGraphNode.h"
 #include "glm/gtc/type_ptr.hpp"
@@ -19,6 +20,7 @@
 #define TREE "tree"
 #define TREE_NODE "tree_node"
 #define BUTTON "button"
+#define RELOAD_BUTTON "reload_button"
 #define SAME_LINE "same_line"
 #define NEW_LINE "new_line"
 #define X_OFFSET "x_offset"
@@ -32,12 +34,16 @@ namespace Audace
 {
 	typedef JsonSerializer jser;
 
-	JsonGui::JsonGui(json content) : jcontent(content)
+	JsonGui::JsonGui(IFileAccess* fileLoader, std::string filepath) : fileLoader(fileLoader), filepath(filepath)
 	{
-		emptyBindingFloats[0] = 0;
-		emptyBindingFloats[1] = 0;
-		emptyBindingFloats[2] = 0;
-		emptyBindingFloats[3] = 0;
+		load();
+	}
+
+	void JsonGui::load()
+	{
+		jcontent = fileLoader->textFileToJson(filepath);
+		json obj = {{NAME, "Reload"}, {TYPE, RELOAD_BUTTON}};
+		jcontent[CHILDREN].push_back(obj);
 	}
 
 	void JsonGui::addBinding(std::string name, bool* b)
@@ -78,6 +84,11 @@ namespace Audace
 	void JsonGui::render()
 	{
 		render(jcontent);
+		if (reload)
+		{
+			load();
+			reload = false;
+		}
 	}
 
 	void JsonGui::render(json& j)
@@ -126,6 +137,13 @@ namespace Audace
 		else if (type == NEW_LINE)
 		{
 			ImGui::NewLine();
+		}
+		else if (type == RELOAD_BUTTON)
+		{
+			if (ImGui::Button(jser::getString(j, NAME).c_str()))
+			{
+				reload = true;
+			}
 		}
 	}
 

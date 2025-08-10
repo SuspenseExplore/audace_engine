@@ -18,7 +18,7 @@
 
 namespace Audace
 {
-	SceneEditor::SceneEditor(IFileAccess* fileLoader) : fileLoader(fileLoader), gui(fileLoader->textFileToJson("ui/scene_editor.json"))
+	SceneEditor::SceneEditor(IFileAccess* fileLoader) : fileLoader(fileLoader), gui(fileLoader, "ui/scene_editor.json")
 	{
 		modelIndex = fileLoader->textFileToJson("models/_index.json");
 		editWin = new NodeEditWindow(fileLoader);

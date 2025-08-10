@@ -11,6 +11,7 @@ using json = nlohmann::json;
 
 namespace Audace
 {
+	class IFileAccess;
 	class SceneGraph;
 	class SceneGraphNode;
 
@@ -27,13 +28,16 @@ namespace Audace
 
 	class JsonGui
 	{
+		std::string filepath;
+		IFileAccess* fileLoader;
 		json jcontent;
+		bool reload = false;
+
 		std::map<std::string, Binding> bindings;
 
-		float emptyBindingFloats[4];
-
 	public:
-		JsonGui(json content);
+		JsonGui(IFileAccess* fileLoader, std::string filepath);
+		void load();
 
 		void addBinding(std::string name, bool* b);
 		void addBinding(std::string name, int* i);

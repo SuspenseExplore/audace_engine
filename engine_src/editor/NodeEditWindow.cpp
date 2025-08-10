@@ -23,7 +23,7 @@ namespace Audace
 		positionMark = new Sprite({ Shapes::spherePositions(8, 8) });
 		positionMark->getMesh()->setMaterial(AssetStore::simpleBillboardMaterial());
 		positionMark->setScale({ 0.05, 0.05, 0.05 });
-		jsonGui = new JsonGui(fileLoader->textFileToJson("ui/node_editor.json"));
+		jsonGui = new JsonGui(fileLoader, "ui/node_editor.json");
 	}
 
 	void NodeEditWindow::setNode(SceneGraphNode* node)
