@@ -87,5 +87,5 @@
 		"resumable": "cpp",
 		"variant": "cpp"
 	},
-	"cmake.sourceDirectory": "C:/Users/spenc/development/audace_engine/sandbox/glfw_sandbox"
+	"cmake.sourceDirectory": "${workspaceFolder}/sandbox/glfw_sandbox"
 }
