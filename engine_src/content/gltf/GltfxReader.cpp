@@ -11,19 +11,18 @@ namespace Audace
 {
 	typedef JsonSerializer jser;
 
-	GltfxReader::GltfxReader(IFileAccess* fileLoader) : fileLoader(fileLoader)
+	GltfxReader::GltfxReader(IFileAccess *fileLoader) : fileLoader(fileLoader)
 	{
-
 	}
 
-	SceneGraphNode* GltfxReader::readAsset(int assetId)
+	SceneGraphNode *GltfxReader::readAsset(int assetId)
 	{
 		std::string filename = jroot["assets"][assetId]["uri"].template get<std::string>();
 
 		if (filename.find(".gltfx") == -1)
 		{
 			GltfLoader loader;
-			loader.setImageLoadPath("images/quaternius/");
+			loader.setImageLoadPath("images/");
 			int i = filename.find_last_of("/") + 1;
 			loader.loadFile(fileLoader, filename.substr(0, i), filename.substr(i));
 			return loader.getSceneRootNode(0);
@@ -33,10 +32,10 @@ namespace Audace
 		return reader.readDefaultScene(filename);
 	}
 
-	SceneGraphNode* GltfxReader::readNode(int nodeId)
+	SceneGraphNode *GltfxReader::readNode(int nodeId)
 	{
-		json& jnode = jroot["nodes"][nodeId];
-		SceneGraphNode* node = new SceneGraphNode();
+		json &jnode = jroot["nodes"][nodeId];
+		SceneGraphNode *node = new SceneGraphNode();
 		if (jnode.contains("asset"))
 		{
 			int assetId = jnode["asset"].template get<int>();
@@ -67,7 +66,7 @@ namespace Audace
 		return node;
 	}
 
-	std::vector<SceneGraphNode*> GltfxReader::getAssets()
+	std::vector<SceneGraphNode *> GltfxReader::getAssets()
 	{
 		return assets;
 	}
@@ -75,10 +74,10 @@ namespace Audace
 	/**
 	 * Return the scene graph tree for the file's default scene.
 	 */
-	SceneGraphNode* GltfxReader::readDefaultScene(const std::string& filepath)
+	SceneGraphNode *GltfxReader::readDefaultScene(const std::string &filepath)
 	{
 		jroot = fileLoader->textFileToJson(filepath);
-		json& jassets = jroot["assets"];
+		json &jassets = jroot["assets"];
 
 		assets.resize(jassets.size());
 		for (int i = 0; i < jassets.size(); i++)
@@ -86,9 +85,9 @@ namespace Audace
 			assets[i] = readAsset(i);
 		}
 		int sceneId = jser::getInt(jroot, "scene");
-		json& jscene = jroot["scenes"][sceneId];
+		json &jscene = jroot["scenes"][sceneId];
 		int nodeId = jscene["nodes"][0].template get<int>();
-		SceneGraphNode* node = readNode(nodeId);
+		SceneGraphNode *node = readNode(nodeId);
 
 		return node;
 	}

@@ -33,10 +33,10 @@ namespace Audace
 	struct GltfBuffer
 	{
 		int id;
-		ByteBuffer* byteBuf;
+		ByteBuffer *byteBuf;
 		int byteLength;
 
-		DataBuffer* glBuffer;
+		DataBuffer *glBuffer;
 	};
 	struct GltfBufferView
 	{
@@ -68,7 +68,7 @@ namespace Audace
 	};
 	struct GltfImage
 	{
-		ImageData* imgData;
+		ImageData *imgData;
 	};
 	struct GltfTexSampler
 	{
@@ -87,12 +87,12 @@ namespace Audace
 		string name;
 		vector<int> childNodeIds;
 		int meshId = -1;
-		glm::vec3 translation{ 0, 0, 0 };
-		glm::vec3 scale{ 1, 1, 1 };
-		glm::quat rotation{ 1, 0, 0, 0 };
+		glm::vec3 translation{0, 0, 0};
+		glm::vec3 scale{1, 1, 1};
+		glm::quat rotation{1, 0, 0, 0};
 		glm::mat4 localTransform = glm::mat4(1.0);
 		vector<int> animationIds;
-		json* extensions = nullptr;
+		json *extensions = nullptr;
 	};
 	struct GltfAnimSampler
 	{
@@ -125,10 +125,11 @@ namespace Audace
 
 	class GltfLoader
 	{
-		IFileAccess* fileLoader;
+		IFileAccess *fileLoader;
 		GltfFile fileData;
 		string imageLoadPath;
 		json jRoot;
+		ByteBuffer *dataChunk;
 
 		int defaultSceneId = 0;
 		vector<GltfScene> scenes;
@@ -136,47 +137,47 @@ namespace Audace
 		vector<GltfAnimation> animations;
 		vector<GltfImage> images;
 		vector<GltfTexSampler> texSamplers;
-		vector<Texture2d*> textures;
-		map<int, Sprite*> lights;
+		vector<Texture2d *> textures;
+		map<int, Sprite *> lights;
 		map<int, string> lightTypes;
 		vector<GltfMesh> meshes;
 		vector<GltfBuffer> buffers;
 		vector<GltfBufferView> bufferViews;
 		vector<GltfAccessor> accessors;
 
-		vector<BaseMaterial*> materials;
-		map<int, Sprite*> sprites;
+		vector<BaseMaterial *> materials;
+		map<int, Sprite *> sprites;
 
-		void parseBuffers(json& jBuffers);
-		void parseBufferViews(json& jBufViews);
-		void parseAccessors(json& jAccessors);
-		void parseMeshes(json& jMeshes);
-		void parseNodes(json& jNodes);
-		void parseAnimations(json& jAnimations);
-		void parseScenes(json& jScenes);
-		void parseImages(json& jImages);
-		void parseTexSamplers(json& jTexSamplers);
-		void parseTextures(json& jTextures);
-		void parseMaterials(json& jMaterials);
-		void parseLights(json& jLights);
+		void parseBuffers(json &jBuffers);
+		void parseBufferViews(json &jBufViews);
+		void parseAccessors(json &jAccessors);
+		void parseMeshes(json &jMeshes);
+		void parseNodes(json &jNodes);
+		void parseAnimations(json &jAnimations);
+		void parseScenes(json &jScenes);
+		void parseImages(json &jImages);
+		void parseTexSamplers(json &jTexSamplers);
+		void parseTextures(json &jTextures);
+		void parseMaterials(json &jMaterials);
+		void parseLights(json &jLights);
 
-		char* getDataChunk(int bufferViewId, int startByte);
+		char *getDataChunk(int bufferViewId, int startByte);
 		vector<unsigned short> getDataUShort(int accessorId);
 		vector<float> getDataFloat(int accessorId);
 		vector<glm::vec2> getDataVec2(int accessorId);
 		vector<glm::vec3> getDataVec3(int accessorId);
 		vector<glm::vec4> getDataVec4(int accessorId);
 		vector<glm::quat> getDataQuat(int accessorId);
-		SceneGraphNode* getNode(int id);
-		vector<INodeAnimation*> getAnimations(int nodeId);
+		SceneGraphNode *getNode(int id);
+		vector<INodeAnimation *> getAnimations(int nodeId);
 
 	public:
-		void loadFile(IFileAccess* fileLoader, std::string path, std::string filename);
+		void loadFile(IFileAccess *fileLoader, std::string path, std::string filename);
 		void setImageLoadPath(string p);
-		Sprite* getSprite(int meshId);
-		SceneGraph* getSceneGraph(Scene* scene);
-		SceneGraph* getSceneGraph(Scene* scene, SceneGraphNode* root);
-		SceneGraphNode* getSceneRootNode(int sceneId);
+		Sprite *getSprite(int meshId);
+		SceneGraph *getSceneGraph(Scene *scene);
+		SceneGraph *getSceneGraph(Scene *scene, SceneGraphNode *root);
+		SceneGraphNode *getSceneRootNode(int sceneId);
 	};
 }
 

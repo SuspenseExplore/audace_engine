@@ -5,7 +5,7 @@
 	},
 	"assets": [
 		{
-			"uri": "scenes/quat_wall_doorway.gltfx"
+			"uri": "models/kenney/city_commercial/building-b.glb"
 		},
 		{
 			"uri": "scenes/sun_light.gltf"
