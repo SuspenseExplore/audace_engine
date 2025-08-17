@@ -12,6 +12,7 @@
 #include "content/JsonGui.h"
 #include "renderer/Texture2d.h"
 #include "renderer/ShaderProgram.h"
+#include "renderer/Mesh.h"
 #include "renderer/Shapes.h"
 #include "renderer/Sprite.h"
 #include "renderer/light/PointLight.h"
@@ -62,26 +63,16 @@ void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
 	renderType = RenderType::FULL;
 	this->fileLoader = fileLoader;
 
-	modelIndex = fileLoader->textFileToJson("models/_index.json");
-	shader = Audace::AssetStore::getShader("pbr");
-
-	// Audace::GltfLoader loader;
-	// loader.setImageLoadPath("images/quaternius/");
-	// loader.loadFile(fileLoader, "models/quat_builds/", "house_orig.gltf");
-	// sceneGraph = new Audace::SceneGraph();
-	// Audace::Sprite* s = loader.getSprite(0);
-	// addSprite(s);
-	// s->addInst(sceneGraph->getRootNode());
+	// modelIndex = fileLoader->textFileToJson("models/_index.json");
 
 	Audace::GltfxReader reader(fileLoader);
 	sceneGraph = new Audace::SceneGraph;
 	sceneGraph->setRootNode(reader.readDefaultScene("scenes/default.gltfx"));
+	shader = Audace::AssetStore::getShader("standard");
 
 	editor = new Audace::SceneEditor(fileLoader);
 	editor->attachToScene(this);
 	editor->setSceneGraph(sceneGraph);
-
-	// jsonGui = new Audace::JsonGui(fileLoader->textFileToJson(guiPath));
 }
 
 void SceneBuilder::render()
@@ -89,34 +80,17 @@ void SceneBuilder::render()
 	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// ImGui::Begin("Gui Loader", nullptr, ImGuiWindowFlags_NoDecoration);
-	// if (ImGui::Button("Reload GUI"))
-	// {
-	// 	delete jsonGui;
-	// 	json jgui = fileLoader->textFileToJson(guiPath);
-	// 	jsonGui = new Audace::JsonGui(jgui);
-	// }
-	// ImGui::End();
-	// jsonGui->render();
-
 	camera->update();
 	sceneGraph->update(this);
 
 	shader->bind();
-	shader->setUniformVec3("viewPos", camera->getPosition());
+	// shader->setUniformVec3("viewPos", camera->getPosition());
 	shader->setUniformVec4("ambientLight", ambientColor);
 
 	for (auto& item : lights)
 	{
 		shader->setUniformLight(item.second);
 	}
-
-	// shader->setUniformFloat("outPosition", renderType == RenderType::POSITION ? 1.0 : 0.0);
-	// shader->setUniformFloat("outMtlColor", renderType == RenderType::MTL_COLOR ? 1.0 : 0.0);
-	// shader->setUniformFloat("outNormal", renderType == RenderType::NORMAL ? 1.0 : 0.0);
-	// shader->setUniformFloat("outAmbient", renderType == RenderType::AMBIENT ? 1.0 : 0.0);
-	// shader->setUniformFloat("outDirLight", renderType == RenderType::DIR_LIGHT ? 1.0 : 0.0);
-	// shader->setUniformFloat("outFull", renderType == RenderType::FULL ? 1.0 : 0.0);
 
 	editor->renderWorldSpace(this);
 	for (Audace::Sprite* s : sprites)

@@ -14,6 +14,7 @@ namespace Audace
 		{
 			material->apply();
 			material->getShader()->setUniformMat4("worldMat", worldMat);
+			// TODO: calculate 3*3 normal matrix: mat3(transpose(inverse(worldMat)))
 		}
 		if (indexBuffer == nullptr)
 		{
@@ -34,6 +35,8 @@ namespace Audace
 		{
 			material->apply();
 			material->getShader()->setUniformMat4Array("worldMat[0]", glm::value_ptr(mats[0]), count);
+			// TODO: calculate 3*3 normal matrix: mat3(transpose(inverse(worldMat)))
+			// this needs to be set for each instance
 		}
 		if (indexBuffer == nullptr)
 		{

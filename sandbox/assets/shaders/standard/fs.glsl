@@ -1,66 +1,58 @@
 #version 320 es
 precision mediump float;
 
-struct Material {
-	vec3 ambient;
-	sampler2D ambientMap;
-	vec3 diffuse;
-	sampler2D diffuseMap;
-	sampler2D normalMap;
-	vec3 specular;
-	sampler2D specularMap;
-	vec3 emission;
-};
+uniform sampler2D baseColorTexture;
 
-uniform Material material;
-
-struct Light {
+struct PointLight {
 	vec3 position;
 	vec3 color;
 	float intensity;
 };
+//struct DirLight {
+//	vec3 direction;
+//	vec4 color;
+//};
+//struct SpotLight {
+//	vec3 position;
+//	vec3 direction;
+//	vec4 color;
+//	float innerAngle;
+//	float outerAngle;
+//};
 
 uniform vec4 ambientLight;
-uniform vec4 diffusePos;
-uniform vec4 diffuseColor;
-uniform Light light[4];
+uniform PointLight ptLight;
+//uniform DirLight dirLight;
+//uniform SpotLight spotLight;
 
-in vec3 texCoord;
-in vec3 tangentViewPos;
 in vec3 fragPos;
-in vec3 tangentFragPos;
-in vec3 tangentLightPos[4];
+in vec3 normal;
+in vec3 texCoord0;
 
 out vec4 fragColor;
 
-vec3 calcDiffuse(int lightIndex, vec3 surfaceNormal) {
-	vec3 lightDir = normalize(tangentLightPos[lightIndex] - tangentFragPos);
-	float diffuseIntensity = max(0.0, dot(surfaceNormal, lightDir)) * light[lightIndex].intensity;
-	vec3 diffuse = light[lightIndex].color * material.diffuse * texture(material.diffuseMap, texCoord.xy).rgb * diffuseIntensity;
-	return diffuse;
+//const float PI = 3.14159265359;
+const vec4 ZERO = vec4(0.0, 0.0, 0.0, 0.0);
+const vec4 ONE = vec4(1.0, 1.0, 1.0, 1.0);
+
+vec3 getAmbientLight()
+{
+	// the light's alpha channel is intensity
+	vec4 lightColor = clamp(ambientLight, ZERO, ONE);
+	return lightColor.rgb * lightColor.a;
 }
 
-vec3 calcSpecular(int lightIndex, vec3 surfaceNormal) {
-	vec3 lightDir = normalize(tangentLightPos[lightIndex] - tangentFragPos);
-	vec3 viewDir = normalize(tangentViewPos - tangentFragPos);
-	vec3 reflectDir = reflect(-lightDir, surfaceNormal);
-
-	float spec = pow(max(dot(viewDir, reflectDir), 0.0), (1.0 - texture(material.specularMap, texCoord.xy).r) * 128.0);
-	vec3 specular = light[lightIndex].color * spec * material.specular;
-	return specular;
-}
-
-vec3 calcLightColor(int lightIndex, vec3 surfaceNormal) {
-	return calcDiffuse(lightIndex, surfaceNormal) + calcSpecular(lightIndex, surfaceNormal);
+vec3 getPointLightDiffuse(PointLight light)
+{
+	vec3 lightColor = clamp(light.color, ZERO.rgb, ONE.rgb);
+	vec3 lightDir = normalize(light.position - fragPos);
+	float diff = max(0.0, dot(normal, lightDir));
+	return diff * lightColor * light.intensity;
 }
 
 void main() {
-	vec3 ambient = (ambientLight.rgb * ambientLight.a) * material.ambient * texture(material.ambientMap, texCoord.xy).r * material.diffuse * texture(material.diffuseMap, texCoord.xy).rgb;
-
-	vec3 surfaceNormal = texture(material.normalMap, texCoord.xy).rgb;
-	surfaceNormal = normalize(surfaceNormal * 2.0 - 1.0);
-	vec3 lightColor = calcLightColor(0, surfaceNormal) + calcLightColor(1, surfaceNormal) + calcLightColor(2, surfaceNormal) + calcLightColor(3, surfaceNormal);
-
-	fragColor = vec4(ambient + material.emission + lightColor, 1.0);
-//	fragColor = vec4(surfaceNormal * 0.5 + 0.5, 1.0);
+	vec3 baseColor = texture(baseColorTexture, texCoord0.xy).xyz;
+	vec3 lightColor = (getAmbientLight() + getPointLightDiffuse(ptLight));
+	vec3 color = clamp(baseColor * lightColor, ZERO.rgb, ONE.rgb);
+	fragColor = vec4(color, 1.0);
 }

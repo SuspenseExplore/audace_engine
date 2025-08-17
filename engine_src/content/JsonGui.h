@@ -18,6 +18,7 @@ namespace Audace
 	union Binding
 	{
 		bool* boolean;
+		char* char_;
 		int* integer;
 		float* float1;
 		glm::vec3* float3;
@@ -40,6 +41,7 @@ namespace Audace
 		void load();
 
 		void addBinding(std::string name, bool* b);
+		void addBinding(std::string name, char* c);
 		void addBinding(std::string name, int* i);
 		void addBinding(std::string name, float* f);
 		void addBinding(std::string name, glm::vec3* v);
@@ -62,6 +64,7 @@ namespace Audace
 		void sceneGraphNode(json& j, SceneGraphNode* node, const std::string& path);
 		void sameLine(json& j);
 		void button(json& j, SceneGraphNode* node);
+		void text(json& j);
 	};
 }
 

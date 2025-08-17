@@ -28,7 +28,7 @@ namespace Audace
 		{
 			glGetProgramiv(glid, GL_INFO_LOG_LENGTH, &res);
 			AU_CHECK_GL_ERRORS();
-			char* log = new char[res];
+			char *log = new char[res];
 			glGetProgramInfoLog(glid, res, nullptr, log);
 			AU_CHECK_GL_ERRORS();
 			AU_RENDERER_LOG_ERROR("Shader program link error: {}", log);
@@ -71,7 +71,7 @@ namespace Audace
 		GLint nameLength;
 		glGetProgramiv(glid, GL_ACTIVE_UNIFORM_MAX_LENGTH, &nameLength);
 		AU_CHECK_GL_ERRORS();
-		char* name = new char[nameLength];
+		char *name = new char[nameLength];
 		AU_RENDERER_LOG_TRACE("Uniform name max length: {}", nameLength);
 
 		for (int i = 0; i < count; i++)
@@ -117,7 +117,7 @@ namespace Audace
 		AU_RENDERER_LOG_TRACE("Set vec2 uniform in shader {} at location {} to value [{},{}]", glid, uniforms[name], x, y);
 	}
 
-	void ShaderProgram::setUniformVec2(std::string name, float* value)
+	void ShaderProgram::setUniformVec2(std::string name, float *value)
 	{
 		glUniform2f(uniforms[name], value[0], value[1]);
 		AU_CHECK_GL_ERRORS();
@@ -141,7 +141,7 @@ namespace Audace
 		}
 	}
 
-	void ShaderProgram::setUniformVec3(std::string name, float* value)
+	void ShaderProgram::setUniformVec3(std::string name, float *value)
 	{
 		if (uniforms.find(name) != uniforms.end())
 		{
@@ -151,7 +151,7 @@ namespace Audace
 		}
 	}
 
-	void ShaderProgram::setUniformVec3Array(std::string name, float* value, int count)
+	void ShaderProgram::setUniformVec3Array(std::string name, float *value, int count)
 	{
 		glUniform3fv(uniforms[name], count, value);
 		AU_CHECK_GL_ERRORS();
@@ -178,7 +178,7 @@ namespace Audace
 		}
 	}
 
-	void ShaderProgram::setUniformVec4(std::string name, float* value)
+	void ShaderProgram::setUniformVec4(std::string name, float *value)
 	{
 		if (uniforms.find(name) != uniforms.end())
 		{
@@ -190,40 +190,43 @@ namespace Audace
 
 	void ShaderProgram::setUniformMat4(std::string name, glm::mat4 value)
 	{
-		glUniformMatrix4fv(uniforms[name], 1, false, glm::value_ptr(value));
-		AU_CHECK_GL_ERRORS();
+		if (uniforms.find(name) != uniforms.end())
+		{
+			glUniformMatrix4fv(uniforms[name], 1, false, glm::value_ptr(value));
+			AU_CHECK_GL_ERRORS();
+		}
 	}
 
-	void ShaderProgram::setUniformMat4(std::string name, float* value)
+	void ShaderProgram::setUniformMat4(std::string name, float *value)
 	{
 		glUniformMatrix4fv(uniforms[name], 1, false, value);
 		AU_CHECK_GL_ERRORS();
 	}
 
-	void ShaderProgram::setUniformMat4Array(std::string name, float* value, int count)
+	void ShaderProgram::setUniformMat4Array(std::string name, float *value, int count)
 	{
 		glUniformMatrix4fv(uniforms[name], count, false, value);
 		AU_CHECK_GL_ERRORS();
 	}
 
-	void ShaderProgram::setUniformLight(TypedLight* light)
+	void ShaderProgram::setUniformLight(TypedLight *light)
 	{
 		if (light->type == POINT_LIGHT)
 		{
-			Audace::PointLight* lt = light->ptLight;
+			Audace::PointLight *lt = light->ptLight;
 			setUniformVec3(lt->getName() + ".position", lt->getPosition());
 			setUniformVec3(lt->getName() + ".color", lt->getColor());
 			setUniformFloat(lt->getName() + ".intensity", lt->getIntensity());
 		}
 		else if (light->type == DIRECTIONAL_LIGHT)
 		{
-			Audace::DirLight* lt = light->dirLight;
+			Audace::DirLight *lt = light->dirLight;
 			setUniformVec4(lt->getName() + ".color", lt->getColor());
 			setUniformVec3(lt->getName() + ".direction", glm::mat3_cast(lt->getOrientation()) * glm::vec3(0, 0, 1));
 		}
 		else if (light->type == SPOTLIGHT)
 		{
-			Audace::SpotLight* lt = light->spotLight;
+			Audace::SpotLight *lt = light->spotLight;
 			setUniformVec3(lt->getName() + ".position", lt->getPosition());
 			setUniformVec3(lt->getName() + ".direction", glm::mat3_cast(lt->getOrientation()) * glm::vec3(0, 0, -1));
 			setUniformVec4(lt->getName() + ".color", glm::vec4(lt->getColor(), lt->getIntensity()));
@@ -232,7 +235,7 @@ namespace Audace
 		}
 	}
 
-	GLuint ShaderProgram::loadShader(const char* src, GLenum shaderType)
+	GLuint ShaderProgram::loadShader(const char *src, GLenum shaderType)
 	{
 		GLuint shaderId = glCreateShader(shaderType);
 		glShaderSource(shaderId, 1, &src, nullptr);
@@ -246,7 +249,7 @@ namespace Audace
 		{
 			glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &res);
 			AU_CHECK_GL_ERRORS();
-			char* log = new char[res];
+			char *log = new char[res];
 			glGetShaderInfoLog(shaderId, res, nullptr, log);
 			AU_CHECK_GL_ERRORS();
 			AU_RENDERER_LOG_ERROR("Shader compile error: {}", log);

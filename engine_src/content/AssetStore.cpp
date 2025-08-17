@@ -28,6 +28,7 @@ namespace Audace
 	{
 		fileLoader = loader;
 		squareMesh = Shapes::squarePositions();
+		getShader("AU_debug");
 		getShader("AU_simple_text");
 		getShader("AU_simple_billboard");
 		billboardMat = new SimpleBillboardMaterial;

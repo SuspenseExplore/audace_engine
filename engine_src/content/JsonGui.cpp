@@ -21,6 +21,7 @@
 #define TREE_NODE "tree_node"
 #define BUTTON "button"
 #define RELOAD_BUTTON "reload_button"
+#define TEXT "text"
 #define SAME_LINE "same_line"
 #define NEW_LINE "new_line"
 #define X_OFFSET "x_offset"
@@ -42,13 +43,20 @@ namespace Audace
 	void JsonGui::load()
 	{
 		jcontent = fileLoader->textFileToJson(filepath);
+		json sep = {{TYPE, SEPARATOR}};
 		json obj = {{NAME, "Reload"}, {TYPE, RELOAD_BUTTON}};
+		jcontent[CHILDREN].push_back(sep);
 		jcontent[CHILDREN].push_back(obj);
 	}
 
 	void JsonGui::addBinding(std::string name, bool* b)
 	{
 		bindings[name].boolean = b;
+	}
+
+	void JsonGui::addBinding(std::string name, char* c)
+	{
+		bindings[name].char_ = c;
 	}
 
 	void JsonGui::addBinding(std::string name, int* i)
@@ -145,6 +153,10 @@ namespace Audace
 				reload = true;
 			}
 		}
+		else if (type == TEXT)
+		{
+			text(j);
+		}
 	}
 
 	void JsonGui::window(json& j)
@@ -155,7 +167,7 @@ namespace Audace
 #ifdef AU_PLATFORM_GLFW
 			platName = "glfw";
 #endif
-#ifdef AU_PLATFORM_OXR;
+#ifdef AU_PLATFORM_OXR
 			platName = "oxr";
 #endif
 			if (j["platform_props"].contains(platName))
@@ -357,6 +369,20 @@ namespace Audace
 		else
 		{
 			ImGui::SameLine();
+		}
+	}
+
+	void JsonGui::text(json& j)
+	{
+		std::string name = jser::getString(j, NAME);
+		if (bindings.find(name) != bindings.end())
+		{
+			ImGui::Text("%s", bindings[name].char_);
+		}
+		else if (j.contains(TEXT))
+		{
+			std::string s = jser::getString(j, TEXT);
+			ImGui::Text("%s", s.c_str());
 		}
 	}
 }

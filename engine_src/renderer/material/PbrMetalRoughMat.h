@@ -15,8 +15,8 @@ namespace Audace
 		std::string name = "default_pbr_metal_roughness_mat";
 
 		glm::vec4 baseColorFactor = { 1, 1, 1, 1 };
-		float metallicFactor = 0.4;
-		float roughnessFactor = 2.0;
+		float metallicFactor = 0.0;
+		float roughnessFactor = 1.0;
 		glm::vec3 emissiveFactor = { 0, 0, 0 };
 
 		Texture2d* baseColorMap = nullptr;

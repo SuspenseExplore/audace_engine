@@ -1,45 +1,23 @@
 #version 320 es
-precision mediump float;
 
-layout (location = 0) in vec4 position;
-layout (location = 1) in vec3 inTexCoord;
-layout (location = 2) in vec3 normal;
-layout (location = 3) in vec3 tangent;
+layout (location = 0) in vec4 a_position;
+layout (location = 1) in vec3 a_normal;
+layout (location = 2) in vec3 a_tangent;
+layout (location = 3) in vec3 a_TexCoord0;
+layout (location = 4) in vec3 a_TexCoord1;
 
-struct Light {
-	vec3 position;
-	vec3 color;
-	float intensity;
-};
-uniform Light light[4];
-
-uniform mat4 worldMat;
+uniform mat4 worldMat[1];
 uniform mat4 vpMat;
-uniform vec3 textureScale;
-uniform vec3 viewPos;
 
-out vec3 texCoord;
-out vec3 tangentViewPos;
 out vec3 fragPos;
-out vec3 tangentFragPos;
-out vec3 tangentLightPos[4];
+out vec3 normal;
+//out vec3 tangent;
+out vec3 texCoord0;
 
 void main() {
-	gl_Position = vpMat * worldMat * position;
-	texCoord = inTexCoord / textureScale;
-	fragPos = (worldMat * position).xyz;
-
-	// calculate TBN matrix for normal mapping
-	vec3 N = normalize(worldMat * vec4(normal, 0.0)).xyz;
-	vec3 T = normalize(worldMat * vec4(tangent, 0.0)).xyz;
-	T = normalize(T - dot(T, N) * N);
-	vec3 B = cross(N, T);
-	mat3 TBN = transpose(mat3(T, B, N));
-
-	tangentViewPos = TBN * viewPos;
-	tangentFragPos = TBN * fragPos;
-	for (int i = 0; i < 4; i++)
-	{
-		tangentLightPos[i] = TBN * light[i].position;
-	}
+	gl_Position = vpMat * worldMat[gl_InstanceID] * a_position;
+	fragPos = (worldMat[gl_InstanceID] * a_position).xyz;
+	normal = normalize(mat3(transpose(inverse(worldMat[gl_InstanceID]))) * a_normal);
+//	tangent = a_tangent;
+	texCoord0 = a_TexCoord0;
 }

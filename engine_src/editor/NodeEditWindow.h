@@ -23,6 +23,7 @@ namespace Audace
 		glm::vec3 translation;
 		glm::vec3 scale;
 		glm::vec3 angles;
+		char quatVal[64];
 		glm::vec4 lightColor;
 		float spotlightInnerAngle;
 		float spotlightOuterAngle;

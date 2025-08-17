@@ -40,6 +40,10 @@
 							"name": "Rotate",
 							"type": "drag_float3",
 							"speed": 0.1
+						},
+						{
+							"name": "Quat value",
+							"type": "text"
 						}
 					]
 				},

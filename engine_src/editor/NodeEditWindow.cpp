@@ -37,6 +37,7 @@ namespace Audace
 		jsonGui->addBinding("Scale", &scale);
 		jsonGui->addBinding("Rotate", &angles);
 		jsonGui->addBinding("node_type", &nodeType);
+		jsonGui->addBinding("Quat value", &quatVal[0]);
 		if (nodeType == DIRLIGHT_NODE)
 		{
 			DirLight* light = reinterpret_cast<DirLight*>(node->getSprite());
@@ -82,7 +83,10 @@ namespace Audace
 
 		node->setTranslation(translation);
 		node->setScale(scale);
-		node->setRotation(glm::quat(glm::radians(angles)));
+		glm::quat q = glm::quat(glm::radians(angles));
+		node->setRotation(q);
+		std::string s = "[" + std::to_string(q.w) + ", " + std::to_string(q.x) + ", " + std::to_string(q.y) + ", " + std::to_string(q.z) + "]";
+		strcpy(quatVal, s.c_str());
 		switch (nodeType)
 		{
 		case DIRLIGHT_NODE:
