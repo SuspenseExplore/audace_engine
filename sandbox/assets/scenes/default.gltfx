@@ -5,59 +5,14 @@
 	},
 	"assets": [
 		{
-			"uri": "models/kenney/city_commercial/building-a.glb"
-		},
-		{
-			"uri": "models/kenney/city_commercial/building-b.glb"
-		},
-		{
-			"uri": "models/kenney/city_commercial/building-c.glb"
-		},
-		{
-			"uri": "models/kenney/city_commercial/building-d.glb"
-		},
-		{
-			"uri": "scenes/sun_light.gltf"
-		},
-		{
-			"uri": "scenes/point_light.gltf"
-		},
-		{
-			"uri": "scenes/spotlight.gltf"
+			"uri": "scenes/proc_city/default.gltfx"
 		}
 	],
 	"nodes": [
 		{
-			"name": "root",
-			"children": [ 1, 2, 3, 4, 5, 6, 7 ],
+			"name": "proc_city_root",
+			"asset": 0,
 			"rotation": [0.707, 0.0, 0.0, 0.707]
-		},
-		{
-			"translation": [0, 0, 0],
-			"asset": 0
-		},
-		{
-			"translation": [0, 0, 0],
-			"asset": 1
-		},
-		{
-			"translation": [0, 0, 0],
-			"asset": 2
-		},
-		{
-			"translation": [0, 0, 0],
-			"asset": 3
-		},
-		{
-			"asset": 4
-		},
-		{
-			"translation": [ 0, 0, 5 ],
-			"asset": 5
-		},
-		{
-			"translation": [ 0, -1, 5 ],
-			"asset": 6
 		}
 	],
 	"scene": 0,

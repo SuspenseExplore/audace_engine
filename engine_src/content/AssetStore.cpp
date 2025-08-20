@@ -9,22 +9,24 @@
 #include "renderer/Texture2d.h"
 #include "renderer/Sprite.h"
 #include "renderer/ShaderProgram.h"
+#include "scene/graph/SceneGraphNode.h"
 #include "util/StringUtil.h"
 
 namespace Audace
 {
-	unsigned char WHITE_TEX[] = { 255, 255, 255, 255 };
-	unsigned char BLUE_TEX[] = { 0, 0, 255, 255 };
-	unsigned char BLACK_TEX[] = { 0, 0, 0, 255 };
-	IFileAccess* AssetStore::fileLoader;
-	Mesh* AssetStore::squareMesh;
-	std::map<std::string, ShaderProgram*> AssetStore::shaders;
-	SimpleBillboardMaterial* AssetStore::billboardMat;
-	std::map<std::string, Texture2d*> AssetStore::textures;
-	std::map<std::string, Model*> AssetStore::models;
-	std::map<std::string, Sprite*> AssetStore::sprites;
+	unsigned char WHITE_TEX[] = {255, 255, 255, 255};
+	unsigned char BLUE_TEX[] = {0, 0, 255, 255};
+	unsigned char BLACK_TEX[] = {0, 0, 0, 255};
+	IFileAccess *AssetStore::fileLoader;
+	Mesh *AssetStore::squareMesh;
+	std::map<std::string, ShaderProgram *> AssetStore::shaders;
+	SimpleBillboardMaterial *AssetStore::billboardMat;
+	std::map<std::string, Texture2d *> AssetStore::textures;
+	std::map<std::string, Model *> AssetStore::models;
+	std::map<std::string, Sprite *> AssetStore::sprites;
+	std::map<std::string, SceneGraphNode *> AssetStore::nodes;
 
-	void AssetStore::init(IFileAccess* loader)
+	void AssetStore::init(IFileAccess *loader)
 	{
 		fileLoader = loader;
 		squareMesh = Shapes::squarePositions();
@@ -36,37 +38,37 @@ namespace Audace
 		billboardMat->setColor(glm::vec4(1, 1, 1, 1));
 
 		{
-			ShaderProgram* shader = getShader("AU_axes");
-			BaseMaterial* mat = new SimpleBillboardMaterial();
+			ShaderProgram *shader = getShader("AU_axes");
+			BaseMaterial *mat = new SimpleBillboardMaterial();
 			mat->setShader(shader);
-			Mesh* mesh = Shapes::coloredAxes();
-			Sprite* sprite = new Sprite({ mesh });
+			Mesh *mesh = Shapes::coloredAxes();
+			Sprite *sprite = new Sprite({mesh});
 			mesh->setMaterial(mat);
 			sprites["AU_axes"] = sprite;
 		}
 
 		{
 			ImageData data(&WHITE_TEX[0], 1, 1, GL_RGBA);
-			Texture2d* whiteTex = new Texture2d(data);
+			Texture2d *whiteTex = new Texture2d(data);
 			whiteTex->create();
 			textures["AU_white_texture"] = whiteTex;
 			billboardMat->setTexture(whiteTex);
 		}
 		{
 			ImageData data(&BLUE_TEX[0], 1, 1, GL_RGBA);
-			Texture2d* blueTex = new Texture2d(data);
+			Texture2d *blueTex = new Texture2d(data);
 			blueTex->create();
 			textures["AU_blue_texture"] = blueTex;
 		}
 		{
 			ImageData data(&BLACK_TEX[0], 1, 1, GL_RGBA);
-			Texture2d* blackTex = new Texture2d(data);
+			Texture2d *blackTex = new Texture2d(data);
 			blackTex->create();
 			textures["AU_black_texture"] = blackTex;
 		}
 	}
 
-	ShaderProgram* AssetStore::getShader(const std::string& name)
+	ShaderProgram *AssetStore::getShader(const std::string &name)
 	{
 		if (shaders.find(name) == shaders.end())
 		{
@@ -76,7 +78,7 @@ namespace Audace
 			ss.str(std::string());
 			ss << "shaders/" << name << "/fs.glsl";
 			std::string fs = fileLoader->textFileToString(ss.str());
-			ShaderProgram* shaderProgram = new ShaderProgram(vs, fs);
+			ShaderProgram *shaderProgram = new ShaderProgram(vs, fs);
 			shaderProgram->create();
 			shaders[name] = shaderProgram;
 			return shaderProgram;
@@ -87,12 +89,12 @@ namespace Audace
 		}
 	}
 
-	Texture2d* AssetStore::getTexture(const std::string& name)
+	Texture2d *AssetStore::getTexture(const std::string &name)
 	{
 		if (textures.find(name) == textures.end())
 		{
 			ImageData img = fileLoader->readImageFile(name);
-			Texture2d* tex = new Texture2d(img);
+			Texture2d *tex = new Texture2d(img);
 			tex->create();
 			textures[name] = tex;
 			return tex;
@@ -103,16 +105,16 @@ namespace Audace
 		}
 	}
 
-	Texture2d* AssetStore::darkGridTexture()
+	Texture2d *AssetStore::darkGridTexture()
 	{
 		return getTexture("images/dark_grid.png");
 	}
 
-	Model* AssetStore::getModel(const std::string& name)
+	Model *AssetStore::getModel(const std::string &name)
 	{
 		if (models.find(name) == models.end())
 		{
-			Model* model = fileLoader->readModelFile("models/", name);
+			Model *model = fileLoader->readModelFile("models/", name);
 			models[name] = model;
 			return model;
 		}
@@ -122,30 +124,18 @@ namespace Audace
 		}
 	}
 
-	Sprite* AssetStore::cloneSprite(const std::string& name)
+	Sprite *AssetStore::getSprite(const std::string &name)
 	{
 		if (sprites.find(name) != sprites.end())
 		{
-			return sprites[name]->clone();
+			return sprites[name];
 		}
 
-		if (name.find(".obj") > -1)
+		if (StringUtil::endsWith(name, ".obj"))
 		{
-			Model* model = getModel(name);
-			Sprite* sprite = new Sprite(model);
+			Model *model = getModel(name);
+			Sprite *sprite = new Sprite(model);
 			sprite->setName(name);
-			sprites[name] = sprite;
-			return sprite;
-		}
-
-		int i = name.find(".gltf");
-		if (i > -1)
-		{
-			std::vector<std::string> v = StringUtil::splitFilePath(name);
-			GltfLoader loader;
-			loader.setImageLoadPath("images/quaternius/");
-			loader.loadFile(fileLoader, v[0], v[1]);
-			Sprite* sprite = loader.getSprite(0);
 			sprites[name] = sprite;
 			return sprite;
 		}
@@ -153,22 +143,42 @@ namespace Audace
 		return nullptr;
 	}
 
-	Sprite* AssetStore::getCubeSprite()
+	SceneGraphNode* AssetStore::getGltfNode(const std::string &name)
+	{
+		if (nodes.find(name) != nodes.end())
+		{
+			return nodes[name];
+		}
+
+		if (StringUtil::endsWith(name, ".gltf") || StringUtil::endsWith(name, ".glb"))
+		{
+			std::vector<std::string> v = StringUtil::splitFilePath(name);
+			GltfLoader loader;
+			loader.setImageLoadPath(v[0]);
+			loader.loadFile(fileLoader, v[0], v[1]);
+			SceneGraphNode *node = loader.getSceneRootNode(0);
+			nodes[name] = node;
+			return node;
+		}
+		return nullptr;
+	}
+
+	Sprite *AssetStore::getCubeSprite()
 	{
 		std::string name = "AU_cube_sprite";
 		if (sprites.find(name) == sprites.end())
 		{
-			std::vector<Audace::Mesh*> v = { Audace::Shapes::cubePosNormTan() };
-			SimpleBillboardMaterial* mat = new SimpleBillboardMaterial();
+			std::vector<Audace::Mesh *> v = {Audace::Shapes::cubePosNormTan()};
+			SimpleBillboardMaterial *mat = new SimpleBillboardMaterial();
 			mat->setShader(simpleBillboardShader());
 			v[0]->setMaterial(mat);
-			Sprite* s = new Sprite(v);
+			Sprite *s = new Sprite(v);
 			sprites[name] = s;
 		}
 		return sprites[name]->clone();
 	}
 
-	Sprite* AssetStore::getColoredAxes()
+	Sprite *AssetStore::getColoredAxes()
 	{
 		return sprites["AU_axes"];
 	}

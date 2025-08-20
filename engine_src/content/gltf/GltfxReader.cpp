@@ -1,11 +1,13 @@
 #include "GltfxReader.h"
 #include "content/IFileAccess.h"
+#include "content/AssetStore.h"
 #include "content/JsonSerializer.h"
 #include "content/gltf/GltfLoader.h"
 #include "renderer/Sprite.h"
 #include "scene/Scene.h"
 #include "scene/graph/SceneGraph.h"
 #include "scene/graph/SceneGraphNode.h"
+#include "util/StringUtil.h"
 
 namespace Audace
 {
@@ -17,15 +19,24 @@ namespace Audace
 
 	SceneGraphNode *GltfxReader::readAsset(int assetId)
 	{
-		std::string filename = jroot["assets"][assetId]["uri"].template get<std::string>();
+		json &jasset = jroot["assets"][assetId];
+		std::string filename = jasset["uri"].template get<std::string>();
 
-		if (filename.find(".gltfx") == -1)
+		if (StringUtil::endsWith(filename, ".gltf") || StringUtil::endsWith(filename, ".glb"))
 		{
-			GltfLoader loader;
-			loader.setImageLoadPath("images/");
-			int i = filename.find_last_of("/") + 1;
-			loader.loadFile(fileLoader, filename.substr(0, i), filename.substr(i));
-			return loader.getSceneRootNode(0);
+			if (jasset.contains("type") && jser::getString(jasset, "type") == "mesh")
+			{
+				SceneGraphNode *node = AssetStore::getGltfNode(filename);
+				return node;
+			}
+			else
+			{
+				GltfLoader loader;
+				loader.setImageLoadPath("images/");
+				int i = filename.find_last_of("/") + 1;
+				loader.loadFile(fileLoader, filename.substr(0, i), filename.substr(i));
+				return loader.getSceneRootNode(0);
+			}
 		}
 
 		GltfxReader reader(fileLoader);

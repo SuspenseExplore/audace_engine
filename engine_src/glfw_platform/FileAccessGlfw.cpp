@@ -11,19 +11,19 @@
 
 namespace Audace
 {
-	ByteBuffer* FileAccessGlfw::readFileToBuffer(const std::string& path)
+	ByteBuffer *FileAccessGlfw::readFileToBuffer(const std::string &path)
 	{
-		std::ifstream fin(fileWriteBasePath() + path, std::ios::in | std::ios::binary | std::ios::ate);
+		std::string fullpath = fileWriteBasePath() + path;
+		std::ifstream fin(fullpath, std::ios::in | std::ios::binary | std::ios::ate);
 		int size = fin.tellg();
 		fin.seekg(0);
-		char* buf = new char[size];
+		char *buf = new char[size];
 		fin.read(buf, size);
 		return new ByteBuffer(buf, size);
 	}
 
-	std::string FileAccessGlfw::textFileToString(const std::string& path)
+	std::string FileAccessGlfw::textFileToString(const std::string &path)
 	{
-		AU_ENGINE_LOG_DEBUG("{}", fileWriteBasePath() + path);
 		std::ifstream fin(fileWriteBasePath() + path, std::ios::in);
 		std::stringstream ss;
 		ss << fin.rdbuf();
@@ -31,18 +31,18 @@ namespace Audace
 		return ss.str();
 	}
 
-	json FileAccessGlfw::textFileToJson(const std::string& path)
+	json FileAccessGlfw::textFileToJson(const std::string &path)
 	{
 		std::string s = textFileToString(path);
 		return json::parse(s);
 	}
 
-	ImageData FileAccessGlfw::readImageFile(const std::string& path)
+	ImageData FileAccessGlfw::readImageFile(const std::string &path)
 	{
 		int width;
 		int height;
 		int channels;
-		unsigned char* bytes = stbi_load((fileWriteBasePath() + path).c_str(), &width, &height, &channels, 0);
+		unsigned char *bytes = stbi_load((fileWriteBasePath() + path).c_str(), &width, &height, &channels, 0);
 		int format = GL_RGBA;
 		switch (channels)
 		{
@@ -57,16 +57,16 @@ namespace Audace
 		return img;
 	}
 
-	Model* FileAccessGlfw::readModelFile(std::string path, std::string filename)
+	Model *FileAccessGlfw::readModelFile(std::string path, std::string filename)
 	{
 		// filename could have part of the path, so put them together and them take them apart again
 		std::string fullName = path + filename;
 		int i = fullName.find_last_of('/') + 1;
-		Model* model = ModelLoader::loadObj(this, fullName.substr(0, i), fullName.substr(i));
+		Model *model = ModelLoader::loadObj(this, fullName.substr(0, i), fullName.substr(i));
 		return model;
 	}
 
-	std::vector<std::string> FileAccessGlfw::listFilesInDir(const std::string& path, bool recursive)
+	std::vector<std::string> FileAccessGlfw::listFilesInDir(const std::string &path, bool recursive)
 	{
 		std::string searchPath = fileWriteBasePath() + path + "/*";
 		std::vector<std::string> filenames;

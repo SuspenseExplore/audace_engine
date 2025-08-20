@@ -9,7 +9,7 @@
 
 namespace Audace
 {
-	void SceneDescriptor::loadSceneAssets(IFileAccess* fileLoader)
+	void SceneDescriptor::loadSceneAssets(IFileAccess *fileLoader)
 	{
 		jsonDescriptor = fileLoader->textFileToJson(descriptorFilename);
 
@@ -20,12 +20,12 @@ namespace Audace
 
 		if (jsonDescriptor.contains("modelMats"))
 		{
-			json& jsonMats = jsonDescriptor["modelMats"];
-			for (auto& el : jsonMats.items())
+			json &jsonMats = jsonDescriptor["modelMats"];
+			for (auto &el : jsonMats.items())
 			{
 				std::string name = el.key();
-				auto& matArray = el.value();
-				for (auto& m : matArray)
+				auto &matArray = el.value();
+				for (auto &m : matArray)
 				{
 					glm::mat4 m = JsonSerializer::getMatrix(matArray);
 					modelMats[name] = m;
@@ -35,8 +35,8 @@ namespace Audace
 
 		if (jsonDescriptor.contains("shaders"))
 		{
-			json& jsonShaders = jsonDescriptor["shaders"];
-			for (auto& el : jsonShaders)
+			json &jsonShaders = jsonDescriptor["shaders"];
+			for (auto &el : jsonShaders)
 			{
 				shaders[el] = AssetStore::getShader(el);
 			}
@@ -44,14 +44,14 @@ namespace Audace
 
 		if (jsonDescriptor.contains("sprites"))
 		{
-			json& jsonModels = jsonDescriptor["sprites"];
-			for (auto& el : jsonModels.items())
+			json &jsonModels = jsonDescriptor["sprites"];
+			for (auto &el : jsonModels.items())
 			{
 				std::string name = el.key();
-				json& spriteArr = el.value();
-				for (auto& el2 : spriteArr)
+				json &spriteArr = el.value();
+				for (auto &el2 : spriteArr)
 				{
-					Sprite* s = AssetStore::cloneSprite(name);
+					Sprite *s = AssetStore::getSprite(name);
 					s->setName(name);
 
 					if (el2.contains("modelMat"))
@@ -61,14 +61,14 @@ namespace Audace
 					}
 					if (el2.contains("pose"))
 					{
-						json& poseJson = el2["pose"];
+						json &poseJson = el2["pose"];
 						s->setPosition(JsonSerializer::getVec3(poseJson[0]));
 						s->setOrientation(JsonSerializer::getQuat(poseJson[1]));
 					}
 					if (el2.contains("shader"))
 					{
-						s->forEachMesh([=](Mesh* m)
-							{
+						s->forEachMesh([=](Mesh *m)
+									   {
 								ShaderProgram* shader = shaders[el2["shader"]];
 								m->getMaterial()->setShader(shader); });
 					}
@@ -78,7 +78,7 @@ namespace Audace
 		}
 	}
 
-	void SceneDescriptor::apply(Scene* scene)
+	void SceneDescriptor::apply(Scene *scene)
 	{
 	}
 }

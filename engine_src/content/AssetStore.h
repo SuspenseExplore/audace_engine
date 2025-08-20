@@ -13,35 +13,38 @@ namespace Audace
 	class Texture2d;
 	class Sprite;
 	class Model;
+	class SceneGraphNode;
 
 	class AssetStore
 	{
-		static IFileAccess* fileLoader;
-		static Mesh* squareMesh;
-		static std::map<std::string, ShaderProgram*> shaders;
-		static SimpleBillboardMaterial* billboardMat;
-		static std::map<std::string, Texture2d*> textures;
-		static std::map<std::string, Model*> models;
-		static std::map<std::string, Sprite*> sprites;
+		static IFileAccess *fileLoader;
+		static Mesh *squareMesh;
+		static std::map<std::string, ShaderProgram *> shaders;
+		static SimpleBillboardMaterial *billboardMat;
+		static std::map<std::string, Texture2d *> textures;
+		static std::map<std::string, Model *> models;
+		static std::map<std::string, Sprite *> sprites;
+		static std::map<std::string, SceneGraphNode*> nodes;
 
 	public:
-		static void init(IFileAccess* loader);
-		static ShaderProgram* getShader(const std::string& name);
-		static Mesh* getSquareMesh() { return squareMesh; }
-		static Sprite* getCubeSprite();
-		static Sprite* getColoredAxes();
-		static ShaderProgram* debugShader() { return shaders["AU_debug"]; }
-		static ShaderProgram* simpleTextShader() { return shaders["AU_simple_text"]; }
-		static ShaderProgram* simpleBillboardShader() { return shaders["AU_simple_billboard"]; }
-		static SimpleBillboardMaterial* simpleBillboardMaterial() { return billboardMat; }
-		static Texture2d* getWhiteTexture() { return textures["AU_white_texture"]; }
-		static Texture2d* getBlueTexture() { return textures["AU_blue_texture"]; }
-		static Texture2d* getBlackTexture() { return textures["AU_black_texture"]; }
-		static Texture2d* darkGridTexture();
+		static void init(IFileAccess *loader);
+		static ShaderProgram *getShader(const std::string &name);
+		static Mesh *getSquareMesh() { return squareMesh; }
+		static Sprite *getCubeSprite();
+		static Sprite *getColoredAxes();
+		static ShaderProgram *debugShader() { return shaders["AU_debug"]; }
+		static ShaderProgram *simpleTextShader() { return shaders["AU_simple_text"]; }
+		static ShaderProgram *simpleBillboardShader() { return shaders["AU_simple_billboard"]; }
+		static SimpleBillboardMaterial *simpleBillboardMaterial() { return billboardMat; }
+		static Texture2d *getWhiteTexture() { return textures["AU_white_texture"]; }
+		static Texture2d *getBlueTexture() { return textures["AU_blue_texture"]; }
+		static Texture2d *getBlackTexture() { return textures["AU_black_texture"]; }
+		static Texture2d *darkGridTexture();
 
-		static Texture2d* getTexture(const std::string& name);
-		static Model* getModel(const std::string& name);
-		static Sprite* cloneSprite(const std::string& name);
+		static Texture2d *getTexture(const std::string &name);
+		static Model *getModel(const std::string &name);
+		static Sprite *getSprite(const std::string &name);
+		static SceneGraphNode* getGltfNode(const std::string &name);
 	};
 }
 

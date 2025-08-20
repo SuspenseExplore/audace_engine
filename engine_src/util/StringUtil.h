@@ -25,8 +25,15 @@ namespace Audace
 			return v;
 		}
 
-		static bool startsWith(string s, string comp) {
-			return !s.substr(0, comp.length()).compare(comp);
+		static bool startsWith(string s, string comp)
+		{
+			return s.compare(0, comp.length(), comp) == 0;
+		}
+
+		static bool endsWith(string s, string comp)
+		{
+			return s.length() >= comp.length() &&
+				   s.compare(s.length() - comp.length(), comp.length(), comp) == 0;
 		}
 
 		static vector<string> splitFilePath(string filepath)

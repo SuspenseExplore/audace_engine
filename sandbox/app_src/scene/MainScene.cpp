@@ -24,13 +24,12 @@
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
-MainScene::MainScene(Audace::BaseAppController* controller)
+MainScene::MainScene(Audace::BaseAppController *controller)
 	: Scene(controller)
 {
-
 }
 
-void MainScene::loadAssets(Audace::IFileAccess* fileLoader)
+void MainScene::loadAssets(Audace::IFileAccess *fileLoader)
 {
 	glClearColor(0, 0, 1, 0);
 
@@ -39,53 +38,53 @@ void MainScene::loadAssets(Audace::IFileAccess* fileLoader)
 	shaderProgram->setUniformVec3("textureScale", 20, 20, 1);
 
 	glm::mat4 IDENTITY_MAT = glm::mat4(1.0f);
-	glm::mat4 modelMat = glm::rotate(glm::scale(IDENTITY_MAT, { 1, 1, 1 }), glm::radians(90.0f), glm::vec3(1, 0, 0));
+	glm::mat4 modelMat = glm::rotate(glm::scale(IDENTITY_MAT, {1, 1, 1}), glm::radians(90.0f), glm::vec3(1, 0, 0));
 
 	std::string s = fileLoader->textFileToString("scenes/MainScene.json");
 	json jScene = json::parse(s);
-	camera->setOriginPos({ jScene["startPos"][0], jScene["startPos"][1], jScene["startPos"][2] });
-	for (auto& item : jScene["materials"].items())
+	camera->setOriginPos({jScene["startPos"][0], jScene["startPos"][1], jScene["startPos"][2]});
+	for (auto &item : jScene["materials"].items())
 	{
 		std::string name = item.key();
 		std::string path = item.value();
-		Audace::Material* mat = Audace::JsonSerializer::loadMaterial(fileLoader->textFileToJson(path));
+		Audace::Material *mat = Audace::JsonSerializer::loadMaterial(fileLoader->textFileToJson(path));
 		materials[name] = mat;
 	}
-	for (auto& item : jScene["sprites"].items())
+	for (auto &item : jScene["sprites"].items())
 	{
 		std::string filename = item.key();
 		json list = item.value();
-		for (auto& it : list.items())
+		for (auto &it : list.items())
 		{
 			json obj = it.value();
 			json pos = obj["position"];
 			json angles = obj["orientation"];
-			Audace::Sprite* sprite = loadSprite(fileLoader, filename);
+			Audace::Sprite *sprite = loadSprite(fileLoader, filename);
 			sprite->setModelMatrix(modelMat);
-			sprite->setPosition({ pos[0], pos[1], pos[2] });
+			sprite->setPosition({pos[0], pos[1], pos[2]});
 			sprite->setOrientation(glm::quat(glm::radians(glm::vec3(angles[0], angles[1], angles[2]))));
 			sprites.push_back(sprite);
 		}
 	}
 
 	pointLights = new Audace::PointLight[4];
-	pointLights[0].setPosition({ 2, 0, 5 });
-	pointLights[0].setColor({ 1, 1, 0.8f });
+	pointLights[0].setPosition({2, 0, 5});
+	pointLights[0].setColor({1, 1, 0.8f});
 	pointLights[0].setIntensity(1);
 	sprites.push_back(&pointLights[0]);
 
-	pointLights[1].setPosition({ -2, -2, 0.3f });
-	pointLights[1].setColor({ 1, 0.2f, 0.1f });
+	pointLights[1].setPosition({-2, -2, 0.3f});
+	pointLights[1].setColor({1, 0.2f, 0.1f});
 	pointLights[1].setIntensity(0.6f);
 	sprites.push_back(&pointLights[1]);
 }
 
-Audace::Sprite* MainScene::loadSprite(Audace::IFileAccess* fileLoader, std::string filename)
+Audace::Sprite *MainScene::loadSprite(Audace::IFileAccess *fileLoader, std::string filename)
 {
 	glm::mat4 IDENTITY_MAT = glm::mat4(1.0f);
-	Audace::Sprite* sprite = Audace::AssetStore::cloneSprite(filename);
-	sprite->forEachMesh([this](Audace::Mesh* mesh)
-		{
+	Audace::Sprite *sprite = Audace::AssetStore::getSprite(filename);
+	sprite->forEachMesh([this](Audace::Mesh *mesh)
+						{
 			Audace::Material* mat = reinterpret_cast<Audace::Material*>(mesh->getMaterial());
 			mat->setShader(shaderProgram);
 			for (auto& m : materials)
@@ -95,7 +94,7 @@ Audace::Sprite* MainScene::loadSprite(Audace::IFileAccess* fileLoader, std::stri
 					mesh->setMaterial(m.second);
 				}
 			} });
-			return sprite;
+	return sprite;
 }
 
 void MainScene::enableAmbientOcclusion(bool enable)
@@ -123,7 +122,7 @@ void MainScene::render()
 
 	shaderProgram->setUniformMat4("vpMat", camera->getViewProjMatrix());
 
-	for (Audace::Sprite* sprite : sprites)
+	for (Audace::Sprite *sprite : sprites)
 	{
 		sprite->renderWorldSpace(this);
 	}
@@ -136,11 +135,13 @@ void MainScene::render()
 	ImGui::End();
 }
 
-void MainScene::setLightPos(int index, glm::vec3 position) {
+void MainScene::setLightPos(int index, glm::vec3 position)
+{
 	pointLights[index].setPosition(camera->getOriginPos() + position);
 }
 
-void MainScene::teleport() {
+void MainScene::teleport()
+{
 	// light pos includes origin already
 	// offset = light - camera - origin
 	// new origin = origin + offset
@@ -148,12 +149,12 @@ void MainScene::teleport() {
 	// new origin = light - camera
 	camera->setOriginPos(pointLights[0].getPosition() - camera->getPosition());
 }
-Audace::BaseCamera* MainScene::getCamera()
+Audace::BaseCamera *MainScene::getCamera()
 {
 	return camera;
 }
 
-void MainScene::setCamera(Audace::BaseCamera* camera)
+void MainScene::setCamera(Audace::BaseCamera *camera)
 {
 	this->camera = camera;
 }
