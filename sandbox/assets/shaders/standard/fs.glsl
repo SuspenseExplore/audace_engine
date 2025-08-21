@@ -1,7 +1,11 @@
 #version 320 es
 precision mediump float;
 
-uniform sampler2D baseColorTexture;
+struct Material{
+	sampler2D baseColorMap;
+	vec4 baseColorFactor;
+};
+uniform Material material;
 
 //struct PointLight {
 //	vec3 position;
@@ -60,7 +64,7 @@ vec3 getDirLightDiffuse(DirLight light)
 }
 
 void main() {
-	vec3 baseColor = texture(baseColorTexture, texCoord0.xy).xyz;
+	vec3 baseColor = texture(material.baseColorMap, texCoord0.xy).rgb * material.baseColorFactor.rgb;
 	vec3 lightColor = (getAmbientLight() + getDirLightDiffuse(dirLight));
 	vec3 color = clamp(baseColor * lightColor, ZERO.rgb, ONE.rgb);
 	fragColor = vec4(color, 1.0);
