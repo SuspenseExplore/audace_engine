@@ -43,6 +43,13 @@
 							"type": "checkbox"
 						},
 						{
+							"type": "same_line"
+						},
+						{
+							"name": "Reload Scene",
+							"type": "button"
+						},
+						{
 							"type": "separator"
 						},
 						{

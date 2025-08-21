@@ -11,23 +11,29 @@ namespace Audace
 		rootNode->setName("root");
 	}
 
-	void SceneGraph::setRootNode(SceneGraphNode* node)
+	void SceneGraph::setRootNode(SceneGraphNode *node)
 	{
 		rootNode = node;
 	}
 
-	SceneGraphNode* SceneGraph::getRootNode()
+	SceneGraphNode *SceneGraph::getRootNode()
 	{
 		return rootNode;
 	}
 
-	void SceneGraph::update(Scene* scene)
+	void SceneGraph::update(Scene *scene)
 	{
 		rootNode->update(scene, IDENTITY);
 	}
 
-	void SceneGraph::debugRender(Scene* scene)
+	void SceneGraph::debugRender(Scene *scene)
 	{
 		rootNode->debugRender(scene, true);
+	}
+
+	void SceneGraph::dispose()
+	{
+		rootNode->dispose();
+		delete rootNode;
 	}
 }

@@ -29,7 +29,7 @@
 			"type": "mesh"
 		},
 		{
-			"uri": "models/kenney/city_roads/tile-low.glb",
+			"uri": "models/kenney/nature/ground_grass.glb",
 			"type": "mesh"
 		}
 	],

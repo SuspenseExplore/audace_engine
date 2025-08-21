@@ -52,27 +52,25 @@ enum RenderType
 
 std::string guiPath = "ui/node_editor.json";
 
-SceneBuilder::SceneBuilder(Audace::BaseAppController* controller)
+SceneBuilder::SceneBuilder(Audace::BaseAppController *controller)
 	: Scene(controller)
 {
 	strcpy(sceneWritePath, "D:/audace_engine/sandbox/assets/scenes/MainScene.json");
 }
 
-void SceneBuilder::loadAssets(Audace::IFileAccess* fileLoader)
+void SceneBuilder::loadAssets(Audace::IFileAccess *fileLoader)
 {
 	renderType = RenderType::FULL;
 	this->fileLoader = fileLoader;
+	sceneFilepath = "scenes/default.gltfx";
 
 	// modelIndex = fileLoader->textFileToJson("models/_index.json");
 
-	Audace::GltfxReader reader(fileLoader);
-	sceneGraph = new Audace::SceneGraph;
-	sceneGraph->setRootNode(reader.readDefaultScene("scenes/default.gltfx"));
 	shader = Audace::AssetStore::getShader("standard");
 
 	editor = new Audace::SceneEditor(fileLoader);
 	editor->attachToScene(this);
-	editor->setSceneGraph(sceneGraph);
+	reloadScene();
 }
 
 void SceneBuilder::render()
@@ -87,16 +85,29 @@ void SceneBuilder::render()
 	// shader->setUniformVec3("viewPos", camera->getPosition());
 	shader->setUniformVec4("ambientLight", ambientColor);
 
-	for (auto& item : lights)
+	for (auto &item : lights)
 	{
 		shader->setUniformLight(item.second);
 	}
 
 	editor->renderWorldSpace(this);
-	for (Audace::Sprite* s : sprites)
+	for (Audace::Sprite *s : sprites)
 	{
 		s->renderWorldSpace(this);
 	}
+}
+
+void SceneBuilder::reloadScene()
+{
+	if (sceneGraph != nullptr)
+	{
+		sceneGraph->dispose();
+		delete sceneGraph;
+	}
+	Audace::GltfxReader reader(fileLoader);
+	sceneGraph = new Audace::SceneGraph;
+	sceneGraph->setRootNode(reader.readDefaultScene(sceneFilepath));
+	editor->setSceneGraph(sceneGraph);
 }
 
 void SceneBuilder::loadModel(std::string path, std::string filename)
@@ -113,18 +124,18 @@ void SceneBuilder::setAmbientLight(glm::vec4 color)
 	ambientColor = color;
 }
 
-void SceneBuilder::setLight(Audace::LightType type, Audace::Sprite* sprite)
+void SceneBuilder::setLight(Audace::LightType type, Audace::Sprite *sprite)
 {
-	const std::string& name = sprite->getName();
+	const std::string &name = sprite->getName();
 	switch (type)
 	{
 	case Audace::LightType::POINT_LIGHT:
 	{
-		Audace::PointLight* ptLight = reinterpret_cast<Audace::PointLight*>(sprite);
+		Audace::PointLight *ptLight = reinterpret_cast<Audace::PointLight *>(sprite);
 		if (lights.find(name) == lights.end())
 		{
 			// the light entry doesn't exist yet
-			Audace::TypedLight* light = new Audace::TypedLight(name, ptLight);
+			Audace::TypedLight *light = new Audace::TypedLight(name, ptLight);
 			lights[name] = light;
 		}
 		else
@@ -137,11 +148,11 @@ void SceneBuilder::setLight(Audace::LightType type, Audace::Sprite* sprite)
 
 	case Audace::LightType::DIRECTIONAL_LIGHT:
 	{
-		Audace::DirLight* dirLight = reinterpret_cast<Audace::DirLight*>(sprite);
+		Audace::DirLight *dirLight = reinterpret_cast<Audace::DirLight *>(sprite);
 		if (lights.find(name) == lights.end())
 		{
 			// the light entry doesn't exist yet
-			Audace::TypedLight* light = new Audace::TypedLight(name, dirLight);
+			Audace::TypedLight *light = new Audace::TypedLight(name, dirLight);
 			lights[name] = light;
 		}
 		else
@@ -154,11 +165,11 @@ void SceneBuilder::setLight(Audace::LightType type, Audace::Sprite* sprite)
 
 	case Audace::LightType::SPOTLIGHT:
 	{
-		Audace::SpotLight* spotLight = reinterpret_cast<Audace::SpotLight*>(sprite);
+		Audace::SpotLight *spotLight = reinterpret_cast<Audace::SpotLight *>(sprite);
 		if (lights.find(name) == lights.end())
 		{
 			// the light entry doesn't exist yet
-			Audace::TypedLight* light = new Audace::TypedLight(name, spotLight);
+			Audace::TypedLight *light = new Audace::TypedLight(name, spotLight);
 			lights[name] = light;
 		}
 		else
@@ -173,17 +184,17 @@ void SceneBuilder::setLight(Audace::LightType type, Audace::Sprite* sprite)
 	}
 }
 
-Audace::TypedLight* SceneBuilder::getLight(const std::string& name)
+Audace::TypedLight *SceneBuilder::getLight(const std::string &name)
 {
 	return lights[name];
 }
 
-void SceneBuilder::setCamera(Audace::BaseCamera* camera)
+void SceneBuilder::setCamera(Audace::BaseCamera *camera)
 {
 	this->camera = camera;
 }
 
-Audace::BaseCamera* SceneBuilder::getCamera()
+Audace::BaseCamera *SceneBuilder::getCamera()
 {
 	return camera;
 }
@@ -200,53 +211,6 @@ void SceneBuilder::renderUi()
 	// 	editWin->renderViewSpace(this);
 	// }
 	editor->sceneEditWindow();
-
-#ifdef UNDEFINED_THING
-	ImGui::Begin("Editor");
-	ImGui::SetWindowPos(ImVec2(600, 800), ImGuiCond_Once);
-	ImGui::SetWindowSize(ImVec2(800, 600), ImGuiCond_Once);
-	if (ImGui::BeginTabBar("Tabs1"))
-	{
-		if (ImGui::BeginTabItem("Render Output"))
-		{
-			if (ImGui::RadioButton("Position", renderType == RenderType::POSITION))
-			{
-				renderType = RenderType::POSITION;
-			}
-			ImGui::SameLine();
-			if (ImGui::RadioButton("Material", renderType == RenderType::MTL_COLOR))
-			{
-				renderType = RenderType::MTL_COLOR;
-			}
-			ImGui::SameLine();
-			if (ImGui::RadioButton("Normal", renderType == RenderType::NORMAL))
-			{
-				renderType = RenderType::NORMAL;
-			}
-			ImGui::SameLine();
-			if (ImGui::RadioButton("Ambient", renderType == RenderType::AMBIENT))
-			{
-				renderType = RenderType::AMBIENT;
-			}
-			ImGui::SameLine();
-			if (ImGui::RadioButton("Dir Light", renderType == RenderType::DIR_LIGHT))
-			{
-				renderType = RenderType::DIR_LIGHT;
-			}
-			ImGui::SameLine();
-			if (ImGui::RadioButton("Full", renderType == RenderType::FULL))
-			{
-				renderType = RenderType::FULL;
-			}
-
-			ImGui::EndTabItem();
-		}
-
-		ImGui::EndTabBar();
-	}
-
-	ImGui::End();
-#endif
 }
 
 void SceneBuilder::disposeAssets()

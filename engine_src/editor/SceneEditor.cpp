@@ -18,40 +18,46 @@
 
 namespace Audace
 {
-	SceneEditor::SceneEditor(IFileAccess* fileLoader) : fileLoader(fileLoader), gui(fileLoader, "ui/scene_editor.json")
+	SceneEditor::SceneEditor(IFileAccess *fileLoader) : fileLoader(fileLoader), gui(fileLoader, "ui/scene_editor.json")
 	{
 		modelIndex = fileLoader->textFileToJson("models/_index.json");
 		editWin = new NodeEditWindow(fileLoader);
 
 		cubeSprite = AssetStore::getCubeSprite();
-		reinterpret_cast<SimpleBillboardMaterial*>(cubeSprite->getMesh()->getMaterial())->setTexture(AssetStore::darkGridTexture());
+		reinterpret_cast<SimpleBillboardMaterial *>(cubeSprite->getMesh()->getMaterial())->setTexture(AssetStore::darkGridTexture());
 
 		gui.addBinding("Clear Color", &clearColor);
 		gui.addBinding("Ambient Color", &ambientColor);
 		gui.addBinding("Visualize", &visualize);
-		selectNodeFn = [=](SceneGraphNode* node)
+
+		reloadSceneFn = [=]()
+		{
+			scene->reloadScene();
+		};
+		selectNodeFn = [=](SceneGraphNode *node)
+		{
+			selectedNode = node;
+			editWin->setNode(node);
+		};
+		newChildFn = [=](SceneGraphNode *node)
+		{
+			new SceneGraphNode(node);
+		};
+		addCubeFn = [=](SceneGraphNode *node)
+		{
+			if (node->getSprite() == nullptr)
 			{
-				selectedNode = node;
-				editWin->setNode(node);
-			};
-		newChildFn = [=](SceneGraphNode* node)
-			{
-				new SceneGraphNode(node);
-			};
-		addCubeFn = [=](SceneGraphNode* node)
-			{
-				if (node->getSprite() == nullptr)
-				{
-					node->setSprite(cubeSprite);
-					cubeSprite->addInst(node);
-				}
-			};
+				node->setSprite(cubeSprite);
+				cubeSprite->addInst(node);
+			}
+		};
+		gui.addBinding("Reload Scene", &reloadSceneFn);
 		gui.addBinding("Select", &selectNodeFn);
 		gui.addBinding("New Child", &newChildFn);
 		gui.addBinding("Add Cube", &addCubeFn);
 	}
 
-	void SceneEditor::renderWorldSpace(Scene* scene)
+	void SceneEditor::renderWorldSpace(Scene *scene)
 	{
 		if (visualize)
 		{
@@ -82,13 +88,13 @@ namespace Audace
 		scene->setAmbientLight(ambientColor);
 	}
 
-	void SceneEditor::attachToScene(Scene* scene)
+	void SceneEditor::attachToScene(Scene *scene)
 	{
 		this->scene = scene;
 		// scene->addSprite(cubeSprite);
 	}
 
-	void SceneEditor::setSceneGraph(SceneGraph* graph)
+	void SceneEditor::setSceneGraph(SceneGraph *graph)
 	{
 		sceneGraph = graph;
 		gui.addBinding("scene_graph", graph);

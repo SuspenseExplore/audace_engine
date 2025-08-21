@@ -17,29 +17,30 @@ namespace Audace
 	class Scene
 	{
 	protected:
-		BaseAppController* appController;
-		std::vector<Sprite*> sprites;
+		BaseAppController *appController;
+		std::vector<Sprite *> sprites;
 
 	public:
-		Scene(BaseAppController* controller);
+		Scene(BaseAppController *controller);
 		virtual ~Scene() {}
-		virtual void loadAssets(Audace::IFileAccess* fileLoader) = 0;
+		virtual void loadAssets(Audace::IFileAccess *fileLoader) = 0;
 		virtual void render() = 0;
 		virtual void renderUi() {}
 		virtual void disposeAssets() = 0;
+		virtual void reloadScene() {}
 
-		virtual BaseCamera* getCamera() = 0;
-		virtual void setCamera(BaseCamera* camera) = 0;
+		virtual BaseCamera *getCamera() = 0;
+		virtual void setCamera(BaseCamera *camera) = 0;
 		virtual void teleport(glm::vec3 pos) {}
 
-		virtual void addSprite(Sprite* s);
-		virtual void removeSprite(Sprite* s);
+		virtual void addSprite(Sprite *s);
+		virtual void removeSprite(Sprite *s);
 
 		virtual void setClearColor(glm::vec4 color) {}
 		virtual void setAmbientLight(glm::vec4 color) {}
-		virtual glm::vec4 getAmbientLight() { return { 1, 0, 1, 1 }; }
-		virtual void setLight(LightType type, Sprite* sprite) {}
-		virtual TypedLight* getLight(const std::string& name) { return nullptr; }
+		virtual glm::vec4 getAmbientLight() { return {1, 0, 1, 1}; }
+		virtual void setLight(LightType type, Sprite *sprite) {}
+		virtual TypedLight *getLight(const std::string &name) { return nullptr; }
 	};
 }
 

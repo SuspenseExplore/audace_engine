@@ -169,4 +169,17 @@ namespace Audace
 			}
 		}
 	}
+
+	void SceneGraphNode::dispose()
+	{
+		if (sprite != nullptr)
+		{
+			sprite->removeInst(this);
+		}
+		for (int i = 0; i < children.size(); i++)
+		{
+			children[i]->dispose();
+			delete children[i];
+		}
+	}
 }

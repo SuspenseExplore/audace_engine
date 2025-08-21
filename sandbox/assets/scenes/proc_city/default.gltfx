@@ -11,7 +11,7 @@
 	"nodes": [
 		{
 			"name": "block_root",
-			"children": [ 1, 2, 3, 4 ]
+			"children": [ 1, 2, 3, 4, 5, 6 ]
 		},
 		{
 			"name": "block_0",
@@ -28,9 +28,19 @@
 			"translation": [ 0, 0, 48 ]
 		},
 		{
-			"name": "block_1",
+			"name": "block_3",
 			"asset": 0,
 			"translation": [ 48, 0, 48 ]
+		},
+		{
+			"name": "block_4",
+			"asset": 0,
+			"translation": [ 0, 0, 96 ]
+		},
+		{
+			"name": "block_5",
+			"asset": 0,
+			"translation": [ 48, 0, 96 ]
 		}
 	],
 	"scene": 0,

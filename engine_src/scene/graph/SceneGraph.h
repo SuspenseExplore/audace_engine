@@ -5,8 +5,8 @@
 #include <map>
 #include "glm/glm.hpp"
 
-using std::string;
 using std::map;
+using std::string;
 namespace Audace
 {
 	class Scene;
@@ -15,17 +15,18 @@ namespace Audace
 
 	class SceneGraph
 	{
-		Scene* scene;
-		SceneGraphNode* rootNode;
+		Scene *scene;
+		SceneGraphNode *rootNode;
 		glm::mat4 IDENTITY = glm::mat4(1.0);
 
 	public:
 		SceneGraph();
-		void setRootNode(SceneGraphNode* node);
-		SceneGraphNode* getRootNode();
+		void setRootNode(SceneGraphNode *node);
+		SceneGraphNode *getRootNode();
 
-		void update(Scene* scene);
-		void debugRender(Scene* scene);
+		void update(Scene *scene);
+		void debugRender(Scene *scene);
+		void dispose();
 	};
 }
 

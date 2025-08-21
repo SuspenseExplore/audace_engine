@@ -35,7 +35,7 @@ namespace Audace
 {
 	typedef JsonSerializer jser;
 
-	JsonGui::JsonGui(IFileAccess* fileLoader, std::string filepath) : fileLoader(fileLoader), filepath(filepath)
+	JsonGui::JsonGui(IFileAccess *fileLoader, std::string filepath) : fileLoader(fileLoader), filepath(filepath)
 	{
 		load();
 	}
@@ -44,47 +44,52 @@ namespace Audace
 	{
 		jcontent = fileLoader->textFileToJson(filepath);
 		json sep = {{TYPE, SEPARATOR}};
-		json obj = {{NAME, "Reload"}, {TYPE, RELOAD_BUTTON}};
+		json obj = {{NAME, "Reload Window"}, {TYPE, RELOAD_BUTTON}};
 		jcontent[CHILDREN].push_back(sep);
 		jcontent[CHILDREN].push_back(obj);
 	}
 
-	void JsonGui::addBinding(std::string name, bool* b)
+	void JsonGui::addBinding(std::string name, bool *b)
 	{
 		bindings[name].boolean = b;
 	}
 
-	void JsonGui::addBinding(std::string name, char* c)
+	void JsonGui::addBinding(std::string name, char *c)
 	{
 		bindings[name].char_ = c;
 	}
 
-	void JsonGui::addBinding(std::string name, int* i)
+	void JsonGui::addBinding(std::string name, int *i)
 	{
 		bindings[name].integer = i;
 	}
 
-	void JsonGui::addBinding(std::string name, float* f)
+	void JsonGui::addBinding(std::string name, float *f)
 	{
 		bindings[name].float1 = f;
 	}
 
-	void JsonGui::addBinding(std::string name, glm::vec3* v)
+	void JsonGui::addBinding(std::string name, glm::vec3 *v)
 	{
 		bindings[name].float3 = v;
 	}
 
-	void JsonGui::addBinding(std::string name, glm::vec4* v)
+	void JsonGui::addBinding(std::string name, glm::vec4 *v)
 	{
 		bindings[name].float4 = v;
 	}
 
-	void JsonGui::addBinding(std::string name, SceneGraph* sg)
+	void JsonGui::addBinding(std::string name, SceneGraph *sg)
 	{
 		bindings[name].sceneGraph = sg;
 	}
 
-	void JsonGui::addBinding(std::string name, std::function<void(SceneGraphNode*)>* sgnFn)
+	void JsonGui::addBinding(std::string name, std::function<void()> *sgnFn)
+	{
+		bindings[name].voidFn = sgnFn;
+	}
+
+	void JsonGui::addBinding(std::string name, std::function<void(SceneGraphNode *)> *sgnFn)
 	{
 		bindings[name].graphNodeFn = sgnFn;
 	}
@@ -99,7 +104,7 @@ namespace Audace
 		}
 	}
 
-	void JsonGui::render(json& j)
+	void JsonGui::render(json &j)
 	{
 		std::string type = jser::getString(j, TYPE);
 		if (type == WINDOW)
@@ -125,6 +130,10 @@ namespace Audace
 		else if (type == LIGHT_COLOR)
 		{
 			lightColor(j);
+		}
+		else if (type == BUTTON)
+		{
+			button(j);
 		}
 		else if (type == CHECKBOX)
 		{
@@ -159,7 +168,7 @@ namespace Audace
 		}
 	}
 
-	void JsonGui::window(json& j)
+	void JsonGui::window(json &j)
 	{
 		if (j.contains("platform_props"))
 		{
@@ -172,22 +181,22 @@ namespace Audace
 #endif
 			if (j["platform_props"].contains(platName))
 			{
-				json& jprops = j["platform_props"][platName];
+				json &jprops = j["platform_props"][platName];
 				if (jprops.contains("position"))
 				{
 					glm::vec2 p = jser::getVec2(jprops, "position");
-					ImGui::SetNextWindowPos(ImVec2{ p.x, p.y }, ImGuiCond_Once);
+					ImGui::SetNextWindowPos(ImVec2{p.x, p.y}, ImGuiCond_Once);
 				}
 				if (jprops.contains("size"))
 				{
 					glm::vec2 s = jser::getVec2(jprops, "size");
-					ImGui::SetNextWindowSize(ImVec2{ s.x, s.y }, ImGuiCond_Once);
+					ImGui::SetNextWindowSize(ImVec2{s.x, s.y}, ImGuiCond_Once);
 				}
 			}
 		}
 		ImGui::Begin(jser::getString(j, NAME).c_str());
 
-		for (json& c : j[CHILDREN])
+		for (json &c : j[CHILDREN])
 		{
 			render(c);
 		}
@@ -195,11 +204,11 @@ namespace Audace
 		ImGui::End();
 	}
 
-	void JsonGui::tabBar(json& j)
+	void JsonGui::tabBar(json &j)
 	{
 		if (ImGui::BeginTabBar(jser::getString(j, NAME).c_str()))
 		{
-			for (json& c : j[TAB_ITEMS])
+			for (json &c : j[TAB_ITEMS])
 			{
 				tabItem(c);
 			}
@@ -208,7 +217,7 @@ namespace Audace
 		}
 	}
 
-	void JsonGui::tabItem(json& j)
+	void JsonGui::tabItem(json &j)
 	{
 		bool vis = true;
 		if (j.contains("visibility") && j["visibility"].contains("equals"))
@@ -220,7 +229,7 @@ namespace Audace
 		{
 			if (ImGui::BeginTabItem(jser::getString(j, NAME).c_str()))
 			{
-				for (json& c : j[CHILDREN])
+				for (json &c : j[CHILDREN])
 				{
 					render(c);
 				}
@@ -230,7 +239,7 @@ namespace Audace
 		}
 	}
 
-	void JsonGui::dragFloat(json& j)
+	void JsonGui::dragFloat(json &j)
 	{
 		std::string name = jser::getString(j, NAME);
 		float s = 1;
@@ -251,7 +260,7 @@ namespace Audace
 		ImGui::DragFloat(name.c_str(), bindings[name].float1, s, min, max);
 	}
 
-	void JsonGui::dragFloat3(json& j)
+	void JsonGui::dragFloat3(json &j)
 	{
 		std::string name = jser::getString(j, NAME);
 		float s = 1;
@@ -272,7 +281,7 @@ namespace Audace
 		ImGui::DragFloat3(name.c_str(), glm::value_ptr(*bindings[name].float3), s, min, max);
 	}
 
-	void JsonGui::dragFloat4(json& j)
+	void JsonGui::dragFloat4(json &j)
 	{
 		std::string name = jser::getString(j, NAME);
 		float s = 1;
@@ -293,14 +302,14 @@ namespace Audace
 		ImGui::ColorEdit4(name.c_str(), glm::value_ptr(*bindings[name].float4));
 	}
 
-	void JsonGui::lightColor(json& j)
+	void JsonGui::lightColor(json &j)
 	{
 		std::string name = jser::getString(j, NAME);
 		ImGui::ColorEdit3(name.c_str(), glm::value_ptr(*bindings[name].float4));
 		ImGui::DragFloat("Intensity", &(*bindings[name].float4).a, 0.01, 0, 1000);
 	}
 
-	void JsonGui::checkbox(json& j)
+	void JsonGui::checkbox(json &j)
 	{
 		std::string name = jser::getString(j, NAME);
 		ImGui::Checkbox(name.c_str(), bindings[name].boolean);
@@ -311,20 +320,20 @@ namespace Audace
 		ImGui::Separator();
 	}
 
-	void JsonGui::sceneGraphTree(json& j)
+	void JsonGui::sceneGraphTree(json &j)
 	{
-		const std::string& name = jser::getString(j, NAME);
-		SceneGraph* graph = bindings[name].sceneGraph;
+		const std::string &name = jser::getString(j, NAME);
+		SceneGraph *graph = bindings[name].sceneGraph;
 		sceneGraphNode(j[TREE_NODE], graph->getRootNode(), "0");
 	}
 
-	void JsonGui::sceneGraphNode(json& j, SceneGraphNode* node, const std::string& path)
+	void JsonGui::sceneGraphNode(json &j, SceneGraphNode *node, const std::string &path)
 	{
 		std::string n = (node->getName().length() > 0) ? node->getName() : path;
 		ImGui::PushID(path.c_str());
 		bool r = ImGui::TreeNode(n.c_str());
-		json& jchildren = j[CHILDREN];
-		for (auto& jchild : jchildren)
+		json &jchildren = j[CHILDREN];
+		for (auto &jchild : jchildren)
 		{
 			if (jser::getString(jchild, TYPE) == BUTTON)
 			{
@@ -339,7 +348,7 @@ namespace Audace
 		// if this node is open
 		if (r)
 		{
-			std::vector<SceneGraphNode*> children = node->getChildren();
+			std::vector<SceneGraphNode *> children = node->getChildren();
 			for (int i = 0; i < children.size(); i++)
 			{
 				sceneGraphNode(j, children[i], path + "/" + std::to_string(i));
@@ -350,7 +359,16 @@ namespace Audace
 		ImGui::PopID();
 	}
 
-	void JsonGui::button(json& j, SceneGraphNode* node)
+	void JsonGui::button(json &j)
+	{
+		std::string name = jser::getString(j, NAME);
+		if (ImGui::Button(name.c_str()))
+		{
+			(*(bindings[name].voidFn))();
+		}
+	}
+
+	void JsonGui::button(json &j, SceneGraphNode *node)
 	{
 		std::string name = jser::getString(j, NAME);
 		if (ImGui::Button(name.c_str()))
@@ -359,7 +377,7 @@ namespace Audace
 		}
 	}
 
-	void JsonGui::sameLine(json& j)
+	void JsonGui::sameLine(json &j)
 	{
 		if (j.contains(X_OFFSET))
 		{
@@ -372,7 +390,7 @@ namespace Audace
 		}
 	}
 
-	void JsonGui::text(json& j)
+	void JsonGui::text(json &j)
 	{
 		std::string name = jser::getString(j, NAME);
 		if (bindings.find(name) != bindings.end())

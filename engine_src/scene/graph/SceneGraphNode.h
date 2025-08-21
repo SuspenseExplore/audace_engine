@@ -46,6 +46,7 @@ namespace Audace
 		SceneGraphNode();
 		SceneGraphNode(SceneGraphNode *parent);
 		SceneGraphNode *clone();
+		void dispose();
 
 		void setName(std::string name);
 		const std::string &getName();
