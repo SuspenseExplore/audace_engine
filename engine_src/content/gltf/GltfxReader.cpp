@@ -51,7 +51,7 @@ namespace Audace
 		{
 			int assetId = jnode["asset"].template get<int>();
 			delete node;
-			node = assets[assetId];
+			node = readAsset(assetId);
 		}
 		if (jnode.contains("name"))
 		{
@@ -88,13 +88,6 @@ namespace Audace
 	SceneGraphNode *GltfxReader::readDefaultScene(const std::string &filepath)
 	{
 		jroot = fileLoader->textFileToJson(filepath);
-		json &jassets = jroot["assets"];
-
-		assets.resize(jassets.size());
-		for (int i = 0; i < jassets.size(); i++)
-		{
-			assets[i] = readAsset(i);
-		}
 		int sceneId = jser::getInt(jroot, "scene");
 		json &jscene = jroot["scenes"][sceneId];
 		int nodeId = jscene["nodes"][0].template get<int>();

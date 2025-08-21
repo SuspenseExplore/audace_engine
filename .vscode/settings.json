@@ -85,7 +85,9 @@
 		"xutility": "cpp",
 		"coroutine": "cpp",
 		"resumable": "cpp",
-		"variant": "cpp"
+		"variant": "cpp",
+		"*.gltf": "json",
+		"*.gltfx": "json"
 	},
 	"cmake.sourceDirectory": "${workspaceFolder}/sandbox/glfw_sandbox"
 }

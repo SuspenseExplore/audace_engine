@@ -12,38 +12,62 @@
 
 namespace Audace
 {
-	Sprite* SceneGraphNode::debugAxes = nullptr;
-	Sprite* SceneGraphNode::bboxSprite = nullptr;
-	ShaderProgram* SceneGraphNode::shader = nullptr;
+	Sprite *SceneGraphNode::debugAxes = nullptr;
+	Sprite *SceneGraphNode::bboxSprite = nullptr;
+	ShaderProgram *SceneGraphNode::shader = nullptr;
 
 	SceneGraphNode::SceneGraphNode() : parent(nullptr)
 	{
 		if (debugAxes == nullptr)
 		{
 			debugAxes = AssetStore::getColoredAxes();
-			Mesh* m = Shapes::cubeWireframe();
-			SimpleBillboardMaterial* mat = new SimpleBillboardMaterial();
+			Mesh *m = Shapes::cubeWireframe();
+			SimpleBillboardMaterial *mat = new SimpleBillboardMaterial();
 			shader = AssetStore::getShader("AU_bbox");
 			mat->setShader(shader);
 			m->setMaterial(mat);
-			bboxSprite = new Sprite({ m });
+			bboxSprite = new Sprite({m});
 		}
 	}
 
-	SceneGraphNode::SceneGraphNode(SceneGraphNode* parent)
+	SceneGraphNode::SceneGraphNode(SceneGraphNode *parent)
 		: parent(parent)
 	{
 		parent->addChild(this);
 		if (debugAxes == nullptr)
 		{
 			debugAxes = AssetStore::getColoredAxes();
-			Mesh* m = Shapes::cubeWireframe();
-			SimpleBillboardMaterial* mat = new SimpleBillboardMaterial();
+			Mesh *m = Shapes::cubeWireframe();
+			SimpleBillboardMaterial *mat = new SimpleBillboardMaterial();
 			shader = AssetStore::getShader("AU_bbox");
 			mat->setShader(shader);
 			m->setMaterial(mat);
-			bboxSprite = new Sprite({ m });
+			bboxSprite = new Sprite({m});
 		}
+	}
+
+	SceneGraphNode *SceneGraphNode::clone()
+	{
+		SceneGraphNode *n = new SceneGraphNode;
+		n->type = type;
+		n->name = name;
+		n->animations = std::vector<INodeAnimation *>(animations);
+		n->translation = translation;
+		n->scale = scale;
+		n->rotation = rotation;
+		n->localTransform = localTransform;
+		n->bbox = bbox;
+		for (int i = 0; i < children.size(); i++)
+		{
+			n->children.push_back(children[i]->clone());
+		}
+		n->sprite = sprite;
+		if (sprite != nullptr)
+		{
+			sprite->addInst(n);
+		}
+
+		return n;
 	}
 
 	void SceneGraphNode::setName(std::string name)
@@ -51,34 +75,34 @@ namespace Audace
 		this->name = name;
 	}
 
-	const std::string& SceneGraphNode::getName()
+	const std::string &SceneGraphNode::getName()
 	{
 		return name;
 	}
 
-	void SceneGraphNode::setSprite(Sprite* s, NodeType type)
+	void SceneGraphNode::setSprite(Sprite *s, NodeType type)
 	{
 		sprite = s;
 		this->type = type;
 	}
 
-	Sprite* SceneGraphNode::getSprite()
+	Sprite *SceneGraphNode::getSprite()
 	{
 		return sprite;
 	}
 
-	void SceneGraphNode::addChild(SceneGraphNode* c)
+	void SceneGraphNode::addChild(SceneGraphNode *c)
 	{
 		children.emplace_back(c);
 		c->parent = this;
 	}
 
-	std::vector<SceneGraphNode*>& SceneGraphNode::getChildren()
+	std::vector<SceneGraphNode *> &SceneGraphNode::getChildren()
 	{
 		return children;
 	}
 
-	void SceneGraphNode::addAnimation(INodeAnimation* a)
+	void SceneGraphNode::addAnimation(INodeAnimation *a)
 	{
 		a->setNode(this);
 		animations.emplace_back(a);
@@ -93,9 +117,9 @@ namespace Audace
 		return glm::vec3(localTransform[3][0], localTransform[3][1], localTransform[3][2]);
 	}
 
-	void SceneGraphNode::update(Scene* scene, glm::mat4 parentTransform)
+	void SceneGraphNode::update(Scene *scene, glm::mat4 parentTransform)
 	{
-		for (INodeAnimation* a : animations)
+		for (INodeAnimation *a : animations)
 		{
 			a->update();
 		}
@@ -113,17 +137,19 @@ namespace Audace
 			scene->addSprite(sprite);
 			if (type == PTLIGHT_NODE || type == DIRLIGHT_NODE || type == SPOTLIGHT_NODE)
 			{
-				scene->setLight(type == PTLIGHT_NODE ? POINT_LIGHT : type == DIRLIGHT_NODE ? DIRECTIONAL_LIGHT : SPOTLIGHT, sprite);
+				scene->setLight(type == PTLIGHT_NODE ? POINT_LIGHT : type == DIRLIGHT_NODE ? DIRECTIONAL_LIGHT
+																						   : SPOTLIGHT,
+								sprite);
 			}
 		}
 
-		for (SceneGraphNode* child : children)
+		for (SceneGraphNode *child : children)
 		{
 			child->update(scene, localTransform);
 		}
 	}
 
-	void SceneGraphNode::debugRender(Scene* scene, bool recursive)
+	void SceneGraphNode::debugRender(Scene *scene, bool recursive)
 	{
 		debugAxes->setModelMatrix(localTransform);
 		debugAxes->renderWorldSpace(scene);
@@ -137,7 +163,7 @@ namespace Audace
 		glEnable(GL_DEPTH_TEST);
 		if (recursive)
 		{
-			for (SceneGraphNode* c : children)
+			for (SceneGraphNode *c : children)
 			{
 				c->debugRender(scene, recursive);
 			}

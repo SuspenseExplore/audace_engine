@@ -5,63 +5,32 @@
 	},
 	"assets": [
 		{
-			"uri": "models/kenney/city_commercial/building-a.glb",
-			"type": "mesh"
-		},
-		{
-			"uri": "models/kenney/city_commercial/building-b.glb",
-			"type": "mesh"
-		},
-		{
-			"uri": "models/kenney/city_commercial/building-c.glb",
-			"type": "mesh"
-		},
-		{
-			"uri": "models/kenney/city_commercial/building-d.glb",
-			"type": "mesh"
-		},
-		{
-			"uri": "scenes/sun_light.gltf"
-		},
-		{
-			"uri": "scenes/point_light.gltf"
-		},
-		{
-			"uri": "scenes/spotlight.gltf"
+			"uri": "scenes/proc_city/block.gltfx"
 		}
 	],
 	"nodes": [
 		{
-			"name": "root",
-			"children": [ 1, 2, 3, 4, 5, 6, 7 ],
-			"rotation": [0.707, 0.0, 0.0, 0.707]
+			"name": "block_root",
+			"children": [ 1, 2, 3, 4 ]
 		},
 		{
-			"translation": [0, 0, 0],
+			"name": "block_0",
 			"asset": 0
 		},
 		{
-			"translation": [0, 0, 0],
-			"asset": 1
+			"name": "block_1",
+			"asset": 0,
+			"translation": [ 48, 0, 0 ]
 		},
 		{
-			"translation": [0, 0, 0],
-			"asset": 2
+			"name": "block_2",
+			"asset": 0,
+			"translation": [ 0, 0, 48 ]
 		},
 		{
-			"translation": [0, 0, 0],
-			"asset": 3
-		},
-		{
-			"asset": 4
-		},
-		{
-			"translation": [ 0, 0, 5 ],
-			"asset": 5
-		},
-		{
-			"translation": [ 0, -1, 5 ],
-			"asset": 6
+			"name": "block_1",
+			"asset": 0,
+			"translation": [ 48, 0, 48 ]
 		}
 	],
 	"scene": 0,

@@ -788,7 +788,7 @@ namespace Audace
 		{
 			Sprite *sprite = getSprite(gltfNode.meshId);
 			node->setSprite(sprite);
-			sprite->addInst(node);
+			sprite->setName(fileData.filename);
 
 			node->setBoundingBox(meshes[gltfNode.meshId].bbox);
 

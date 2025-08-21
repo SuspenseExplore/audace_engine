@@ -3,15 +3,17 @@ precision mediump float;
 
 uniform sampler2D baseColorTexture;
 
-struct PointLight {
-	vec3 position;
-	vec3 color;
-	float intensity;
-};
-//struct DirLight {
-//	vec3 direction;
-//	vec4 color;
+//struct PointLight {
+//	vec3 position;
+//	vec3 color;
+//	float intensity;
 //};
+
+struct DirLight {
+	vec3 direction;
+	vec4 color;
+};
+
 //struct SpotLight {
 //	vec3 position;
 //	vec3 direction;
@@ -21,8 +23,8 @@ struct PointLight {
 //};
 
 uniform vec4 ambientLight;
-uniform PointLight ptLight;
-//uniform DirLight dirLight;
+//uniform PointLight ptLight;
+uniform DirLight dirLight;
 //uniform SpotLight spotLight;
 
 in vec3 fragPos;
@@ -42,17 +44,24 @@ vec3 getAmbientLight()
 	return lightColor.rgb * lightColor.a;
 }
 
-vec3 getPointLightDiffuse(PointLight light)
+//vec3 getPointLightDiffuse(PointLight light)
+//{
+//	vec3 lightColor = clamp(light.color, ZERO.rgb, ONE.rgb);
+//	vec3 lightDir = normalize(light.position - fragPos);
+//	float diff = max(0.0, dot(normal, lightDir));
+//	return diff * lightColor * light.intensity;
+//}
+
+vec3 getDirLightDiffuse(DirLight light)
 {
-	vec3 lightColor = clamp(light.color, ZERO.rgb, ONE.rgb);
-	vec3 lightDir = normalize(light.position - fragPos);
-	float diff = max(0.0, dot(normal, lightDir));
-	return diff * lightColor * light.intensity;
+	vec3 lightColor = clamp(light.color.rgb, ZERO.rgb, ONE.rgb);
+	float diff = max(0.0, dot(normal, light.direction));
+	return diff * lightColor * light.color.a;
 }
 
 void main() {
 	vec3 baseColor = texture(baseColorTexture, texCoord0.xy).xyz;
-	vec3 lightColor = (getAmbientLight() + getPointLightDiffuse(ptLight));
+	vec3 lightColor = (getAmbientLight() + getDirLightDiffuse(dirLight));
 	vec3 color = clamp(baseColor * lightColor, ZERO.rgb, ONE.rgb);
 	fragColor = vec4(color, 1.0);
 }

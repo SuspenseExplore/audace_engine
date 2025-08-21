@@ -18,15 +18,15 @@
 
 namespace Audace
 {
-	NodeEditWindow::NodeEditWindow(IFileAccess* fileLoader)
+	NodeEditWindow::NodeEditWindow(IFileAccess *fileLoader)
 	{
-		positionMark = new Sprite({ Shapes::spherePositions(8, 8) });
+		positionMark = new Sprite({Shapes::spherePositions(8, 8)});
 		positionMark->getMesh()->setMaterial(AssetStore::simpleBillboardMaterial());
-		positionMark->setScale({ 0.05, 0.05, 0.05 });
+		positionMark->setScale({0.05, 0.05, 0.05});
 		jsonGui = new JsonGui(fileLoader, "ui/node_editor.json");
 	}
 
-	void NodeEditWindow::setNode(SceneGraphNode* node)
+	void NodeEditWindow::setNode(SceneGraphNode *node)
 	{
 		this->node = node;
 		nodeType = node->getNodeType();
@@ -40,19 +40,19 @@ namespace Audace
 		jsonGui->addBinding("Quat value", &quatVal[0]);
 		if (nodeType == DIRLIGHT_NODE)
 		{
-			DirLight* light = reinterpret_cast<DirLight*>(node->getSprite());
+			DirLight *light = reinterpret_cast<DirLight *>(node->getSprite());
 			lightColor = light->getColor();
 			jsonGui->addBinding("Color", &lightColor);
 		}
 		else if (nodeType == PTLIGHT_NODE)
 		{
-			PointLight* light = reinterpret_cast<PointLight*>(node->getSprite());
+			PointLight *light = reinterpret_cast<PointLight *>(node->getSprite());
 			lightColor = glm::vec4(light->getColor(), light->getIntensity());
 			jsonGui->addBinding("Color", &lightColor);
 		}
 		else if (nodeType == SPOTLIGHT_NODE)
 		{
-			SpotLight* light = reinterpret_cast<SpotLight*>(node->getSprite());
+			SpotLight *light = reinterpret_cast<SpotLight *>(node->getSprite());
 			lightColor = glm::vec4(light->getColor(), light->getIntensity());
 			spotlightInnerAngle = light->getInnerAngle();
 			spotlightOuterAngle = light->getOuterAngle();
@@ -62,7 +62,7 @@ namespace Audace
 		}
 	}
 
-	void NodeEditWindow::renderWorldSpace(Scene* scene)
+	void NodeEditWindow::renderWorldSpace(Scene *scene)
 	{
 		// positionMark->setPosition(node->getPosition());
 		// glDisable(GL_DEPTH_TEST);
@@ -70,10 +70,10 @@ namespace Audace
 		// glEnable(GL_DEPTH_TEST);
 	}
 
-	void NodeEditWindow::renderViewSpace(Scene* scene)
+	void NodeEditWindow::renderViewSpace(Scene *scene)
 	{
-		std::vector<float> intervals = { 0.01, 0.1, 1, 5, 10, 15 };
-		std::vector<float> angleIntervals = { 0.01, 0.1, 1, 5, 15, 45, 90 };
+		std::vector<float> intervals = {0.01, 0.1, 1, 5, 10, 15};
+		std::vector<float> angleIntervals = {0.01, 0.1, 1, 5, 15, 45, 90};
 		static int intervalIndex = 2;
 		static int angleIntervalIndex = 6;
 
@@ -85,20 +85,20 @@ namespace Audace
 		node->setScale(scale);
 		glm::quat q = glm::quat(glm::radians(angles));
 		node->setRotation(q);
-		std::string s = "[" + std::to_string(q.w) + ", " + std::to_string(q.x) + ", " + std::to_string(q.y) + ", " + std::to_string(q.z) + "]";
+		std::string s = "[" + std::to_string(q.x) + ", " + std::to_string(q.y) + ", " + std::to_string(q.z) + ", " + std::to_string(q.w) + "]";
 		strcpy(quatVal, s.c_str());
 		switch (nodeType)
 		{
 		case DIRLIGHT_NODE:
 		{
-			DirLight* light = reinterpret_cast<DirLight*>(node->getSprite());
+			DirLight *light = reinterpret_cast<DirLight *>(node->getSprite());
 			light->setColor(lightColor);
 			break;
 		}
 
 		case PTLIGHT_NODE:
 		{
-			PointLight* light = reinterpret_cast<PointLight*>(node->getSprite());
+			PointLight *light = reinterpret_cast<PointLight *>(node->getSprite());
 			light->setColor(glm::vec3(lightColor));
 			light->setIntensity(lightColor.a);
 			break;
@@ -106,7 +106,7 @@ namespace Audace
 
 		case SPOTLIGHT_NODE:
 		{
-			SpotLight* light = reinterpret_cast<SpotLight*>(node->getSprite());
+			SpotLight *light = reinterpret_cast<SpotLight *>(node->getSprite());
 			light->setColor(glm::vec3(lightColor));
 			light->setIntensity(lightColor.a);
 			light->setInnerAngle(spotlightInnerAngle);
@@ -116,7 +116,7 @@ namespace Audace
 		}
 	}
 
-	void NodeEditWindow::txWidgets(Scene* scene)
+	void NodeEditWindow::txWidgets(Scene *scene)
 	{
 		ImGui::PushID("tx_widgets");
 		moveWidgetButton(scene, glm::vec3(-1, 0, 0), "-X");
@@ -128,7 +128,7 @@ namespace Audace
 		ImGui::PopID();
 	}
 
-	void NodeEditWindow::moveWidgetButton(Scene* scene, glm::vec3 diff, std::string label)
+	void NodeEditWindow::moveWidgetButton(Scene *scene, glm::vec3 diff, std::string label)
 	{
 		glm::mat4 tx = node->getLocalTransform();
 		glm::vec3 worldPos = glm::vec3(tx * glm::vec4(diff, 1.0));

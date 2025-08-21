@@ -13,7 +13,7 @@
 		"KHR_lights_punctual":{
 			"lights":[
 				{
-					"color": [1.0, 1.0, 0.8, 1.0],
+					"color": [1.0, 1.0, 0.95, 1.0],
 					"intensity": 1.0,
 					"type": "directional",
 					"name": "dirLight"

@@ -143,11 +143,11 @@ namespace Audace
 		return nullptr;
 	}
 
-	SceneGraphNode* AssetStore::getGltfNode(const std::string &name)
+	SceneGraphNode *AssetStore::getGltfNode(const std::string &name)
 	{
 		if (nodes.find(name) != nodes.end())
 		{
-			return nodes[name];
+			return nodes[name]->clone();
 		}
 
 		if (StringUtil::endsWith(name, ".gltf") || StringUtil::endsWith(name, ".glb"))
@@ -158,7 +158,7 @@ namespace Audace
 			loader.loadFile(fileLoader, v[0], v[1]);
 			SceneGraphNode *node = loader.getSceneRootNode(0);
 			nodes[name] = node;
-			return node;
+			return node->clone();
 		}
 		return nullptr;
 	}
