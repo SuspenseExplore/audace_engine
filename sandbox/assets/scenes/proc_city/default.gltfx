@@ -5,7 +5,7 @@
 	},
 	"assets": [
 		{
-			"uri": "scenes/proc_city/block.gltfx"
+			"uri": "scenes/proc_city/skyscrapers_1.gltfx"
 		}
 	],
 	"nodes": [
@@ -25,22 +25,22 @@
 		{
 			"name": "block_2",
 			"asset": 0,
-			"translation": [ 0, 0, 48 ]
+			"translation": [ 0, 0, 40 ]
 		},
 		{
 			"name": "block_3",
 			"asset": 0,
-			"translation": [ 48, 0, 48 ]
+			"translation": [ 48, 0, 40 ]
 		},
 		{
 			"name": "block_4",
 			"asset": 0,
-			"translation": [ 0, 0, 96 ]
+			"translation": [ 0, 0, 80 ]
 		},
 		{
 			"name": "block_5",
 			"asset": 0,
-			"translation": [ 48, 0, 96 ]
+			"translation": [ 48, 0, 80 ]
 		}
 	],
 	"scene": 0,

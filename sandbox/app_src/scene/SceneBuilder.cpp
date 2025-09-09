@@ -66,6 +66,7 @@ void SceneBuilder::loadAssets(Audace::IFileAccess *fileLoader)
 
 	// modelIndex = fileLoader->textFileToJson("models/_index.json");
 
+	setAmbientLight({1, 1, 1, 0.4});
 	shader = Audace::AssetStore::getShader("standard");
 
 	editor = new Audace::SceneEditor(fileLoader);

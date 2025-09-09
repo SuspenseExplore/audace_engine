@@ -1,0 +1,143 @@
+{
+	"asset": {
+		"version": "2.0",
+		"experience": true
+	},
+	"assets": [
+		{
+			"uri": "models/kenney/city_commercial/building-skyscraper-a.glb",
+			"type": "mesh"
+		},
+		{
+			"uri": "models/kenney/city_commercial/building-skyscraper-b.glb",
+			"type": "mesh"
+		},
+		{
+			"uri": "models/kenney/city_commercial/building-skyscraper-c.glb",
+			"type": "mesh"
+		},
+		{
+			"uri": "models/kenney/city_commercial/building-skyscraper-d.glb",
+			"type": "mesh"
+		},
+		{
+			"uri": "models/kenney/city_commercial/building-skyscraper-e.glb",
+			"type": "mesh"
+		},
+		{
+			"uri": "models/kenney/city_roads/road-straight.glb",
+			"type": "mesh"
+		},
+		{
+			"uri": "models/kenney/city_roads/road-crossroad.glb",
+			"type": "mesh"
+		},
+		{
+			"uri": "models/kenney/city_roads/tile-low.glb",
+			"type": "mesh"
+		},
+		{
+			"uri": "models/kenney/city_commercial/building-a.glb",
+			"type": "mesh"
+		},
+		{
+			"uri": "models/kenney/city_commercial/building-b.glb",
+			"type": "mesh"
+		},
+		{
+			"uri": "models/kenney/city_commercial/building-c.glb",
+			"type": "mesh"
+		},
+		{
+			"uri": "models/kenney/city_commercial/building-d.glb",
+			"type": "mesh"
+		}
+	],
+	"nodes": [
+		{
+			"name": "root",
+			"children": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ],
+			"scale": [8, 8, 8]
+		},
+		{
+			"translation": [-1.85, 0, -0.37],
+			"asset": 0
+		},
+		{
+			"translation": [1.86, 0, -0.35],
+			"asset": 1
+		},
+		{
+			"translation": [0.69, 0, -0.4],
+			"asset": 2
+		},
+		{
+			"translation": [-1.92, 0, 2.14],
+			"rotation": [ 0, 0.707, 0, 0.707 ],
+			"asset": 3
+		},
+		{
+			"translation": [-0.65, 0, -0.37],
+			"rotation": [ 0, 1, 0, 0 ],
+			"asset": 4
+		},
+		{
+			"translation": [-1.86, 0, 0.92],
+			"rotation": [ 0, 0.707, 0, 0.707 ],
+			"asset": 4
+		},
+		{
+			"translation": [0, -0.02, -1.5],
+			"scale": [ 5, 1, 1 ],
+			"asset": 5
+		},
+		{
+			"translation": [3, -0.02, 1],
+			"rotation": [ 0, 0.707, 0, 0.707 ],
+			"scale": [ 4, 1, 1 ],
+			"asset": 5
+		},
+		{
+			"translation": [3, -0.02, -1.5],
+			"asset": 6
+		},
+		{
+			"translation": [0, -0.02, 1],
+			"scale": [5, 1, 4],
+			"asset": 7
+		},
+		{
+			"translation": [-0.56, 0, 2.39],
+			"rotation": [ 0, 1, 0, 0 ],
+			"asset": 8
+		},
+		{
+			"translation": [0.28, 0, 2.14],
+			"rotation": [ 0, 1, 0, 0 ],
+			"asset": 9
+		},
+		{
+			"translation": [2.09, 0, 2.08],
+			"rotation": [ 0, 1, 0, 0 ],
+			"asset": 10
+		},
+		{
+			"translation": [2.15, 0, 1.01],
+			"rotation": [ 0, -0.7071, 0, 0.7071 ],
+			"asset": 11
+		},
+		{
+			"translation": [1.34, 0, 2.07],
+			"rotation": [ 0, 1, 0, 0 ],
+			"asset": 11
+		}
+	],
+	"scene": 0,
+	"scenes": [
+		{
+			"nodes": [
+				0
+			]
+		}
+	]
+}
