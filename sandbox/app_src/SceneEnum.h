@@ -7,5 +7,6 @@ enum SandboxScene
 	DRAG_DROP,
 	TEXT,
 	PROC_TERRAIN,
+	PROC_CITY,
 	GLTF
 };

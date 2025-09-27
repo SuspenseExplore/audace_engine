@@ -15,6 +15,7 @@
 #include "scene/DragDropScene.h"
 #include "scene/TextScene.h"
 #include "scene/ProcTerrainScene.h"
+#include "scene/ProcCityScene.h"
 #include "scene/GltfViewerScene.h"
 #include "scene/BasicCameraController.h"
 #include "scene/ForwardCamera.h"
@@ -188,6 +189,25 @@ namespace Audace
 		case PROC_TERRAIN:
 		{
 			scene = new ProcTerrainScene(this);
+			BaseCamera *camera = Audace::ForwardCamera::standard3d(glm::vec3(0, -10, 2), getWidth(), getHeight());
+			scene->setCamera(camera);
+			BasicCameraController *camCtl = new BasicCameraController((ForwardCamera *)camera);
+			camCtl->setVelocityFactor(0.1f);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_W, camCtl->forwardAction);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_S, camCtl->backwardAction);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_A, camCtl->leftAction);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_D, camCtl->rightAction);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Q, camCtl->upAction);
+			KeyboardManager::addButtonChangedEventHandler(GLFW_KEY_Z, camCtl->downAction);
+			MouseManager::addButtonChangedEventHandler(1, camCtl->rightMouseAction);
+			MouseManager::setMouseMoveEventHandler(camCtl->aimAction);
+			scene->loadAssets(fileLoader);
+		}
+		break;
+
+		case PROC_CITY:
+		{
+			scene = new ProcCityScene(this);
 			BaseCamera *camera = Audace::ForwardCamera::standard3d(glm::vec3(0, -10, 2), getWidth(), getHeight());
 			scene->setCamera(camera);
 			BasicCameraController *camCtl = new BasicCameraController((ForwardCamera *)camera);

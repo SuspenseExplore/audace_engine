@@ -1,5 +1,5 @@
-#ifndef AU_SCENEBUILDER_H
-#define AU_SCENEBUILDER_H
+#ifndef AU_PROCCITYSCENE_H
+#define AU_PROCCITYSCENE_H
 
 #include <vector>
 #include <map>
@@ -20,7 +20,7 @@ namespace Audace
 	class IFileAccess;
 }
 
-class SceneBuilder : public Audace::Scene
+class ProcCityScene : public Audace::Scene
 {
 	glm::vec4 clearColor = glm::vec4(0, 0, 1, 1);
 	Audace::IFileAccess *fileLoader;
@@ -46,7 +46,7 @@ class SceneBuilder : public Audace::Scene
 	int renderType = 0;
 
 public:
-	SceneBuilder(Audace::BaseAppController *controller);
+	ProcCityScene(Audace::BaseAppController *controller);
 
 	void setClearColor(glm::vec4 color) override;
 	void setAmbientLight(glm::vec4 color) override;
