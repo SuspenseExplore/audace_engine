@@ -23,29 +23,40 @@ namespace Audace
 		else
 		{
 			indexBuffer->bind(GL_ELEMENT_ARRAY_BUFFER);
-			glDrawElements(renderMode, vertexCount, indexType, (void*)byteOffset);
+			glDrawElements(renderMode, vertexCount, indexType, (void *)byteOffset);
 		}
 	}
 
 	void Mesh::renderInstanced(std::vector<glm::mat4> mats)
 	{
-		int count = mats.size();
+		int totalCount = mats.size();
+		int first = 0;
 		vertexArray->bind();
-		if (material != nullptr)
+		while (totalCount > 0)
 		{
-			material->apply();
-			material->getShader()->setUniformMat4Array("worldMat[0]", glm::value_ptr(mats[0]), count);
-			// TODO: calculate 3*3 normal matrix: mat3(transpose(inverse(worldMat)))
-			// this needs to be set for each instance
-		}
-		if (indexBuffer == nullptr)
-		{
-			glDrawArraysInstanced(renderMode, byteOffset, vertexCount, count);
-		}
-		else
-		{
-			indexBuffer->bind(GL_ELEMENT_ARRAY_BUFFER);
-			glDrawElementsInstanced(renderMode, vertexCount, indexType, (void*)byteOffset, count);
+			int count = totalCount;
+			if (count > 128)
+			{
+				count = 128;
+			}
+			totalCount -= count;
+			if (material != nullptr)
+			{
+				material->apply();
+				material->getShader()->setUniformMat4Array("worldMat[0]", glm::value_ptr(mats[first]), count);
+				// TODO: calculate 3*3 normal matrix: mat3(transpose(inverse(worldMat)))
+				// this needs to be set for each instance
+			}
+			if (indexBuffer == nullptr)
+			{
+				glDrawArraysInstanced(renderMode, byteOffset, vertexCount, count);
+			}
+			else
+			{
+				indexBuffer->bind(GL_ELEMENT_ARRAY_BUFFER);
+				glDrawElementsInstanced(renderMode, vertexCount, indexType, (void *)byteOffset, count);
+			}
+			first += count;
 		}
 	}
 }
