@@ -6,7 +6,7 @@ layout (location = 2) in vec3 a_tangent;
 layout (location = 3) in vec3 a_TexCoord0;
 layout (location = 4) in vec3 a_TexCoord1;
 
-uniform mat4 worldMat[64];
+uniform mat4 worldMat[128];
 uniform mat4 vpMat;
 
 out vec3 fragPos;

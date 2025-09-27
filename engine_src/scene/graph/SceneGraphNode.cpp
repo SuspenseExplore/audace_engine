@@ -46,7 +46,7 @@ namespace Audace
 		}
 	}
 
-	SceneGraphNode *SceneGraphNode::clone()
+	SceneGraphNode *SceneGraphNode::clone(bool instSprites)
 	{
 		SceneGraphNode *n = new SceneGraphNode;
 		n->type = type;
@@ -59,10 +59,10 @@ namespace Audace
 		n->bbox = bbox;
 		for (int i = 0; i < children.size(); i++)
 		{
-			n->children.push_back(children[i]->clone());
+			n->children.push_back(children[i]->clone(instSprites));
 		}
 		n->sprite = sprite;
-		if (sprite != nullptr)
+		if (instSprites && sprite != nullptr)
 		{
 			sprite->addInst(n);
 		}

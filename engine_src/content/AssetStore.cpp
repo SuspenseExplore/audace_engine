@@ -147,7 +147,7 @@ namespace Audace
 	{
 		if (nodes.find(name) != nodes.end())
 		{
-			return nodes[name]->clone();
+			return nodes[name]->clone(false);
 		}
 
 		if (StringUtil::endsWith(name, ".gltf") || StringUtil::endsWith(name, ".glb"))
@@ -158,7 +158,7 @@ namespace Audace
 			loader.loadFile(fileLoader, v[0], v[1]);
 			SceneGraphNode *node = loader.getSceneRootNode(0);
 			nodes[name] = node;
-			return node->clone();
+			return node->clone(false);
 		}
 		return nullptr;
 	}

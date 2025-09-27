@@ -29,7 +29,7 @@ const glm::mat4 HmdCamera::getViewProjMatrix() {
 															pose.position.z)));
 	glm::mat4 projMat = glm::frustum(tan(fov.angleLeft) * 0.01f, tan(fov.angleRight) * 0.01f,
 									 tan(fov.angleDown) * 0.01f, tan(fov.angleUp) * 0.01f, 0.01f,
-									 100.0f);
+									 1000.0f);
 	glm::mat4 vpMat = projMat * camMat;
 	return vpMat;
 }

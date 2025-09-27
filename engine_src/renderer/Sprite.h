@@ -49,7 +49,7 @@ namespace Audace
 
 		void removeInst(SceneGraphNode *n)
 		{
-			for (auto &iter = instances.begin(); iter != instances.end(); iter++)
+			for (auto iter = instances.begin(); iter != instances.end(); iter++)
 			{
 				if (*iter == n)
 				{

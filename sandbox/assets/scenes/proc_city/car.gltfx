@@ -1,0 +1,59 @@
+{
+	"asset": {
+		"version": "2.0",
+		"experience": true
+	},
+	"assets": [
+		{
+			"uri": "models/kenney/car_kit/sedan.glb",
+			"type": "mesh"
+		},
+		{
+			"uri": "models/kenney/car_kit/wheel-default.glb",
+			"type": "mesh"
+		}
+	],
+	"nodes": [
+		{
+			"name": "sedan",
+			"scale": [ 0.15, 0.15, 0.15 ],
+			"children": [
+				1, 2, 3, 4, 5
+			]
+		},
+		{
+			"name": "body",
+			"asset": 0
+		},
+		{
+			"name": "wheel1",
+			"asset": 1,
+			"translation": [0.45, 0.3, 0.65]
+		},
+		{
+			"name": "wheel2",
+			"asset": 1,
+			"translation": [0.45, 0.3, -0.65]
+		},
+		{
+			"name": "wheel3",
+			"asset": 1,
+			"translation": [-0.45, 0.3, 0.65],
+			"rotation": [0, 1, 0, 0]
+		},
+		{
+			"name": "wheel4",
+			"asset": 1,
+			"translation": [-0.45, 0.3, -0.65],
+			"rotation": [0, 1, 0, 0]
+		}
+	],
+	"scene": 0,
+	"scenes": [
+		{
+			"nodes": [
+				0
+			]
+		}
+	]
+}
