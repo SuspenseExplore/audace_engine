@@ -21,10 +21,10 @@ namespace Audace
 		void startNextScene();
 
 	public:
-		GameWindow* window;
-		FileAccessGlfw* fileLoader;
-		Scene* scene = nullptr;
-		int nextScene = SandboxScene::PROC_CITY;
+		GameWindow *window;
+		FileAccessGlfw *fileLoader;
+		Scene *scene = nullptr;
+		int nextScene = SandboxScene::BUILDER;
 		glm::vec2 mousePos;
 
 		AppController() {}

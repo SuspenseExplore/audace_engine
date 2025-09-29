@@ -354,7 +354,7 @@ namespace Audace
 			{
 				json &jpbr = jMat["pbrMetallicRoughness"];
 				PbrMetalRoughMat *pbrMat = new PbrMetalRoughMat();
-				pbrMat->setShader(AssetStore::getShader("standard"));
+				pbrMat->setShader(AssetStore::getShader("pbr"));
 				mat = pbrMat;
 				if (jpbr.contains("baseColorFactor"))
 				{

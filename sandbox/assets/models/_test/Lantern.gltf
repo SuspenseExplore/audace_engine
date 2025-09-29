@@ -209,16 +209,16 @@
   ],
   "images": [
     {
-      "uri": "Lantern_baseColor.png"
+      "uri": "textures/Lantern_baseColor.png"
     },
     {
-      "uri": "Lantern_roughnessMetallic.png"
+      "uri": "textures/Lantern_roughnessMetallic.png"
     },
     {
-      "uri": "Lantern_normal.png"
+      "uri": "textures/Lantern_normal.png"
     },
     {
-      "uri": "Lantern_emissive.png"
+      "uri": "textures/Lantern_emissive.png"
     }
   ],
   "meshes": [
@@ -325,8 +325,7 @@
       "children": [
         0,
         1,
-        2,
-		5
+        2
       ],
 	  "translation": [ 0, 0, -4 ],
       "rotation": [
@@ -351,15 +350,6 @@
 			0
 		],
 		"scale": [ 0.2, 0.2, 0.2 ]
-	},
-	{
-		"extensions":{
-			"KHR_lights_punctual":{
-				"light":1
-			}
-		},
-		"name":"Sun_light",
-		"rotation":[ 1, 0, 0, 0 ]
 	}
   ],
   "scene": 0,
@@ -393,15 +383,9 @@
 						0.7,
 						0.5
 					],
-					"intensity":10,
+					"intensity":1,
 					"type":"point",
 					"name":"ptLight"
-				},
-				{
-					"color": [ 0.9, 0.8, 0.4 ],
-					"intensity": 1,
-					"type": "directional",
-					"name": "dirLight"
 				}
 			]
 		}

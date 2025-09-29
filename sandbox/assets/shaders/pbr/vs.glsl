@@ -1,5 +1,4 @@
 #version 320 es
-precision mediump float;
 
 layout (location = 0) in vec4 position;
 layout (location = 1) in vec3 normal;
@@ -23,7 +22,7 @@ struct SpotLight {
 	float outerAngle;
 };
 
-uniform mat4 worldMat[50];
+uniform mat4 worldMat[128];
 uniform mat4 vpMat;
 uniform vec3 textureScale;
 uniform vec3 viewPos;

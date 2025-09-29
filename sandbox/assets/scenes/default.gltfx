@@ -5,10 +5,12 @@
 	},
 	"assets": [
 		{
-			"uri": "scenes/proc_city/default.gltfx"
+			"uri": "models/_test/Lantern.gltf",
+			"type": "mesh"
 		},
 		{
-			"uri": "scenes/sun_light.gltf"
+			"uri": "scenes/sun_light.gltf",
+			"type": "mesh"
 		}
 	],
 	"nodes": [
@@ -17,9 +19,9 @@
 			"children": [ 1, 2 ]
 		},
 		{
-			"name": "proc_city_root",
+			"name": "lantern",
 			"asset": 0,
-			"translation": [ 0, 20, 0 ],
+			"translation": [ 0, 0, 0 ],
 			"rotation": [0.707107, 0, 0, 0.707107]
 		},
 		{

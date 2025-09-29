@@ -67,7 +67,7 @@ void SceneBuilder::loadAssets(Audace::IFileAccess *fileLoader)
 	// modelIndex = fileLoader->textFileToJson("models/_index.json");
 
 	setAmbientLight({1, 1, 1, 0.4});
-	shader = Audace::AssetStore::getShader("standard");
+	shader = Audace::AssetStore::getShader("pbr");
 
 	editor = new Audace::SceneEditor(fileLoader);
 	editor->attachToScene(this);
@@ -83,7 +83,7 @@ void SceneBuilder::render()
 	sceneGraph->update(this);
 
 	shader->bind();
-	// shader->setUniformVec3("viewPos", camera->getPosition());
+	shader->setUniformVec3("viewPos", camera->getPosition());
 	shader->setUniformVec4("ambientLight", ambientColor);
 
 	for (auto &item : lights)
@@ -107,22 +107,7 @@ void SceneBuilder::reloadScene()
 	}
 	Audace::GltfxReader reader(fileLoader);
 	sceneGraph = new Audace::SceneGraph;
-	Audace::SceneGraphNode *root = new Audace::SceneGraphNode;
-	root->setName("scene_root");
-	Audace::SceneGraphNode *fileRoot = reader.readDefaultScene(sceneFilepath);
-	Audace::SceneGraphNode *cityNode = fileRoot->getChildren()[0]->getChildren()[0];
-	cityNode->setRotation(fileRoot->getChildren()[0]->getRotation());
-	Audace::SceneGraphNode *lightNode = fileRoot->getChildren()[1];
-	root->addChild(lightNode);
-	for (int x = -4; x < 4; x++)
-	{
-		for (int y = -4; y < 4; y++)
-		{
-			Audace::SceneGraphNode *n = cityNode->clone(true);
-			n->setTranslation({x * 48, y * 40, 0});
-			root->addChild(n);
-		}
-	}
+	Audace::SceneGraphNode *root = reader.readDefaultScene(sceneFilepath);
 	sceneGraph->setRootNode(root);
 	editor->setSceneGraph(sceneGraph);
 }
