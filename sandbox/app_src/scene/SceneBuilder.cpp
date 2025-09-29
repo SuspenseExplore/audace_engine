@@ -62,7 +62,7 @@ void SceneBuilder::loadAssets(Audace::IFileAccess *fileLoader)
 {
 	renderType = RenderType::FULL;
 	this->fileLoader = fileLoader;
-	sceneFilepath = "scenes/default.gltfx";
+	sceneFilepath = "scenes/samples/sample_scenes.gltfx";
 
 	// modelIndex = fileLoader->textFileToJson("models/_index.json");
 

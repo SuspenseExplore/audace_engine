@@ -36,8 +36,8 @@ namespace Audace
 
 		SceneGraphNode *selectedNode = nullptr;
 		NodeEditWindow *editWin;
-		glm::vec4 clearColor = {0.5, 0.5, 0.5, 0.5};
-		glm::vec4 ambientColor = {1.0, 1.0, 1.0, 0.35};
+		glm::vec4 clearColor = {0.2, 0.4, 0.55, 0.5};
+		glm::vec4 ambientColor = {1.0, 1.0, 1.0, 0.1};
 		bool visualize = false;
 
 		json modelIndex;						 // lists content of the assets/models/ folder

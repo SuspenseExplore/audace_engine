@@ -1,0 +1,39 @@
+{
+	"asset": {
+		"version": "2.0",
+		"experience": true
+	},
+	"assets": [
+		{
+			"uri": "models/_test/Corset.gltf",
+			"type": "mesh"
+		},
+		{
+			"uri": "scenes/sun_light.gltf",
+			"type": "mesh"
+		}
+	],
+	"nodes": [
+		{
+			"name": "scene_root",
+			"children": [ 1, 2 ]
+		},
+		{
+			"name": "corset",
+			"asset": 0,
+			"translation": [ 0, 0, 0 ],
+			"rotation": [0, 0.707107, 0.707107, 0]
+		},
+		{
+			"asset": 1
+		}
+	],
+	"scene": 0,
+	"scenes": [
+		{
+			"nodes": [
+				0
+			]
+		}
+	]
+}

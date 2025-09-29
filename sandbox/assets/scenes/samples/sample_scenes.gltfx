@@ -1,0 +1,73 @@
+{
+	"asset": {
+		"version": "2.0",
+		"experience": true
+	},
+	"assets": [
+		{
+			"uri": "scenes/samples/lantern_sample.gltfx"
+		},
+		{
+			"uri": "scenes/samples/bottle_sample.gltfx"
+		},
+		{
+			"uri": "scenes/samples/fish_sample.gltfx"
+		},
+		{
+			"uri": "scenes/samples/monkey_sample.gltfx"
+		},
+		{
+			"uri": "scenes/samples/corset_sample.gltfx"
+		}
+	],
+	"nodes": [
+		{
+			"name": "lantern_scene",
+			"asset": 0
+		},
+		{
+			"name": "bottle_scene",
+			"asset": 1
+		},
+		{
+			"name": "fish_scene",
+			"asset": 2
+		},
+		{
+			"name": "monkey_scene",
+			"asset": 3
+		},
+		{
+			"name": "corset_scene",
+			"asset": 4
+		}
+	],
+	"scene": 0,
+	"scenes": [
+		{
+			"nodes": [
+				0
+			]
+		},
+		{
+			"nodes": [
+				1
+			]
+		},
+		{
+			"nodes": [
+				2
+			]
+		},
+		{
+			"nodes": [
+				3
+			]
+		},
+		{
+			"nodes": [
+				4
+			]
+		}
+	]
+}

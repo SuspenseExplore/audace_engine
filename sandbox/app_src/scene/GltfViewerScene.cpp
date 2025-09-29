@@ -1,76 +1,75 @@
+#include <fstream>
+#include <sstream>
+#include "au_renderer.h"
 #include "GltfViewerScene.h"
+#include "imgui.h"
+#include "SceneEnum.h"
+#include "content/IFileAccess.h"
+#include "content/JsonSerializer.h"
 #include "content/AssetStore.h"
 #include "content/gltf/GltfLoader.h"
+#include "content/gltf/GltfxReader.h"
+#include "content/JsonGui.h"
+#include "renderer/Texture2d.h"
 #include "renderer/ShaderProgram.h"
+#include "renderer/Mesh.h"
+#include "renderer/Shapes.h"
 #include "renderer/Sprite.h"
-#include "renderer/material/PbrMetalRoughMat.h"
 #include "renderer/light/PointLight.h"
+#include "renderer/light/DirLight.h"
+#include "renderer/light/SpotLight.h"
+#include "renderer/light/TypedLight.h"
+#include "renderer/material/Material.h"
 #include "scene/BaseCamera.h"
-#include "scene/ForwardCamera.h"
+#include "scene/SceneDescriptor.h"
 #include "scene/graph/SceneGraph.h"
 #include "scene/graph/SceneGraphNode.h"
-#include "scene/graph/RotationAnimation.h"
-#include <vector>
-using std::vector;
+#include "util/StringUtil.h"
+#include "glm/gtc/quaternion.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/matrix_inverse.hpp"
+#include "glm/gtc/type_ptr.hpp"
+#include "editor/SceneEditor.h"
 
-GltfViewerScene::GltfViewerScene(Audace::BaseAppController* controller)
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
+
+#ifdef AU_PLATFORM_GLFW
+#include "KeyboardManager.h"
+#include "MouseManager.h"
+#endif
+
+enum RenderType
+{
+	POSITION,
+	MTL_COLOR,
+	NORMAL,
+	AMBIENT,
+	DIR_LIGHT,
+	FULL
+};
+
+GltfViewerScene::GltfViewerScene(Audace::BaseAppController *controller)
 	: Scene(controller)
 {
-
+	strcpy(sceneWritePath, "D:/audace_engine/sandbox/assets/scenes/MainScene.json");
 }
 
-void GltfViewerScene::loadAssets(Audace::IFileAccess* fileLoader)
+void GltfViewerScene::loadAssets(Audace::IFileAccess *fileLoader)
 {
-	Audace::BaseMaterial* mat = Audace::AssetStore::simpleBillboardMaterial();
+	renderType = RenderType::FULL;
+	this->fileLoader = fileLoader;
+	sceneFilepath = "scenes/samples/sample_scenes.gltfx";
 
-	Audace::GltfLoader loader;
-	// std::string path = "models/quaternius/medieval_village/";
-	// std::string filename = "Overhang_RoofIncline_UnevenBricks.gltf";
-	// loader.setImageLoadPath("images/quaternius/");
+	// modelIndex = fileLoader->textFileToJson("models/_index.json");
 
-	std::string path = "models/_test/";
-	std::string filename = "Lantern.gltf";
-	loader.setImageLoadPath("images/_test/");
+	setAmbientLight({1, 1, 1, 0.4});
+	shader = Audace::AssetStore::getShader("pbr");
 
-	// std::string path = "models/quat_builds/";
-	// std::string filename = "house_orig.gltf";
-	// loader.setImageLoadPath("images/quaternius/");
-	loader.loadFile(fileLoader, path, filename);
-	Audace::SceneGraphNode* root = new Audace::SceneGraphNode();
-	sceneGraph = loader.getSceneGraph(this, root);
-
-	// root->setTranslation({-4, 9, -2});
-
-	// camera->setOriginPos({2, 0, 0});
-	// reinterpret_cast<Audace::ForwardCamera*>(camera)->setPosition({ 2, 2, 0 });
-
-	anim = new Audace::RotationAnimation();
-	vector<float> times = { 0.0, 0.25, 0.5, 0.75, 1.0 };
-	vector<glm::quat> values = {
-		{   0.0, 0.0,	0.0,     1.0},
-		{ 0.707, 0.0,	0.0,   0.707},
-		{   1.0, 0.0,	0.0,     0.0},
-		{ 0.707, 0.0,	0.0,  -0.707},
-		{   0.0, 0.0,	0.0,     1.0}
-	};
-	anim->setFrameTimes(times);
-	anim->setFrameStates(values);
-	anim->setTimeFactor(0.05);
-
-	ptLight = new Audace::PointLight();
-	ptLight->setColor({ 1, 1, 1 });
-	ptLight->setIntensity(1);
-	Audace::SceneGraphNode* n1 = new Audace::SceneGraphNode();
-	n1->addAnimation(anim);
-	n1->setTranslation({ 0, 0, 0 });
-	lightNode = new Audace::SceneGraphNode(n1);
-	lightNode->setTranslation({ 0, 3, 0 });
-	lightNode->setSprite(ptLight);
-	sceneGraph->getRootNode()->addChild(n1);
-	addSprite(ptLight);
-
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_CW);
+	editor = new Audace::SceneEditor(fileLoader);
+	editor->attachToScene(this);
+	reloadScene();
 }
 
 void GltfViewerScene::render()
@@ -80,40 +79,140 @@ void GltfViewerScene::render()
 
 	camera->update();
 	sceneGraph->update(this);
-	glm::vec3 p = lightNode->getPosition();
-	ptLight->setPosition(p);
-	Audace::ShaderProgram* shader = Audace::AssetStore::getShader("pbr");
+
 	shader->bind();
 	shader->setUniformVec3("viewPos", camera->getPosition());
-	shader->setUniformVec4("ambientLight", 1, 1, 1, 0.4);
-	shader->setUniformVec3("ptLight[0].position", ptLight->getPosition());
-	shader->setUniformVec3("ptLight[0].color", ptLight->getColor());
-	shader->setUniformFloat("ptLight[0].intensity", ptLight->getIntensity());
-	for (Audace::Sprite* s : sprites)
+	shader->setUniformVec4("ambientLight", ambientColor);
+
+	for (auto &item : lights)
+	{
+		shader->setUniformLight(item.second);
+	}
+
+	editor->renderWorldSpace(this);
+	for (Audace::Sprite *s : sprites)
 	{
 		s->renderWorldSpace(this);
 	}
 }
 
-void GltfViewerScene::renderUi()
+void GltfViewerScene::reloadScene()
 {
-	for (Audace::Sprite* s : sprites)
+	if (sceneGraph != nullptr)
 	{
-		s->renderViewSpace(this);
+		sceneGraph->dispose();
+		delete sceneGraph;
+	}
+	Audace::GltfxReader reader(fileLoader);
+	sceneGraph = new Audace::SceneGraph;
+	Audace::SceneGraphNode *root = reader.readScene(sceneFilepath, 4);
+	sceneGraph->setRootNode(root);
+	editor->setSceneGraph(sceneGraph);
+}
+
+void GltfViewerScene::loadModel(std::string path, std::string filename)
+{
+}
+
+void GltfViewerScene::setClearColor(glm::vec4 color)
+{
+	clearColor = color;
+}
+
+void GltfViewerScene::setAmbientLight(glm::vec4 color)
+{
+	ambientColor = color;
+}
+
+void GltfViewerScene::setLight(Audace::LightType type, Audace::Sprite *sprite)
+{
+	const std::string &name = sprite->getName();
+	switch (type)
+	{
+	case Audace::LightType::POINT_LIGHT:
+	{
+		Audace::PointLight *ptLight = reinterpret_cast<Audace::PointLight *>(sprite);
+		if (lights.find(name) == lights.end())
+		{
+			// the light entry doesn't exist yet
+			Audace::TypedLight *light = new Audace::TypedLight(name, ptLight);
+			lights[name] = light;
+		}
+		else
+		{
+			lights[name]->ptLight->setColor(ptLight->getColor());
+			lights[name]->ptLight->setIntensity(ptLight->getIntensity());
+		}
+	}
+	break;
+
+	case Audace::LightType::DIRECTIONAL_LIGHT:
+	{
+		Audace::DirLight *dirLight = reinterpret_cast<Audace::DirLight *>(sprite);
+		if (lights.find(name) == lights.end())
+		{
+			// the light entry doesn't exist yet
+			Audace::TypedLight *light = new Audace::TypedLight(name, dirLight);
+			lights[name] = light;
+		}
+		else
+		{
+			lights[name]->dirLight->setColor(dirLight->getColor());
+			lights[name]->dirLight->setIntensity(dirLight->getIntensity());
+		}
+	}
+	break;
+
+	case Audace::LightType::SPOTLIGHT:
+	{
+		Audace::SpotLight *spotLight = reinterpret_cast<Audace::SpotLight *>(sprite);
+		if (lights.find(name) == lights.end())
+		{
+			// the light entry doesn't exist yet
+			Audace::TypedLight *light = new Audace::TypedLight(name, spotLight);
+			lights[name] = light;
+		}
+		else
+		{
+			lights[name]->spotLight->setColor(spotLight->getColor());
+			lights[name]->spotLight->setIntensity(spotLight->getIntensity());
+			lights[name]->spotLight->setInnerAngle(spotLight->getInnerAngle());
+			lights[name]->spotLight->setOuterAngle(spotLight->getOuterAngle());
+		}
+	}
+	break;
 	}
 }
 
-Audace::BaseCamera* GltfViewerScene::getCamera()
+Audace::TypedLight *GltfViewerScene::getLight(const std::string &name)
 {
-	return camera;
+	return lights[name];
 }
 
-void GltfViewerScene::setCamera(Audace::BaseCamera* camera)
+void GltfViewerScene::setCamera(Audace::BaseCamera *camera)
 {
 	this->camera = camera;
+}
+
+Audace::BaseCamera *GltfViewerScene::getCamera()
+{
+	return camera;
 }
 
 void GltfViewerScene::teleport(glm::vec3 pos)
 {
 	camera->setOriginPos(pos);
+}
+
+void GltfViewerScene::renderUi()
+{
+	// if (currSprite != nullptr)
+	// {
+	// 	editWin->renderViewSpace(this);
+	// }
+	editor->sceneEditWindow();
+}
+
+void GltfViewerScene::disposeAssets()
+{
 }

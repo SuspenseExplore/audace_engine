@@ -79,16 +79,16 @@
   ],
   "images": [
     {
-      "uri": "WaterBottle_baseColor.png"
+      "uri": "textures/WaterBottle_baseColor.png"
     },
     {
-      "uri": "WaterBottle_occlusionRoughnessMetallic.png"
+      "uri": "textures/WaterBottle_occlusionRoughnessMetallic.png"
     },
     {
-      "uri": "WaterBottle_normal.png"
+      "uri": "textures/WaterBottle_normal.png"
     },
     {
-      "uri": "WaterBottle_emissive.png"
+      "uri": "textures/WaterBottle_emissive.png"
     }
   ],
   "meshes": [

@@ -16,17 +16,18 @@ namespace Audace
 
 	class GltfxReader
 	{
-		IFileAccess* fileLoader;
+		IFileAccess *fileLoader;
 		json jroot;
-		std::vector<SceneGraphNode*> assets;
+		std::vector<SceneGraphNode *> assets;
 
 	public:
-		GltfxReader(IFileAccess* fileLoader);
+		GltfxReader(IFileAccess *fileLoader);
 
-		SceneGraphNode* readAsset(int assetId);
-		std::vector<SceneGraphNode*> getAssets();
-		SceneGraphNode* readNode(int nodeId);
-		SceneGraphNode* readDefaultScene(const std::string& filepath);
+		SceneGraphNode *readAsset(int assetId);
+		std::vector<SceneGraphNode *> getAssets();
+		SceneGraphNode *readNode(int nodeId);
+		SceneGraphNode *readScene(const std::string &filepath, int sceneId);
+		SceneGraphNode *readDefaultScene(const std::string &filepath);
 	};
 }
 

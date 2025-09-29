@@ -82,6 +82,16 @@ namespace Audace
 		return assets;
 	}
 
+	SceneGraphNode *GltfxReader::readScene(const std::string &filepath, int sceneId)
+	{
+		jroot = fileLoader->textFileToJson(filepath);
+		json &jscene = jroot["scenes"][sceneId];
+		int nodeId = jscene["nodes"][0].template get<int>();
+		SceneGraphNode *node = readNode(nodeId);
+
+		return node;
+	}
+
 	/**
 	 * Return the scene graph tree for the file's default scene.
 	 */
