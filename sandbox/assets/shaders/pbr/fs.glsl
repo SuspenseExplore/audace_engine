@@ -1,5 +1,5 @@
 #version 320 es
-precision mediump float;
+precision highp float;
 
 struct Material {
 	vec4 baseColorFactor;
@@ -168,8 +168,8 @@ void main() {
 	vec3 ambient = ambientLight.rgb * ambientLight.a * baseColor * occlusion;
 	vec3 color = clamp(ambient + lo + emissive, ZERO.xyz, ONE.xyz);
 
-	color = color / (color + ONE.xyz);
-	color = pow(color, vec3(1.0 / 2.2));
+//	color = color / (color + ONE.xyz);
+//	color = pow(color, vec3(1.0 / 2.2));
 
 	fragColor = vec4(color, 1.0);
 }

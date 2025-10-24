@@ -105,7 +105,7 @@ void GltfViewerScene::reloadScene()
 	}
 	Audace::GltfxReader reader(fileLoader);
 	sceneGraph = new Audace::SceneGraph;
-	Audace::SceneGraphNode *root = reader.readScene(sceneFilepath, 4);
+	Audace::SceneGraphNode *root = reader.readDefaultScene(sceneFilepath);
 	sceneGraph->setRootNode(root);
 	editor->setSceneGraph(sceneGraph);
 }
