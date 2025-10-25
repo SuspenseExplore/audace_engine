@@ -10,7 +10,8 @@
 #include "content/gltf/GltfLoader.h"
 #include "content/gltf/GltfxReader.h"
 #include "content/JsonGui.h"
-#include "renderer/Texture2d.h"
+#include "renderer/texture/Texture2d.h"
+#include "renderer/texture/TextureCubemap.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/Mesh.h"
 #include "renderer/Shapes.h"
@@ -70,6 +71,20 @@ void GltfViewerScene::loadAssets(Audace::IFileAccess *fileLoader)
 	editor = new Audace::SceneEditor(fileLoader);
 	editor->attachToScene(this);
 	reloadScene();
+
+	Audace::Sprite *skyboxSprite = Audace::AssetStore::getCubeSprite();
+	Audace::SimpleBillboardMaterial *mat = new Audace::SimpleBillboardMaterial();
+	mat->setShader(Audace::AssetStore::getShader("skybox"));
+	Audace::TextureCubemap *cubeTex = Audace::AssetStore::getCubemapTex("images/skybox/skybox.jpg");
+	// Audace::Texture2d *cubeTex = Audace::AssetStore::getTexture("images/skybox/skyboxU.jpg");
+	mat->setTexture(cubeTex);
+	skyboxSprite->getMesh()->setMaterial(mat);
+	skyboxNode = new Audace::SceneGraphNode;
+	skyboxNode->setName("skybox1");
+	skyboxNode->setRotation({0, 0, 0.707107, 0.707107});
+	skyboxNode->setScale({400, 400, 400});
+	skyboxNode->setSprite(skyboxSprite);
+	sceneGraph->getRootNode()->addChild(skyboxNode);
 }
 
 void GltfViewerScene::render()
@@ -90,6 +105,12 @@ void GltfViewerScene::render()
 	}
 
 	editor->renderWorldSpace(this);
+
+	glDepthMask(GL_FALSE);
+	skyboxNode->setTranslation(camera->getPosition());
+	skyboxNode->getSprite()->renderWorldSpace(this);
+	glDepthMask(GL_TRUE);
+
 	for (Audace::Sprite *s : sprites)
 	{
 		s->renderWorldSpace(this);

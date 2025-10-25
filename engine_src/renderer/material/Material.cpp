@@ -1,8 +1,9 @@
 #include "Material.h"
 #include "renderer/ShaderProgram.h"
-#include "renderer/Texture2d.h"
+#include "renderer/texture/Texture2d.h"
 
-namespace Audace {
+namespace Audace
+{
 
 	void Material::apply()
 	{

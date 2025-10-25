@@ -13,6 +13,7 @@ namespace Audace
 {
 	class SceneEditor;
 	class SceneGraph;
+	class SceneGraphNode;
 	class JsonGui;
 	class ShaderProgram;
 	class Sprite;
@@ -42,6 +43,8 @@ class GltfViewerScene : public Audace::Scene
 	glm::vec4 ambientColor = {1.0, 1.0, 1.0, 0.03};
 	std::map<std::string, Audace::TypedLight *> lights;
 	glm::mat4 modelMat;
+
+	Audace::SceneGraphNode *skyboxNode;
 
 	int renderType = 0;
 

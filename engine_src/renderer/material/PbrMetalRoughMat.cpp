@@ -1,6 +1,6 @@
 #include "PbrMetalRoughMat.h"
 #include "content/AssetStore.h"
-#include "renderer/Texture2d.h"
+#include "renderer/texture/Texture2d.h"
 #include "renderer/ShaderProgram.h"
 
 namespace Audace
@@ -34,47 +34,47 @@ namespace Audace
 		emissiveFactor = f;
 	}
 
-	void PbrMetalRoughMat::setBaseColorMap(Texture2d* t)
+	void PbrMetalRoughMat::setBaseColorMap(Texture2d *t)
 	{
 		baseColorMap = t;
 	}
 
-	void PbrMetalRoughMat::setNormalMap(Texture2d* t)
+	void PbrMetalRoughMat::setNormalMap(Texture2d *t)
 	{
 		normalMap = t;
 	}
 
-	void PbrMetalRoughMat::setMetallicMap(Texture2d* t)
+	void PbrMetalRoughMat::setMetallicMap(Texture2d *t)
 	{
 		metallicMap = t;
 	}
 
-	void PbrMetalRoughMat::setRoughnessMap(Texture2d* t)
+	void PbrMetalRoughMat::setRoughnessMap(Texture2d *t)
 	{
 		roughnessMap = t;
 	}
 
-	void PbrMetalRoughMat::setOcclusionMap(Texture2d* t)
+	void PbrMetalRoughMat::setOcclusionMap(Texture2d *t)
 	{
 		occlusionMap = t;
 	}
 
-	void PbrMetalRoughMat::setEmissiveMap(Texture2d* t)
+	void PbrMetalRoughMat::setEmissiveMap(Texture2d *t)
 	{
 		emissiveMap = t;
 	}
 
-	std::string	PbrMetalRoughMat::getName()
+	std::string PbrMetalRoughMat::getName()
 	{
 		return name;
 	}
 
-	ShaderProgram* PbrMetalRoughMat::getShader()
+	ShaderProgram *PbrMetalRoughMat::getShader()
 	{
 		return shaderProgram;
 	}
 
-	void PbrMetalRoughMat::setShader(ShaderProgram* shader)
+	void PbrMetalRoughMat::setShader(ShaderProgram *shader)
 	{
 		shaderProgram = shader;
 	}

@@ -4,13 +4,15 @@
 #include <string>
 #include <map>
 #include "renderer/material/SimpleBillboardMaterial.h"
+#include "renderer/texture/ITexture.h"
+#include "renderer/texture/Texture2d.h"
+#include "renderer/texture/TextureCubemap.h"
 
 namespace Audace
 {
 	class IFileAccess;
 	class Mesh;
 	class ShaderProgram;
-	class Texture2d;
 	class Sprite;
 	class Model;
 	class SceneGraphNode;
@@ -21,10 +23,10 @@ namespace Audace
 		static Mesh *squareMesh;
 		static std::map<std::string, ShaderProgram *> shaders;
 		static SimpleBillboardMaterial *billboardMat;
-		static std::map<std::string, Texture2d *> textures;
+		static std::map<std::string, ITexture *> textures;
 		static std::map<std::string, Model *> models;
 		static std::map<std::string, Sprite *> sprites;
-		static std::map<std::string, SceneGraphNode*> nodes;
+		static std::map<std::string, SceneGraphNode *> nodes;
 
 	public:
 		static void init(IFileAccess *loader);
@@ -36,15 +38,16 @@ namespace Audace
 		static ShaderProgram *simpleTextShader() { return shaders["AU_simple_text"]; }
 		static ShaderProgram *simpleBillboardShader() { return shaders["AU_simple_billboard"]; }
 		static SimpleBillboardMaterial *simpleBillboardMaterial() { return billboardMat; }
-		static Texture2d *getWhiteTexture() { return textures["AU_white_texture"]; }
-		static Texture2d *getBlueTexture() { return textures["AU_blue_texture"]; }
-		static Texture2d *getBlackTexture() { return textures["AU_black_texture"]; }
+		static Texture2d *getWhiteTexture() { return reinterpret_cast<Texture2d *>(textures["AU_white_texture"]); }
+		static Texture2d *getBlueTexture() { return reinterpret_cast<Texture2d *>(textures["AU_blue_texture"]); }
+		static Texture2d *getBlackTexture() { return reinterpret_cast<Texture2d *>(textures["AU_black_texture"]); }
 		static Texture2d *darkGridTexture();
 
 		static Texture2d *getTexture(const std::string &name);
+		static TextureCubemap *getCubemapTex(const std::string &name);
 		static Model *getModel(const std::string &name);
 		static Sprite *getSprite(const std::string &name);
-		static SceneGraphNode* getGltfNode(const std::string &name);
+		static SceneGraphNode *getGltfNode(const std::string &name);
 	};
 }
 

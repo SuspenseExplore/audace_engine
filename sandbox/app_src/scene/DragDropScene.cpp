@@ -11,7 +11,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include "renderer/DataBuffer.h"
-#include "renderer/Texture2d.h"
+#include "renderer/texture/Texture2d.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/VertexAttribute.h"
 #include "renderer/VertexArray.h"
@@ -21,13 +21,13 @@
 #include "imgui.h"
 #include "SceneEnum.h"
 
-DragDropScene::DragDropScene(Audace::BaseAppController* controller, Audace::IFileAccess* fileLoader)
+DragDropScene::DragDropScene(Audace::BaseAppController *controller, Audace::IFileAccess *fileLoader)
 	: Audace::Scene(controller), fileLoader(fileLoader), rand(Audace::RandomUniformFloats::normalizedRange())
 {
 	camera = Audace::ForwardCamera::standard2d(glm::vec3(0, 0, -1), 1280, 720);
 }
 
-void DragDropScene::loadAssets(Audace::IFileAccess* fileLoader)
+void DragDropScene::loadAssets(Audace::IFileAccess *fileLoader)
 {
 	glClearColor(0, 0, 1, 0);
 
@@ -43,7 +43,7 @@ void DragDropScene::loadAssets(Audace::IFileAccess* fileLoader)
 				ss.str("");
 				ss << "images/playing_cards/card" << suitNames[j] << rankNames[k] << ".png";
 				Audace::ImageData img = fileLoader->readImageFile(ss.str());
-				Audace::Texture2d* tex = new Audace::Texture2d(img);
+				Audace::Texture2d *tex = new Audace::Texture2d(img);
 				tex->create();
 				cardTextures[i++] = tex;
 			}
@@ -52,23 +52,23 @@ void DragDropScene::loadAssets(Audace::IFileAccess* fileLoader)
 	material = new Audace::SimpleBillboardMaterial;
 	material->setShader(shaderProgram);
 
-	Audace::Mesh* mesh = Audace::Shapes::cubePositions();
-	mesh->setMaterial((Audace::BaseMaterial*)material);
-	sprite = new Audace::Sprite(std::vector<Audace::Mesh*>{mesh});
+	Audace::Mesh *mesh = Audace::Shapes::cubePositions();
+	mesh->setMaterial((Audace::BaseMaterial *)material);
+	sprite = new Audace::Sprite(std::vector<Audace::Mesh *>{mesh});
 	sprite->setPosition(glm::vec3(0, 0, 0));
 	sprite->setScale(glm::vec3(140.0f, 190.0f, 1.0f));
 }
 
-Audace::Sprite* DragDropScene::loadSprite(std::string filename)
+Audace::Sprite *DragDropScene::loadSprite(std::string filename)
 {
 
 	glm::mat4 IDENTITY_MAT = glm::mat4(1.0f);
-	Audace::Model* model = fileLoader->readModelFile("models/", filename);
-	for (Audace::ModelSection* section : model->sections)
+	Audace::Model *model = fileLoader->readModelFile("models/", filename);
+	for (Audace::ModelSection *section : model->sections)
 	{
 		section->material->setShader(shaderProgram);
 	}
-	Audace::Sprite* sprite = new Audace::Sprite(model);
+	Audace::Sprite *sprite = new Audace::Sprite(model);
 	delete model;
 	return sprite;
 }
@@ -132,13 +132,12 @@ void DragDropScene::render()
 	ImGui::End();
 }
 
-Audace::BaseCamera* DragDropScene::getCamera()
+Audace::BaseCamera *DragDropScene::getCamera()
 {
 	return camera;
 }
-void DragDropScene::setCamera(Audace::BaseCamera* camera)
+void DragDropScene::setCamera(Audace::BaseCamera *camera)
 {
-
 }
 
 void DragDropScene::disposeAssets()

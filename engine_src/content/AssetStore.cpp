@@ -6,7 +6,8 @@
 #include "content/Model.h"
 #include "content/gltf/GltfLoader.h"
 #include "renderer/Mesh.h"
-#include "renderer/Texture2d.h"
+#include "renderer/texture/Texture2d.h"
+#include "renderer/texture/TextureCubemap.h"
 #include "renderer/Sprite.h"
 #include "renderer/ShaderProgram.h"
 #include "scene/graph/SceneGraphNode.h"
@@ -21,7 +22,7 @@ namespace Audace
 	Mesh *AssetStore::squareMesh;
 	std::map<std::string, ShaderProgram *> AssetStore::shaders;
 	SimpleBillboardMaterial *AssetStore::billboardMat;
-	std::map<std::string, Texture2d *> AssetStore::textures;
+	std::map<std::string, ITexture *> AssetStore::textures;
 	std::map<std::string, Model *> AssetStore::models;
 	std::map<std::string, Sprite *> AssetStore::sprites;
 	std::map<std::string, SceneGraphNode *> AssetStore::nodes;
@@ -94,14 +95,39 @@ namespace Audace
 		if (textures.find(name) == textures.end())
 		{
 			ImageData img = fileLoader->readImageFile(name);
-			Texture2d *tex = new Texture2d(img);
+			ITexture *tex = new Texture2d(img);
+			tex->create();
+			textures[name] = tex;
+			return reinterpret_cast<Texture2d *>(tex);
+		}
+		else
+		{
+			return reinterpret_cast<Texture2d *>(textures[name]);
+		}
+	}
+
+	TextureCubemap *AssetStore::getCubemapTex(const std::string &name)
+	{
+		static std::string faceIds[] = {"R", "L", "U", "D", "B", "F"};
+		std::vector<std::string> parts = StringUtil::split(name, '.');
+		parts[1] = "." + parts[1];
+		if (textures.find(name) == textures.end())
+		{
+			std::vector<ImageData> imgs;
+			imgs.resize(6);
+			for (int i = 0; i < 6; i++)
+			{
+				std::string realName = parts[0] + faceIds[i] + parts[1];
+				imgs[i] = fileLoader->readImageFile(realName);
+			}
+			TextureCubemap *tex = new TextureCubemap(imgs);
 			tex->create();
 			textures[name] = tex;
 			return tex;
 		}
 		else
 		{
-			return textures[name];
+			return reinterpret_cast<TextureCubemap *>(textures[name]);
 		}
 	}
 

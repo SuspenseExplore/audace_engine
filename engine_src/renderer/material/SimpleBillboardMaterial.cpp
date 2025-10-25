@@ -1,8 +1,9 @@
 #include "SimpleBillboardMaterial.h"
 #include "renderer/ShaderProgram.h"
-#include "renderer/Texture2d.h"
+#include "renderer/texture/ITexture.h"
 
-namespace Audace {
+namespace Audace
+{
 	void SimpleBillboardMaterial::setName(std::string name)
 	{
 		this->name = name;
@@ -13,22 +14,22 @@ namespace Audace {
 		return name;
 	}
 
-	ShaderProgram* SimpleBillboardMaterial::getShader()
+	ShaderProgram *SimpleBillboardMaterial::getShader()
 	{
 		return shaderProgram;
 	}
 
-	void SimpleBillboardMaterial::setShader(ShaderProgram* shaderProgram)
+	void SimpleBillboardMaterial::setShader(ShaderProgram *shaderProgram)
 	{
 		this->shaderProgram = shaderProgram;
 	}
 
-	Texture2d* SimpleBillboardMaterial::getTexture()
+	ITexture *SimpleBillboardMaterial::getTexture()
 	{
 		return texture;
 	}
 
-	void SimpleBillboardMaterial::setTexture(Texture2d* texture)
+	void SimpleBillboardMaterial::setTexture(ITexture *texture)
 	{
 		this->texture = texture;
 	}

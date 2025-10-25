@@ -14,7 +14,7 @@
 #include "renderer/VertexAttribute.h"
 #include "renderer/VertexArray.h"
 #include "renderer/Mesh.h"
-#include "renderer/Texture2d.h"
+#include "renderer/texture/Texture2d.h"
 #include "renderer/Sprite.h"
 #include "renderer/material/PbrMetalRoughMat.h"
 #include "renderer/light/PointLight.h"

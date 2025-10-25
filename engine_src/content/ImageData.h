@@ -7,20 +7,24 @@
 
 #include "au_renderer.h"
 
-namespace Audace {
-	class ImageData {
+namespace Audace
+{
+	class ImageData
+	{
 	public:
-		unsigned char* bytes;
+		unsigned char *bytes;
 		int width;
 		int height;
 		GLenum format;
 
-		ImageData(unsigned char* bytes, int width, int height, GLenum format)
-			: bytes(bytes), width(width), height(height), format(format) {
+		ImageData() {}
+		ImageData(unsigned char *bytes, int width, int height, GLenum format)
+			: bytes(bytes), width(width), height(height), format(format)
+		{
 		}
 
 		void release();
 	};
 }
 
-#endif //AU_IMAGEDATA_H
+#endif // AU_IMAGEDATA_H

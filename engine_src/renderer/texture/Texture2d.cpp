@@ -1,7 +1,9 @@
 #include "Texture2d.h"
 
-namespace Audace {
-	void Texture2d::create() {
+namespace Audace
+{
+	void Texture2d::create()
+	{
 		glPixelStorei(GL_UNPACK_ALIGNMENT, img.format == GL_ALPHA ? 1 : 4);
 		glGenTextures(1, &glid);
 		AU_CHECK_GL_ERRORS();
@@ -24,10 +26,17 @@ namespace Audace {
 		// img.release();
 	}
 
-	void Texture2d::bind(int texUnit) {
+	void Texture2d::bind(int texUnit)
+	{
 		glActiveTexture(GL_TEXTURE0 + texUnit);
 		AU_CHECK_GL_ERRORS();
 		glBindTexture(GL_TEXTURE_2D, glid);
 		AU_CHECK_GL_ERRORS();
+	}
+
+	void Texture2d::destroy()
+	{
+		glDeleteTextures(1, &glid);
+		glid = -1;
 	}
 }
