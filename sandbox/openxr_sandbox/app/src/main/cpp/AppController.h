@@ -29,7 +29,7 @@ class AppController : public Audace::BaseAppController {
 
 	HmdCamera* camera;
 	Audace::Scene* scene;
-	int nextScene = SandboxScene::BUILDER;
+	int nextScene = SandboxScene::GLTF;
 
 	bool xButtonDown = false;
 

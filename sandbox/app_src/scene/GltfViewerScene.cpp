@@ -67,21 +67,33 @@ void GltfViewerScene::loadAssets(Audace::IFileAccess *fileLoader)
 
 	setAmbientLight({1, 1, 1, 0.4});
 	shader = Audace::AssetStore::getShader("pbr");
+	shader->bind();
+	shader->setUniformInt("irradianceMap", 6);
 
 	editor = new Audace::SceneEditor(fileLoader);
 	editor->attachToScene(this);
 	reloadScene();
 
+	// TODO: put this info somewhere logical!
+	// making cubemap texture from equirectangular image
+	// use these angles (x, y, z) for the camera and render each face
+	// nx: 0, 90, 0
+	// ny: 0, 0, 0
+	// nz: 270, 180, 0
+	// px: 0, 270, 0
+	// py: 0, 180, 0
+	// pz: 90, 180, 0
+	// make sure to use a square viewport size and 90deg fov on the camera
 	Audace::Sprite *skyboxSprite = Audace::AssetStore::getCubeSprite();
 	Audace::SimpleBillboardMaterial *mat = new Audace::SimpleBillboardMaterial();
 	mat->setShader(Audace::AssetStore::getShader("skybox"));
-	Audace::TextureCubemap *cubeTex = Audace::AssetStore::getCubemapTex("images/skybox/skybox.jpg");
-	// Audace::Texture2d *cubeTex = Audace::AssetStore::getTexture("images/skybox/skyboxU.jpg");
+	cubeTex = Audace::AssetStore::getCubemapTex(    "images/paris_skybox");
+	cubeConvTex = Audace::AssetStore::getCubemapTex("images/paris_skybox/conv");
+
 	mat->setTexture(cubeTex);
 	skyboxSprite->getMesh()->setMaterial(mat);
 	skyboxNode = new Audace::SceneGraphNode;
 	skyboxNode->setName("skybox1");
-	skyboxNode->setRotation({0, 0, 0.707107, 0.707107});
 	skyboxNode->setScale({400, 400, 400});
 	skyboxNode->setSprite(skyboxSprite);
 	sceneGraph->getRootNode()->addChild(skyboxNode);
@@ -93,11 +105,13 @@ void GltfViewerScene::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	camera->update();
+	skyboxNode->setTranslation(camera->getPosition());
 	sceneGraph->update(this);
 
 	shader->bind();
 	shader->setUniformVec3("viewPos", camera->getPosition());
 	shader->setUniformVec4("ambientLight", ambientColor);
+	cubeConvTex->bind(6);
 
 	for (auto &item : lights)
 	{
@@ -105,11 +119,6 @@ void GltfViewerScene::render()
 	}
 
 	editor->renderWorldSpace(this);
-
-	glDepthMask(GL_FALSE);
-	skyboxNode->setTranslation(camera->getPosition());
-	skyboxNode->getSprite()->renderWorldSpace(this);
-	glDepthMask(GL_TRUE);
 
 	for (Audace::Sprite *s : sprites)
 	{

@@ -54,7 +54,8 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/renderer/ShaderProgram.cpp
 		${ENGINE_DIR}/renderer/VertexAttribute.cpp
 		${ENGINE_DIR}/renderer/VertexArray.cpp
-		${ENGINE_DIR}/renderer/Texture2d.cpp
+		${ENGINE_DIR}/renderer/texture/Texture2d.cpp
+		${ENGINE_DIR}/renderer/texture/TextureCubemap.cpp
 		${ENGINE_DIR}/renderer/Mesh.cpp
 		${ENGINE_DIR}/renderer/Sprite.cpp
 		${ENGINE_DIR}/renderer/Shapes.cpp

@@ -33,6 +33,7 @@ uniform SpotLight spotLight;
 out vec3 texCoord;
 out vec3 fragPos;
 out vec3 tViewPos;
+out mat3 tbnMat;
 out PointLight tLight;
 out DirLight tDirLight;
 out SpotLight tSpotLight;
@@ -46,20 +47,21 @@ void main() {
 	vec3 t = normalize(mat3(worldMat[gl_InstanceID]) * tangent);
 	t = normalize(t - dot(t, n) * n);
 	vec3 binormal = cross(n, t);
-	mat3 tbnMat = transpose(mat3(t, binormal, n));
+	tbnMat = mat3(t, binormal, n);
+	mat3 _tbnMat = transpose(tbnMat);
 
-	fragPos = tbnMat * (worldMat[gl_InstanceID] * position).xyz;
-	tViewPos = tbnMat * viewPos;
+	fragPos = _tbnMat * (worldMat[gl_InstanceID] * position).xyz;
+	tViewPos = _tbnMat * viewPos;
 
-	tLight.position = tbnMat * ptLight.position;
+	tLight.position = _tbnMat * ptLight.position;
 	tLight.color = ptLight.color;
 	tLight.intensity = ptLight.intensity;
 
-	tDirLight.direction = tbnMat * dirLight.direction;
+	tDirLight.direction = _tbnMat * dirLight.direction;
 	tDirLight.color = dirLight.color;
 	
-	tSpotLight.position = tbnMat * spotLight.position;
-	tSpotLight.direction = tbnMat * spotLight.direction;
+	tSpotLight.position = _tbnMat * spotLight.position;
+	tSpotLight.direction = _tbnMat * spotLight.direction;
 	tSpotLight.color = spotLight.color;
 	tSpotLight.innerAngle = spotLight.innerAngle;
 	tSpotLight.outerAngle = spotLight.outerAngle;

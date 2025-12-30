@@ -18,6 +18,12 @@
 		},
 		{
 			"uri": "scenes/samples/corset_sample.gltfx"
+		},
+		{
+			"uri": "scenes/samples/scifihelmet_sample.gltfx"
+		},
+		{
+			"uri": "scenes/samples/damagedhelmet_sample.gltfx"
 		}
 	],
 	"nodes": [
@@ -40,7 +46,16 @@
 		{
 			"name": "corset_scene",
 			"asset": 4
+		},
+		{
+			"name": "scifihelmet_scene",
+			"asset": 5
+		},
+		{
+			"name": "damagedhelmet_scene",
+			"asset": 6
 		}
+
 	],
 	"scene": 0,
 	"scenes": [
@@ -68,6 +83,18 @@
 			"nodes": [
 				4
 			]
+		},
+		{
+			"nodes": [
+				5
+			]
+		},
+		{
+			"nodes": [
+				6
+			]
 		}
+
+
 	]
 }

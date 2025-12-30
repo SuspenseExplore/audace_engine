@@ -21,7 +21,7 @@
 #include "glm/glm.hpp"
 
 AppController::AppController()
-		: scene(new SceneBuilder(this))
+		: scene(new GltfViewerScene(this))
 {
 }
 

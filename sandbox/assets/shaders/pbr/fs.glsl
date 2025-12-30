@@ -34,6 +34,8 @@ struct SpotLight {
 };
 
 uniform vec4 ambientLight;
+uniform samplerCube irradianceMap;
+
 in PointLight tLight;
 in DirLight tDirLight;
 in SpotLight tSpotLight;
@@ -41,6 +43,7 @@ in SpotLight tSpotLight;
 in vec3 texCoord;
 in vec3 fragPos;
 in vec3 tViewPos;
+in mat3 tbnMat;
 
 out vec4 fragColor;
 
@@ -128,16 +131,17 @@ vec3 calcLighting(vec4 lightColor, vec3 lightDir, vec3 normal, vec3 v, float atn
 	float g = geomSmith(normal, v, lightDir, roughness);
 	vec3 f = fresnelSchlick(max(0.0, dot(h, v)), f0);
 
-	vec3 ks = f;
-	vec3 kd = ONE.xyz - ks;
-	kd *= 1.0 - metallic;
-
 	vec3 num = ndf * g * f;
 	float denom = 4.0 * max(0.0, dot(normal, v)) * max(0.0, dot(normal, lightDir)) + 0.0001;
 	vec3 specular = num / denom;
 
+	vec3 ks = f;
+	vec3 kd = ONE.xyz - ks;
+	kd *= 1.0 - metallic;
+
 	float n_dot_l = max(0.0, dot(normal, lightDir));
-	return (kd * baseColor / PI + specular) * radiance * n_dot_l;
+	vec3 lightVal = (kd * baseColor / PI + specular) * radiance * n_dot_l;
+	return lightVal;
 }
 
 void main() {
@@ -164,12 +168,19 @@ void main() {
 	lightDir = normalize(tSpotLight.position - fragPos);
 	float i = spotlightIntensity(tSpotLight.direction, tSpotLight.innerAngle, tSpotLight.outerAngle, lightDir);
 	lo += calcLighting(vec4(tSpotLight.color.rgb, i), lightDir, normal, v, 0.0, roughness, f0, metallic, baseColor);
-	
-	vec3 ambient = ambientLight.rgb * ambientLight.a * baseColor * occlusion;
-	vec3 color = clamp(ambient + lo + emissive, ZERO.xyz, ONE.xyz);
 
-//	color = color / (color + ONE.xyz);
-//	color = pow(color, vec3(1.0 / 2.2));
+	vec3 ks = fresnelSchlick(max(0.0, dot(normal, v)), f0);
+	vec3 kd = 1.0 - ks;
+	kd *= 1.0 - metallic;
+
+	vec3 irradiance = texture(irradianceMap, normalize(tbnMat * normal)).rgb;
+	vec3 diffuse = irradiance * baseColor;
+	vec3 ambient = (kd * diffuse) * occlusion;
+	
+	vec3 color = ambient + lo + emissive;
+
+	color = color / (color + ONE.xyz);
+	color = pow(color, vec3(1.0 / 2.2));
 
 	fragColor = vec4(color, 1.0);
 }

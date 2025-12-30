@@ -14,6 +14,12 @@ namespace Audace
 		occlusionMap = AssetStore::getWhiteTexture();
 		emissiveMap = AssetStore::getBlackTexture();
 	}
+
+	void PbrMetalRoughMat::setAmbientColor(glm::vec4 f)
+	{
+		ambientColor = f;
+	}
+
 	void PbrMetalRoughMat::setBaseColorFactor(glm::vec4 f)
 	{
 		baseColorFactor = f;
@@ -64,6 +70,11 @@ namespace Audace
 		emissiveMap = t;
 	}
 
+	void PbrMetalRoughMat::setIrradianceMap(TextureCubemap *t)
+	{
+		irradianceMap = t;
+	}
+
 	std::string PbrMetalRoughMat::getName()
 	{
 		return name;
@@ -82,6 +93,7 @@ namespace Audace
 	void PbrMetalRoughMat::apply()
 	{
 		shaderProgram->bind();
+		shaderProgram->setUniformVec4("ambientLight", ambientColor);
 		shaderProgram->setUniformVec4("material.baseColorFactor", baseColorFactor);
 		shaderProgram->setUniformFloat("material.metallicFactor", metallicFactor);
 		shaderProgram->setUniformFloat("material.roughnessFactor", roughnessFactor);
@@ -116,6 +128,11 @@ namespace Audace
 		{
 			shaderProgram->setUniformInt("material.emissiveMap", 5);
 			emissiveMap->bind(5);
+		}
+		if (irradianceMap != nullptr)
+		{
+			shaderProgram->setUniformInt("irradianceMap", 6);
+			irradianceMap->bind(6);
 		}
 	}
 }

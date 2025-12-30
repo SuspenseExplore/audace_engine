@@ -108,16 +108,14 @@ namespace Audace
 
 	TextureCubemap *AssetStore::getCubemapTex(const std::string &name)
 	{
-		static std::string faceIds[] = {"R", "L", "U", "D", "B", "F"};
-		std::vector<std::string> parts = StringUtil::split(name, '.');
-		parts[1] = "." + parts[1];
+		static std::string filenames[] = {"nx.png", "px.png", "pz.png", "nz.png", "py.png", "ny.png"};
 		if (textures.find(name) == textures.end())
 		{
 			std::vector<ImageData> imgs;
 			imgs.resize(6);
 			for (int i = 0; i < 6; i++)
 			{
-				std::string realName = parts[0] + faceIds[i] + parts[1];
+				std::string realName = name + "/" + filenames[i];
 				imgs[i] = fileLoader->readImageFile(realName);
 			}
 			TextureCubemap *tex = new TextureCubemap(imgs);

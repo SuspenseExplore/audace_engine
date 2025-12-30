@@ -17,6 +17,7 @@ namespace Audace
 	class JsonGui;
 	class ShaderProgram;
 	class Sprite;
+	class TextureCubemap;
 	struct TypedLight;
 	class IFileAccess;
 }
@@ -44,6 +45,8 @@ class GltfViewerScene : public Audace::Scene
 	std::map<std::string, Audace::TypedLight *> lights;
 	glm::mat4 modelMat;
 
+	Audace::TextureCubemap *cubeTex;
+	Audace::TextureCubemap *cubeConvTex;
 	Audace::SceneGraphNode *skyboxNode;
 
 	int renderType = 0;

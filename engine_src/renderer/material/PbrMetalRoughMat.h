@@ -7,6 +7,7 @@
 namespace Audace
 {
 	class Texture2d;
+	class TextureCubemap;
 	class ShaderProgram;
 
 	class PbrMetalRoughMat : public BaseMaterial
@@ -14,6 +15,7 @@ namespace Audace
 		ShaderProgram* shaderProgram;
 		std::string name = "default_pbr_metal_roughness_mat";
 
+		glm::vec4 ambientColor = {1, 1, 1, 1};
 		glm::vec4 baseColorFactor = { 1, 1, 1, 1 };
 		float metallicFactor = 0.0;
 		float roughnessFactor = 1.0;
@@ -25,9 +27,12 @@ namespace Audace
 		Texture2d* roughnessMap = nullptr;
 		Texture2d* occlusionMap = nullptr;
 		Texture2d* emissiveMap = nullptr;
+		
+		TextureCubemap* irradianceMap = nullptr;
 
 	public:
 		PbrMetalRoughMat();
+		void setAmbientColor(glm::vec4 f);
 		void setBaseColorFactor(glm::vec4 f);
 		void setMetallicFactor(float f);
 		void setRoughnessFactor(float f);
@@ -38,6 +43,7 @@ namespace Audace
 		void setRoughnessMap(Texture2d* t);
 		void setOcclusionMap(Texture2d* t);
 		void setEmissiveMap(Texture2d* t);
+		void setIrradianceMap(TextureCubemap* t);
 
 		std::string getName() override;
 		ShaderProgram* getShader() override;
