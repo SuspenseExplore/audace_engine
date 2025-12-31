@@ -77,7 +77,7 @@ add_executable(
 	${ENGINE_DIR}/scene/graph/RotationAnimation.cpp
 )
 
-add_compile_definitions(AU_PLATFORM_GLFW)
+add_compile_definitions(AU_GLFW_PLATFORM)
 
 target_include_directories(
 	sandbox_glfw

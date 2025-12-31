@@ -1,9 +1,9 @@
 #ifndef AU_LOGGER_H
 #define AU_LOGGER_H
 
-#include "platform_defs.h"
 #include "spdlog/spdlog.h"
 
+// these platform defines are in CMakeLists.txt
 #ifdef AU_GLFW_PLATFORM
 #include "spdlog/sinks/stdout_color_sinks.h"
 #define AU_PLATFORM_LOGGER spdlog::stdout_color_mt
