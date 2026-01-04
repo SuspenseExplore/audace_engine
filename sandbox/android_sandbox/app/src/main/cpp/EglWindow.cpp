@@ -82,7 +82,8 @@ bool EglWindow::open(android_app *app) {
 	ImGui::StyleColorsDark();
 	ImGui_ImplAndroid_Init(app->window);
 	ImGui_ImplOpenGL3_Init("#version 300 es");
-	ImGui::GetStyle().ScaleAllSizes(5);
+	ImGui::GetStyle().ScaleAllSizes(8);
+    io.FontGlobalScale = 2.5;
 
 	initialized = true;
 	return true;
