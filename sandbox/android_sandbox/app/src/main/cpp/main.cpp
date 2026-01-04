@@ -8,6 +8,7 @@
 #include <GLES3/gl32.h>
 #include <vector>
 #include "AuLogger.h"
+#include "au_renderer.h"
 #include "EglWindow.h"
 #include "AppController.h"
 #include "imgui/imgui.h"

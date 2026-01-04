@@ -2,6 +2,7 @@
 // Created by Suspense on 5/13/2023.
 //
 
+#include "AuLogger.h"
 #include "AppController.h"
 #include "scene/NavigationScene.h"
 #include "scene/SceneBuilder.h"
@@ -14,14 +15,14 @@ namespace Audace {
 
 	void AppController::windowInitialized() {
 		scene = new NavigationScene(this);
-		scene->loadAssets();
+		scene->loadAssets(fileLoader);
 	}
 
 	void AppController::pollSystemEvents(android_app *app) {
 		int id;
 		int events;
 		struct android_poll_source *source;
-		while ((id = ALooper_pollAll(0, nullptr, &events, (void **) &source)) >= 0) {
+		while ((id = ALooper_pollOnce(0, nullptr, &events, (void **) &source)) >= 0) {
 			if (source != nullptr) {
 				source->process(app, source);
 			}
@@ -61,17 +62,17 @@ namespace Audace {
 		{
 			case NAVIGATION:
 				scene = new NavigationScene(this);
-				scene->loadAssets();
+				scene->loadAssets(fileLoader);
 				break;
 
 			case MAIN:
-				scene = new MainScene(this, fileLoader);
-				scene->loadAssets();
+				scene = new MainScene(this);
+				scene->loadAssets(fileLoader);
 				break;
 
 			case BUILDER:
-				scene = new SceneBuilder(this, fileLoader);
-				scene->loadAssets();
+				scene = new SceneBuilder(this);
+				scene->loadAssets(fileLoader);
 				break;
 		}
 		nextScene = CURRENT;

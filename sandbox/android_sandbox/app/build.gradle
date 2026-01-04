@@ -3,7 +3,8 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 36
+    namespace "com.audace.android_sandbox"
 
     defaultConfig {
         applicationId "com.audace.android_sandbox"

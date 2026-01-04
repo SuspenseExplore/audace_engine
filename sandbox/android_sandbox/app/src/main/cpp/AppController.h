@@ -9,14 +9,15 @@
 #include <android_native_app_glue.h>
 #include "EngineEventListener.h"
 #include "EglWindow.h"
-#include "FileLoader.h"
+#include "application/BaseAppController.h"
+#include "FileAccessAndroid.h"
 #include "scene/MainScene.h"
 #include "SceneEnum.h"
 
 namespace Audace {
 	class AppController : public EngineEventListener, BaseAppController {
 		android_app* androidApp;
-		FileAccessGlfw* fileLoader;
+        FileAccessAndroid* fileLoader;
 		Scene* scene;
 		int nextScene = SandboxScene::CURRENT;
 
@@ -26,7 +27,7 @@ namespace Audace {
 		EglWindow window;
 
 		AppController(android_app* app) : androidApp(app),
-			fileLoader(new FileAccessGlfw(app->activity->assetManager)) {
+			fileLoader(new FileAccessAndroid()) {
 		}
 
 		bool createWindow();

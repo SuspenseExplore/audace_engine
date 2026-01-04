@@ -10,7 +10,9 @@ enum SandboxScene
 	CURRENT,
 	NAVIGATION,
 	MAIN,
-	BUILDER
+	BUILDER,
+    DRAG_DROP,
+    TEXT
 };
 
 #endif //AU_SCENEENUM_H

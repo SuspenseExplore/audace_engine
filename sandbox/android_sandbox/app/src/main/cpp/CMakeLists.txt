@@ -7,9 +7,9 @@ cmake_minimum_required(VERSION 3.18.1)
 
 # Declares and names the project.
 
-project(android_sandbox)
+project("android_sandbox")
 set(ENGINE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../../engine_src)
-set(APP_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../app_src)
+set(APP_DIR ${ENGINE_DIR}/../sandbox/app_src)
 
 # add android's native app glue
 add_library(native_app_glue STATIC
@@ -37,33 +37,61 @@ add_library( # Sets the name of the library.
 		${ENGINE_DIR}/include/imgui/imgui_draw.cpp
 		${ENGINE_DIR}/include/imgui/imgui_tables.cpp
 		${ENGINE_DIR}/include/imgui/imgui_widgets.cpp
+		${ENGINE_DIR}/include/b64/cencode.c
+		${ENGINE_DIR}/include/b64/cdecode.c
 		${ENGINE_DIR}/android_platform/imgui/imgui_impl_android.cpp
 		${ENGINE_DIR}/android_platform/imgui/imgui_impl_opengl3.cpp
-		${ENGINE_DIR}/android_platform/FileLoader.cpp
-		${ENGINE_DIR}/android_platform/ImageData.cpp
+		${ENGINE_DIR}/android_platform/FileAccessAndroid.cpp
+		${ENGINE_DIR}/content/AssetStore.cpp
+		${ENGINE_DIR}/content/ImageData.cpp
 		${ENGINE_DIR}/content/ModelLoader.cpp
+		${ENGINE_DIR}/content/JsonGui.cpp
 		${ENGINE_DIR}/content/ByteBuffer.cpp
+		${ENGINE_DIR}/content/JsonSerializer.cpp
+		${ENGINE_DIR}/content/gltf/GltfLoader.cpp
+		${ENGINE_DIR}/content/gltf/GltfxReader.cpp
 		${ENGINE_DIR}/renderer/DataBuffer.cpp
 		${ENGINE_DIR}/renderer/ShaderProgram.cpp
 		${ENGINE_DIR}/renderer/VertexAttribute.cpp
 		${ENGINE_DIR}/renderer/VertexArray.cpp
-		${ENGINE_DIR}/renderer/Texture2d.cpp
+		${ENGINE_DIR}/renderer/texture/Texture2d.cpp
+		${ENGINE_DIR}/renderer/texture/TextureCubemap.cpp
 		${ENGINE_DIR}/renderer/Mesh.cpp
 		${ENGINE_DIR}/renderer/Sprite.cpp
 		${ENGINE_DIR}/renderer/Shapes.cpp
+		${ENGINE_DIR}/renderer/material/Material.cpp
+		${ENGINE_DIR}/renderer/material/SimpleBillboardMaterial.cpp
+		${ENGINE_DIR}/renderer/material/PbrMetalRoughMat.cpp
+		${ENGINE_DIR}/renderer/light/PointLight.cpp
+		${ENGINE_DIR}/renderer/light/DirLight.cpp
+		${ENGINE_DIR}/renderer/light/SpotLight.cpp
+		${ENGINE_DIR}/renderer/light/TypedLight.cpp
 		${ENGINE_DIR}/renderer/text/BitmapFont.cpp
+		${ENGINE_DIR}/editor/SpriteData.cpp
+		${ENGINE_DIR}/editor/SceneData.cpp
+		${ENGINE_DIR}/editor/SceneEditor.cpp
+		${ENGINE_DIR}/editor/NodeEditWindow.cpp
 		${ENGINE_DIR}/scene/Scene.cpp
+		${ENGINE_DIR}/scene/graph/SceneGraph.cpp
+		${ENGINE_DIR}/scene/graph/SceneGraphNode.cpp
+		${ENGINE_DIR}/scene/graph/RotationAnimation.cpp
+		${ENGINE_DIR}/scene/BaseCamera.cpp
 		${ENGINE_DIR}/scene/ForwardCamera.cpp
 		${ENGINE_DIR}/scene/BasicCameraController.cpp
 		${APP_DIR}/scene/MainScene.cpp
 		${APP_DIR}/scene/NavigationScene.cpp
 		${APP_DIR}/scene/SceneBuilder.cpp
 		)
+include_directories(
+		.
+		lib
+)
 
 target_compile_definitions(
 		android_sandbox
 		PRIVATE
 		IMGUI_IMPL_OPENGL_ES3
+		AU_ANDROID_PLATFORM
 )
 
 add_custom_command(
@@ -113,6 +141,10 @@ set_target_properties(
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
+include (FetchContent)
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
 target_link_libraries( # Specifies the target library.
 		android_sandbox
 		android
@@ -120,7 +152,9 @@ target_link_libraries( # Specifies the target library.
 		EGL
 		GLESv3
 		freetype
+		nlohmann_json::nlohmann_json
 
 		# Links the target library to the log library
 		# included in the NDK.
+		${ANDROID_LIBRARY}
 		${log-lib})
