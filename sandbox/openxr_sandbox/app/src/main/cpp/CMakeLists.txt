@@ -99,6 +99,7 @@ target_compile_definitions(
 		openxr_sandbox
 		PRIVATE
 		IMGUI_IMPL_OPENGL_ES3
+		AU_ANDROID_PLATFORM
 		AU_PLATFORM_OXR
 )
 

@@ -4,10 +4,10 @@ plugins {
 
 android {
     compileSdk 36
-    namespace "com.audace.android_xr.sandbox"
+    namespace "com.audace.android_sandbox"
 
     defaultConfig {
-        applicationId "com.audace.android_xr.sandbox"
+        applicationId "com.audace.android_sandbox.oxr"
         minSdk 24
         targetSdk 32
         versionCode 1

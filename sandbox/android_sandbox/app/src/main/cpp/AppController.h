@@ -14,11 +14,13 @@
 #include "scene/MainScene.h"
 #include "SceneEnum.h"
 
-namespace Audace {
-	class AppController : public EngineEventListener, BaseAppController {
-		android_app* androidApp;
-        FileAccessAndroid* fileLoader;
-		Scene* scene;
+namespace Audace
+{
+	class AppController : public EngineEventListener, BaseAppController
+	{
+		android_app *androidApp;
+		FileAccessAndroid *fileLoader;
+		Scene *scene;
 		int nextScene = SandboxScene::CURRENT;
 
 		void startNextScene();
@@ -26,9 +28,7 @@ namespace Audace {
 	public:
 		EglWindow window;
 
-		AppController(android_app* app) : androidApp(app),
-			fileLoader(new FileAccessAndroid()) {
-		}
+		AppController(android_app *app) : androidApp(app) {}
 
 		bool createWindow();
 
@@ -40,7 +40,7 @@ namespace Audace {
 
 		void setScene(int newScene) override;
 
-		static void pollSystemEvents(android_app* app);
+		static void pollSystemEvents(android_app *app);
 
 		void windowInitialized() override;
 
@@ -49,4 +49,4 @@ namespace Audace {
 	};
 }
 
-#endif //AU_APPCONTROLLER_H
+#endif // AU_APPCONTROLLER_H
