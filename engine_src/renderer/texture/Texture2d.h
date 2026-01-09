@@ -17,6 +17,10 @@ namespace Audace
 		void create() override;
 		void bind(int texUnit) override;
 		void destroy() override;
+
+		GLuint getId() { return glid; }
+		int getWidth() { return img.width; }
+		int getHeight() { return img.height; }
 	};
 }
 

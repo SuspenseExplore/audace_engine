@@ -43,6 +43,7 @@ add_executable(
 	${ENGINE_DIR}/renderer/VertexArray.cpp
 	${ENGINE_DIR}/renderer/texture/Texture2d.cpp
 	${ENGINE_DIR}/renderer/texture/TextureCubemap.cpp
+	${ENGINE_DIR}/renderer/FrameBuffer.cpp
 	${ENGINE_DIR}/renderer/Mesh.cpp
 	${ENGINE_DIR}/renderer/Sprite.cpp
 	${ENGINE_DIR}/renderer/Shapes.cpp

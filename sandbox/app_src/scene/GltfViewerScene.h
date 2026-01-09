@@ -19,6 +19,7 @@ namespace Audace
 	class Sprite;
 	class TextureCubemap;
 	struct TypedLight;
+	class FrameBuffer;
 	class IFileAccess;
 }
 
@@ -48,6 +49,7 @@ class GltfViewerScene : public Audace::Scene
 	Audace::TextureCubemap *cubeTex;
 	Audace::TextureCubemap *cubeConvTex;
 	Audace::SceneGraphNode *skyboxNode;
+	Audace::FrameBuffer *frameBuffer;
 
 	int renderType = 0;
 

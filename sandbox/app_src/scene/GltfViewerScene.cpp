@@ -4,6 +4,7 @@
 #include "GltfViewerScene.h"
 #include "imgui.h"
 #include "SceneEnum.h"
+#include "application/BaseAppController.h"
 #include "content/IFileAccess.h"
 #include "content/JsonSerializer.h"
 #include "content/AssetStore.h"
@@ -20,7 +21,9 @@
 #include "renderer/light/DirLight.h"
 #include "renderer/light/SpotLight.h"
 #include "renderer/light/TypedLight.h"
+#include "renderer/texture/Texture2d.h"
 #include "renderer/material/Material.h"
+#include "renderer/FrameBuffer.h"
 #include "scene/BaseCamera.h"
 #include "scene/SceneDescriptor.h"
 #include "scene/graph/SceneGraph.h"
@@ -65,6 +68,19 @@ void GltfViewerScene::loadAssets(Audace::IFileAccess *fileLoader)
 
 	// modelIndex = fileLoader->textFileToJson("models/_index.json");
 
+	// framebuffer
+	Audace::ImageData dat;
+	dat.bytes = nullptr;
+	dat.width = appController->getWidth();
+	dat.height = appController->getHeight();
+	dat.format = GL_RGB;
+	Audace::Texture2d *fbTex = new Audace::Texture2d(dat);
+	fbTex->create();
+	frameBuffer = new Audace::FrameBuffer();
+	frameBuffer->create();
+	frameBuffer->colorAttachment(fbTex);
+	frameBuffer->checkStatus();
+
 	setAmbientLight({1, 1, 1, 0.4});
 	shader = Audace::AssetStore::getShader("pbr");
 	shader->bind();
@@ -101,6 +117,7 @@ void GltfViewerScene::loadAssets(Audace::IFileAccess *fileLoader)
 
 void GltfViewerScene::render()
 {
+	frameBuffer->bind();
 	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -123,6 +140,27 @@ void GltfViewerScene::render()
 	for (Audace::Sprite *s : sprites)
 	{
 		s->renderWorldSpace(this);
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClearColor(1, 0, 1, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// render the framebuffer texture onto a quad
+	{
+		Audace::SimpleBillboardMaterial *mat = new Audace::SimpleBillboardMaterial();
+		mat->setTexture(frameBuffer->getColorTexAttachment());
+		mat->setColor({1, 1, 1, 0});
+		Audace::ShaderProgram *s = Audace::AssetStore::getShader("AU_post_proc");
+		s->bind();
+		s->setUniformMat4("vpMat", glm::mat4(1));
+		mat->setShader(s);
+		Audace::Mesh *m = Audace::Shapes::squarePositions();
+		glm::mat4 worldMat = glm::mat4(1);
+		worldMat = glm::translate(worldMat, {-1, -1, 0});
+		worldMat = glm::scale(worldMat, {2, 2, 2});
+		m->setMaterial(mat);
+		m->renderInstanced({worldMat});
 	}
 }
 
