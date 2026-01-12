@@ -110,6 +110,16 @@ namespace Audace
 		}
 	}
 
+	void ShaderProgram::setUniformFloatArray(std::string name, float *value, int count)
+	{
+		if (uniforms.find(name) != uniforms.end())
+		{
+			glUniform1fv(uniforms[name], count, value);
+			AU_CHECK_GL_ERRORS();
+			AU_RENDERER_LOG_TRACE("Set float array uniform {} in shader {} at location {}", name, glid, uniforms[name]);
+		}
+	}
+
 	void ShaderProgram::setUniformVec2(std::string name, float x, float y)
 	{
 		glUniform2f(uniforms[name], x, y);

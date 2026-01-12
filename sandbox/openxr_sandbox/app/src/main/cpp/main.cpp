@@ -29,7 +29,6 @@
 #include "imgui/imgui_impl_android.h"
 
 AppController appController;
-GLuint framebuffer;
 
 bool sessionRunning = false;
 bool exitRenderLoop = false;
@@ -37,7 +36,6 @@ bool exitRenderLoop = false;
 static int initWindow() {
 	appController.createWindow();
 	appController.createXrSession();
-	glGenFramebuffers(1, &framebuffer);
 
 	return 0;
 }
@@ -61,7 +59,6 @@ static void handleAndroidCmd(struct android_app *app, int32_t cmd) {
 		case APP_CMD_TERM_WINDOW:
 			LOGD("term window");
 			appController.getWindow().close();
-			glDeleteFramebuffers(1, &framebuffer);
 			break;
 	}
 }
@@ -163,7 +160,6 @@ void android_main(struct android_app *app) {
 		handleXrEvents();
 		if (exitRenderLoop) {
 			appController.getWindow().close();
-			glDeleteFramebuffers(1, &framebuffer);
 			ANativeActivity_finish(app->activity);
 
 			AU_ENGINE_LOG_TRACE("Application terminating normally");
@@ -172,7 +168,6 @@ void android_main(struct android_app *app) {
 
 		if (app->destroyRequested != 0) {
 			appController.getWindow().close();
-			glDeleteFramebuffers(1, &framebuffer);
 
 			AU_ENGINE_LOG_TRACE("Application terminating normally");
 			return;

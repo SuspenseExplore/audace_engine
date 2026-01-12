@@ -30,6 +30,7 @@ namespace Audace
 		std::function<void(SceneGraphNode *)> selectNodeFn;
 		std::function<void(SceneGraphNode *)> newChildFn;
 		std::function<void(SceneGraphNode *)> addCubeFn;
+		std::function<void()> applyPostProcFn;
 
 		Sprite *cubeSprite;
 		std::map<int, SceneGraphNode *> insts;
@@ -39,6 +40,10 @@ namespace Audace
 		glm::vec4 clearColor = {0.2, 0.4, 0.55, 0.5};
 		glm::vec4 ambientColor = {1.0, 1.0, 1.0, 0.1};
 		bool visualize = false;
+
+		int postProcIndex = 0;
+		float postProcKernel[9] = {0, 0, 0, 0, 1, 0, 0, 0, 0};
+		float offsetScale = 1;
 
 		json modelIndex;						 // lists content of the assets/models/ folder
 		std::vector<std::string> modelIndexPath; // the currently selected path in modelIndex

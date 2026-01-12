@@ -15,6 +15,10 @@ namespace Audace
 		glBindFramebuffer(GL_FRAMEBUFFER, glid);
 		AU_CHECK_GL_ERRORS();
 		AU_RENDERER_LOG_TRACE("Bound FrameBuffer {}", glid);
+		if (texAttachment != nullptr)
+		{
+			glViewport(0, 0, texAttachment->getWidth(), texAttachment->getHeight());
+		}
 	}
 
 	void FrameBuffer::destroy()
@@ -31,13 +35,13 @@ namespace Audace
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex->getId(), 0);
 		texAttachment = tex;
 
-		//TODO: this whole thing should be more flexible about what buffers exist, 
-		// where they come from, who owns them, etc
+		// TODO: this whole thing should be more flexible about what buffers exist,
+		//  where they come from, who owns them, etc
 		glGenRenderbuffers(1, &glidDepthStencil);
 		glBindRenderbuffer(GL_RENDERBUFFER, glidDepthStencil);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH32F_STENCIL8, tex->getWidth(), tex->getHeight());
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, glidDepthStencil);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 
 	bool FrameBuffer::checkStatus()

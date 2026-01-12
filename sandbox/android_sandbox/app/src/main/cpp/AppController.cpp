@@ -103,6 +103,7 @@ namespace Audace
     {
         window.beginFrame();
         scene->render();
+        scene->renderUi();
         window.endFrame();
     }
 

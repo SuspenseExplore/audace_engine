@@ -14,8 +14,10 @@
 #define DRAG_FLOAT "drag_float"
 #define DRAG_FLOAT3 "drag_float3"
 #define DRAG_FLOAT4 "drag_float4"
+#define INPUT_FLOAT3 "input_float3"
 #define LIGHT_COLOR "light_color"
 #define CHECKBOX "checkbox"
+#define COMBO_SIMPLE "combo_simple"
 #define SEPARATOR "separator"
 #define TREE "tree"
 #define TREE_NODE "tree_node"
@@ -127,6 +129,10 @@ namespace Audace
 		{
 			dragFloat4(j);
 		}
+		else if (type == INPUT_FLOAT3)
+		{
+			inputFloat3(j);
+		}
 		else if (type == LIGHT_COLOR)
 		{
 			lightColor(j);
@@ -138,6 +144,10 @@ namespace Audace
 		else if (type == CHECKBOX)
 		{
 			checkbox(j);
+		}
+		else if (type == COMBO_SIMPLE)
+		{
+			comboSimple(j);
 		}
 		else if (type == SEPARATOR)
 		{
@@ -302,6 +312,12 @@ namespace Audace
 		ImGui::ColorEdit4(name.c_str(), glm::value_ptr(*bindings[name].float4));
 	}
 
+	void JsonGui::inputFloat3(json &j)
+	{
+		std::string name = jser::getString(j, NAME);
+		ImGui::InputFloat3(name.c_str(), glm::value_ptr(*bindings[name].float3));
+	}
+
 	void JsonGui::lightColor(json &j)
 	{
 		std::string name = jser::getString(j, NAME);
@@ -313,6 +329,22 @@ namespace Audace
 	{
 		std::string name = jser::getString(j, NAME);
 		ImGui::Checkbox(name.c_str(), bindings[name].boolean);
+	}
+
+	void JsonGui::comboSimple(json &j)
+	{
+		std::string name = jser::getString(j, NAME);
+		json &entry = j["values"];
+		std::string vals_str;
+		for (int i = 0; i < entry.size(); i++)
+		{
+			auto &item = entry[i];
+			auto str = item.template get<std::string>();
+			const char *s = str.c_str();
+			vals_str.append(s);
+			vals_str += '\0';
+		}
+		ImGui::Combo(name.c_str(), bindings[name].integer, vals_str.c_str());
 	}
 
 	void JsonGui::separator()

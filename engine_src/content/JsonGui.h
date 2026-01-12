@@ -59,8 +59,10 @@ namespace Audace
 		void dragFloat(json &j);
 		void dragFloat3(json &j);
 		void dragFloat4(json &j);
+		void inputFloat3(json &j);
 		void lightColor(json &j);
 		void checkbox(json &j);
+		void comboSimple(json &j);
 		void separator();
 		void sceneGraphTree(json &j);
 		void sceneGraphNode(json &j, SceneGraphNode *node, const std::string &path);

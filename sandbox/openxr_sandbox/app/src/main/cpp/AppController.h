@@ -15,20 +15,22 @@
 #include "SceneEnum.h"
 
 class HmdCamera;
-namespace Audace {
+namespace Audace
+{
 	class FileAccessAndroid;
 	class Scene;
 }
 
-class AppController : public Audace::BaseAppController {
-	android_app* androidApp;
+class AppController : public Audace::BaseAppController
+{
+	android_app *androidApp;
 	EglWindow window;
-	Audace::FileAccessAndroid* fileLoader;
+	Audace::FileAccessAndroid *fileLoader;
 	XrFrameState currentFrameState;
-	GLuint framebuffer;
+	GLuint framebuffer = 0;
 
-	HmdCamera* camera;
-	Audace::Scene* scene;
+	HmdCamera *camera;
+	Audace::Scene *scene;
 	int nextScene = SandboxScene::GLTF;
 
 	bool xButtonDown = false;
@@ -39,28 +41,28 @@ public:
 	AppController();
 	OpenxrContext xrContext;
 
-	bool init(android_app* app);
+	bool init(android_app *app);
 
 	bool createWindow();
 
 	bool createXrSession();
 
-	XrFrameState* startFrame();
+	XrFrameState *startFrame();
 
-	bool endFrame(std::vector<XrCompositionLayerBaseHeader*> layers);
+	bool endFrame(std::vector<XrCompositionLayerBaseHeader *> layers);
 
-	uint32_t prepareViews(XrFrameState* frameState, XrSpace space);
+	uint32_t prepareViews(XrFrameState *frameState, XrSpace space);
 
 	void renderFrame();
 
-	bool renderLayer(std::vector<XrCompositionLayerProjectionView>& projectionLayerViews,
-		XrCompositionLayerProjection& layer);
-	bool renderUiLayer(XrCompositionLayerQuad& layer);
+	bool renderLayer(std::vector<XrCompositionLayerProjectionView> &projectionLayerViews,
+					 XrCompositionLayerProjection &layer);
+	bool renderUiLayer(XrCompositionLayerQuad &layer);
 
 	void renderView(OpenxrView view);
 	void renderUi();
 
-	android_app* getAndroidApp();
+	android_app *getAndroidApp();
 	OpenxrContext getXrContext();
 	EglWindow getWindow();
 
@@ -69,11 +71,11 @@ public:
 	// all the swapchains should have the same dimensions
 	int getWidth();
 	int getHeight();
+	GLuint getDefaultFramebuffer() override { return framebuffer; }
 
 	void addPoseHandler(Audace::OculusTouchController::InputName name, std::function<void(Audace::PoseInputEvent)> handler);
 	void addFloatEventHandler(Audace::OculusTouchController::InputName name, std::function<void(Audace::FloatInputEvent)> handler);
 	void addBooleanEventHandler(Audace::OculusTouchController::InputName name, std::function<void(Audace::BooleanInputEvent)> handler);
 };
 
-
-#endif //AUDACE_APPCONTROLLER_H
+#endif // AUDACE_APPCONTROLLER_H
