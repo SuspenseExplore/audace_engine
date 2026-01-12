@@ -11,7 +11,7 @@ namespace Audace
 	{
 		GLuint glid;
 		GLuint glidDepthStencil;
-		Texture2d *texAttachment;
+		Texture2d *texAttachment = nullptr;
 
 		public:
 		FrameBuffer() {}

@@ -80,6 +80,13 @@ void GltfViewerScene::loadAssets(Audace::IFileAccess *fileLoader)
 	frameBuffer->create();
 	frameBuffer->colorAttachment(fbTex);
 	frameBuffer->checkStatus();
+	{
+		float v[9] = {0, 0, 0, 0, 1, 0, 0, 0, 0};
+		Audace::ShaderProgram *s = Audace::AssetStore::getShader("AU_post_proc");
+		s->bind();
+		s->setUniformFloatArray("kernel[0]", v, 9);
+		s->setUniformFloat("offsetScale", 1);
+	}
 
 	setAmbientLight({1, 1, 1, 0.4});
 	shader = Audace::AssetStore::getShader("pbr");
@@ -103,7 +110,7 @@ void GltfViewerScene::loadAssets(Audace::IFileAccess *fileLoader)
 	Audace::Sprite *skyboxSprite = Audace::AssetStore::getCubeSprite();
 	Audace::SimpleBillboardMaterial *mat = new Audace::SimpleBillboardMaterial();
 	mat->setShader(Audace::AssetStore::getShader("skybox"));
-	cubeTex = Audace::AssetStore::getCubemapTex(    "images/paris_skybox");
+	cubeTex = Audace::AssetStore::getCubemapTex("images/paris_skybox");
 	cubeConvTex = Audace::AssetStore::getCubemapTex("images/paris_skybox/conv");
 
 	mat->setTexture(cubeTex);
@@ -142,13 +149,13 @@ void GltfViewerScene::render()
 		s->renderWorldSpace(this);
 	}
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClearColor(1, 0, 1, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, appController->getDefaultFramebuffer());
+	glClearColor(1, 0, 1, 0.5);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// render the framebuffer texture onto a quad
 	{
-		Audace::SimpleBillboardMaterial *mat = new Audace::SimpleBillboardMaterial();
+		static Audace::SimpleBillboardMaterial *mat = new Audace::SimpleBillboardMaterial();
 		mat->setTexture(frameBuffer->getColorTexAttachment());
 		mat->setColor({1, 1, 1, 0});
 		Audace::ShaderProgram *s = Audace::AssetStore::getShader("AU_post_proc");

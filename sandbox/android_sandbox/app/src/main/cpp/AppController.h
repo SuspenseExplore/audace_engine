@@ -46,6 +46,7 @@ namespace Audace
 
 		int getWidth() override { return window.getWidth(); }
 		int getHeight() override { return window.getHeight(); }
+        GLuint getDefaultFramebuffer() override { return 0; }
 	};
 }
 

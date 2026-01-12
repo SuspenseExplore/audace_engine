@@ -37,6 +37,7 @@ namespace Audace
 
 		int getWidth() override;
 		int getHeight() override;
+		GLuint getDefaultFramebuffer() override { return 0; }
 		void setScene(int newScene) override;
 
 		void setMousePosListener(std::function<void(Vec2InputEvent)> listener);

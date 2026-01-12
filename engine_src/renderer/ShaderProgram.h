@@ -6,11 +6,13 @@
 #include "au_renderer.h"
 #include "glm/glm.hpp"
 
-namespace Audace {
+namespace Audace
+{
 	class Sprite;
 	struct TypedLight;
 
-	class ShaderProgram {
+	class ShaderProgram
+	{
 		GLuint glid = -1;
 		std::string vsSrc;
 		std::string fsSrc;
@@ -28,22 +30,23 @@ namespace Audace {
 
 		void setUniformInt(std::string name, int value);
 		void setUniformFloat(std::string name, float x);
+		void setUniformFloatArray(std::string name, float *value, int count);
 		void setUniformVec2(std::string name, float x, float y);
-		void setUniformVec2(std::string name, float* value);
+		void setUniformVec2(std::string name, float *value);
 		void setUniformVec3(std::string name, float x, float y, float z);
 		void setUniformVec3(std::string name, glm::vec3 value);
-		void setUniformVec3(std::string name, float* value);
-		void setUniformVec3Array(std::string name, float* value, int count);
+		void setUniformVec3(std::string name, float *value);
+		void setUniformVec3Array(std::string name, float *value, int count);
 		void setUniformVec4(std::string name, float x, float y, float z, float w);
 		void setUniformVec4(std::string name, glm::vec4 value);
-		void setUniformVec4(std::string name, float* value);
+		void setUniformVec4(std::string name, float *value);
 		void setUniformMat4(std::string name, glm::mat4 mat);
-		void setUniformMat4(std::string name, float* value);
-		void setUniformMat4Array(std::string name, float* value, int count);
+		void setUniformMat4(std::string name, float *value);
+		void setUniformMat4Array(std::string name, float *value, int count);
 
-		void setUniformLight(TypedLight* light);
+		void setUniformLight(TypedLight *light);
 
-		static GLuint loadShader(const char* src, GLenum shaderType);
+		static GLuint loadShader(const char *src, GLenum shaderType);
 	};
 }
 

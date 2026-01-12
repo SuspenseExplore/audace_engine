@@ -88,6 +88,48 @@
 							}
 						}
 					]
+				},
+				{
+					"name": "Post Proc",
+					"children": [
+						{
+							"name": "Kernel",
+							"type": "text"
+						},
+						{
+							"name": "kernel 0, 1, 2",
+							"type": "input_float3"
+						},
+						{
+							"name": "kernel 3, 4, 5",
+							"type": "input_float3"
+						},
+						{
+							"name": "kernel 6, 7, 8",
+							"type": "input_float3"
+						},
+						{
+							"name": "Preset",
+							"type": "combo_simple",
+							"values": [
+								"Normal",
+								"Sharpen",
+								"Blur",
+								"Edge Detect"
+							]
+						},
+						{
+							"name": "Offset Scale",
+							"type": "drag_float",
+							"min": 0.00001,
+							"max": 10,
+							"speed": 0.001
+						},
+						{
+							"name": "Apply",
+							"type": "button"
+						}
+					]
 				}
 			]
 		}
