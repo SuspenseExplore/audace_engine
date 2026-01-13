@@ -18,21 +18,21 @@ namespace Audace
 	public:
 		ForwardCamera(Pose pose, glm::mat4 projection) : pose(pose), projMat(projection) {}
 
-		static ForwardCamera* standard3d(glm::vec3 position, float viewWidth, float viewHeight)
+		static ForwardCamera *standard3d(glm::vec3 position, float viewWidth, float viewHeight)
 		{
 			glm::quat q = glm::quat(glm::vec3(0.0f, 0.0f, 0.0f));
 			glm::mat4 proj = glm::perspectiveFov(glm::radians(45.0f), viewWidth, viewHeight, 0.1f, 500.0f);
 
-			ForwardCamera* c = new ForwardCamera(Pose(position, q), proj);
+			ForwardCamera *c = new ForwardCamera(Pose(position, q), proj);
 			c->viewSize = glm::vec2(viewWidth, viewHeight);
 			return c;
 		}
-		static ForwardCamera* standard2d(glm::vec3 position, float viewWidth, float viewHeight)
+		static ForwardCamera *standard2d(glm::vec3 position, float viewWidth, float viewHeight)
 		{
 			glm::quat q = glm::quat(glm::vec3(glm::radians(-90.0f), 0.0f, 0.0f));
 			glm::mat4 proj = glm::ortho(viewWidth * -0.5f, viewWidth * 0.5f, viewHeight * -0.5f, viewHeight * 0.5f, 0.1f, 100.0f);
 
-			ForwardCamera* c = new ForwardCamera(Pose(position, q), proj);
+			ForwardCamera *c = new ForwardCamera(Pose(position, q), proj);
 			c->viewSize = glm::vec2(viewWidth, viewHeight);
 			return c;
 		}
@@ -89,6 +89,8 @@ namespace Audace
 		{
 			pose.orientation = quat;
 		}
+
+		Pose getPose() { return pose; }
 
 		glm::vec3 getFwdVec() override
 		{

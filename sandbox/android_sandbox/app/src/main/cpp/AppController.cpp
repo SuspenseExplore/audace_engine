@@ -9,6 +9,7 @@
 #include "scene/NavigationScene.h"
 #include "scene/SceneBuilder.h"
 #include "scene/GltfViewerScene.h"
+#include "scene/BinocularViewScene.h"
 
 namespace Audace
 {
@@ -83,7 +84,7 @@ namespace Audace
 
         case MAIN:
         {
-            scene = new GltfViewerScene(this);
+            scene = new BinocularViewScene(this);
             BaseCamera *camera = Audace::ForwardCamera::standard3d(glm::vec3(0, -10, 2),
                                                                    getWidth(), getHeight());
             scene->setCamera(camera);

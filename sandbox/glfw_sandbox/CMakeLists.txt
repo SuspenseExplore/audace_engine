@@ -20,6 +20,7 @@ add_executable(
 	${APP_DIR}/scene/ProcTerrainScene.cpp
 	${APP_DIR}/scene/ProcCityScene.cpp
 	${APP_DIR}/scene/GltfViewerScene.cpp
+	${APP_DIR}/scene/BinocularViewScene.cpp
 	${ENGINE_DIR}/AuLogger.cpp
 	${ENGINE_DIR}/glfw_platform/GameWindow.cpp
 	${ENGINE_DIR}/glfw_platform/KeyboardManager.cpp

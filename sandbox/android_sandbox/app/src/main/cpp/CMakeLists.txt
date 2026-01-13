@@ -83,6 +83,7 @@ add_library( # Sets the name of the library.
 		${APP_DIR}/scene/NavigationScene.cpp
 		${APP_DIR}/scene/SceneBuilder.cpp
 		${APP_DIR}/scene/GltfViewerScene.cpp
+		${APP_DIR}/scene/BinocularViewScene.cpp
 		)
 include_directories(
 		.
