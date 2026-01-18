@@ -38,7 +38,7 @@ namespace Audace
 
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
-		ImGuiIO& io = ImGui::GetIO();
+		ImGuiIO &io = ImGui::GetIO();
 		io.FontGlobalScale = 2;
 		// io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		// io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
@@ -57,7 +57,7 @@ namespace Audace
 		MouseManager::setMouseWheelEventHandler(
 			[=](Vec2InputEvent e)
 			{
-				ImGuiIO& io = ImGui::GetIO();
+				ImGuiIO &io = ImGui::GetIO();
 				io.AddMouseWheelEvent(e.state.x, e.state.y);
 			});
 		return true;
@@ -82,7 +82,7 @@ namespace Audace
 		double x, y;
 		glfwGetCursorPos(window, &x, &y);
 		int pressed = glfwGetMouseButton(window, 0);
-		ImGuiIO& io = ImGui::GetIO();
+		ImGuiIO &io = ImGui::GetIO();
 		io.AddMousePosEvent(x, y);
 		io.AddMouseButtonEvent(0, pressed == GLFW_PRESS);
 	}
@@ -125,7 +125,8 @@ namespace Audace
 
 	bool GameWindow::isMouseButtonDown(int button) { return glfwGetMouseButton(window, button) == GLFW_PRESS; };
 
-	glm::vec2 GameWindow::getMousePos() {
+	glm::vec2 GameWindow::getMousePos()
+	{
 		double x, y;
 		glfwGetCursorPos(window, &x, &y);
 		return glm::vec2(x, y);

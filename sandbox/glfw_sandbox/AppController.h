@@ -15,6 +15,7 @@ namespace Audace
 	class Scene;
 	class Vec2InputEvent;
 	class ButtonInputEvent;
+	class FrameBuffer;
 
 	class AppController : public EngineEventListener, BaseAppController
 	{
@@ -26,6 +27,13 @@ namespace Audace
 		Scene *scene = nullptr;
 		int nextScene = SandboxScene::BINOC;
 		glm::vec2 mousePos;
+
+		// binocular view specific
+		bool useBinocularView = true;
+		float offsetVal = 0.03;
+		float angleVal = 0.001;
+		bool crossView = true;
+		Audace::FrameBuffer *binocFrameBuffer[2];
 
 		AppController() {}
 

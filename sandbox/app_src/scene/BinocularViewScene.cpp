@@ -75,22 +75,6 @@ void BinocularViewScene::loadAssets(Audace::IFileAccess *fileLoader)
 		s->setUniformFloat("offsetScale", 1);
 	}
 
-	// framebuffer
-	Audace::ImageData dat;
-	dat.bytes = nullptr;
-	dat.width = appController->getWidth() / 2;
-	dat.height = appController->getHeight();
-	dat.format = GL_RGB;
-	for (int i = 0; i < 2; i++)
-	{
-		Audace::Texture2d *fbTex = new Audace::Texture2d(dat);
-		fbTex->create();
-		frameBuffer[i] = new Audace::FrameBuffer();
-		frameBuffer[i]->create();
-		frameBuffer[i]->colorAttachment(fbTex);
-		frameBuffer[i]->checkStatus();
-	}
-
 	setAmbientLight({1, 1, 1, 0.4});
 	shader = Audace::AssetStore::getShader("pbr");
 	shader->bind();
@@ -127,88 +111,28 @@ void BinocularViewScene::loadAssets(Audace::IFileAccess *fileLoader)
 
 void BinocularViewScene::render()
 {
-	camera->update();
-	Audace::ForwardCamera *origCam = reinterpret_cast<Audace::ForwardCamera *>(camera);
-	Audace::ForwardCamera *eyeCam[2];
-	eyeCam[0] = new Audace::ForwardCamera(origCam->getPose(), origCam->getProjMat());
-	eyeCam[1] = new Audace::ForwardCamera(origCam->getPose(), origCam->getProjMat());
-	glViewport(0, 0, appController->getWidth() / 2, appController->getHeight());
-
-	static float offsetVal = 0.03;
-	static float angleVal = 0.001;
-	static bool crossView = false;
-	float offset[2] = {-offsetVal, offsetVal};
-	float angle[2] = {-angleVal, angleVal};
-	float lr[2] = {0, -1};
-
-	for (int i = 0; i < 2; i++)
-	{
-		eyeCam[i]->move(origCam->getRightVec() * offset[i]);
-		eyeCam[i]->rotate(0, 0, angle[i]);
-		camera = eyeCam[i];
-		frameBuffer[i]->bind();
-		glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		skyboxNode->setTranslation(camera->getPosition());
-		sceneGraph->update(this);
-
-		shader->bind();
-		shader->setUniformVec3("viewPos", camera->getPosition());
-		shader->setUniformVec4("ambientLight", ambientColor);
-		cubeConvTex->bind(6);
-
-		for (auto &item : lights)
-		{
-			shader->setUniformLight(item.second);
-		}
-
-		editor->renderWorldSpace(this);
-
-		for (Audace::Sprite *s : sprites)
-		{
-			s->renderWorldSpace(this);
-		}
-	}
-	camera = origCam;
-
-	glBindFramebuffer(GL_FRAMEBUFFER, appController->getDefaultFramebuffer());
-	glViewport(0, 0, appController->getWidth(), appController->getHeight());
-	glClearColor(1, 0, 1, 0.5);
+	glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// render the framebuffers side by side
-	{
-		static Audace::SimpleBillboardMaterial *mat = new Audace::SimpleBillboardMaterial();
-		mat->setColor({1, 1, 1, 0});
-		Audace::ShaderProgram *s = Audace::AssetStore::getShader("AU_post_proc");
-		s->bind();
-		s->setUniformMat4("vpMat", glm::mat4(1));
-		mat->setShader(s);
-		Audace::Mesh *m = Audace::Shapes::squarePositions();
-		m->setMaterial(mat);
+	skyboxNode->setTranslation(camera->getPosition());
+	sceneGraph->update(this);
 
-		{
-			glm::mat4 worldMat = glm::mat4(1);
-			worldMat = glm::translate(worldMat, {crossView ? lr[0] : lr[1], -1, 0});
-			worldMat = glm::scale(worldMat, {1, 2, 1});
-			mat->setTexture(frameBuffer[0]->getColorTexAttachment());
-			m->renderInstanced({worldMat});
-		}
-		{
-			glm::mat4 worldMat = glm::mat4(1);
-			worldMat = glm::translate(worldMat, {crossView ? lr[1] : lr[0], -1, 0});
-			worldMat = glm::scale(worldMat, {1, 2, 1});
-			mat->setTexture(frameBuffer[1]->getColorTexAttachment());
-			m->renderInstanced({worldMat});
-		}
+	shader->bind();
+	shader->setUniformVec3("viewPos", camera->getPosition());
+	shader->setUniformVec4("ambientLight", ambientColor);
+	cubeConvTex->bind(6);
+
+	for (auto &item : lights)
+	{
+		shader->setUniformLight(item.second);
 	}
 
-	ImGui::Begin("BinocularView");
-	ImGui::DragFloat("offset", &offsetVal, 0.001, 0, 1);
-	ImGui::DragFloat("angle", &angleVal, 0.0001, 0, 1, "%.6f");
-	ImGui::Checkbox("Cross view", &crossView);
-	ImGui::End();
+	editor->renderWorldSpace(this);
+
+	for (Audace::Sprite *s : sprites)
+	{
+		s->renderWorldSpace(this);
+	}
 }
 
 void BinocularViewScene::reloadScene()

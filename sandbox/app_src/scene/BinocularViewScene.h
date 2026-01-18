@@ -49,7 +49,6 @@ class BinocularViewScene : public Audace::Scene
 	Audace::TextureCubemap *cubeTex;
 	Audace::TextureCubemap *cubeConvTex;
 	Audace::SceneGraphNode *skyboxNode;
-	Audace::FrameBuffer *frameBuffer[2];
 
 	int renderType = 0;
 

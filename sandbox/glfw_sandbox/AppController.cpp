@@ -9,6 +9,10 @@
 #include "FileAccessGlfw.h"
 #include "content/AssetStore.h"
 #include "content/Model.h"
+#include "renderer/Shapes.h"
+#include "renderer/Mesh.h"
+#include "renderer/ShaderProgram.h"
+#include "renderer/FrameBuffer.h"
 #include "scene/MainScene.h"
 #include "scene/NavigationScene.h"
 #include "scene/SceneBuilder.h"
@@ -39,7 +43,7 @@ namespace Audace
 		AU_RENDERER_LOG_TRACE("Renderer initialized");
 
 		fileLoader = new FileAccessGlfw();
-		fileLoader->setExternalFilePath("../../sandbox/assets/");
+		fileLoader->setExternalFilePath("../sandbox/assets/");
 
 		// build an index file for models in assets/models/
 		json index = json::object();
@@ -260,6 +264,27 @@ namespace Audace
 			MouseManager::addButtonChangedEventHandler(1, camCtl->rightMouseAction);
 			MouseManager::setMouseMoveEventHandler(camCtl->aimAction);
 			scene->loadAssets(fileLoader);
+			if (useBinocularView)
+			{
+
+				// framebuffer
+				ImageData dat;
+				dat.bytes = nullptr;
+				dat.width = getWidth() / 2;
+				dat.height = getHeight();
+				dat.format = GL_RGB;
+				for (int i = 0; i < 2; i++)
+				{
+					Texture2d *fbTex = new Texture2d(dat);
+					fbTex->create();
+					binocFrameBuffer[i] = new FrameBuffer();
+					binocFrameBuffer[i]->create();
+					binocFrameBuffer[i]->colorAttachment(fbTex);
+					binocFrameBuffer[i]->checkStatus();
+				}
+			}
+			{
+			}
 		}
 		break;
 		}
@@ -268,8 +293,74 @@ namespace Audace
 
 	void AppController::renderFrame()
 	{
-		scene->render();
+		scene->getCamera()->update();
+		if (useBinocularView)
+		{
+			ForwardCamera *origCam = reinterpret_cast<ForwardCamera *>(scene->getCamera());
+			ForwardCamera *eyeCam[2];
+			eyeCam[0] = ForwardCamera::standard3d(origCam->getPosition(), origCam->getViewSize().x * 0.5, origCam->getViewSize().y);
+			eyeCam[0]->setOrientation(origCam->getPose().orientation);
+			eyeCam[1] = ForwardCamera::standard3d(origCam->getPosition(), origCam->getViewSize().x * 0.5, origCam->getViewSize().y);
+			eyeCam[1]->setOrientation(origCam->getPose().orientation);
+			glViewport(0, 0, origCam->getViewSize().x * 0.5, getHeight());
+
+			float offset[2] = {-offsetVal, offsetVal};
+			float angle[2] = {-angleVal, angleVal};
+			float lr[2] = {0, -1};
+
+			for (int i = 0; i < 2; i++)
+			{
+				eyeCam[i]->move(origCam->getRightVec() * offset[i]);
+				eyeCam[i]->rotate(0, 0, angle[i]);
+				scene->setCamera(eyeCam[i]);
+				binocFrameBuffer[i]->bind();
+				scene->render();
+			}
+			scene->setCamera(origCam);
+
+			glBindFramebuffer(GL_FRAMEBUFFER, getDefaultFramebuffer());
+			glViewport(0, 0, getWidth(), getHeight());
+			glClearColor(1, 0, 1, 0.5);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			// render the framebuffers side by side
+			{
+				static SimpleBillboardMaterial *mat = new SimpleBillboardMaterial();
+				mat->setColor({1, 1, 1, 0});
+				ShaderProgram *s = AssetStore::getShader("AU_post_proc");
+				s->bind();
+				s->setUniformMat4("vpMat", glm::mat4(1));
+				mat->setShader(s);
+				Mesh *m = Shapes::squarePositions();
+				m->setMaterial(mat);
+
+				{
+					glm::mat4 worldMat = glm::mat4(1);
+					worldMat = glm::translate(worldMat, {lr[0], -1, 0});
+					worldMat = glm::scale(worldMat, {1, 2, 1});
+					mat->setTexture(binocFrameBuffer[crossView ? 0 : 1]->getColorTexAttachment());
+					m->renderInstanced({worldMat});
+				}
+				{
+					glm::mat4 worldMat = glm::mat4(1);
+					worldMat = glm::translate(worldMat, {lr[1], -1, 0});
+					worldMat = glm::scale(worldMat, {1, 2, 1});
+					mat->setTexture(binocFrameBuffer[crossView ? 1 : 0]->getColorTexAttachment());
+					m->renderInstanced({worldMat});
+				}
+			}
+		}
+		else
+		{
+			scene->render();
+		}
 		((SceneBuilder *)scene)->renderUi();
+		ImGui::Begin("BinocularView");
+		ImGui::Checkbox("Binocular view", &useBinocularView);
+		ImGui::DragFloat("offset", &offsetVal, 0.001, 0, 1);
+		ImGui::DragFloat("angle", &angleVal, 0.0001, 0, 1, "%.6f");
+		ImGui::Checkbox("Cross view", &crossView);
+		ImGui::End();
 	}
 
 	int AppController::getWidth()
