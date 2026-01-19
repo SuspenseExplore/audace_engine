@@ -31,7 +31,7 @@ namespace Audace
 		// binocular view specific
 		bool useBinocularView = true;
 		float offsetVal = 0.03;
-		float angleVal = 0.001;
+		float angleVal = 0.000;
 		bool crossView = true;
 		Audace::FrameBuffer *binocFrameBuffer[2];
 

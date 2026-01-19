@@ -310,7 +310,7 @@ namespace Audace
 
 			for (int i = 0; i < 2; i++)
 			{
-				eyeCam[i]->move(origCam->getRightVec() * offset[i]);
+				eyeCam[i]->setPosition(origCam->getPosition() + origCam->getRightVec() * offset[i]);
 				eyeCam[i]->rotate(0, 0, angle[i]);
 				scene->setCamera(eyeCam[i]);
 				binocFrameBuffer[i]->bind();
