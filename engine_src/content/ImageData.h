@@ -16,10 +16,12 @@ namespace Audace
 		int width;
 		int height;
 		GLenum format;
+		GLenum internalFormat;
+		GLenum type;
 
 		ImageData() {}
-		ImageData(unsigned char *bytes, int width, int height, GLenum format)
-			: bytes(bytes), width(width), height(height), format(format)
+		ImageData(unsigned char *bytes, int width, int height, GLenum format, GLenum internalFormat = GL_RGBA, GLenum type = GL_UNSIGNED_BYTE)
+			: bytes(bytes), width(width), height(height), format(format), internalFormat(internalFormat), type(type)
 		{
 		}
 

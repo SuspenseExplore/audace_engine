@@ -97,26 +97,18 @@ void GltfViewerScene::loadAssets(Audace::IFileAccess *fileLoader)
 	editor->attachToScene(this);
 	reloadScene();
 
-	// TODO: put this info somewhere logical!
-	// making cubemap texture from equirectangular image
-	// use these angles (x, y, z) for the camera and render each face
-	// nx: 0, 90, 0
-	// ny: 0, 0, 0
-	// nz: 270, 180, 0
-	// px: 0, 270, 0
-	// py: 0, 180, 0
-	// pz: 90, 180, 0
-	// make sure to use a square viewport size and 90deg fov on the camera
 	Audace::Sprite *skyboxSprite = Audace::AssetStore::getCubeSprite();
 	Audace::SimpleBillboardMaterial *mat = new Audace::SimpleBillboardMaterial();
 	mat->setShader(Audace::AssetStore::getShader("skybox"));
-	cubeTex = Audace::AssetStore::getCubemapTex("images/paris_skybox");
-	cubeConvTex = Audace::AssetStore::getCubemapTex("images/paris_skybox/conv");
+	cubeTex = Audace::AssetStore::getCubemapHdrTex("images/field_day_skybox");
+	cubeConvTex = Audace::AssetStore::getCubemapHdrTex("images/field_day_skybox/irradiance");
+	cubeConvTex->bind(6);
 
 	mat->setTexture(cubeTex);
 	skyboxSprite->getMesh()->setMaterial(mat);
 	skyboxNode = new Audace::SceneGraphNode;
 	skyboxNode->setName("skybox1");
+	skyboxNode->setRotation(glm::quat(glm::radians(glm::vec3(90, 0, 0))));
 	skyboxNode->setScale({400, 400, 400});
 	skyboxNode->setSprite(skyboxSprite);
 	sceneGraph->getRootNode()->addChild(skyboxNode);
@@ -137,6 +129,7 @@ void GltfViewerScene::render()
 	shader->bind();
 	shader->setUniformVec3("viewPos", camera->getPosition());
 	shader->setUniformVec4("ambientLight", ambientColor);
+	shader->setUniformMat4("irradianceMapTx", glm::transpose(glm::mat4_cast(skyboxNode->getRotation())));
 	cubeConvTex->bind(6);
 
 	for (auto &item : lights)
@@ -184,7 +177,7 @@ void GltfViewerScene::reloadScene()
 	}
 	Audace::GltfxReader reader(fileLoader);
 	sceneGraph = new Audace::SceneGraph;
-	Audace::SceneGraphNode *root = reader.readDefaultScene(sceneFilepath);
+	Audace::SceneGraphNode *root = reader.readScene(sceneFilepath, 4);
 	sceneGraph->setRootNode(root);
 	editor->setSceneGraph(sceneGraph);
 }

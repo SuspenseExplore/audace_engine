@@ -16,11 +16,12 @@ namespace Audace
 	class IFileAccess
 	{
 	public:
-		virtual ByteBuffer* readFileToBuffer(const std::string& path) = 0;
-		virtual std::string textFileToString(const std::string& path) = 0;
-		virtual json textFileToJson(const std::string& path) = 0;
-		virtual ImageData readImageFile(const std::string& path) = 0;
-		virtual Model* readModelFile(std::string path, std::string filename) = 0;
+		virtual ByteBuffer *readFileToBuffer(const std::string &path) = 0;
+		virtual std::string textFileToString(const std::string &path) = 0;
+		virtual json textFileToJson(const std::string &path) = 0;
+		virtual ImageData readImageFile(const std::string &path) = 0;
+		virtual ImageData readHdrImageFile(const std::string &path) = 0;
+		virtual Model *readModelFile(std::string path, std::string filename) = 0;
 
 		virtual std::string assetReadBasePath() = 0;
 		virtual std::string fileWriteBasePath() = 0;

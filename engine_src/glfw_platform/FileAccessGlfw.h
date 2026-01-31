@@ -17,13 +17,14 @@ namespace Audace
 	public:
 		FileAccessGlfw() {}
 
-		ByteBuffer* readFileToBuffer(const std::string& path) override;
-		std::string textFileToString(const std::string& path) override;
-		json textFileToJson(const std::string& path) override;
-		ImageData readImageFile(const std::string& path) override;
-		Model* readModelFile(std::string path, std::string filename) override;
+		ByteBuffer *readFileToBuffer(const std::string &path) override;
+		std::string textFileToString(const std::string &path) override;
+		json textFileToJson(const std::string &path) override;
+		ImageData readImageFile(const std::string &path) override;
+		ImageData readHdrImageFile(const std::string &path) override;
+		Model *readModelFile(std::string path, std::string filename) override;
 
-		std::vector<std::string> listFilesInDir(const std::string& path, bool recursive = false);
+		std::vector<std::string> listFilesInDir(const std::string &path, bool recursive = false);
 
 		std::string assetReadBasePath() override { return externalFilePath; }
 		std::string fileWriteBasePath() override { return externalFilePath; }

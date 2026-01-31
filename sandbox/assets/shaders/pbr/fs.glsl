@@ -35,6 +35,7 @@ struct SpotLight {
 
 uniform vec4 ambientLight;
 uniform samplerCube irradianceMap;
+uniform mat4 irradianceMapTx;
 
 in PointLight tLight;
 in DirLight tDirLight;
@@ -173,7 +174,7 @@ void main() {
 	vec3 kd = 1.0 - ks;
 	kd *= 1.0 - metallic;
 
-	vec3 irradiance = texture(irradianceMap, normalize(tbnMat * normal)).rgb;
+	vec3 irradiance = texture(irradianceMap, normalize(mat3(irradianceMapTx) * tbnMat * normal)).rgb;
 	vec3 diffuse = irradiance * baseColor;
 	vec3 ambient = (kd * diffuse) * occlusion;
 	

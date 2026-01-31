@@ -44,7 +44,18 @@ namespace Audace
 		int width, height, channels;
 		stbi_uc *bytes = stbi_load_from_memory(reinterpret_cast<const stbi_uc *>(buf->getBuffer()), buf->getLength(), &width, &height, &channels, 3);
 		delete[] buf;
-		ImageData img(bytes, width, height, GL_RGB);
+		ImageData img(bytes, width, height, GL_RGB, GL_RGB, GL_UNSIGNED_BYTE);
+		return img;
+	}
+
+	ImageData FileAccessAndroid::readHdrImageFile(const std::string &path)
+	{
+		ByteBuffer *buf = readFileToBuffer(path);
+
+		int width, height, channels;
+		float *bytes = stbi_loadf_from_memory(reinterpret_cast<const stbi_uc *>(buf->getBuffer()), buf->getLength(), &width, &height, &channels, 3);
+		delete[] buf;
+		ImageData img((unsigned char *)bytes, width, height, GL_RGB, GL_RGB16F, GL_FLOAT);
 		return img;
 	}
 

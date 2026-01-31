@@ -25,11 +25,11 @@ namespace Audace
 		GameWindow *window;
 		FileAccessGlfw *fileLoader;
 		Scene *scene = nullptr;
-		int nextScene = SandboxScene::BINOC;
+		int nextScene = SandboxScene::GLTF;
 		glm::vec2 mousePos;
 
 		// binocular view specific
-		bool useBinocularView = true;
+		bool useBinocularView = false;
 		float offsetVal = 0.03;
 		float angleVal = 0.000;
 		bool crossView = true;

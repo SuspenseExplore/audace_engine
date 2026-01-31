@@ -44,7 +44,9 @@ namespace Audace
 		static Texture2d *darkGridTexture();
 
 		static Texture2d *getTexture(const std::string &name);
+		static Texture2d *getHdrTexture(const std::string &name);
 		static TextureCubemap *getCubemapTex(const std::string &name);
+		static TextureCubemap *getCubemapHdrTex(const std::string &name);
 		static Model *getModel(const std::string &name);
 		static Sprite *getSprite(const std::string &name);
 		static SceneGraphNode *getGltfNode(const std::string &name);

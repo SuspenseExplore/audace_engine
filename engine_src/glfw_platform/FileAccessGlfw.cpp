@@ -53,7 +53,19 @@ namespace Audace
 		case 3:
 			format = GL_RGB;
 		}
-		ImageData img(bytes, width, height, format);
+		ImageData img(bytes, width, height, format, format, GL_UNSIGNED_BYTE);
+		return img;
+	}
+
+	ImageData FileAccessGlfw::readHdrImageFile(const std::string &path)
+	{
+		int width;
+		int height;
+		int channels;
+		ByteBuffer *buffer = readFileToBuffer(path);
+		stbi_set_flip_vertically_on_load(false);
+		float *bytes = stbi_loadf_from_memory((stbi_uc *)buffer->getBuffer(), buffer->getLength(), &width, &height, &channels, 0);
+		ImageData img((byte *)(bytes), width, height, GL_RGB, GL_RGB16F, GL_FLOAT);
 		return img;
 	}
 

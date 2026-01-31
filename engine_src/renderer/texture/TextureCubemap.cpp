@@ -12,7 +12,7 @@ namespace Audace
 		for (int i = 0; i < 6; i++)
 		{
 			ImageData img = imgs[i];
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, img.format, img.width, img.height, 0, img.format, GL_UNSIGNED_BYTE, img.bytes);
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, img.internalFormat, img.width, img.height, 0, img.format, img.type, img.bytes);
 			AU_CHECK_GL_ERRORS();
 		}
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

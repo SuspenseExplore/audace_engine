@@ -58,6 +58,7 @@ namespace Audace
         std::string textFileToString(const std::string &path) override;
         json textFileToJson(const std::string &path) override;
         ImageData readImageFile(const std::string &path) override;
+        ImageData readHdrImageFile(const std::string &path) override;
         Model *readModelFile(std::string path, std::string filename) override;
 
         std::string assetReadBasePath() override { return ""; }

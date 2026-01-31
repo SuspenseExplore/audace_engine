@@ -84,7 +84,7 @@ namespace Audace
 
         case MAIN:
         {
-            scene = new BinocularViewScene(this);
+            scene = new GltfViewerScene(this);
             BaseCamera *camera = Audace::ForwardCamera::standard3d(glm::vec3(0, -10, 2),
                                                                    getWidth(), getHeight());
             scene->setCamera(camera);

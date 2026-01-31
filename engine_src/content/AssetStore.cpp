@@ -106,6 +106,22 @@ namespace Audace
 		}
 	}
 
+	Texture2d *AssetStore::getHdrTexture(const std::string &name)
+	{
+		if (textures.find(name) == textures.end())
+		{
+			ImageData img = fileLoader->readHdrImageFile(name);
+			ITexture *tex = new Texture2d(img);
+			tex->create();
+			textures[name] = tex;
+			return reinterpret_cast<Texture2d *>(tex);
+		}
+		else
+		{
+			return reinterpret_cast<Texture2d *>(textures[name]);
+		}
+	}
+
 	TextureCubemap *AssetStore::getCubemapTex(const std::string &name)
 	{
 		static std::string filenames[] = {"nx.png", "px.png", "pz.png", "nz.png", "py.png", "ny.png"};
@@ -117,6 +133,29 @@ namespace Audace
 			{
 				std::string realName = name + "/" + filenames[i];
 				imgs[i] = fileLoader->readImageFile(realName);
+			}
+			TextureCubemap *tex = new TextureCubemap(imgs);
+			tex->create();
+			textures[name] = tex;
+			return tex;
+		}
+		else
+		{
+			return reinterpret_cast<TextureCubemap *>(textures[name]);
+		}
+	}
+
+	TextureCubemap *AssetStore::getCubemapHdrTex(const std::string &name)
+	{
+		static std::string filenames[] = {"px.hdr", "nx.hdr", "pz.hdr", "nz.hdr", "ny.hdr", "py.hdr"};
+		if (textures.find(name) == textures.end())
+		{
+			std::vector<ImageData> imgs;
+			imgs.resize(6);
+			for (int i = 0; i < 6; i++)
+			{
+				std::string realName = name + "/" + filenames[i];
+				imgs[i] = fileLoader->readHdrImageFile(realName);
 			}
 			TextureCubemap *tex = new TextureCubemap(imgs);
 			tex->create();
